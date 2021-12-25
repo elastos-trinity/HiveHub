@@ -125,6 +125,16 @@ const headerStyle = {
     boxShadow:
       "0 4px 18px 0px rgba(0, 0, 0, 0.12), 0 7px 10px -5px rgba(0, 0, 0, 0.15)"
   },
+  searchBlack: {
+    backgroundColor: "#rgba(0, 0, 0, 0) !important",
+    color: "#000000 !important",
+    "&::placeholder": {
+      color: "rgba(0, 0, 0, 0.3) !important"
+    }
+  },
+  searchContainerBlack: {
+    backgroundColor: "rgba(0, 0, 0, 0.1) !important",
+  },
   drawerPaper: {
     border: "none",
     bottom: "0",

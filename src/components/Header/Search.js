@@ -13,7 +13,7 @@ const customStyle = theme => ({
         borderRadius: "20px",
         border: "0px",
         background: "rgba(255, 255, 255, 0.3)",
-        padding: "0 10px",
+        padding: "0 10px"
     },
 
     icon: {
@@ -44,9 +44,9 @@ export default function Search() {
     let {t} = useTranslation()
     const classes = useStyles();
     return (
-        <span className={classes.item}>
+        <span className={classes.item} id="searchContainer">
             <SearchIcon className={classes.icon}/>
-            <input type="text" className={classes.searchInput} placeholder={t("search-placeholder")}/>
+            <input type="text" id="search" className={classes.searchInput} placeholder={t("search-placeholder")}/>
         </span>
     );
 }

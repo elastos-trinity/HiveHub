@@ -21,6 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import styles from "assets/jss/material-kit-react/views/components.js";
 import { useTranslation } from 'react-i18next'
 import Badge from "../../components/Badge/Badge";
+import LoginQRCode from "./LoginQRCode";
 
 const customStyle = theme => ({
   ...styles,
@@ -113,11 +114,19 @@ export default function Components(props) {
 
   const preventDefault = (event) => event.preventDefault();
 
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = (value) => {
+    setOpen(false);
+  };
+
   return (
     <div>
       <Header
         brand={<Brand />}
-        rightLinks={<HeaderLinks />}
+        rightLinks={<HeaderLinks openLogin={handleClickOpen} />}
         fixed
         color="transparent"
         changeColorOnScroll={{
@@ -242,6 +251,7 @@ export default function Components(props) {
         <Box component="div" className={classes.loading}>{t('loading')}</Box>
       </div>
       <Footer whiteFont={true} />
+      <LoginQRCode open={open} onClose={handleClose} />
     </div>
   );
 }

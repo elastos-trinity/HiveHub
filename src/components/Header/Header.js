@@ -44,6 +44,9 @@ export default function Header(props) {
       document.body
         .getElementsByTagName("header")[0]
         .classList.add(classes[changeColorOnScroll.color]);
+
+      document.getElementById("search").classList.add(classes.searchBlack)
+      document.getElementById("searchContainer").classList.add(classes.searchContainerBlack)
     } else {
       document.body
         .getElementsByTagName("header")[0]
@@ -51,6 +54,9 @@ export default function Header(props) {
       document.body
         .getElementsByTagName("header")[0]
         .classList.remove(classes[changeColorOnScroll.color]);
+
+      document.getElementById("search").classList.remove(classes.searchBlack)
+      document.getElementById("searchContainer").classList.remove(classes.searchContainerBlack)
     }
   };
   const { color, rightLinks, leftLinks, brand, fixed, absolute } = props;

@@ -20,12 +20,12 @@ const footerStyle = {
     padding: "0 1.2375rem",
     fontWeight: "300",
     fontSize: "18px",
-    // textTransform: "uppercase",
-    // borderRadius: "3px",
     textDecoration: "none",
     position: "relative",
     display: "block",
-
+    "&:hover": {
+      color: "#316BFF"
+    }
   },
   inlineBlock: {
     display: "inline-block",

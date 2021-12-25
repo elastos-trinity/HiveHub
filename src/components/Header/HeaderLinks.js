@@ -29,6 +29,7 @@ export default function HeaderLinks(props) {
     const classes = useStyles();
     let {t, i18n} = useTranslation()
     let {language, changeLanguage} = useContext(LanguageContext)
+    let { openLogin } = props;
     return (
         <List className={classes.list}>
             <ListItem className={classes.listItem} style={{paddingTop: "5px"}}>
@@ -46,11 +47,10 @@ export default function HeaderLinks(props) {
             </ListItem>
             <ListItem className={classes.listItem}>
                 <MUIButton
-                    href="https://developer.elastos.org/"
                     color="transparent"
-                    target="_blank"
+                    onClick={() => {openLogin()}}
                     className={classes.navLink}
-                    style={{backgroundImage: "linear-gradient(to right, #5297FF , #316BFF)", borderRadius: "25px"}}
+                    style={{backgroundImage: "linear-gradient(to right, #5297FF , #316BFF)", borderRadius: "25px", color: "white"}}
                 >
                     {t("did-login")}
                 </MUIButton>

@@ -29,10 +29,10 @@ export default function HeaderLinks(props) {
     const classes = useStyles();
     let {t, i18n} = useTranslation()
     let {language, changeLanguage} = useContext(LanguageContext)
-    let { openLogin } = props;
+    let { openLogin, showSearch } = props;
     return (
         <List className={classes.list}>
-            <ListItem className={classes.listItem} style={{paddingTop: "5px"}}>
+            <ListItem className={classes.listItem} style={{paddingTop: "5px", display: showSearch ? "inline-block" : "none"}}>
                 <Search/>
             </ListItem>
             <ListItem className={classes.listItem}>

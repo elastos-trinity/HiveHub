@@ -15,6 +15,8 @@ import LoginPage from "views/LoginPage/LoginPage.js";
 import DidRepairPage from "views/DidRepairPage/DidRepairPage.js";
 import PrivacyPolicyPage from "./views/PrivacyPolicy/PrivacyPolicy";
 import TermPage from "./views/TermPage/TermPage";
+import SearchResult from "./views/SearchResult";
+import NodeDetails from "./views/NodeDetails/NodeDetails";
 
 let browserHistory = createBrowserHistory();
 
@@ -37,6 +39,8 @@ function App() {
                     <Route path="/did-repair" component={DidRepairPage} />
                     <Route path="/privacy-policy" component={PrivacyPolicyPage} />
                     <Route path="/terms" component={TermPage} />
+                    <Route path="/search" component={SearchResult} />
+                    <Route path="/node" component={NodeDetails} />
                     <Route path="/" component={Components} />
                 </Switch>
             </Router>

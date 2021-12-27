@@ -12,6 +12,10 @@ let en = {
     "starter": "Instruction",
     "functions": "Functions",
     "loading": "Loading...",
+    "search-result": "Search Result",
+    "vault-service": "Vault Service",
+    "backup-service": "Backup Service",
+    "create-vault": "Create Vault",
 
     "download": "Download",
     "did-repair": "DID Repair",
@@ -40,6 +44,10 @@ let zh = {
     "starter": "新手引导",
     "functions": "功能介绍",
     "loading": "正在加载中...",
+    "search-result": "搜索结果",
+    "vault-service": "Vault 服务",
+    "backup-service": "Backup 服务",
+    "create-vault": "创建 Vault",
 
     "download": "直接下载",
     "did-repair": "DID修复",

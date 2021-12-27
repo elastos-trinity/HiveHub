@@ -126,7 +126,7 @@ export default function Components(props) {
     <div>
       <Header
         brand={<Brand />}
-        rightLinks={<HeaderLinks openLogin={handleClickOpen} />}
+        rightLinks={<HeaderLinks openLogin={handleClickOpen} showSearch={true} />}
         fixed
         color="transparent"
         changeColorOnScroll={{

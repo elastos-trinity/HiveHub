@@ -30,7 +30,7 @@ const customStyle = theme => ({
         position: "absolute",
         top: "10px",
         color: "white",
-        fontSize: "18px",
+        fontSize: "16px",
 
         "&::placeholder": {
             color: "rgba(255, 255, 255, 0.3)"
@@ -40,13 +40,14 @@ const customStyle = theme => ({
 
 const useStyles = makeStyles(customStyle);
 
-export default function Search() {
+export default function Search(props) {
     let {t} = useTranslation()
     const classes = useStyles();
     return (
         <span className={classes.item} id="searchContainer">
             <SearchIcon className={classes.icon}/>
-            <input type="text" id="search" className={classes.searchInput} placeholder={t("search-placeholder")}/>
+            <input type="text" id="search" className={classes.searchInput} placeholder={t("search-placeholder")}
+                   onKeyPress={()=> props.history.push("/search")} autoComplete="off" />
         </span>
     );
 }

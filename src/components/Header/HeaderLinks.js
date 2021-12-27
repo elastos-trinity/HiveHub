@@ -29,17 +29,16 @@ export default function HeaderLinks(props) {
     const classes = useStyles();
     let {t, i18n} = useTranslation()
     let {language, changeLanguage} = useContext(LanguageContext)
-    let { openLogin, showSearch } = props;
+    let { openLogin, showSearch, history } = props;
     return (
         <List className={classes.list}>
             <ListItem className={classes.listItem} style={{paddingTop: "5px", display: showSearch ? "inline-block" : "none"}}>
-                <Search/>
+                <Search history={history} />
             </ListItem>
             <ListItem className={classes.listItem}>
                 <Button
-                    href="https://trinity-feeds.app"
+                    href="/#square"
                     color="transparent"
-                    target="_blank"
                     className={classes.navLink}
                 >
                     {t("nav-square")}

@@ -14,14 +14,11 @@ import Parallax from "components/Parallax/Parallax.js";
 // sections for this page
 import Brand from "views/Brand"
 import HeaderLinks from "components/Header/HeaderLinks.js";
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import styles from "assets/jss/material-kit-react/views/components.js";
 import { useTranslation } from 'react-i18next'
 import Badge from "../../components/Badge/Badge";
-import SearchIcon from "@material-ui/icons/Search";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabPanel from "./TabPanel";
@@ -33,39 +30,6 @@ import Button from "@material-ui/core/Button";
 
 const customStyle = theme => ({
   ...styles,
-  searchBox: {
-    width: "100%",
-    height: "100px",
-    paddingTop: "30px",
-    marginTop: "70px"
-  },
-
-  resultBox: {
-    backgroundColor: "#F5F5F5",
-    borderRadius: "10px",
-    height: "800px",
-  },
-
-  searchResult: {
-    fontWeight: "600",
-    marginBottom: "10px"
-  },
-
-  root: {
-    width: "100%",
-    height: "66px",
-    color: "#00164E",
-    fontWeight: "400",
-    fontSize: "20px",
-    lineHeight: "66px",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignContent: "space-around",
-    '& > * + *': {marginLeft: theme.spacing(2),},
-    '& a': {'&:hover': {color: "#316BFF"}}
-  },
-
   nodeName: {
     color: "#333333",
     fontSize: "22px",

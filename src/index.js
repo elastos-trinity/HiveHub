@@ -18,6 +18,7 @@ import TermPage from "./views/TermPage/TermPage";
 import SearchResult from "./views/SearchResult";
 import NodeDetails from "./views/NodeDetails/NodeDetails";
 import Dashboard from "./views/Dashboard";
+import NewNode from "./views/NewNode";
 
 let browserHistory = createBrowserHistory();
 
@@ -42,6 +43,7 @@ function App() {
                     <Route path="/terms" component={TermPage} />
                     <Route path="/search" component={SearchResult} />
                     <Route path="/node" component={NodeDetails} />
+                    <Route path="/new-node" component={NewNode} />
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/" component={Components} />
                 </Switch>

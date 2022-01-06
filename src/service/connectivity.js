@@ -5,6 +5,8 @@ import ConnectivityContext from "../contexts/ConnectivityContext";
 
 export const essentialsConnector = new EssentialsConnector();
 
+console.log(essentialsConnector);
+
 let connectivityInitialized = false;
 
 export function useConnectivitySDK() {

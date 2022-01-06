@@ -5,8 +5,12 @@
   "private": true,
   "main": "src/index.js",
   "dependencies": {
+    "@elastosfoundation/did-js-sdk": "^2.2.0",
+    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.15",
+    "@elastosfoundation/essentials-connector-client-browser": "^1.0.32",
     "@material-ui/core": "4.12.3",
     "@material-ui/icons": "4.9.1",
+    "@walletconnect/web3-provider": "^1.7.0",
     "classnames": "2.2.6",
     "did-js-sdk": "2.0.12",
     "history": "4.10.1",
@@ -19,15 +23,12 @@
     "react": "16.13.1",
     "react-datetime": "2.16.3",
     "react-dom": "16.13.1",
-    "react-i18next": "^11.11.4",
+    "react-i18next": "^11.15.3",
     "react-localization": "^1.0.17",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
     "react-slick": "0.26.1",
-    "react-swipeable-views": "0.13.9",
-    "@elastosfoundation/did-js-sdk": "^2.2.0",
-    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.12",
-    "@elastosfoundation/essentials-connector-client-browser": "^1.0.26"
+    "react-swipeable-views": "0.13.9"
   },
   "devDependencies": {
     "@babel/cli": "7.10.1",

@@ -22,14 +22,16 @@ import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js
 import {LanguageContext} from "../../context"
 import Search from "./Search";
 import {useTranslation} from "react-i18next";
+import UserContext from "../../contexts/UserContext";
 
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
+    const { user, signOut } = useContext(UserContext);
     const classes = useStyles();
     let {t, i18n} = useTranslation()
     let {language, changeLanguage} = useContext(LanguageContext)
-    let { openLogin, showSearch, history } = props;
+    let { openLogin, showSearch, history, clean } = props;
     return (
         <List className={classes.list}>
             <ListItem className={classes.listItem} style={{paddingTop: "5px", display: showSearch ? "inline-block" : "none"}}>
@@ -45,14 +47,27 @@ export default function HeaderLinks(props) {
                 </Button>
             </ListItem>
             <ListItem className={classes.listItem}>
-                <MUIButton
-                    color="transparent"
-                    onClick={() => {openLogin()}}
-                    className={classes.navLink}
-                    style={{backgroundImage: "linear-gradient(to right, #5297FF , #316BFF)", borderRadius: "25px", color: "white"}}
-                >
-                    {t("did-login")}
-                </MUIButton>
+                {
+                    user === null ? (
+                        <MUIButton
+                            color="transparent"
+                            onClick={() => {openLogin()}}
+                            className={classes.navLink}
+                            style={{backgroundImage: "linear-gradient(to right, #5297FF , #316BFF)", borderRadius: "25px", color: "white"}}
+                        >
+                            {t("did-login")}
+                        </MUIButton>
+
+                    ) : (
+                        <Button
+                            href="/"
+                            color="transparent"
+                            className={classes.navLink}
+                        >
+                            {t("nav-my")}
+                        </Button>
+                    )
+                }
             </ListItem>
 
             <ListItem className={classes.listItem}>

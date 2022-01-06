@@ -5,6 +5,8 @@ import {initReactI18next} from "react-i18next"
 let en = {
     "search-placeholder": "search",
     "nav-square": "Square",
+    "nav-my": "My",
+    "nav-logout": "Logout",
     "did-login": "DID Login",
     "title": "Elastos Hive",
     "subtitle": "This utility can make sure that your online DID document is in a correct status. Your mnemonic and passphrase remain in the browser",
@@ -53,6 +55,8 @@ let en = {
 let zh = {
     "search-placeholder": "搜索",
     "nav-square": "广场",
+    "nav-my": "我的",
+    "nav-logout": "退出登陆",
     "did-login": "DID登陆",
     "title": "亦来云Hive",
     "subtitle": "提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案 赋能应用、使能数据、做数字世界的“私权捍卫者",

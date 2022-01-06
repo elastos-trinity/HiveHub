@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -21,7 +21,11 @@ import Grid from '@material-ui/core/Grid';
 import styles from "assets/jss/material-kit-react/views/components.js";
 import { useTranslation } from 'react-i18next'
 import Badge from "../../components/Badge/Badge";
-import LoginQRCode from "./LoginQRCode";
+
+import UserContext from '../../contexts/UserContext';
+import { essentialsConnector, useConnectivitySDK } from "../../service/connectivity";
+import ConnectivityContext from '../../contexts/ConnectivityContext';
+import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 
 const customStyle = theme => ({
   ...styles,
@@ -114,19 +118,55 @@ export default function Components(props) {
 
   const preventDefault = (event) => event.preventDefault();
 
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
+  const { user, signOut, setUser } = useContext(UserContext);
+  const { isLinkedToEssentials, setIsLinkedToEssentials } = useContext(ConnectivityContext);
+
+  useConnectivitySDK();
+
+  const clearEssentialsSession = () => {
+    essentialsConnector.disconnectWalletConnect();
+    signOut();
+    setIsLinkedToEssentials(false);
   };
-  const handleClose = (value) => {
-    setOpen(false);
-  };
+
+  const login = async () => {
+    const didAccess = new DID.DIDAccess();
+    let presentation;
+
+    console.log("Trying to sign in using the connectivity SDK");
+    try {
+      presentation = await didAccess.requestCredentials({
+        claims: [
+          DID.simpleIdClaim("Your name", "name", false)
+        ]
+      });
+    } catch (e) {
+      // Possible exception while using wallet connect (i.e. not an identity wallet)
+      // Kill the wallet connect session
+      console.warn("Error while getting credentials", e);
+
+      try {
+        await essentialsConnector.getWalletConnectProvider().disconnect();
+      } catch (e) {
+        console.error("Error while trying to disconnect wallet connect session", e);
+      }
+
+      return;
+    }
+
+    if (presentation) {
+      const did = presentation.getHolder().getMethodSpecificId();
+      localStorage.setItem("did", did);
+      setUser(did)
+      console.log(did);
+    }
+  }
 
   return (
     <div>
       <Header
         brand={<Brand />}
-        rightLinks={<HeaderLinks openLogin={handleClickOpen} showSearch={true} {...rest} />}
+        rightLinks={<HeaderLinks openLogin={login} clean={clearEssentialsSession} showSearch={true} {...rest} />}
         fixed
         color="transparent"
         changeColorOnScroll={{
@@ -178,7 +218,7 @@ export default function Components(props) {
             </GridItem>
 
             <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container xs={12} sm={12} md={12} justifyContent="space-between" style={{marginBottom: "15px"}}>
+              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
                 <Link href="/node" underline="none">
                   <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
                 </Link>
@@ -187,14 +227,14 @@ export default function Components(props) {
 
               <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
 
-              <Grid container xs={12} sm={12} md={12} justifyContent="flex-start" style={{margin: "25px 0"}}>
+              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
                 地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
                 发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
               </Grid>
             </GridItem>
 
             <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container xs={12} sm={12} md={12} justifyContent="space-between" style={{marginBottom: "15px"}}>
+              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
                 <Link href="/node" underline="none">
                   <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
                 </Link>
@@ -203,14 +243,14 @@ export default function Components(props) {
 
               <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
 
-              <Grid container xs={12} sm={12} md={12} justifyContent="flex-start" style={{margin: "25px 0"}}>
+              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
                 地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
                 发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
               </Grid>
             </GridItem>
 
             <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container xs={12} sm={12} md={12} justifyContent="space-between" style={{marginBottom: "15px"}}>
+              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
                 <Link href="/node" underline="none">
                   <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
                 </Link>
@@ -219,14 +259,14 @@ export default function Components(props) {
 
               <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
 
-              <Grid container xs={12} sm={12} md={12} justifyContent="flex-start" style={{margin: "25px 0"}}>
+              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
                 地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
                 发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
               </Grid>
             </GridItem>
 
             <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container xs={12} sm={12} md={12} justifyContent="space-between" style={{marginBottom: "15px"}}>
+              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
                 <Link href="/node" underline="none">
                   <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
                 </Link>
@@ -235,14 +275,14 @@ export default function Components(props) {
 
               <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
 
-              <Grid container xs={12} sm={12} md={12} justifyContent="flex-start" style={{margin: "25px 0"}}>
+              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
                 地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
                 发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
               </Grid>
             </GridItem>
 
             <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container xs={12} sm={12} md={12} justifyContent="space-between" style={{marginBottom: "15px"}}>
+              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
                 <Link href="/node" underline="none">
                   <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
                 </Link>
@@ -251,7 +291,7 @@ export default function Components(props) {
 
               <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
 
-              <Grid container xs={12} sm={12} md={12} justifyContent="flex-start" style={{margin: "25px 0"}}>
+              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
                 地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
                 发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
               </Grid>
@@ -261,7 +301,6 @@ export default function Components(props) {
         <Box component="div" className={classes.loading}>{t('loading')}</Box>
       </div>
       <Footer whiteFont={true} />
-      <LoginQRCode open={open} onClose={handleClose} />
     </div>
   );
 }

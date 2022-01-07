@@ -21,7 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import styles from "assets/jss/material-kit-react/views/components.js";
 import { useTranslation } from 'react-i18next'
 import Badge from "../../components/Badge/Badge";
-
+import Vault from "../../hivejs/vault.ts";
 import UserContext from '../../contexts/UserContext';
 import { essentialsConnector, useConnectivitySDK } from "../../service/connectivity";
 import ConnectivityContext from '../../contexts/ConnectivityContext';
@@ -118,6 +118,7 @@ export default function Components(props) {
 
   let [loading, setLoading] = useState(false);
   const preventDefault = (event) => event.preventDefault();
+  const helloSdk = async (event) => await new Vault().hello();
 
   const { user, signOut, setUser } = useContext(UserContext);
 
@@ -199,7 +200,7 @@ export default function Components(props) {
               <Link href="#" onClick={preventDefault} underline="none" color="inherit">
                 {t('functions')}
               </Link>
-              <Link href="#" onClick={preventDefault} underline="none" color="inherit">
+              <Link href="#" onClick={helloSdk} underline="none" color="inherit">
                 SDK
               </Link>
               <Link href="#" onClick={preventDefault} underline="none" color="inherit">

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -116,6 +116,7 @@ export default function Components(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
+  let [loading, setLoading] = useState(false);
   const preventDefault = (event) => event.preventDefault();
 
   const { user, signOut, setUser } = useContext(UserContext);
@@ -130,6 +131,7 @@ export default function Components(props) {
   };
 
   const login = async () => {
+    setLoading(true);
     const didAccess = new DID.DIDAccess();
     let presentation;
 
@@ -158,6 +160,7 @@ export default function Components(props) {
       const did = presentation.getHolder().getMethodSpecificId();
       localStorage.setItem("did", did);
       setUser(did)
+      setLoading(false);
       console.log(did);
     }
   }
@@ -166,7 +169,7 @@ export default function Components(props) {
     <div>
       <Header
         brand={<Brand />}
-        rightLinks={<HeaderLinks openLogin={login} clean={clearEssentialsSession} showSearch={true} {...rest} />}
+        rightLinks={<HeaderLinks openLogin={login} clean={clearEssentialsSession} showSearch={true} loading={loading} {...rest} />}
         fixed
         color="transparent"
         changeColorOnScroll={{

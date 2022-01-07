@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -14,16 +14,18 @@ import Parallax from "components/Parallax/Parallax.js";
 // sections for this page
 import Brand from "views/Brand"
 import HeaderLinks from "components/Header/HeaderLinks.js";
+import Link from '@material-ui/core/Link';
 
 import styles from "assets/jss/material-kit-react/views/components.js";
 import { useTranslation } from 'react-i18next'
-import {Route, Switch, useRouteMatch} from "react-router-dom";
+import {Route, Switch, useRouteMatch, useHistory} from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import LeftNav from "./LeftNav";
 import Box from "@material-ui/core/Box";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Statistic from "./Statistic";
+import UserContext from "../contexts/UserContext";
 
 
 const customStyle = theme => ({
@@ -73,7 +75,14 @@ const useStyles = makeStyles(customStyle);
 
 export default function Dashboard(props) {
     let match = useRouteMatch();
+    let history = useHistory();
     const classes = useStyles();
+    const { user, signOut, setUser } = useContext(UserContext);
+
+    const logout = () => {
+        signOut()
+        history.push("/")
+    }
 
     let { ...rest } = props;
 
@@ -103,11 +112,13 @@ export default function Dashboard(props) {
                                     </Box>
                                 </Grid>
                                 <Grid item md={8} className={classes.didBox}>
-                                    <Box component="span" className={classes.did}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
-                                    <Box component="span" className={classes.logout}>
-                                        <PowerSettingsNewIcon style={{position: "relative", top: "6px", marginRight: "5px"}} />
-                                        登出
-                                    </Box>
+                                    <Box component="span" className={classes.did}>{user}</Box>
+                                    <Link onClick={ () => { logout() } } style={{textDecoration: "none", cursor: "pointer"}}>
+                                        <Box component="span" className={classes.logout}>
+                                            <PowerSettingsNewIcon style={{position: "relative", top: "6px", marginRight: "5px"}} />
+                                            登出
+                                        </Box>
+                                    </Link>
                                 </Grid>
                             </Grid>
                             <Switch>

@@ -23,15 +23,17 @@ import {LanguageContext} from "../../context"
 import Search from "./Search";
 import {useTranslation} from "react-i18next";
 import UserContext from "../../contexts/UserContext";
+import {CircularProgress} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
+    let { openLogin, showSearch, history, clean, loading } = props;
     const { user, signOut } = useContext(UserContext);
     const classes = useStyles();
     let {t, i18n} = useTranslation()
     let {language, changeLanguage} = useContext(LanguageContext)
-    let { openLogin, showSearch, history, clean } = props;
     return (
         <List className={classes.list}>
             <ListItem className={classes.listItem} style={{paddingTop: "5px", display: showSearch ? "inline-block" : "none"}}>
@@ -49,18 +51,32 @@ export default function HeaderLinks(props) {
             <ListItem className={classes.listItem}>
                 {
                     user === null ? (
-                        <MUIButton
-                            color="transparent"
-                            onClick={() => {openLogin()}}
-                            className={classes.navLink}
-                            style={{backgroundImage: "linear-gradient(to right, #5297FF , #316BFF)", borderRadius: "25px", color: "white"}}
-                        >
-                            {t("did-login")}
-                        </MUIButton>
-
+                        loading ? (
+                            <Box>
+                                <MUIButton
+                                    disabled
+                                    color="transparent"
+                                    onClick={() => { openLogin() }}
+                                    className={classes.navLink}
+                                    style={{background: "rgba(255, 255, 255, 0.3)", borderRadius: "25px", color: "white"}}
+                                >
+                                    {t("did-login")}
+                                </MUIButton>
+                                <CircularProgress size={24}  style={{color: "white", position: "absolute", top: "50%", left: "50%", marginTop: "-12px", marginLeft: "-12px"}}/>
+                            </Box>
+                        ) : (
+                            <MUIButton
+                                color="transparent"
+                                onClick={() => { openLogin() }}
+                                className={classes.navLink}
+                                style={{backgroundImage: "linear-gradient(to right, #5297FF , #316BFF)", borderRadius: "25px", color: "white"}}
+                            >
+                                {t("did-login")}
+                            </MUIButton>
+                        )
                     ) : (
                         <Button
-                            href="/"
+                            href="/dashboard/main"
                             color="transparent"
                             className={classes.navLink}
                         >

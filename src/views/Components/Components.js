@@ -26,6 +26,7 @@ import UserContext from '../../contexts/UserContext';
 import { essentialsConnector, useConnectivitySDK } from "../../service/connectivity";
 import ConnectivityContext from '../../contexts/ConnectivityContext';
 import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import HiveHubServer from "../../service/hivehub";
 
 const customStyle = theme => ({
   ...styles,
@@ -116,7 +117,10 @@ export default function Components(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
-  let [loading, setLoading] = useState(false);
+  // let [loading, setLoading] = useState(false);
+  let [state, setState] = useState({loading: false, nodes: []});
+  let loading = state.loading;
+  let setLoading = (v) => setState({loading: v});
   const preventDefault = (event) => event.preventDefault();
   const helloSdk = async (event) => await new Vault().hello();
 
@@ -160,6 +164,10 @@ export default function Components(props) {
 
     setLoading(false);
   }
+
+  HiveHubServer.getHiveNodes().then(data => {
+    setState({nodes: data.nodes});
+  });
 
   return (
     <div>
@@ -216,88 +224,25 @@ export default function Components(props) {
               <div className={classes.line} />
             </GridItem>
 
-            <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
-                <Link href="/node" underline="none">
-                  <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
-                </Link>
-                <Box component="span" className={classes.nodeTime}>2021-11-09 21:00:32</Box>
-              </Grid>
+            {state.nodes.map((node, index) =>
+              <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
+                <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
+                  <Link href="/node" underline="none">
+                    <Box component="span" className={classes.nodeName}>{node.name}<Badge color="success">在线</Badge></Box>
+                  </Link>
+                  <Box component="span" className={classes.nodeTime}>{node.created}</Box>
+                </Grid>
 
-              <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
+                <Box component="div">{node.remark}</Box>
 
-              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
-                地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
-                发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
-              </Grid>
-            </GridItem>
-
-            <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
-                <Link href="/node" underline="none">
-                  <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
-                </Link>
-                <Box component="span" className={classes.nodeTime}>2021-11-09 21:00:32</Box>
-              </Grid>
-
-              <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
-
-              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
-                地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
-                发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
-              </Grid>
-            </GridItem>
-
-            <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
-                <Link href="/node" underline="none">
-                  <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
-                </Link>
-                <Box component="span" className={classes.nodeTime}>2021-11-09 21:00:32</Box>
-              </Grid>
-
-              <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
-
-              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
-                地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
-                发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
-              </Grid>
-            </GridItem>
-
-            <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
-                <Link href="/node" underline="none">
-                  <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
-                </Link>
-                <Box component="span" className={classes.nodeTime}>2021-11-09 21:00:32</Box>
-              </Grid>
-
-              <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
-
-              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
-                地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
-                发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
-              </Grid>
-            </GridItem>
-
-            <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
-              <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
-                <Link href="/node" underline="none">
-                  <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="success">在线</Badge></Box>
-                </Link>
-                <Box component="span" className={classes.nodeTime}>2021-11-09 21:00:32</Box>
-              </Grid>
-
-              <Box component="div">提供安全可靠、稳定可信、可持续创新的去中心化数据存储方案，赋能应用、使能数据、做数字世界的“私权捍卫者”</Box>
-
-              <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
-                地址：<Box component="span" className={classes.nodeParam}>192.115.24.2.0380</Box>
-                发起人DID：<Box component="span" className={classes.nodeParam}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Box>
-              </Grid>
-            </GridItem>
+                <Grid container justifyContent="flex-start" style={{margin: "25px 0"}}>
+                  地址：<Box component="span" className={classes.nodeParam}>{node.ip}</Box>
+                  发起人DID：<Box component="span" className={classes.nodeParam}>{node.owner_did}</Box>
+                </Grid>
+              </GridItem>)}
           </GridContainer>
         </div>
-        <Box component="div" className={classes.loading}>{t('loading')}</Box>
+        {/*<Box component="div" className={classes.loading}>{t('loading')}</Box>*/}
       </div>
       <Footer whiteFont={true} />
     </div>

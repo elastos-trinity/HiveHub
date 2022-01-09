@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -27,6 +27,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
+import HiveHubServer from "../../service/hivehub";
 
 const customStyle = theme => ({
   ...styles,
@@ -120,7 +121,11 @@ export default function NodeDetails(props) {
 
   const preventDefault = (event) => event.preventDefault();
 
-  const [open, setOpen] = React.useState(false);
+  // use state.
+  // const [open, setOpen] = React.useState(false);
+  let [state, setState] = useState({open: false, node: {}, online: false});
+  let open = state.open;
+  let setOpen = (value) => setState({open: value})
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -133,6 +138,16 @@ export default function NodeDetails(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  // init the page's data.
+  useEffect(async() => {
+    let data = await HiveHubServer.getHiveNodes(props.match.params.nid);
+    let online = false;
+    if (data.nodes[0]) {
+      online = await HiveHubServer.isOnline(data.nodes[0].url);
+    }
+    setState({node: data.nodes[0], online: online});
+  }, []);
 
   return (
     <div>
@@ -147,33 +162,32 @@ export default function NodeDetails(props) {
       <div className={classNames(classes.main)} style={{paddingTop: "75px"}}>
         <div className={classes.container}>
 
-          <Box component="div" className={classes.nodeName}>Hive Node 节点名称 <Badge color="success">在线</Badge></Box>
+          <Box component="div" className={classes.nodeName}>{state.node.name} <Badge color={state.online ? "success" : "gray"}>{state.online ? "在线" : "离线"}</Badge>
+          </Box>
 
-          <Box component="div" className={classes.nodeTime}>2021-11-09 21:00:32</Box>
+          <Box component="div" className={classes.nodeTime}>{state.node.created}</Box>
 
           <Box component="div" className={classes.nodeParam}>
             <Grid container>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>地址:</Box> 192.115.24.2.0380
+                <Box component="span" className={classes.paramKey}>地址:</Box> {state.node.ip}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>发起人DID：</Box> srgsve5h5yvnwi5yh4hyg2945hvwq0tq
+                <Box component="span" className={classes.paramKey}>发起人DID：</Box> {state.node.owner_did}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>国家/地区：</Box> 加拿大 安大略省 多伦多市
+                <Box component="span" className={classes.paramKey}>国家/地区：</Box> {state.node.area}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>邮箱：</Box> 1234456789 @gamil.com
+                <Box component="span" className={classes.paramKey}>邮箱：</Box> {state.node.email}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>URL地址：</Box> http://hivenode.com
+                <Box component="span" className={classes.paramKey}>URL地址：</Box> {state.node.url}
               </Grid>
             </Grid>
           </Box>
 
-          <Box component="div" className={classes.nodeDesc}>
-            简介：区块链是一个信息技术领域的术语。从本质上讲，它是一个共享数据库，存储于其中的数据或信息，具有“不可伪造”“全程留痕”“可以追溯”“公开透明”“集体维护”等特征。基于这些特征，区块链技术奠定了坚实的“信任”基础，创造了可靠的“合作”机制，具有广阔的运用前景。
-          </Box>
+          <Box component="div" className={classes.nodeDesc}>{state.node.remark}</Box>
 
           <Box component="div" className={classes.serviceBox}>
             <Tabs

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -26,7 +26,7 @@ import UserContext from '../../contexts/UserContext';
 import { essentialsConnector, useConnectivitySDK } from "../../service/connectivity";
 import ConnectivityContext from '../../contexts/ConnectivityContext';
 import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
-import HiveHubServer from "../../service/hivehub";
+import HiveHubServer from "../../service/hivehub.ts";
 
 const customStyle = theme => ({
   ...styles,
@@ -117,6 +117,7 @@ export default function Components(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
+  // use state.
   // let [loading, setLoading] = useState(false);
   let [state, setState] = useState({loading: false, nodes: []});
   let loading = state.loading;
@@ -165,9 +166,11 @@ export default function Components(props) {
     setLoading(false);
   }
 
-  HiveHubServer.getHiveNodes().then(data => {
+  // init the page's data.
+  useEffect(async () => {
+    let data = await HiveHubServer.getHiveNodes();
     setState({nodes: data.nodes});
-  });
+  }, []);
 
   return (
     <div>
@@ -225,9 +228,9 @@ export default function Components(props) {
             </GridItem>
 
             {state.nodes.map((node, index) =>
-              <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
+              <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid} key={node.nid}>
                 <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
-                  <Link href="/node" underline="none">
+                  <Link href={`/node/${node.nid}`} underline="none">
                     <Box component="span" className={classes.nodeName}>{node.name}<Badge color="success">在线</Badge></Box>
                   </Link>
                   <Box component="span" className={classes.nodeTime}>{node.created}</Box>

@@ -69,7 +69,7 @@ function App() {
                                 <Route path="/privacy-policy" component={PrivacyPolicyPage} />
                                 <Route path="/terms" component={TermPage} />
                                 <Route path="/search" component={SearchResult} />
-                                <Route path="/node" component={NodeDetails} />
+                                <Route path="/node/:nid" component={NodeDetails} />
                                 <Route path="/new-node" component={NewNode} />
                                 <Route path="/dashboard" component={Dashboard} />
                                 <Route path="/" component={Components} />

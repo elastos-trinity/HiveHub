@@ -123,7 +123,7 @@ export default function NodeDetails(props) {
 
   // use state.
   // const [open, setOpen] = React.useState(false);
-  let [state, setState] = useState({open: false, node: {}, online: false});
+  let [state, setState] = useState({open: false, node: {}, online: false, vaults: [], backups: []});
   let open = state.open;
   let setOpen = (value) => setState({open: value})
   const handleClickOpen = () => {

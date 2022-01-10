@@ -26,6 +26,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Statistic from "./Statistic";
 import UserContext from "../contexts/UserContext";
+import {essentialsConnector} from "../service/connectivity";
+import ConnectivityContext from "../contexts/ConnectivityContext";
 
 
 const customStyle = theme => ({
@@ -78,11 +80,18 @@ export default function Dashboard(props) {
     let history = useHistory();
     const classes = useStyles();
     const { user, signOut, setUser } = useContext(UserContext);
+    const { isLinkedToEssentials, setIsLinkedToEssentials } = useContext(ConnectivityContext);
 
     const logout = () => {
-        signOut()
+        clearEssentialsSession()
         history.push("/")
     }
+
+    const clearEssentialsSession = () => {
+        essentialsConnector.disconnectWalletConnect();
+        signOut();
+        setIsLinkedToEssentials(false);
+    };
 
     let { ...rest } = props;
 

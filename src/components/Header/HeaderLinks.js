@@ -29,7 +29,7 @@ import Box from "@material-ui/core/Box";
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
-    let { openLogin, showSearch, history, clean, loading } = props;
+    let { openLogin, showSearch, history, loading } = props;
     const { user, signOut } = useContext(UserContext);
     const classes = useStyles();
     let {t, i18n} = useTranslation()

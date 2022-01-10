@@ -120,15 +120,8 @@ export default function Components(props) {
   const preventDefault = (event) => event.preventDefault();
 
   const { user, signOut, setUser } = useContext(UserContext);
-  const { isLinkedToEssentials, setIsLinkedToEssentials } = useContext(ConnectivityContext);
 
   useConnectivitySDK();
-
-  const clearEssentialsSession = () => {
-    essentialsConnector.disconnectWalletConnect();
-    signOut();
-    setIsLinkedToEssentials(false);
-  };
 
   const login = async () => {
     setLoading(true);
@@ -169,7 +162,7 @@ export default function Components(props) {
     <div>
       <Header
         brand={<Brand />}
-        rightLinks={<HeaderLinks openLogin={login} clean={clearEssentialsSession} showSearch={true} loading={loading} {...rest} />}
+        rightLinks={<HeaderLinks openLogin={login} showSearch={true} loading={loading} {...rest} />}
         fixed
         color="transparent"
         changeColorOnScroll={{

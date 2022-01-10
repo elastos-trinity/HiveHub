@@ -1,6 +1,7 @@
 import { VerifiableCredential, VerifiablePresentation, DIDDocument, JWTHeader, DefaultDIDAdapter, DIDBackend, VerificationEventListener } from "@elastosfoundation/did-js-sdk";
 import dayjs from "dayjs";
 import { DIDEntity } from "./didentity";
+import {DID} from "@elastosfoundation/elastos-connectivity-sdk-js";
 
 export class AppDID extends DIDEntity {
 	private appId = "appId";
@@ -24,17 +25,12 @@ export class AppDID extends DIDEntity {
 	}
 
 	public async createPresentation(vc: VerifiableCredential, realm: string, nonce: string): Promise<VerifiablePresentation> {
-
-		
 		let vpb = await VerifiablePresentation.createFor(this.getDid(), null, this.getDIDStore());
 		let vp = await vpb.credentials(vc)
 				.realm(realm)
 				.nonce(nonce)
 				.seal(this.getStorePassword());
 
-		
-			
-				
 		AppDID.LOG.info("VerifiablePresentation:{}", vp.toString());
 
 		let listener = VerificationEventListener.getDefaultWithIdent("isValid");
@@ -62,6 +58,45 @@ export class AppDID extends DIDEntity {
 				.setNotBefore(nbf)
 				.claimsWithJson("presentation", vp.toString(true))
 				.sign(this.storepass);
+
+		AppDID.LOG.info("JWT Token: {}", token);
+		return token;
+	}
+
+	static async getAppInstanceDIDDoc(): Promise<DIDDocument> {
+		let access = new DID.DIDAccess();
+		let info = await access.getOrCreateAppInstanceDID();
+		return await info.didStore.loadDid(info.did);
+	}
+
+	static async createVerifiablePresentation(
+			vc: VerifiableCredential, hiveDid: string, nonce: string, storepass: string):
+			Promise<VerifiablePresentation> {
+		let access = new DID.DIDAccess();
+		let info = await access.getOrCreateAppInstanceDID();
+		let vpb = await VerifiablePresentation.createFor(info.did, null, info.didStore);
+		let vp = await vpb.credentials(vc).realm(hiveDid).nonce(nonce).seal(storepass);
+		let listener = VerificationEventListener.getDefaultWithIdent("isValid");
+		return vp;
+	}
+
+	static async createChallengeResponse(vp: VerifiablePresentation, hiveDid: string, storepass: string): Promise<string> {
+		let cal = dayjs();
+		let iat = cal.unix();
+		let nbf = cal.unix();
+		let exp = cal.add(3, 'month').unix();
+
+		// Create JWT token with presentation.
+		let doc: DIDDocument = await AppDID.getAppInstanceDIDDoc();
+		let token = await doc.jwtBuilder().addHeader(JWTHeader.TYPE, JWTHeader.JWT_TYPE)
+			.addHeader("version", "1.0")
+			.setSubject("DIDAuthResponse")
+			.setAudience(hiveDid)
+			.setIssuedAt(iat)
+			.setExpiration(exp)
+			.setNotBefore(nbf)
+			.claimsWithJson("presentation", vp.toString(true))
+			.sign(storepass);
 
 		AppDID.LOG.info("JWT Token: {}", token);
 		return token;

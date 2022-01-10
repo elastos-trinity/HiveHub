@@ -132,7 +132,7 @@ export class DIDEntity {
 		return this.name;
 	}
 
-	protected getStorePassword(): string {
+	public getStorePassword(): string {
 		return this.storepass;
 	}
 

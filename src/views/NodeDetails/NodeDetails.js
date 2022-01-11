@@ -28,6 +28,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import HiveHubServer from "../../service/hivehub";
+import Vault, {VaultDetail} from "../../hivejs/vault";
 
 const customStyle = theme => ({
   ...styles,
@@ -63,6 +64,14 @@ const customStyle = theme => ({
 
   serviceBox: {
     margin: "60px 0",
+
+    "& .MuiTab-root": {
+      textTransform: "none"
+    }
+  },
+
+  serviceBox_offline: {
+    margin: "60px 0 0 0",
 
     "& .MuiTab-root": {
       textTransform: "none"
@@ -123,9 +132,10 @@ export default function NodeDetails(props) {
 
   // use state.
   // const [open, setOpen] = React.useState(false);
-  let [state, setState] = useState({open: false, node: {}, online: false, vaults: [], backups: []});
+  let [state, setState] = useState({open: false, node: {},
+    online: false, vaults: [], backups: [], needCreate: false});
   let open = state.open;
-  let setOpen = (value) => setState({open: value})
+  let setOpen = (value) => setState({...state, open: value})
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -143,11 +153,35 @@ export default function NodeDetails(props) {
   useEffect(async() => {
     let data = await HiveHubServer.getHiveNodes(props.match.params.nid);
     let online = false;
-    if (data.nodes[0]) {
-      online = await HiveHubServer.isOnline(data.nodes[0].url);
+    let needCreate = false;
+    let node = data.nodes[0];
+    let vaults = [];
+    if (node) {
+      online = await HiveHubServer.isOnline(node.url);
+      if (online) {
+        // check owned vault status.
+        let vaultDetail = await (await Vault.getInstance()).getVaultDetail(node.url);
+        if (!vaultDetail) {
+          needCreate = true;
+        }
+        let did = localStorage.getItem('did');
+        // if (did === node.owner_did) {
+        if (true) {
+          vaults = await (await Vault.getInstance()).getVaults(node.url);
+        }
+      }
     }
-    setState({node: data.nodes[0], online: online});
+    setState({...state, node: data.nodes[0], online: online, needCreate: needCreate, vaults: vaults});
   }, []);
+
+  let onCreate = async () => {
+    let vaultDetail = await (await Vault.getInstance()).createVault(state.node.url);
+    setState({...state, needCreate: false})
+  };
+  let onDestroy = async () => {
+    await (await Vault.getInstance()).destroyVault(state.node.url);
+    setState({...state, needCreate: true})
+  };
 
   return (
     <div>
@@ -189,7 +223,7 @@ export default function NodeDetails(props) {
 
           <Box component="div" className={classes.nodeDesc}>{state.node.remark}</Box>
 
-          <Box component="div" className={classes.serviceBox}>
+          <Box component="div" className={state.online ? classes.serviceBox : classes.serviceBox_offline}>
             <Tabs
                 value={value}
                 indicatorColor="primary"
@@ -204,43 +238,14 @@ export default function NodeDetails(props) {
             <TabPanel value={value} index={0}>
               <Box component="div" style={{padding: "0", minHeight: "800px"}}>
                 <List>
-                  <ListItem style={{padding: "10px 0"}}>
-                    <Box component="div" className={classes.vaultBox} style={{border: "1px solid #5297FF"}}>
-                      <Box component="div" className={classes.nodeName} style={{marginTop: "20px"}}>Vault Service-01</Box>
-                      <Box component="div" className={classes.nodeParam} style={{margin: "10px 0 15px"}}>10.2 GB 可用（共30GB）</Box>
-                      <BorderLinearProgress variant="determinate" value={70} />
-                      <Grid container alignItems="center" justifyContent="space-around" style={{margin: "20px 0 10px", textAlign: "center"}}>
-                        <Grid item xs={3}>
-                          <Box component="div" className={classes.data}>1200</Box>
-                          <Box component="div" className={classes.dataDesc}>统计数据1</Box>
-                        </Grid>
-                        <Divider orientation="vertical" flexItem />
-                        <Grid item xs={3}>
-                          <Box component="div" className={classes.data}>1200</Box>
-                          <Box component="div" className={classes.dataDesc}>统计数据1</Box>
-                        </Grid>
-                        <Divider orientation="vertical" flexItem />
-                        <Grid item xs={3}>
-                          <Box component="div" className={classes.data}>1200</Box>
-                          <Box component="div" className={classes.dataDesc}>统计数据1</Box>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </ListItem>
-                  <ListItem style={{padding: "10px 0"}}>
-                    <Box component="div" className={classes.vaultBox}>
-                      <Box component="div" className={classes.nodeName} style={{marginTop: "20px"}}>Vault Service-02</Box>
-                      <Box component="div" className={classes.nodeParam} style={{margin: "10px 0 15px"}}>9 GB 可用（共30GB）</Box>
-                      <BorderLinearProgress variant="determinate" value={30} />
-                    </Box>
-                  </ListItem>
-                  <ListItem style={{padding: "10px 0"}}>
-                    <Box component="div" className={classes.vaultBox}>
-                      <Box component="div" className={classes.nodeName} style={{marginTop: "20px"}}>Vault Service-03</Box>
-                      <Box component="div" className={classes.nodeParam} style={{margin: "10px 0 15px"}}>3 GB 可用（共30GB）</Box>
-                      <BorderLinearProgress variant="determinate" value={10} />
-                    </Box>
-                  </ListItem>
+                  {state.vaults.map((vault, index) =>
+                      <ListItem style={{padding: "10px 0"}}>
+                        <Box component="div" className={classes.vaultBox}>
+                          <Box component="div" className={classes.nodeName} style={{marginTop: "20px"}}>Vault Service-{index}（{vault.pricingPlan}）</Box>
+                          <Box component="div" className={classes.nodeParam} style={{margin: "10px 0 15px"}}>{vault.used} MB / {vault.quota} MB</Box>
+                          <BorderLinearProgress variant="determinate" value={vault.used/vault.quota*100} />
+                        </Box>
+                      </ListItem>)}
                 </List>
               </Box>
             </TabPanel>
@@ -253,11 +258,15 @@ export default function NodeDetails(props) {
         </div>
       </div>
 
-      <Box component="div" className={classes.bottomBox}>
-        <Button variant="contained" color="default" style={{backgroundColor: "#5297FF", color: "white", width: "200px"}}>
-          {t('create-vault')}
-        </Button>
-      </Box>
+      {state.online &&
+        <Box component="div" className={classes.bottomBox}>
+          <Button variant="contained" color="default"
+                  style={{backgroundColor: "#5297FF", color: "white", width: "200px"}}
+                  onClick={state.needCreate ? onCreate : onDestroy}>
+            {state.needCreate ? t('create-vault') : t('destroy-vault')}
+          </Button>
+        </Box>
+      }
     </div>
   );
 }

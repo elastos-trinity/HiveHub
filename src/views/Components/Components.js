@@ -145,7 +145,7 @@ export default function Components(props) {
       } catch (e) {
         console.error("Error while trying to disconnect wallet connect session", e);
       }
-
+      setLoading(false);
       return;
     }
 
@@ -156,6 +156,8 @@ export default function Components(props) {
       setLoading(false);
       console.log(did);
     }
+
+    setLoading(false);
   }
 
   return (

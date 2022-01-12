@@ -82,6 +82,10 @@ export default function Dashboard(props) {
     const { user, signOut, setUser } = useContext(UserContext);
     const { isLinkedToEssentials, setIsLinkedToEssentials } = useContext(ConnectivityContext);
 
+    if(user === null) {
+        history.push("/")
+    }
+
     const logout = () => {
         clearEssentialsSession()
         history.push("/")

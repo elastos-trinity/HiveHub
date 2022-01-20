@@ -7,6 +7,7 @@ export class VaultDetail {
     quota: number;
     used: number;
     pricingPlan: string;
+    userDid: string;
 }
 
 
@@ -53,7 +54,8 @@ export default class Vault {
         return {
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),
-            pricingPlan: vaultInfo.getPricePlan()
+            pricingPlan: vaultInfo.getPricePlan(),
+            userDid: null,
         };
     }
 
@@ -62,7 +64,8 @@ export default class Vault {
         return {
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),
-            pricingPlan: vaultInfo.getPricePlan()
+            pricingPlan: vaultInfo.getPricePlan(),
+            userDid: null
         };
     }
 
@@ -75,10 +78,16 @@ export default class Vault {
             quota: 512,
             used: 20,
             pricingPlan: 'Free',
+            userDid: 'did1'
         }, {
             quota: 512,
             used: 100,
             pricingPlan: 'Free',
+            userDid: 'did2'
         }];
+    }
+
+    async getBackups(hiveUrl: string): Promise<Array<VaultDetail>> {
+        return await this.getVaults(hiveUrl);
     }
 }

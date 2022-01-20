@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -29,6 +29,11 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import HiveHubServer from "../../service/hivehub";
 import Vault, {VaultDetail} from "../../hivejs/vault";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
 const customStyle = theme => ({
   ...styles,
@@ -131,57 +136,79 @@ export default function NodeDetails(props) {
   const preventDefault = (event) => event.preventDefault();
 
   // use state.
-  // const [open, setOpen] = React.useState(false);
-  let [state, setState] = useState({open: false, node: {},
-    online: false, vaults: [], backups: [], needCreate: false});
-  let open = state.open;
-  let setOpen = (value) => setState({...state, open: value})
+  let [state, setState] = useState({
+    tabValue: 0,
+    open: false,
+    openVault: false,
+    node: {},
+    online: false,
+    vaults: [],
+    backups: [],
+    // needCreate: false
+  });
+  let setOpen = (v) => setState({...state, open: v})
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = (value) => {
-    setOpen(false);
+  const handleTabChange = (event, newValue) => {
+    setState({...state, tabValue: newValue});
   };
 
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const [needCreate, setNeedCreate] = useState(true);
 
   // init the page's data.
-  useEffect(async() => {
+  useEffect(async () => {
     let data = await HiveHubServer.getHiveNodes(props.match.params.nid);
     let online = false;
-    let needCreate = false;
     let node = data.nodes[0];
     let vaults = [];
-    if (node) {
-      online = await HiveHubServer.isOnline(node.url);
-      if (online) {
-        // check owned vault status.
-        let vaultDetail = await (await Vault.getInstance()).getVaultDetail(node.url);
-        if (!vaultDetail) {
-          needCreate = true;
-        }
-        let did = localStorage.getItem('did');
-        // if (did === node.owner_did) {
-        if (true) {
-          vaults = await (await Vault.getInstance()).getVaults(node.url);
-        }
-      }
+    let backups = [];
+    if (!node) return;
+    online = await HiveHubServer.isOnline(node.url);
+    if (!online) return;
+    let vault = await Vault.getInstance();
+    let did = localStorage.getItem('did');
+    // if (did === node.owner_did) {
+    if (true) {
+      vaults = await vault.getVaults(node.url);
+      backups = await vault.getBackups(state.node.url);
     }
-    setState({...state, node: data.nodes[0], online: online, needCreate: needCreate, vaults: vaults});
+    setState({...state, node: data.nodes[0], online: online, vaults: vaults, backups: backups});
+    // vault.getVaultDetail(node.url).then(detail => setNeedCreate(true), error => setNeedCreate(true))
+    //     .catch(error => setNeedCreate(true));
+
+    // TODO: can not catch the error.
+    try {
+      let detail = await vault.getVaultDetail(node.url);
+      console.log('success vault.getVaultDetail()');
+      setNeedCreate(false);
+    } catch (e) {
+      console.log('failed vault.getVaultDetail()');
+      setNeedCreate(true);
+    }
   }, []);
 
+  // create&destroy the vault service.
   let onCreate = async () => {
-    let vaultDetail = await (await Vault.getInstance()).createVault(state.node.url);
-    setState({...state, needCreate: false})
+    await (await Vault.getInstance()).createVault(state.node.url);
+    setNeedCreate(false);
   };
   let onDestroy = async () => {
     await (await Vault.getInstance()).destroyVault(state.node.url);
-    setState({...state, needCreate: true})
+    setNeedCreate(true);
   };
+
+  let handleOpenVault = () => {
+    setState({...state, openVault: true});
+  }
+
+  let handleCloseVault = async (value) => {
+    if (value) {
+      needCreate ? await onCreate() : await onDestroy();
+      setNeedCreate(!needCreate);
+    }
+    setState({...state, openVault: false});
+  }
 
   return (
     <div>
@@ -225,21 +252,21 @@ export default function NodeDetails(props) {
 
           <Box component="div" className={state.online ? classes.serviceBox : classes.serviceBox_offline}>
             <Tabs
-                value={value}
+                value={state.tabValue}
+                onChange={handleTabChange}
                 indicatorColor="primary"
                 textColor="#00164E"
-                onChange={handleChange}
                 aria-label="disabled tabs example"
                 variant="fullWidth"
             >
               <Tab label={t('vault-service')} />
               <Tab label={t('backup-service')} />
             </Tabs>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={state.tabValue} index={0}>
               <Box component="div" style={{padding: "0", minHeight: "800px"}}>
                 <List>
                   {state.vaults.map((vault, index) =>
-                      <ListItem style={{padding: "10px 0"}}>
+                      <ListItem key={vault.userDid} style={{padding: "10px 0"}}>
                         <Box component="div" className={classes.vaultBox}>
                           <Box component="div" className={classes.nodeName} style={{marginTop: "20px"}}>Vault Service-{index}（{vault.pricingPlan}）</Box>
                           <Box component="div" className={classes.nodeParam} style={{margin: "10px 0 15px"}}>{vault.used} MB / {vault.quota} MB</Box>
@@ -249,9 +276,18 @@ export default function NodeDetails(props) {
                 </List>
               </Box>
             </TabPanel>
-            <TabPanel value={value} index={1}>
-              <Box component="div" style={{padding: "0", minHeight: "800px", backgroundColor: "#F5F5F5"}}>
-
+            <TabPanel value={state.tabValue} index={1}>
+              <Box component="div" style={{padding: "0", minHeight: "800px"}}>
+                <List>
+                  {state.backups.map((backup, index) =>
+                      <ListItem key={backup.userDid} style={{padding: "10px 0"}}>
+                        <Box component="div" className={classes.vaultBox}>
+                          <Box component="div" className={classes.nodeName} style={{marginTop: "20px"}}>Backup Service-{index}（{backup.pricingPlan}）</Box>
+                          <Box component="div" className={classes.nodeParam} style={{margin: "10px 0 15px"}}>{backup.used} MB / {backup.quota} MB</Box>
+                          <BorderLinearProgress variant="determinate" value={backup.used/backup.quota*100} />
+                        </Box>
+                      </ListItem>)}
+                </List>
               </Box>
             </TabPanel>
           </Box>
@@ -262,11 +298,28 @@ export default function NodeDetails(props) {
         <Box component="div" className={classes.bottomBox}>
           <Button variant="contained" color="default"
                   style={{backgroundColor: "#5297FF", color: "white", width: "200px"}}
-                  onClick={state.needCreate ? onCreate : onDestroy}>
-            {state.needCreate ? t('create-vault') : t('destroy-vault')}
+                  onClick={handleOpenVault}>
+            {needCreate ? t('create-vault') : t('destroy-vault')}
           </Button>
         </Box>
       }
+
+      <Dialog
+          open={state.openVault}
+          onClose={() => handleCloseVault(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">Yes or No ?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseVault(false)}>No</Button>
+          <Button onClick={() => handleCloseVault(true)} autoFocus>Yes</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

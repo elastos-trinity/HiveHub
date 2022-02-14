@@ -1,6 +1,7 @@
 import SdkContext from "./testdata";
 import ClientConfig from "./config/clientconfig";
 import {VaultInfo, VaultSubscriptionService} from "@dchagastelles/elastos-hive-js-sdk";
+import {lstatSync, readdirSync} from "./bfs";
 
 
 export class VaultDetail {
@@ -37,15 +38,41 @@ export default class Vault {
         return new VaultSubscriptionService(this.sdkContext.getAppContext(), hiveUrl);
     }
 
+    readDirTree(root: string): void {
+        const files = readdirSync(root);
+        for (const name of files) {
+            const childrenDir = root === '/' ? `/${name}` : `${root}/${name}`;
+            if (!lstatSync(childrenDir).isDirectory()) {
+                console.log(`get file: ${childrenDir}`);
+                continue;
+            }
+            console.log(`try dir: ${childrenDir}`);
+            this.readDirTree(childrenDir);
+        }
+    }
+
     async hello(): Promise<void> {
         // this.init().then((res) => alert('hello hive js'), (res) => alert('error hive js'));
         // this.init().then(async (res) => {
         //     this.vaultSubscriptionService.checkSubscription();
         // }, (res) => alert('error hive js'));
         // await this.init();
-        let vaultInfo = await this.vaultSubscriptionService.checkSubscription();
-        alert('hello hive js' + vaultInfo.getServiceDid());
 
+        console.log('enter hello');
+
+        // const files = readdirSync('/');
+        // console.log(`all files: ${files}`);
+
+        this.readDirTree('/');
+
+        try {
+            let vaultInfo = await this.getVaultSubscriptionService('http://localhost:5004').checkSubscription();
+            alert('hello hive js' + vaultInfo.getServiceDid());
+        } catch (e) {
+            console.log(`failed in hello: ${e}`);
+        }
+
+        console.log('leave hello');
     }
 
     async getVaultDetail(hiveUrl: string): Promise<VaultDetail> {
@@ -55,7 +82,7 @@ export default class Vault {
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),
             pricingPlan: vaultInfo.getPricePlan(),
-            userDid: null,
+            userDid: vaultInfo.getServiceDid(),
         };
     }
 
@@ -65,7 +92,7 @@ export default class Vault {
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),
             pricingPlan: vaultInfo.getPricePlan(),
-            userDid: null
+            userDid: vaultInfo.getServiceDid(),
         };
     }
 
@@ -89,5 +116,9 @@ export default class Vault {
 
     async getBackups(hiveUrl: string): Promise<Array<VaultDetail>> {
         return await this.getVaults(hiveUrl);
+    }
+
+    static async getHiveUrlByDid(did: string): Promise<string> {
+        return 'http://localhost:5004';
     }
 }

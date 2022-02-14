@@ -125,7 +125,7 @@ export default function Dashboard(props) {
                                     </Box>
                                 </Grid>
                                 <Grid item md={8} className={classes.didBox}>
-                                    <Box component="span" className={classes.did}>{user}</Box>
+                                    <Box component="span" className={classes.did}>{`did:elastos:${user}`}</Box>
                                     <Link onClick={ () => { logout() } } style={{textDecoration: "none", cursor: "pointer"}}>
                                         <Box component="span" className={classes.logout}>
                                             <PowerSettingsNewIcon style={{position: "relative", top: "6px", marginRight: "5px"}} />

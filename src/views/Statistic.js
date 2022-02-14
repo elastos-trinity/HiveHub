@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import {
@@ -15,6 +15,9 @@ import {useTranslation} from "react-i18next";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Badge from "../components/Badge/Badge";
+import Vault from "../hivejs/vault";
+import UserContext from "../contexts/UserContext";
+import HiveHubServer from "../service/hivehub";
 
 const useStyles = makeStyles((theme) => ({
     nodeVolumeBox: {
@@ -80,7 +83,35 @@ const rows = [
 export default function Statistic() {
     const classes = useStyles();
 
-    let {t} = useTranslation()
+    let {t} = useTranslation();
+    const { user, signOut, setUser } = useContext(UserContext);
+    let [online, setOnline] = useState(false);
+    let [vault, setVault] = useState(null);
+    let [nodes, setNodes] = useState([]);
+    let ownerDid = `did:elastos:${user}`;
+
+    // init page data.
+    useEffect(async () => {
+        let vault = await Vault.getInstance();
+        let url = await Vault.getHiveUrlByDid(ownerDid);
+        if (url) {
+            let on = await HiveHubServer.isOnline(url);
+            setOnline(online);
+            if (on) {
+                try {
+                    let detail = await vault.getVaultDetail(url);
+                    setVault(detail);
+                } catch (e) {
+                    console.log(`can not get the vault information in ${url}`);
+                }
+            }
+        }
+        let data = await HiveHubServer.getHiveNodes(null, ownerDid);
+        for (const node of data.nodes) {
+            node.online = await HiveHubServer.isOnline(node.url);
+        }
+        setNodes(data.nodes);
+    }, []);
 
     return (
         <div>
@@ -88,12 +119,12 @@ export default function Statistic() {
                 <Box component="div" className={classes.title}>Hive Node 数量统计</Box>
                 <Grid container justifyContent="space-around" style={{margin: "60px 0", height: "60px"}}>
                     <Grid item className={classes.data}>
-                        <Box component="div" className={classes.number}>6</Box>
+                        <Box component="div" className={classes.number}>{nodes.length}</Box>
                         <Box component="div">我创建的</Box>
                     </Grid>
                     <Divider orientation="vertical" />
                     <Grid item className={classes.data}>
-                        <Box component="div" className={classes.number}>1</Box>
+                        <Box component="div" className={classes.number}>{vault ? 1 : 0}</Box>
                         <Box component="div">我参与的</Box>
                     </Grid>
                 </Grid>
@@ -107,22 +138,22 @@ export default function Statistic() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>{t('t-name')}</TableCell>
-                                    <TableCell align="right">{t('t-visitor')}</TableCell>
-                                    <TableCell align="right">{t('t-capacity')}</TableCell>
+                                    {/*<TableCell align="right">{t('t-visitor')}</TableCell>*/}
+                                    <TableCell align="left">{t('form-node-url')}</TableCell>
                                     <TableCell align="right">{t('t-status')}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.name}>
+                                {nodes.map((node) => (
+                                    <TableRow key={node.nid}>
                                         <TableCell component="th" scope="row">
-                                            {row.name}
+                                            {node.name}
                                         </TableCell>
-                                        <TableCell align="right">{row.visitor}</TableCell>
-                                        <TableCell align="right">{row.capacity}</TableCell>
+                                        {/*<TableCell align="right">{node.visitor}</TableCell>*/}
+                                        <TableCell align="left">{node.url}</TableCell>
                                         <TableCell align="right">
-                                            <Badge color={row.status === 1 ? 'success' : 'gray'}>
-                                                {row.status === 1 ? t('online') : t('offline')}
+                                            <Badge color={node.online ? 'success' : 'gray'}>
+                                                {node.online ? t('online') : t('offline')}
                                             </Badge>
                                         </TableCell>
                                     </TableRow>
@@ -135,27 +166,28 @@ export default function Statistic() {
                         <Table className={classes.table} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>{t('t-name')}</TableCell>
-                                    <TableCell align="right">{t('t-visitor')}</TableCell>
-                                    <TableCell align="right">{t('t-capacity')}</TableCell>
-                                    <TableCell align="right">{t('t-status')}</TableCell>
+                                    {/*<TableCell>{t('t-name')}</TableCell>*/}
+                                    <TableCell>{t('pricing-plan')}</TableCell>
+                                    <TableCell align="left">{t('t-capacity')}</TableCell>
+                                    <TableCell align="right">{t('owner-did')}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.name}>
-                                        <TableCell component="th" scope="row">
-                                            {row.name}
-                                        </TableCell>
-                                        <TableCell align="right">{row.visitor}</TableCell>
-                                        <TableCell align="right">{row.capacity}</TableCell>
-                                        <TableCell align="right">
-                                            <Badge color={row.status === 1 ? 'success' : 'gray'}>
-                                                {row.status === 1 ? t('online') : t('offline')}
-                                            </Badge>
-                                        </TableCell>
+                                {vault &&
+                                    <TableRow key={vault.userDid}>
+                                        {/*<TableCell component="th" scope="row">*/}
+                                        {/*    {vault.pricePlan}*/}
+                                        {/*</TableCell>*/}
+                                        <TableCell>{vault.pricePlan}</TableCell>
+                                        <TableCell align="left">{vault.used/1024/1024}MB/{(vault.quota/1024/1024)}MB</TableCell>
+                                        {/*<TableCell align="right">*/}
+                                        {/*    <Badge color={online? 'success' : 'gray'}>*/}
+                                        {/*        {online ? t('online') : t('offline')}*/}
+                                        {/*    </Badge>*/}
+                                        {/*</TableCell>*/}
+                                        <TableCell align="right">...{vault.userDid.substring(vault.userDid.length - 8)}</TableCell>
                                     </TableRow>
-                                ))}
+                                }
                             </TableBody>
                         </Table>
                     </Grid>

@@ -14,7 +14,8 @@ import {DID} from "@elastosfoundation/elastos-connectivity-sdk-js";
 export default class SdkContext {
     public static INSTANCE: SdkContext;
     public static readonly RESOLVE_CACHE = "data/didCache";
-    public static readonly USER_DIR = path.join(__dirname, '../../data/userDir');
+    // public static readonly USER_DIR = path.join(__dirname, '../../data/userDir');
+    public static readonly USER_DIR = '/data/userDir';
     // private static LOG = new Logger("TestData");
 
     private context: AppContext;
@@ -143,8 +144,7 @@ export default class SdkContext {
     }
 
     public getLocalStorePath(): string {
-        // return this.userDir + File.SEPARATOR + "data/store" + File.SEPARATOR + this.clientConfig.node.storePath;
-        return '';
+        return `${this.userDir}/data/store/${this.clientConfig.node.storePath}`;
     }
 
     async getAppInstanceDIDDoc(): Promise<DIDDocument> {

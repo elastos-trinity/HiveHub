@@ -35,6 +35,7 @@ let en = {
     "form-node-country": "Country/Region",
     "form-node-url": "URL",
     "form-node-desc": "Description",
+    "pricing-plan": "Price Plan",
 
     "download": "Download",
     "did-repair": "DID Repair",
@@ -86,6 +87,7 @@ let zh = {
     "form-node-country": "国家/地区",
     "form-node-url": "URL地址",
     "form-node-desc": "简介",
+    "pricing-plan": "套餐名称",
 
     "download": "直接下载",
     "did-repair": "DID修复",

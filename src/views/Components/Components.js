@@ -121,7 +121,7 @@ export default function Components(props) {
   // let [loading, setLoading] = useState(false);
   let [state, setState] = useState({loading: false, nodes: []});
   let loading = state.loading;
-  let setLoading = (v) => setState({loading: v});
+  let setLoading = (v) => setState({...state, loading: v});
   const preventDefault = (event) => event.preventDefault();
   const helloSdk = async (event) => await new Vault().hello();
 
@@ -169,7 +169,13 @@ export default function Components(props) {
   // init the page's data.
   useEffect(async () => {
     let data = await HiveHubServer.getHiveNodes();
-    setState({nodes: data.nodes});
+    if (!data || !data.nodes) {
+      return;
+    }
+    for (const node of data.nodes) {
+      node.online = await HiveHubServer.isOnline(node.url);
+    }
+    setState({...state, nodes: data.nodes});
   }, []);
 
   return (
@@ -231,7 +237,7 @@ export default function Components(props) {
               <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid} key={node.nid}>
                 <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
                   <Link href={`/node/${node.nid}`} underline="none">
-                    <Box component="span" className={classes.nodeName}>{node.name}<Badge color="success">在线</Badge></Box>
+                    <Box component="span" className={classes.nodeName}>{node.name} <Badge color={node.online ? "success" : "gray"}>{node.online ? "在线" : "离线"}</Badge></Box>
                   </Link>
                   <Box component="span" className={classes.nodeTime}>{node.created}</Box>
                 </Grid>

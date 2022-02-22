@@ -167,6 +167,7 @@ export default function NewNode(props) {
             email: info.email,
             remark: info.remark
         });
+        alert('Successfully add new hive node.');
         window.location.href = '/';
     };
 

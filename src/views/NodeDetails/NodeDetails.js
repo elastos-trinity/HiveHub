@@ -166,7 +166,7 @@ export default function NodeDetails(props) {
     if (!node) return;
     online = await HiveHubServer.isOnline(node.url);
     if (!online) return;
-    let vault = await Vault.getInstance();
+    let vault = new Vault();
     let did = localStorage.getItem('did');
     // if (did === node.owner_did) {
     if (true) {
@@ -183,26 +183,31 @@ export default function NodeDetails(props) {
       console.log('success vault.getVaultDetail()');
       setNeedCreate(false);
     } catch (e) {
-      console.log('failed vault.getVaultDetail()');
+      console.error('failed vault.getVaultDetail()');
       setNeedCreate(true);
     }
+
+    // // TODO:
+    // setNeedCreate(true);
   }, []);
 
   // create&destroy the vault service.
   let onCreate = async () => {
-    await (await Vault.getInstance()).createVault(state.node.url);
+    await (new Vault()).createVault(state.node.url);
     setNeedCreate(false);
   };
   let onDestroy = async () => {
-    await (await Vault.getInstance()).destroyVault(state.node.url);
+    await (new Vault()).destroyVault(state.node.url);
     setNeedCreate(true);
   };
 
-  let handleOpenVault = () => {
+  let handleOpenVault = async () => {
     setState({...state, openVault: true});
+    // await onCreate();
   }
 
   let handleCloseVault = async (value) => {
+    console.log(`handleCloseVault: ${value}`);
     if (value) {
       needCreate ? await onCreate() : await onDestroy();
       setNeedCreate(!needCreate);

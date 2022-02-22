@@ -1,54 +1,59 @@
 import {
-    Claims,
+    Claims, DefaultDIDAdapter, DIDBackend,
     DIDDocument,
     JWTParserBuilder,
     VerifiableCredential,
-    VerifiablePresentation
+    VerifiablePresentation, DID
 } from "@elastosfoundation/did-js-sdk";
 import {AppContext, HiveException} from "@dchagastelles/elastos-hive-js-sdk";
 import {AppDID} from "./did/appdid";
 import {UserDID} from "./did/userdid";
-import path from 'path';
-import {DID} from "@elastosfoundation/elastos-connectivity-sdk-js";
+import {DID as ConDID} from "@elastosfoundation/elastos-connectivity-sdk-js";
+import ClientConfig from "./config/clientconfig";
+import {NoLoginError} from "./error";
 
 export default class SdkContext {
     public static INSTANCE: SdkContext;
+    public static readonly DID_NET = "mainnet";
     public static readonly RESOLVE_CACHE = "data/didCache";
-    // public static readonly USER_DIR = path.join(__dirname, '../../data/userDir');
     public static readonly USER_DIR = '/data/userDir';
-    // private static LOG = new Logger("TestData");
+    private static readonly isTest: boolean = true;
 
-    private context: AppContext;
-    private clientConfig: any;
-    private userDir: string | undefined;
+    // for test.
+    private isInit: boolean = false;
+    private clientConfig: any = ClientConfig.CUSTOM;
     private userDid: UserDID;
     private callerDid: UserDID;
     private appInstanceDid: AppDID;
+
+    private context: AppContext;
     private callerContext: AppContext;
-    private readonly isTest: boolean;
-
     private appIdCredential: VerifiableCredential;
+    private curLoginUserDidStr: string;
 
-    static async getInstance(testName: string, clientConfig: any, userDir?: string): Promise<SdkContext> {
+    static async getInstance(): Promise<SdkContext> {
         if (!SdkContext.INSTANCE) {
-            SdkContext.INSTANCE = new SdkContext(clientConfig, userDir);
-            await SdkContext.INSTANCE.init();
+            SdkContext.INSTANCE = new SdkContext();
         }
+        if (SdkContext.isTest)
+            await SdkContext.INSTANCE.initByTestDid();
+        else
+            await SdkContext.INSTANCE.initByLoginDid();
         return SdkContext.INSTANCE;
     }
 
-    constructor(clientConfig: any, userDir?: string) {
-        this.clientConfig = clientConfig;
-        this.userDir = userDir;
-        this.isTest = true;
+    private constructor() {
+        DIDBackend.initialize(new DefaultDIDAdapter(SdkContext.DID_NET));
+        AppContext.setupResolver(SdkContext.DID_NET, SdkContext.RESOLVE_CACHE);
     }
 
-    async init(): Promise<void> {
-
-        //let userDirFile = new File(this.userDir);
-        //userDirFile.delete();
-
-        AppContext.setupResolver(this.clientConfig.resolverUrl, SdkContext.RESOLVE_CACHE);
+    /**
+     * for test.
+     */
+    async initByTestDid(): Promise<void> {
+        if (this.isInit) {
+            return;
+        }
 
         let applicationConfig = this.clientConfig.application;
         this.appInstanceDid = await AppDID.create(applicationConfig.name,
@@ -81,11 +86,9 @@ export default class SdkContext {
 
             async getAppInstanceDocument() : Promise<DIDDocument>  {
                 try {
-                    // return await owner.appInstanceDid.getDocument();
                     return await owner.getAppInstanceDIDDoc();
                 } catch (e) {
-                    // TestData.LOG.debug("TestData.getAppInstanceDocument Error {}", e);
-                    // TestData.LOG.error(e.stack);
+                    console.error(`failed to get app instance doc: ${e}`);
                 }
                 return null;
             },
@@ -93,8 +96,9 @@ export default class SdkContext {
             async getAuthorization(jwtToken : string) : Promise<string> {
                 try {
                     let claims : Claims = (await new JWTParserBuilder().build().parse(jwtToken)).getBody();
-                    if (claims == null)
+                    if (claims == null) {
                         throw new HiveException("Invalid jwt token as authorization.");
+                    }
 
                     let presentation = await owner.appInstanceDid.createPresentation(
                         await owner.userDid.issueDiplomaFor(owner.appInstanceDid),
@@ -135,34 +139,76 @@ export default class SdkContext {
         }, this.callerDid.getDid().toString());
     }
 
-    getAppContext(): AppContext {
-        return this.context;
-    }
-
     getProviderAddress(): string {
         return this.clientConfig.node.provider;
     }
 
-    public getLocalStorePath(): string {
-        return `${this.userDir}/data/store/${this.clientConfig.node.storePath}`;
-    }
-
     async getAppInstanceDIDDoc(): Promise<DIDDocument> {
-        if (this.isTest) {
-            return await this.appInstanceDid.getDocument();
-        }
-        return AppDID.getAppInstanceDIDDoc();
+        return await this.appInstanceDid.getDocument();
     }
 
-    async getAuthAuthorization(challenge: string): Promise<string> {
-        if (this.isTest) {
-            let claims : Claims = (await new JWTParserBuilder().build().parse(challenge)).getBody();
-            if (claims == null)
-                throw new HiveException("Invalid jwt token as authorization.");
-            return await this.appInstanceDid.createToken(await this.appInstanceDid.createPresentation(
-                await this.userDid.issueDiplomaFor(this.appInstanceDid),
-                claims.getIssuer(), claims.get("nonce") as string), claims.getIssuer());
+    /**
+     * for real
+     * @private
+     */
+    private async initByLoginDid(): Promise<void> {
+        const userDidStr = SdkContext.getLoginUserDid();
+        if (!userDidStr) {
+            throw new NoLoginError('Can not initialize SdkContext.');
+        } else if (userDidStr === this.curLoginUserDidStr) {
+            return;
         }
+
+        // Application Context
+        let owner = this;
+        this.context = await AppContext.build({
+            getLocalDataDir() : string {
+                return owner.getLocalStorePath();
+            },
+
+            async getAppInstanceDocument() : Promise<DIDDocument>  {
+                try {
+                    console.log(`enter getAppInstanceDocument() of the app context.`);
+                    return await owner.getLoginAppInstanceDidDoc();
+                } catch (e) {
+                    console.error(`Failed to get application instance did documentation.`);
+                    return null;
+                }
+            },
+
+            async getAuthorization(jwtToken : string) : Promise<string> {
+                try {
+                    return await owner.getAuthAuthorization(jwtToken);
+                } catch (e) {
+                    console.error(`TestData->getAuthorization error: ${e}`);
+                    return null;
+                }
+            }
+        }, userDidStr);
+        this.curLoginUserDidStr = userDidStr;
+    }
+
+    getAppContext(): AppContext {
+        return this.context;
+    }
+
+    public getLocalStorePath(): string {
+        return `${SdkContext.USER_DIR}/data/store/${this.clientConfig.node.storePath}`;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // For login user ConDID.
+
+    async getLoginAppInstanceDidDoc(): Promise<DIDDocument> {
+        const didAccess = new ConDID.DIDAccess();
+        console.log('after didAccess creating.');
+        console.log('after didAccess creating 2.');
+        const info = await didAccess.getOrCreateAppInstanceDID();
+        console.log(`get the app instance did: ${info}`);
+        return await info.didStore.loadDid(info.did.toString());
+    }
+
+    private async getAuthAuthorization(challenge: string): Promise<string> {
         let claims : Claims = (await new JWTParserBuilder().build().parse(challenge)).getBody();
         if (claims == null) {
             throw new HiveException("Invalid jwt token as authorization.");
@@ -181,42 +227,76 @@ export default class SdkContext {
         return await AppDID.createChallengeResponse(vp, hiveDid, this.appInstanceDid.getStorePassword());
     }
 
-    checkAppIdCredentialStatus(appIdCredential): Promise<VerifiableCredential> {
+    private checkAppIdCredentialStatus(appIdCredential): Promise<VerifiableCredential> {
         return new Promise(async (resolve, reject) => {
             if (this.checkCredentialValid(appIdCredential)) {
-                // Logger.log(TAG, 'Credential valid , credential is ', appIdCredential);
+                console.log(`Credential valid, credential is ${this.appIdCredential}`);
                 resolve(appIdCredential);
                 return;
             }
 
-            // Logger.warn(TAG, 'Credential invalid, Getting app identity credential');
-            let didAccess = new DID.DIDAccess();
+            console.warn('Credential invalid, Getting app identity credential');
+
+            let didAccess = new ConDID.DIDAccess();
             try {
                 let credential = await didAccess.getExistingAppIdentityCredential();
                 if (credential) {
-                    // Logger.log(TAG, 'Get app identity credential', mAppIdCredential);
+                    console.log(`Get app identity credential ${credential}`);
                     resolve(credential);
                     return;
                 }
 
                 credential = await didAccess.generateAppIdCredential();
                 if (credential) {
-                    // Logger.log(TAG, 'Generate app identity credential, credential is ', mAppIdCredential);
+                    console.log(`Generate app identity credential, credential is ${credential}`);
                     resolve(credential);
                     return;
                 }
 
                 let error = 'Get app identity credential error, credential is ' + JSON.stringify(credential);
-                // Logger.error(TAG, error);
+                console.error(error);
                 reject(error);
             } catch (error) {
+                console.error(`Failed to check the application credential: ${error}`);
                 reject(error);
-                // Logger.error(TAG, error);
             }
         });
     }
 
-    checkCredentialValid(appIdCredential): boolean {
+    private checkCredentialValid(appIdCredential): boolean {
         return appIdCredential && appIdCredential.getExpirationDate().valueOf() >= new Date().valueOf();
+    }
+
+    public async getLoginUserNodeUrl(): Promise<string> {
+        const userDidStr = SdkContext.getLoginUserDid();
+        if (!userDidStr) {
+            throw new NoLoginError('Can not get user did hive node url.');
+        }
+        const userDidDocument = await DID.from(userDidStr).resolve();
+        const service = userDidDocument.getService(`${userDidStr}#hivevault`);
+        const url: string = service.getServiceEndpoint();
+        if (url.includes(':')) {
+            return service.getServiceEndpoint();
+        } else if (url.startsWith('https')) {
+            return url + ":443";
+        }
+        return url + ":80";
+    }
+
+    public async updateLoginUserNodeUrl(url: string): Promise<void> {
+        // TODO:
+        console.warn(`TODO: publish the node url (${url}) for login user.`);
+    }
+
+    public static getLoginUserDid(): string {
+        const did = localStorage.getItem('did');
+        if (!did) {
+            return null;
+        }
+        return `did:elastos:${did}`;
+    }
+
+    public static isLogined(): boolean {
+        return !!SdkContext.getLoginUserDid();
     }
 }

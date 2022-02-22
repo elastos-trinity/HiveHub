@@ -1,8 +1,6 @@
 import SdkContext from "./testdata";
-import ClientConfig from "./config/clientconfig";
 import {VaultInfo, VaultSubscriptionService} from "@dchagastelles/elastos-hive-js-sdk";
 import {lstatSync, readdirSync} from "./bfs";
-
 
 export class VaultDetail {
     quota: number;
@@ -11,31 +9,14 @@ export class VaultDetail {
     userDid: string;
 }
 
-
 export default class Vault {
-    private static instance: Vault = null;
-
-    private sdkContext: SdkContext;
-    private vaultSubscriptionService: VaultSubscriptionService;
-
-    public static async getInstance(): Promise<Vault> {
-        if (!Vault.instance) {
-            Vault.instance = new Vault();
-            await Vault.instance.init();
-        }
-        return Vault.instance;
+    private async getSdkContext(): Promise<SdkContext> {
+        return await SdkContext.getInstance();
     }
 
-    private constructor() {
-        // do nothing.
-    }
-
-    private async init(): Promise<void> {
-        this.sdkContext = await SdkContext.getInstance("vault subscribe.test", ClientConfig.CUSTOM, SdkContext.USER_DIR);
-    }
-
-    private getVaultSubscriptionService(hiveUrl: string) {
-        return new VaultSubscriptionService(this.sdkContext.getAppContext(), hiveUrl);
+    private async getVaultSubscriptionService(hiveUrl: string): Promise<VaultSubscriptionService> {
+        const sdkContext = await this.getSdkContext();
+        return new VaultSubscriptionService(sdkContext.getAppContext(), hiveUrl);
     }
 
     readDirTree(root: string): void {
@@ -66,7 +47,7 @@ export default class Vault {
         this.readDirTree('/');
 
         try {
-            let vaultInfo = await this.getVaultSubscriptionService('http://localhost:5004').checkSubscription();
+            let vaultInfo = await (await this.getVaultSubscriptionService('http://localhost:5004')).checkSubscription();
             alert('hello hive js' + vaultInfo.getServiceDid());
         } catch (e) {
             console.log(`failed in hello: ${e}`);
@@ -76,7 +57,7 @@ export default class Vault {
     }
 
     async getVaultDetail(hiveUrl: string): Promise<VaultDetail> {
-        let vaultInfo: VaultInfo = await this.getVaultSubscriptionService(hiveUrl).checkSubscription();
+        let vaultInfo: VaultInfo = await (await this.getVaultSubscriptionService(hiveUrl)).checkSubscription();
         console.log('get vault details with hive node did: ' + vaultInfo.getServiceDid());
         return {
             quota: vaultInfo.getStorageQuota(),
@@ -87,7 +68,8 @@ export default class Vault {
     }
 
     async createVault(hiveUrl: string): Promise<VaultDetail> {
-        let vaultInfo: VaultInfo = await this.getVaultSubscriptionService(hiveUrl).subscribe();
+        console.log(`create vault with hive url ${hiveUrl}`);
+        let vaultInfo: VaultInfo = await (await this.getVaultSubscriptionService(hiveUrl)).subscribe();
         return {
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),
@@ -97,9 +79,13 @@ export default class Vault {
     }
 
     async destroyVault(hiveUrl: string): Promise<void> {
-        await this.getVaultSubscriptionService(hiveUrl).unsubscribe();
+        await (await this.getVaultSubscriptionService(hiveUrl)).unsubscribe();
     }
 
+    /**
+     * Get the vaults of the hive node.
+     * @param hiveUrl
+     */
     async getVaults(hiveUrl: string): Promise<Array<VaultDetail>> {
         return [{
             quota: 512,
@@ -114,10 +100,19 @@ export default class Vault {
         }];
     }
 
+    /**
+     * Get the backups of the hive node.
+     * @param hiveUrl
+     */
     async getBackups(hiveUrl: string): Promise<Array<VaultDetail>> {
         return await this.getVaults(hiveUrl);
     }
 
+    /**
+     * Get login user node url.
+     * TODO: remove this.
+     * @param did
+     */
     static async getHiveUrlByDid(did: string): Promise<string> {
         return 'http://localhost:5004';
     }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -26,6 +26,8 @@ import Button from "@material-ui/core/Button";
 import {InputBase, InputLabel, MenuItem, NativeSelect, Select, TextField} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import withStyles from "@material-ui/core/styles/withStyles";
+import HiveHubServer from "../service/hivehub";
+import SdkContext from "../hivejs/testdata";
 
 const customStyle = theme => ({
     ...styles,
@@ -145,6 +147,33 @@ export default function NewNode(props) {
         setAge(event.target.value);
     };
 
+    const [userDid, setUserDid] = useState('');
+    const [info, setInfo] = useState({name: '', email: '',
+        country: '', province: '', district: '', url: '', remark: ''});
+
+    const handleAddHiveNode = async () => {
+        console.log(`name: ${info}`);
+        if (!info.name) {alert('Please input hive node name.'); return;}
+        if (!info.email) {alert('Please input hive node email.'); return;}
+        if (!info.country) {alert('Please input hive node country.'); return;}
+        if (!info.province) {alert('Please input hive node province.'); return;}
+        if (!info.district) {alert('Please input hive node district.'); return;}
+        if (!info.url) {alert('Please input hive node url.'); return;}
+        if (!info.remark) {alert('Please input hive node remark.'); return;}
+        await HiveHubServer.addHiveNode({
+            name: info.name,
+            owner_did: userDid,
+            area: `${info.country} ${info.province} ${info.district}`,
+            email: info.email,
+            remark: info.remark
+        });
+        window.location.href = '/';
+    };
+
+    useEffect(async () => {
+        setUserDid(SdkContext.getLoginUserDid());
+    }, [setUserDid]);
+
     return (
         <div>
             <Header
@@ -160,7 +189,7 @@ export default function NewNode(props) {
                     <Box component="div" className={classes.formBox}>
                         <Grid container>
                             <Grid item md={2} className={classes.itemKey}>{t('owner-did')}</Grid>
-                            <Grid item md={10} className={classes.itemValue}>srgsve5h5yvnwi5yh4hyg2945hvwq0tq</Grid>
+                            <Grid item md={10} className={classes.itemValue}>{userDid}</Grid>
 
                             <Grid item md={2} className={classes.itemKey}>{t('form-node-name')}</Grid>
                             <Grid item md={10} className={classes.itemValue}>
@@ -173,6 +202,8 @@ export default function NewNode(props) {
                                         shrink: true,
                                     }}
                                     variant="outlined"
+                                    value={info.name}
+                                    onChange={(e)=>setInfo({...info, name: e.target.value})}
                                 />
                             </Grid>
 
@@ -186,23 +217,36 @@ export default function NewNode(props) {
                                         shrink: true,
                                     }}
                                     variant="outlined"
+                                    value={info.email}
+                                    onChange={(e)=>setInfo({...info, email: e.target.value})}
                                 />
                             </Grid>
 
                             <Grid item md={2} className={classes.itemKey}>{t('form-node-country')}</Grid>
                             <Grid item md={10} className={classes.itemValue}>
                                 <FormControl className={classes.select}>
-                                    <NativeSelect
-                                        id="demo-customized-select-native"
-                                        value=""
-                                        onChange={handleChange}
-                                        input={<BootstrapInput />}
-                                    >
-                                        <option value={0}>国家</option>
-                                        <option value={10}>Ten</option>
-                                        <option value={20}>Twenty</option>
-                                        <option value={30}>Thirty</option>
-                                    </NativeSelect>
+                                    {/*<NativeSelect*/}
+                                    {/*    id="demo-customized-select-native"*/}
+                                    {/*    value=""*/}
+                                    {/*    onChange={handleChange}*/}
+                                    {/*    input={<BootstrapInput />}*/}
+                                    {/*>*/}
+                                    {/*    <option value={0}>国家</option>*/}
+                                    {/*    <option value={10}>Ten</option>*/}
+                                    {/*    <option value={20}>Twenty</option>*/}
+                                    {/*    <option value={30}>Thirty</option>*/}
+                                    {/*</NativeSelect>*/}
+                                    <TextField
+                                        id="outlined-full-width"
+                                        margin="normal"
+                                        placeholder="国家"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        variant="outlined"
+                                        value={info.country}
+                                        onChange={(e)=>setInfo({...info, country: e.target.value})}
+                                    />
                                 </FormControl>
                                 <FormControl className={classes.select}>
                                     <TextField
@@ -213,6 +257,8 @@ export default function NewNode(props) {
                                             shrink: true,
                                         }}
                                         variant="outlined"
+                                        value={info.province}
+                                        onChange={(e)=>setInfo({...info, province: e.target.value})}
                                     />
                                 </FormControl>
                                 <FormControl className={classes.select}>
@@ -224,6 +270,8 @@ export default function NewNode(props) {
                                             shrink: true,
                                         }}
                                         variant="outlined"
+                                        value={info.district}
+                                        onChange={(e)=>setInfo({...info, district: e.target.value})}
                                     />
                                 </FormControl>
                             </Grid>
@@ -238,6 +286,8 @@ export default function NewNode(props) {
                                         shrink: true,
                                     }}
                                     variant="outlined"
+                                    value={info.url}
+                                    onChange={(e)=>setInfo({...info, url: e.target.value})}
                                 />
                             </Grid>
 
@@ -252,11 +302,14 @@ export default function NewNode(props) {
                                     }}
                                     multiline={true}
                                     variant="outlined"
+                                    value={info.remark}
+                                    onChange={(e)=>setInfo({...info, remark: e.target.value})}
                                 />
                             </Grid>
                         </Grid>
                         <Box component="div" style={{textAlign: "center"}}>
-                            <Button variant="contained" className={classes.commitButton}>
+                            <Button variant="contained" className={classes.commitButton}
+                                    onClick={handleAddHiveNode}>
                                 {t('confirm')}
                             </Button>
                         </Box>

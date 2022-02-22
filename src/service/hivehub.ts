@@ -44,4 +44,21 @@ export default class HiveHubServer {
             return false;
         }
     }
+
+    static async addHiveNode(info) {
+        console.log(`Add hive node with information: ${info}`);
+        let url = `${config.serverUrl}/api/hivehub/node`;
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+            //     'Authorization': assistAPIKey
+            },
+            body: JSON.stringify({node: info})
+        });
+        return await response.json();
+    }
 }

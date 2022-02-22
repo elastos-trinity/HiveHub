@@ -24,9 +24,10 @@ import Badge from "../../components/Badge/Badge";
 import Vault from "../../hivejs/vault.ts";
 import UserContext from '../../contexts/UserContext';
 import { essentialsConnector, useConnectivitySDK } from "../../service/connectivity";
-import ConnectivityContext from '../../contexts/ConnectivityContext';
 import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import HiveHubServer from "../../service/hivehub.ts";
+import SdkContext from "../../hivejs/testdata";
+import Button from "@material-ui/core/Button";
 
 const customStyle = theme => ({
   ...styles,
@@ -118,8 +119,8 @@ export default function Components(props) {
   const { ...rest } = props;
 
   // use state.
-  // let [loading, setLoading] = useState(false);
   let [state, setState] = useState({loading: false, nodes: []});
+  let [logined, setLogined] = useState(false);
   let loading = state.loading;
   let setLoading = (v) => setState({...state, loading: v});
   const preventDefault = (event) => event.preventDefault();
@@ -176,6 +177,7 @@ export default function Components(props) {
       node.online = await HiveHubServer.isOnline(node.url);
     }
     setState({...state, nodes: data.nodes});
+    setLogined(SdkContext.isLogined());
   }, []);
 
   return (
@@ -232,6 +234,15 @@ export default function Components(props) {
               <div className={classes.product}>{t('node-list')}</div>
               <div className={classes.line} />
             </GridItem>
+
+            {logined &&
+            <Box component="div" className={classes.bottomBox}>
+              <Button variant="contained" color="default" href="/new-node"
+                      style={{backgroundColor: "#5297FF", color: "white", width: "200px"}}>
+                {t('create-node')}
+              </Button>
+            </Box>
+            }
 
             {state.nodes.map((node, index) =>
               <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid} key={node.nid}>

@@ -1,10 +1,24 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
-import {Collapse, ListItem, ListItemIcon, ListItemText, ListSubheader} from "@material-ui/core";
+import {
+    Collapse,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListSubheader,
+    TableBody,
+    TableCell,
+    TableRow
+} from "@material-ui/core";
 import {ExpandLess, ExpandMore, StarBorder} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
+import HiveHubServer from "../service/hivehub";
+import SdkContext from "../hivejs/testdata";
+import Badge from "../components/Badge/Badge";
+// import Link from "@material-ui/core/Link";
+// import NavLink from "react-router-dom/modules/NavLink";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,12 +41,22 @@ const useStyles = makeStyles((theme) => ({
 export default function LeftNav() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
+    let [nodes, setNodes] = useState([]);
 
     let {t} = useTranslation()
 
     const handleClick = () => {
         setOpen(!open);
     };
+
+    useEffect(async () => {
+        const userDid = SdkContext.getLoginUserDid();
+        const data = await HiveHubServer.getHiveNodes(null, userDid);
+        for (const node of data.nodes) {
+            node.online = await HiveHubServer.isOnline(node.url);
+        }
+        setNodes(data.nodes);
+    }, [])
 
     return (
         <Box component="div" className={classes.navBox}>
@@ -41,7 +65,8 @@ export default function LeftNav() {
                 aria-labelledby="nested-list-subheader"
                 className={classes.root}
             >
-                <ListItem button style={{backgroundColor: "#005996", borderRadius: "4px"}}>
+                <ListItem button style={{backgroundColor: "#005996", borderRadius: "4px"}}
+                          component="a" href={`/dashboard/main`}>
                     <ListItemText primary={t('main')} />
                 </ListItem>
                 <ListItem button onClick={handleClick}>
@@ -50,18 +75,12 @@ export default function LeftNav() {
                 </ListItem>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.nested}>
-                            <ListItemText primary="HiveNode-1" />
-                        </ListItem>
-                        <ListItem button className={classes.nested}>
-                            <ListItemText primary="HiveNode-2" />
-                        </ListItem>
-                        <ListItem button className={classes.nested}>
-                            <ListItemText primary="HiveNode-3" />
-                        </ListItem>
-                        <ListItem button className={classes.nested}>
-                            <ListItemText primary="HiveNode-4" />
-                        </ListItem>
+                        {nodes.map((node) => (
+                            <ListItem button className={classes.nested}
+                                      component="a" href={node.online ? `/dashboard/node/${node.nid}` : '#'}>
+                                <ListItemText primary={node.name} />
+                            </ListItem>
+                        ))}
                     </List>
                 </Collapse>
                 <ListItem button>

@@ -58,7 +58,7 @@ export default class Vault {
 
     async getVaultDetail(hiveUrl: string): Promise<VaultDetail> {
         let vaultInfo: VaultInfo = await (await this.getVaultSubscriptionService(hiveUrl)).checkSubscription();
-        console.log('get vault details with hive node did: ' + vaultInfo.getServiceDid());
+        console.log('get vault details with hive node: ' + vaultInfo.getServiceDid() + ', ' + vaultInfo.getPricePlan());
         return {
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),

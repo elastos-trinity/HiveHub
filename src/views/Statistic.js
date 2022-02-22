@@ -178,14 +178,15 @@ export default function Statistic() {
                                         {/*<TableCell component="th" scope="row">*/}
                                         {/*    {vault.pricePlan}*/}
                                         {/*</TableCell>*/}
-                                        <TableCell>{vault.pricePlan}</TableCell>
+                                        <TableCell>{vault.pricingPlan}</TableCell>
                                         <TableCell align="left">{vault.used/1024/1024}MB/{(vault.quota/1024/1024)}MB</TableCell>
                                         {/*<TableCell align="right">*/}
                                         {/*    <Badge color={online? 'success' : 'gray'}>*/}
                                         {/*        {online ? t('online') : t('offline')}*/}
                                         {/*    </Badge>*/}
                                         {/*</TableCell>*/}
-                                        <TableCell align="right">...{vault.userDid.substring(vault.userDid.length - 8)}</TableCell>
+                                        <TableCell align="right">...{vault.userDid.substring(vault.userDid.length - 8)}
+                                        </TableCell>
                                     </TableRow>
                                 }
                             </TableBody>

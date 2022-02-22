@@ -28,6 +28,7 @@ import Statistic from "./Statistic";
 import UserContext from "../contexts/UserContext";
 import {essentialsConnector} from "../service/connectivity";
 import ConnectivityContext from "../contexts/ConnectivityContext";
+import NodeDetails from "./NodeDetails/NodeDetails";
 
 
 const customStyle = theme => ({
@@ -136,6 +137,7 @@ export default function Dashboard(props) {
                             </Grid>
                             <Switch>
                                 <Route path={`${match.path}/main`} component={Statistic} />
+                                <Route path={`${match.path}/node/:nid`} component={NodeDetails} />
                             </Switch>
                         </Box>
                     </Grid>

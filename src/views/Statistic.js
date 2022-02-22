@@ -92,7 +92,7 @@ export default function Statistic() {
 
     // init page data.
     useEffect(async () => {
-        let vault = await Vault.getInstance();
+        let vault = new Vault();
         let url = await Vault.getHiveUrlByDid(ownerDid);
         if (url) {
             let on = await HiveHubServer.isOnline(url);

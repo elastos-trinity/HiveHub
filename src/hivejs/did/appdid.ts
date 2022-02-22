@@ -1,7 +1,7 @@
 import { VerifiableCredential, VerifiablePresentation, DIDDocument, JWTHeader, DefaultDIDAdapter, DIDBackend, VerificationEventListener } from "@elastosfoundation/did-js-sdk";
 import dayjs from "dayjs";
 import { DIDEntity } from "./didentity";
-import {DID} from "@elastosfoundation/elastos-connectivity-sdk-js";
+import {DID as ConDID} from "@elastosfoundation/elastos-connectivity-sdk-js";
 
 export class AppDID extends DIDEntity {
 	private appId = "appId";
@@ -64,7 +64,7 @@ export class AppDID extends DIDEntity {
 	}
 
 	static async getAppInstanceDIDDoc(): Promise<DIDDocument> {
-		let access = new DID.DIDAccess();
+		let access = new ConDID.DIDAccess();
 		let info = await access.getOrCreateAppInstanceDID();
 		return await info.didStore.loadDid(info.did);
 	}
@@ -72,7 +72,7 @@ export class AppDID extends DIDEntity {
 	static async createVerifiablePresentation(
 			vc: VerifiableCredential, hiveDid: string, nonce: string, storepass: string):
 			Promise<VerifiablePresentation> {
-		let access = new DID.DIDAccess();
+		let access = new ConDID.DIDAccess();
 		let info = await access.getOrCreateAppInstanceDID();
 		let vpb = await VerifiablePresentation.createFor(info.did, null, info.didStore);
 		let vp = await vpb.credentials(vc).realm(hiveDid).nonce(nonce).seal(storepass);

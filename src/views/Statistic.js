@@ -18,6 +18,7 @@ import Badge from "../components/Badge/Badge";
 import Vault from "../hivejs/vault";
 import UserContext from "../contexts/UserContext";
 import HiveHubServer from "../service/hivehub";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
     nodeVolumeBox: {
@@ -113,6 +114,23 @@ export default function Statistic() {
         setNodes(data.nodes);
     }, []);
 
+    const handleBackup = async () => {
+        console.log('enter handleBackup');
+        await new Vault().backup(vault.url, "http://localhost:5004");
+        alert('Successfully backup.');
+    };
+    const handleMigration = async () => {
+        console.log('enter handleMigration');
+        await new Vault().migrate(vault.url, "http://localhost:5004");
+        alert('Successfully migrate.');
+    };
+    const handleUnsubscribe = async () => {
+        console.log('enter handleUnsubscribe');
+        await new Vault().destroyVault(vault.url);
+        setVault(null);
+        alert('Successfully unsubscribe.');
+    };
+
     return (
         <div>
             <Box component="div" className={classes.nodeVolumeBox}>
@@ -125,7 +143,21 @@ export default function Statistic() {
                     <Divider orientation="vertical" />
                     <Grid item className={classes.data}>
                         <Box component="div" className={classes.number}>{vault ? 1 : 0}</Box>
-                        <Box component="div">我参与的</Box>
+                        <Box component="div"><center>我参与的</center></Box>
+                        <Box component="div" className={classes.contentBox}>
+                            <Button variant="contained" color="default" onClick={handleBackup}
+                                    style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
+                                备份
+                            </Button>
+                            <Button variant="contained" color="default" onClick={handleMigration}
+                                    style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
+                                迁移
+                            </Button>
+                            <Button variant="contained" color="default" onClick={handleUnsubscribe}
+                                    style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
+                                解绑
+                            </Button>
+                        </Box>
                     </Grid>
                 </Grid>
             </Box>

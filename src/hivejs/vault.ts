@@ -3,6 +3,7 @@ import {VaultInfo, VaultSubscriptionService} from "@dchagastelles/elastos-hive-j
 import {lstatSync, readdirSync} from "./bfs";
 
 export class VaultDetail {
+    url: string;
     quota: number;
     used: number;
     pricingPlan: string;
@@ -60,6 +61,7 @@ export default class Vault {
         let vaultInfo: VaultInfo = await (await this.getVaultSubscriptionService(hiveUrl)).checkSubscription();
         console.log('get vault details with hive node: ' + vaultInfo.getServiceDid() + ', ' + vaultInfo.getPricePlan());
         return {
+            url: hiveUrl,
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),
             pricingPlan: vaultInfo.getPricePlan(),
@@ -71,6 +73,7 @@ export default class Vault {
         console.log(`create vault with hive url ${hiveUrl}`);
         let vaultInfo: VaultInfo = await (await this.getVaultSubscriptionService(hiveUrl)).subscribe();
         return {
+            url: hiveUrl,
             quota: vaultInfo.getStorageQuota(),
             used: vaultInfo.getStorageUsed(),
             pricingPlan: vaultInfo.getPricePlan(),
@@ -88,11 +91,13 @@ export default class Vault {
      */
     async getVaults(hiveUrl: string): Promise<Array<VaultDetail>> {
         return [{
+            url: hiveUrl,
             quota: 512,
             used: 20,
             pricingPlan: 'Free',
             userDid: 'did1'
         }, {
+            url: hiveUrl,
             quota: 512,
             used: 100,
             pricingPlan: 'Free',
@@ -115,5 +120,25 @@ export default class Vault {
      */
     static async getHiveUrlByDid(did: string): Promise<string> {
         return 'http://localhost:5004';
+    }
+
+    async backup(hiveUrl: string, dstUrl: string) {
+        await (await this.getSdkContext()).getBackupService().startBackup();
+    }
+
+    async migrate(hiveUrl: string, dstUrl: string) {
+        await (await this.getSdkContext()).getBackupService().startBackup();
+        // await this.waitBackupFinished();
+        // await (await this.getSdkContext()).newBackup().getPromotionService().promote();
+        await (await this.getSdkContext()).updateLoginUserNodeUrl(dstUrl);
+    }
+
+    private async waitBackupFinished() {
+        let times = 0;
+        let isBackup = false;
+        while (times < 10) {
+            // TODO: check the result of backup here.
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
     }
 }

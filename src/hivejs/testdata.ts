@@ -5,7 +5,7 @@ import {
     VerifiableCredential,
     VerifiablePresentation, DID
 } from "@elastosfoundation/did-js-sdk";
-import {AppContext, HiveException} from "@dchagastelles/elastos-hive-js-sdk";
+import {AppContext, BackupService, HiveException, VaultServices} from "@dchagastelles/elastos-hive-js-sdk";
 import {AppDID} from "./did/appdid";
 import {UserDID} from "./did/userdid";
 import {DID as ConDID} from "@elastosfoundation/elastos-connectivity-sdk-js";
@@ -194,6 +194,56 @@ export default class SdkContext {
 
     public getLocalStorePath(): string {
         return `${SdkContext.USER_DIR}/data/store/${this.clientConfig.node.storePath}`;
+    }
+
+    private getTargetProviderAddress(): string {
+        return this.clientConfig.node.targetHost;
+    }
+
+    private getTargetServiceDid(): string {
+        return this.clientConfig.node.targetDid;
+    }
+
+    public newVault(): VaultServices {
+        return new VaultServices(this.context, this.getProviderAddress());
+    }
+
+    // public newBackup(): Backup {
+    //     return new Backup(this.context, this.getProviderAddress());
+    // }
+
+    public getBackupService(): BackupService {
+        const backupService = this.newVault().getBackupService();
+        const self = this;
+        backupService.setBackupContext({
+            getParameter(parameter:string): string {
+                switch (parameter) {
+                    case "targetAddress":
+                        return self.getTargetProviderAddress();
+
+                    case "targetServiceDid":
+                        return self.getTargetServiceDid();
+
+                    default:
+                        break;
+                }
+                return null;
+            },
+
+            getType(): string {
+                return null;
+            },
+
+            async getAuthorization(srcDid: string, targetDid: string, targetHost: string): Promise<string> {
+                try {
+                    return (await self.userDid.issueBackupDiplomaFor(srcDid, targetHost, targetDid)).toString();
+                } catch (e) {
+                    throw new HiveException(e.toString());
+                }
+
+            }
+        });
+        return backupService;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

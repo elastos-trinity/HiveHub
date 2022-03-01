@@ -20,64 +20,64 @@ export default class Vault {
         return new VaultSubscriptionService(sdkContext.getAppContext(), hiveUrl);
     }
 
-    readDirTree(root: string): void {
-        const files = readdirSync(root);
-        for (const name of files) {
-            const childrenDir = root === '/' ? `/${name}` : `${root}/${name}`;
-            if (!lstatSync(childrenDir).isDirectory()) {
-                console.log(`get file: ${childrenDir}`);
-                continue;
-            }
-            console.log(`try dir: ${childrenDir}`);
-            this.readDirTree(childrenDir);
-        }
-    }
+    // readDirTree(root: string): void {
+    //     const files = readdirSync(root);
+    //     for (const name of files) {
+    //         const childrenDir = root === '/' ? `/${name}` : `${root}/${name}`;
+    //         if (!lstatSync(childrenDir).isDirectory()) {
+    //             console.log(`get file: ${childrenDir}`);
+    //             continue;
+    //         }
+    //         console.log(`try dir: ${childrenDir}`);
+    //         this.readDirTree(childrenDir);
+    //     }
+    // }
 
-    async hello(): Promise<void> {
-        // this.init().then((res) => alert('hello hive js'), (res) => alert('error hive js'));
-        // this.init().then(async (res) => {
-        //     this.vaultSubscriptionService.checkSubscription();
-        // }, (res) => alert('error hive js'));
-        // await this.init();
+    // async hello(): Promise<void> {
+    //     // this.init().then((res) => alert('hello hive js'), (res) => alert('error hive js'));
+    //     // this.init().then(async (res) => {
+    //     //     this.vaultSubscriptionService.checkSubscription();
+    //     // }, (res) => alert('error hive js'));
+    //     // await this.init();
+    //
+    //     console.log('enter hello');
+    //
+    //     // const files = readdirSync('/');
+    //     // console.log(`all files: ${files}`);
+    //
+    //     this.readDirTree('/');
+    //
+    //     try {
+    //         let vaultInfo = await (await this.getVaultSubscriptionService('http://localhost:5004')).checkSubscription();
+    //         alert('hello hive js' + vaultInfo.getServiceDid());
+    //     } catch (e) {
+    //         console.log(`failed in hello: ${e}`);
+    //     }
+    //
+    //     console.log('leave hello');
+    // }
 
-        console.log('enter hello');
-
-        // const files = readdirSync('/');
-        // console.log(`all files: ${files}`);
-
-        this.readDirTree('/');
-
-        try {
-            let vaultInfo = await (await this.getVaultSubscriptionService('http://localhost:5004')).checkSubscription();
-            alert('hello hive js' + vaultInfo.getServiceDid());
-        } catch (e) {
-            console.log(`failed in hello: ${e}`);
-        }
-
-        console.log('leave hello');
-    }
-
-    async tryGetVaultDetailWithLogin() {
-        //// Vault operation.
-        const sdkContext = new SdkContext();
-        sdkContext.initLoginConnector();
-        const vaultService = new VaultSubscriptionService(await sdkContext.getLoginAppContext(),
-            'http://localhost:5004');
-        let vaultInfo: VaultInfo = await vaultService.checkSubscription();
-        console.log('get vault details with hive node: ' + vaultInfo.getServiceDid() + ', ' + vaultInfo.getPricePlan());
-
-        //// Just test ...
-        // const sdkContext = new SdkContext();
-        //
-        // console.log(`isUsingEssentialsConnector: ${isUsingEssentialsConnector()}`);
-        // const connector = connectivity.getActiveConnector() as EssentialsConnector;
-        // console.log(`connector.hasWalletConnectSession(): ${connector.hasWalletConnectSession()}`);
-        // console.log(`connector.getWalletConnectProvider().isWalletConnect(): ${connector.getWalletConnectProvider().isWalletConnect}`);
-        // console.log(`connector.getWalletConnectProvider().connected(): ${connector.getWalletConnectProvider().connected}`);
-        //
-        // const credential = await sdkContext.testGetAppIDCredential();
-        // console.log(`credential for testing: ${credential}`);
-    }
+    // async tryGetVaultDetailWithLogin() {
+    //     //// Vault operation.
+    //     const sdkContext = new SdkContext();
+    //     // sdkContext.initLoginConnector();
+    //     const vaultService = new VaultSubscriptionService(await sdkContext.getLoginAppContext(),
+    //         'http://localhost:5004');
+    //     let vaultInfo: VaultInfo = await vaultService.checkSubscription();
+    //     console.log('get vault details with hive node: ' + vaultInfo.getServiceDid() + ', ' + vaultInfo.getPricePlan());
+    //
+    //     //// Just test ...
+    //     // const sdkContext = new SdkContext();
+    //     //
+    //     // console.log(`isUsingEssentialsConnector: ${isUsingEssentialsConnector()}`);
+    //     // const connector = connectivity.getActiveConnector() as EssentialsConnector;
+    //     // console.log(`connector.hasWalletConnectSession(): ${connector.hasWalletConnectSession()}`);
+    //     // console.log(`connector.getWalletConnectProvider().isWalletConnect(): ${connector.getWalletConnectProvider().isWalletConnect}`);
+    //     // console.log(`connector.getWalletConnectProvider().connected(): ${connector.getWalletConnectProvider().connected}`);
+    //     //
+    //     // const credential = await sdkContext.testGetAppIDCredential();
+    //     // console.log(`credential for testing: ${credential}`);
+    // }
 
     async getVaultDetail(hiveUrl: string): Promise<VaultDetail> {
         let vaultInfo: VaultInfo = await (await this.getVaultSubscriptionService(hiveUrl)).checkSubscription();

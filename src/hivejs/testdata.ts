@@ -18,7 +18,7 @@ export default class SdkContext {
     public static readonly APPLICATION_DID = 'did:elastos:iqtWRVjz7gsYhyuQEb1hYNNmWQt1Z9geXg';
     public static readonly RESOLVE_CACHE = "data/didCache";
     public static readonly USER_DIR = '/data/userDir';
-    private static readonly isTest: boolean = true;
+    private static readonly isTest: boolean = false;
 
     // for test.
     private isInit: boolean = false;
@@ -31,6 +31,7 @@ export default class SdkContext {
     private callerContext: AppContext;
     private appIdCredential: VerifiableCredential;
     private curLoginUserDidStr: string;
+    private curLoginUserNodeUrl: string; // maybe null
 
     static async getInstance(): Promise<SdkContext> {
         if (!SdkContext.INSTANCE) {
@@ -44,6 +45,7 @@ export default class SdkContext {
     }
 
     public constructor() {
+        connectivity.setApplicationDID(SdkContext.APPLICATION_DID);
         DIDBackend.initialize(new DefaultDIDAdapter(SdkContext.DID_NET));
         AppContext.setupResolver(SdkContext.DID_NET, SdkContext.RESOLVE_CACHE);
     }
@@ -52,6 +54,7 @@ export default class SdkContext {
      * for test.
      */
     async initByTestDid(): Promise<void> {
+        console.log('Init SDKContext by preset user did.');
         if (this.isInit) {
             return;
         }
@@ -153,40 +156,16 @@ export default class SdkContext {
      * @private
      */
     private async initByLoginDid(): Promise<void> {
+        console.log('Init SDKContext by essentials login user did.');
         const userDidStr = SdkContext.getLoginUserDid();
         if (!userDidStr) {
             throw new NoLoginError('Can not initialize SdkContext.');
         } else if (userDidStr === this.curLoginUserDidStr) {
             return;
         }
-
-        // Application Context
-        let owner = this;
-        this.context = await AppContext.build({
-            getLocalDataDir() : string {
-                return owner.getLocalStorePath();
-            },
-
-            async getAppInstanceDocument() : Promise<DIDDocument>  {
-                try {
-                    console.log(`enter getAppInstanceDocument() of the app context.`);
-                    return await SdkContext.getLoginAppInstanceDidDoc();
-                } catch (e) {
-                    console.error(`Failed to get application instance did documentation.`);
-                    return null;
-                }
-            },
-
-            async getAuthorization(jwtToken : string) : Promise<string> {
-                try {
-                    return await owner.getAuthAuthorization(jwtToken);
-                } catch (e) {
-                    console.error(`TestData->getAuthorization error: ${e}`);
-                    return null;
-                }
-            }
-        }, userDidStr);
+        this.context = await this.getLoginAppContext();
         this.curLoginUserDidStr = userDidStr;
+        this.curLoginUserNodeUrl = await this.getLoginUserNodeUrl();
     }
 
     getAppContext(): AppContext {
@@ -250,10 +229,10 @@ export default class SdkContext {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // For login user ConDID.
 
-    initLoginConnector(): void {
-        // connectivity.registerConnector(this.localIdentityConnector);
-        connectivity.setApplicationDID(SdkContext.APPLICATION_DID);
-    }
+    // initLoginConnector(): void {
+    //     // connectivity.registerConnector(this.localIdentityConnector);
+    //     connectivity.setApplicationDID(SdkContext.APPLICATION_DID);
+    // }
 
     async getLoginAppContext() {
         let owner = this;
@@ -360,17 +339,21 @@ export default class SdkContext {
     public async getLoginUserNodeUrl(): Promise<string> {
         const userDidStr = SdkContext.getLoginUserDid();
         if (!userDidStr) {
-            throw new NoLoginError('Can not get user did hive node url.');
+            throw new NoLoginError('Can not get the hive node url of the login user did.');
         }
         const userDidDocument = await DID.from(userDidStr).resolve();
         const service = userDidDocument.getService(`${userDidStr}#hivevault`);
-        const url: string = service.getServiceEndpoint();
-        if (url.includes(':')) {
-            return service.getServiceEndpoint();
-        } else if (url.startsWith('https')) {
-            return url + ":443";
+        if (!service) {
+            return null;
         }
-        return url + ":80";
+        // const url: string = service.getServiceEndpoint();
+        // if (url.includes(':')) {
+        //     return service.getServiceEndpoint();
+        // } else if (url.startsWith('https')) {
+        //     return url + ":443";
+        // }
+        // return url + ":80";
+        return service.getServiceEndpoint();
     }
 
     public async updateLoginUserNodeUrl(url: string): Promise<void> {
@@ -390,28 +373,28 @@ export default class SdkContext {
         return !!SdkContext.getLoginUserDid();
     }
 
-    public async testGetAppIDCredential() {
-        let didAccess = new ConDID.DIDAccess();
-
-        console.log(`Trying to get an app id credential`);
-
-        connectivity.setApplicationDID("did:elastos:in8oqWe4R4AswdJeFdhLDm6iGe6Ac4mqUJ"); // TestApp's DID
-
-        console.log(`Trying to generateAppIdCredential()`);
-
-        // const connector = connectivity.getActiveConnector();
-        // console.log(`Connector: ${await connector.getDisplayName()}`);
-
-        // let credential = await didAccess.generateAppIdCredential();
-        // console.log("App id credential:", credential);
-
-        // return credential;
-
-        return new Promise((resolve, refuse) => didAccess.generateAppIdCredential().then(credential => {
-            console.log("App id credential:", credential);
-            resolve(credential)
-        }).catch(error => {
-            refuse(error);
-        }));
-    }
+    // public async testGetAppIDCredential() {
+    //     let didAccess = new ConDID.DIDAccess();
+    //
+    //     console.log(`Trying to get an app id credential`);
+    //
+    //     connectivity.setApplicationDID("did:elastos:in8oqWe4R4AswdJeFdhLDm6iGe6Ac4mqUJ"); // TestApp's DID
+    //
+    //     console.log(`Trying to generateAppIdCredential()`);
+    //
+    //     // const connector = connectivity.getActiveConnector();
+    //     // console.log(`Connector: ${await connector.getDisplayName()}`);
+    //
+    //     // let credential = await didAccess.generateAppIdCredential();
+    //     // console.log("App id credential:", credential);
+    //
+    //     // return credential;
+    //
+    //     return new Promise((resolve, refuse) => didAccess.generateAppIdCredential().then(credential => {
+    //         console.log("App id credential:", credential);
+    //         resolve(credential)
+    //     }).catch(error => {
+    //         refuse(error);
+    //     }));
+    // }
 }

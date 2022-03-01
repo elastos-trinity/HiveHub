@@ -254,6 +254,7 @@ export default class SdkContext {
 
             async getAuthorization(jwtToken : string) : Promise<string> {
                 try {
+                    console.log(`enter getAuthorization() of the app context.`);
                     return await owner.getAuthAuthorization(jwtToken);
                 } catch (e) {
                     console.error(`TestData->getAuthorization error: ${e}`);
@@ -269,12 +270,14 @@ export default class SdkContext {
     }
 
     static async getLoginAppInstanceDidDoc(): Promise<DIDDocument> {
+        console.log('enter SdkContext.getLoginAppInstanceDidDoc()')
         const didAccess = new ConDID.DIDAccess();
         const info = await didAccess.getOrCreateAppInstanceDID();
         return await info.didStore.loadDid(info.did.toString());
     }
 
     private async getAuthAuthorization(challenge: string): Promise<string> {
+        console.log('enter SdkContext.getAuthAuthorization()')
         let claims : Claims = (await new JWTParserBuilder().build().parse(challenge)).getBody();
         if (claims == null) {
             throw new HiveException("Invalid jwt token as authorization.");

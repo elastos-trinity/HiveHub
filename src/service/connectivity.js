@@ -16,12 +16,11 @@ export function useConnectivitySDK() {
     console.log('connectivityInitialized = true.')
     return;
   }
+  connectivityInitialized = true;
 
   console.log("Preparing the Elastos connectivity SDK");
 
   connectivity.registerConnector(essentialsConnector).then(() => {
-    connectivityInitialized = true;
-
     console.log("essentialsConnector", essentialsConnector)
     console.log("Wallet connect provider", essentialsConnector.getWalletConnectProvider());
 

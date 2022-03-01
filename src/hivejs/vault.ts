@@ -11,7 +11,7 @@ export class VaultDetail {
 }
 
 export default class Vault {
-    private async getSdkContext(): Promise<SdkContext> {
+    public async getSdkContext(): Promise<SdkContext> {
         return await SdkContext.getInstance();
     }
 
@@ -55,6 +55,28 @@ export default class Vault {
         }
 
         console.log('leave hello');
+    }
+
+    async tryGetVaultDetailWithLogin() {
+        //// Vault operation.
+        const sdkContext = new SdkContext();
+        sdkContext.initLoginConnector();
+        const vaultService = new VaultSubscriptionService(await sdkContext.getLoginAppContext(),
+            'http://localhost:5004');
+        let vaultInfo: VaultInfo = await vaultService.checkSubscription();
+        console.log('get vault details with hive node: ' + vaultInfo.getServiceDid() + ', ' + vaultInfo.getPricePlan());
+
+        //// Just test ...
+        // const sdkContext = new SdkContext();
+        //
+        // console.log(`isUsingEssentialsConnector: ${isUsingEssentialsConnector()}`);
+        // const connector = connectivity.getActiveConnector() as EssentialsConnector;
+        // console.log(`connector.hasWalletConnectSession(): ${connector.hasWalletConnectSession()}`);
+        // console.log(`connector.getWalletConnectProvider().isWalletConnect(): ${connector.getWalletConnectProvider().isWalletConnect}`);
+        // console.log(`connector.getWalletConnectProvider().connected(): ${connector.getWalletConnectProvider().connected}`);
+        //
+        // const credential = await sdkContext.testGetAppIDCredential();
+        // console.log(`credential for testing: ${credential}`);
     }
 
     async getVaultDetail(hiveUrl: string): Promise<VaultDetail> {

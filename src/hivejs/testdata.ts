@@ -8,13 +8,14 @@ import {
 import {AppContext, BackupService, HiveException, VaultServices} from "@dchagastelles/elastos-hive-js-sdk";
 import {AppDID} from "./did/appdid";
 import {UserDID} from "./did/userdid";
-import {DID as ConDID} from "@elastosfoundation/elastos-connectivity-sdk-js";
+import {connectivity, DID as ConDID} from "@elastosfoundation/elastos-connectivity-sdk-js";
 import ClientConfig from "./config/clientconfig";
 import {NoLoginError} from "./error";
 
 export default class SdkContext {
     public static INSTANCE: SdkContext;
     public static readonly DID_NET = "mainnet";
+    public static readonly APPLICATION_DID = 'did:elastos:iqtWRVjz7gsYhyuQEb1hYNNmWQt1Z9geXg';
     public static readonly RESOLVE_CACHE = "data/didCache";
     public static readonly USER_DIR = '/data/userDir';
     private static readonly isTest: boolean = true;
@@ -42,7 +43,7 @@ export default class SdkContext {
         return SdkContext.INSTANCE;
     }
 
-    private constructor() {
+    public constructor() {
         DIDBackend.initialize(new DefaultDIDAdapter(SdkContext.DID_NET));
         AppContext.setupResolver(SdkContext.DID_NET, SdkContext.RESOLVE_CACHE);
     }
@@ -169,7 +170,7 @@ export default class SdkContext {
             async getAppInstanceDocument() : Promise<DIDDocument>  {
                 try {
                     console.log(`enter getAppInstanceDocument() of the app context.`);
-                    return await owner.getLoginAppInstanceDidDoc();
+                    return await SdkContext.getLoginAppInstanceDidDoc();
                 } catch (e) {
                     console.error(`Failed to get application instance did documentation.`);
                     return null;
@@ -249,12 +250,48 @@ export default class SdkContext {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // For login user ConDID.
 
-    async getLoginAppInstanceDidDoc(): Promise<DIDDocument> {
+    initLoginConnector(): void {
+        // connectivity.registerConnector(this.localIdentityConnector);
+        connectivity.setApplicationDID(SdkContext.APPLICATION_DID);
+    }
+
+    async getLoginAppContext() {
+        let owner = this;
+        const userDidStr = SdkContext.getLoginUserDid();
+        const context = await AppContext.build({
+            getLocalDataDir() : string {
+                return owner.getLoginLocalStorePath();
+            },
+
+            async getAppInstanceDocument() : Promise<DIDDocument>  {
+                try {
+                    console.log(`enter getAppInstanceDocument() of the app context.`);
+                    return await SdkContext.getLoginAppInstanceDidDoc();
+                } catch (e) {
+                    console.error(`Failed to get application instance did documentation.`);
+                    return null;
+                }
+            },
+
+            async getAuthorization(jwtToken : string) : Promise<string> {
+                try {
+                    return await owner.getAuthAuthorization(jwtToken);
+                } catch (e) {
+                    console.error(`TestData->getAuthorization error: ${e}`);
+                    return null;
+                }
+            }
+        }, userDidStr);
+        return context;
+    }
+
+    public getLoginLocalStorePath(): string {
+        return `${SdkContext.USER_DIR}/data/store/develop`;
+    }
+
+    static async getLoginAppInstanceDidDoc(): Promise<DIDDocument> {
         const didAccess = new ConDID.DIDAccess();
-        console.log('after didAccess creating.');
-        console.log('after didAccess creating 2.');
         const info = await didAccess.getOrCreateAppInstanceDID();
-        console.log(`get the app instance did: ${info}`);
         return await info.didStore.loadDid(info.did.toString());
     }
 
@@ -272,9 +309,10 @@ export default class SdkContext {
         if (!this.appIdCredential) {
             throw new HiveException('Can not get the credential for the application instance.');
         }
+        const storePassword = 'password';
         let vp: VerifiablePresentation = await AppDID.createVerifiablePresentation(
-            this.appIdCredential, hiveDid, nonce, this.appInstanceDid.getStorePassword());
-        return await AppDID.createChallengeResponse(vp, hiveDid, this.appInstanceDid.getStorePassword());
+            this.appIdCredential, hiveDid, nonce, storePassword);
+        return await AppDID.createChallengeResponse(vp, hiveDid, storePassword);
     }
 
     private checkAppIdCredentialStatus(appIdCredential): Promise<VerifiableCredential> {
@@ -285,7 +323,7 @@ export default class SdkContext {
                 return;
             }
 
-            console.warn('Credential invalid, Getting app identity credential');
+            console.log('checkAppIdCredentialStatus: Credential invalid, Getting app identity credential');
 
             let didAccess = new ConDID.DIDAccess();
             try {
@@ -295,6 +333,8 @@ export default class SdkContext {
                     resolve(credential);
                     return;
                 }
+
+                console.log('checkAppIdCredentialStatus: getExistingAppIdentityCredential, failed')
 
                 credential = await didAccess.generateAppIdCredential();
                 if (credential) {
@@ -348,5 +388,30 @@ export default class SdkContext {
 
     public static isLogined(): boolean {
         return !!SdkContext.getLoginUserDid();
+    }
+
+    public async testGetAppIDCredential() {
+        let didAccess = new ConDID.DIDAccess();
+
+        console.log(`Trying to get an app id credential`);
+
+        connectivity.setApplicationDID("did:elastos:in8oqWe4R4AswdJeFdhLDm6iGe6Ac4mqUJ"); // TestApp's DID
+
+        console.log(`Trying to generateAppIdCredential()`);
+
+        // const connector = connectivity.getActiveConnector();
+        // console.log(`Connector: ${await connector.getDisplayName()}`);
+
+        // let credential = await didAccess.generateAppIdCredential();
+        // console.log("App id credential:", credential);
+
+        // return credential;
+
+        return new Promise((resolve, refuse) => didAccess.generateAppIdCredential().then(credential => {
+            console.log("App id credential:", credential);
+            resolve(credential)
+        }).catch(error => {
+            refuse(error);
+        }));
     }
 }

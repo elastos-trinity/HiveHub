@@ -74,8 +74,9 @@ export class AppDID extends DIDEntity {
 			Promise<VerifiablePresentation> {
 		let access = new ConDID.DIDAccess();
 		let info = await access.getOrCreateAppInstanceDID();
+		let info2 = await access.getExistingAppInstanceDIDInfo();
 		let vpb = await VerifiablePresentation.createFor(info.did, null, info.didStore);
-		let vp = await vpb.credentials(vc).realm(hiveDid).nonce(nonce).seal(storepass);
+		let vp = await vpb.credentials(vc).realm(hiveDid).nonce(nonce).seal(info2.storePassword);
 		let listener = VerificationEventListener.getDefaultWithIdent("isValid");
 		return vp;
 	}
@@ -88,6 +89,7 @@ export class AppDID extends DIDEntity {
 
 		// Create JWT token with presentation.
 		let doc: DIDDocument = await AppDID.getAppInstanceDIDDoc();
+		let info = await new ConDID.DIDAccess().getExistingAppInstanceDIDInfo();
 		let token = await doc.jwtBuilder().addHeader(JWTHeader.TYPE, JWTHeader.JWT_TYPE)
 			.addHeader("version", "1.0")
 			.setSubject("DIDAuthResponse")
@@ -96,9 +98,8 @@ export class AppDID extends DIDEntity {
 			.setExpiration(exp)
 			.setNotBefore(nbf)
 			.claimsWithJson("presentation", vp.toString(true))
-			.sign(storepass);
-
-		AppDID.LOG.info("JWT Token: {}", token);
+			.sign(info.storePassword);
+		console.log(`challenge response: ${token}`);
 		return token;
 	}
 }

@@ -124,7 +124,15 @@ export default function Components(props) {
   let loading = state.loading;
   let setLoading = (v) => setState({...state, loading: v});
   const preventDefault = (event) => event.preventDefault();
-  const helloSdk = async (event) => await new Vault().hello();
+  // const helloSdk = async (event) => await new Vault().hello();
+  const helloSdk = async (event) => {
+    // TODO: test
+    // await new Vault().getVaultDetail('http://localhost:5004');
+
+    const vault = new Vault();
+    const url = await (await vault.getSdkContext()).getLoginUserNodeUrl();
+    console.log(`the url for login user did: ${url}`);
+  };
 
   const { user, signOut, setUser } = useContext(UserContext);
 
@@ -180,14 +188,14 @@ export default function Components(props) {
     setLogined(SdkContext.isLogined());
   }, []);
 
-  const handleLoginWithHiveJs = async () => {
-    // // OK: the doc can be got.
-    // console.log('enter handleLoginWithHiveJs()');
-    // let appInstanceDoc = await SdkContext.getLoginAppInstanceDidDoc();
-    // console.log(`appInstanceDoc: ${appInstanceDoc.toString(true)}`);
-
-    await new Vault().tryGetVaultDetailWithLogin();
-  }
+  // const handleLoginWithHiveJs = async () => {
+  //   // // OK: the doc can be got.
+  //   // console.log('enter handleLoginWithHiveJs()');
+  //   // let appInstanceDoc = await SdkContext.getLoginAppInstanceDidDoc();
+  //   // console.log(`appInstanceDoc: ${appInstanceDoc.toString(true)}`);
+  //
+  //   await new Vault().tryGetVaultDetailWithLogin();
+  // }
 
   return (
     <div>
@@ -253,13 +261,13 @@ export default function Components(props) {
             </Box>
             }
 
-            <Box component="div" className={classes.bottomBox}>
-              <Button variant="contained" color="default"
-                      onClick={handleLoginWithHiveJs}
-                      style={{backgroundColor: "#5297FF", color: "white", width: "200px"}}>
-                扫码登陆对接HiveJS
-              </Button>
-            </Box>
+            {/*<Box component="div" className={classes.bottomBox}>*/}
+            {/*  <Button variant="contained" color="default"*/}
+            {/*          onClick={handleLoginWithHiveJs}*/}
+            {/*          style={{backgroundColor: "#5297FF", color: "white", width: "200px"}}>*/}
+            {/*    扫码登陆对接HiveJS*/}
+            {/*  </Button>*/}
+            {/*</Box>*/}
 
             {state.nodes.map((node, index) =>
               <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid} key={node.nid}>

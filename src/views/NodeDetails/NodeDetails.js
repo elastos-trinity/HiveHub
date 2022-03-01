@@ -34,6 +34,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
+import SdkContext from "../../hivejs/testdata";
+import {useConnectivitySDK} from "../../service/connectivity";
 
 const customStyle = theme => ({
   ...styles,
@@ -142,6 +144,7 @@ export default function NodeDetails(props) {
     openVault: false,
     node: {},
     online: false,
+    isOwner: false,
     vaults: [],
     backups: [],
     // needCreate: false
@@ -156,6 +159,8 @@ export default function NodeDetails(props) {
 
   const [needCreate, setNeedCreate] = useState(true);
 
+  useConnectivitySDK();
+
   // init the page's data.
   useEffect(async () => {
     let data = await HiveHubServer.getHiveNodes(props.match.params.nid);
@@ -165,30 +170,26 @@ export default function NodeDetails(props) {
     let backups = [];
     if (!node) return;
     online = await HiveHubServer.isOnline(node.url);
-    if (!online) return;
-    let vault = new Vault();
-    let did = localStorage.getItem('did');
-    // if (did === node.owner_did) {
-    if (true) {
-      vaults = await vault.getVaults(node.url);
-      backups = await vault.getBackups(state.node.url);
-    }
-    setState({...state, node: data.nodes[0], online: online, vaults: vaults, backups: backups});
-    // vault.getVaultDetail(node.url).then(detail => setNeedCreate(true), error => setNeedCreate(true))
-    //     .catch(error => setNeedCreate(true));
+    if (!online) {
+      setState({...state, node: data.nodes[0]});
+    } else {
+      let vault = new Vault();
+      const isOwner = SdkContext.getLoginUserDid() === node.owner_did;
+      if (isOwner) {
+        vaults = await vault.getVaults(node.url);
+        backups = await vault.getBackups(state.node.url);
+      }
+      setState({...state, node: data.nodes[0], online: online, isOwner: isOwner, vaults: vaults, backups: backups});
 
-    // TODO: can not catch the error.
-    try {
-      let detail = await vault.getVaultDetail(node.url);
-      console.log('success vault.getVaultDetail()');
-      setNeedCreate(false);
-    } catch (e) {
-      console.error('failed vault.getVaultDetail()');
-      setNeedCreate(true);
+      try {
+        let detail = await vault.getVaultDetail(node.url);
+        console.log('success vault.getVaultDetail()');
+        setNeedCreate(false);
+      } catch (e) {
+        console.error('failed vault.getVaultDetail()');
+        setNeedCreate(true);
+      }
     }
-
-    // // TODO:
-    // setNeedCreate(true);
   }, []);
 
   // create&destroy the vault service.
@@ -255,6 +256,7 @@ export default function NodeDetails(props) {
 
           <Box component="div" className={classes.nodeDesc}>{state.node.remark}</Box>
 
+          {state.isOwner &&
           <Box component="div" className={state.online ? classes.serviceBox : classes.serviceBox_offline}>
             <Tabs
                 value={state.tabValue}
@@ -296,6 +298,7 @@ export default function NodeDetails(props) {
               </Box>
             </TabPanel>
           </Box>
+          }
         </div>
       </div>
 

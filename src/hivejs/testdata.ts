@@ -229,11 +229,6 @@ export default class SdkContext {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // For login user ConDID.
 
-    // initLoginConnector(): void {
-    //     // connectivity.registerConnector(this.localIdentityConnector);
-    //     connectivity.setApplicationDID(SdkContext.APPLICATION_DID);
-    // }
-
     async getLoginAppContext() {
         let owner = this;
         const userDidStr = SdkContext.getLoginUserDid();
@@ -375,29 +370,4 @@ export default class SdkContext {
     public static isLogined(): boolean {
         return !!SdkContext.getLoginUserDid();
     }
-
-    // public async testGetAppIDCredential() {
-    //     let didAccess = new ConDID.DIDAccess();
-    //
-    //     console.log(`Trying to get an app id credential`);
-    //
-    //     connectivity.setApplicationDID("did:elastos:in8oqWe4R4AswdJeFdhLDm6iGe6Ac4mqUJ"); // TestApp's DID
-    //
-    //     console.log(`Trying to generateAppIdCredential()`);
-    //
-    //     // const connector = connectivity.getActiveConnector();
-    //     // console.log(`Connector: ${await connector.getDisplayName()}`);
-    //
-    //     // let credential = await didAccess.generateAppIdCredential();
-    //     // console.log("App id credential:", credential);
-    //
-    //     // return credential;
-    //
-    //     return new Promise((resolve, refuse) => didAccess.generateAppIdCredential().then(credential => {
-    //         console.log("App id credential:", credential);
-    //         resolve(credential)
-    //     }).catch(error => {
-    //         refuse(error);
-    //     }));
-    // }
 }

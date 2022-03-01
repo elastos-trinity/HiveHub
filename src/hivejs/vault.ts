@@ -1,6 +1,6 @@
 import SdkContext from "./testdata";
 import {VaultInfo, VaultSubscriptionService} from "@dchagastelles/elastos-hive-js-sdk";
-import {lstatSync, readdirSync} from "./bfs";
+// import {ProviderService} from "@dchagastelles/elastos-hive-js-sdk/typings/restclient/provider/providerservice";
 
 export class VaultDetail {
     url: string;
@@ -20,63 +20,9 @@ export default class Vault {
         return new VaultSubscriptionService(sdkContext.getAppContext(), hiveUrl);
     }
 
-    // readDirTree(root: string): void {
-    //     const files = readdirSync(root);
-    //     for (const name of files) {
-    //         const childrenDir = root === '/' ? `/${name}` : `${root}/${name}`;
-    //         if (!lstatSync(childrenDir).isDirectory()) {
-    //             console.log(`get file: ${childrenDir}`);
-    //             continue;
-    //         }
-    //         console.log(`try dir: ${childrenDir}`);
-    //         this.readDirTree(childrenDir);
-    //     }
-    // }
-
-    // async hello(): Promise<void> {
-    //     // this.init().then((res) => alert('hello hive js'), (res) => alert('error hive js'));
-    //     // this.init().then(async (res) => {
-    //     //     this.vaultSubscriptionService.checkSubscription();
-    //     // }, (res) => alert('error hive js'));
-    //     // await this.init();
-    //
-    //     console.log('enter hello');
-    //
-    //     // const files = readdirSync('/');
-    //     // console.log(`all files: ${files}`);
-    //
-    //     this.readDirTree('/');
-    //
-    //     try {
-    //         let vaultInfo = await (await this.getVaultSubscriptionService('http://localhost:5004')).checkSubscription();
-    //         alert('hello hive js' + vaultInfo.getServiceDid());
-    //     } catch (e) {
-    //         console.log(`failed in hello: ${e}`);
-    //     }
-    //
-    //     console.log('leave hello');
-    // }
-
-    // async tryGetVaultDetailWithLogin() {
-    //     //// Vault operation.
-    //     const sdkContext = new SdkContext();
-    //     // sdkContext.initLoginConnector();
-    //     const vaultService = new VaultSubscriptionService(await sdkContext.getLoginAppContext(),
-    //         'http://localhost:5004');
-    //     let vaultInfo: VaultInfo = await vaultService.checkSubscription();
-    //     console.log('get vault details with hive node: ' + vaultInfo.getServiceDid() + ', ' + vaultInfo.getPricePlan());
-    //
-    //     //// Just test ...
-    //     // const sdkContext = new SdkContext();
-    //     //
-    //     // console.log(`isUsingEssentialsConnector: ${isUsingEssentialsConnector()}`);
-    //     // const connector = connectivity.getActiveConnector() as EssentialsConnector;
-    //     // console.log(`connector.hasWalletConnectSession(): ${connector.hasWalletConnectSession()}`);
-    //     // console.log(`connector.getWalletConnectProvider().isWalletConnect(): ${connector.getWalletConnectProvider().isWalletConnect}`);
-    //     // console.log(`connector.getWalletConnectProvider().connected(): ${connector.getWalletConnectProvider().connected}`);
-    //     //
-    //     // const credential = await sdkContext.testGetAppIDCredential();
-    //     // console.log(`credential for testing: ${credential}`);
+    // private async getProviderService(hiveUrl: string) {
+    //     const sdkContext = await this.getSdkContext();
+    //     return new ProviderService(sdkContext.getAppContext(), hiveUrl);
     // }
 
     async getVaultDetail(hiveUrl: string): Promise<VaultDetail> {
@@ -112,6 +58,19 @@ export default class Vault {
      * @param hiveUrl
      */
     async getVaults(hiveUrl: string): Promise<Array<VaultDetail>> {
+        // try {
+        //     const vaults = await (await this.getProviderService(hiveUrl)).getVaults();
+        //     return vaults.map(e => ({
+        //         url: hiveUrl,
+        //         quota: e.getMaxStorage(),
+        //         used: e.getDatabaseUseStorage() + e.getFileUseStorage(),
+        //         pricingPlan: e.getPricingName(),
+        //         userDid: e.getUserDid()
+        //     }));
+        // } catch (e) {
+        //     console.error(`getVaults error: ${e}`);
+        //     return []
+        // }
         return [{
             url: hiveUrl,
             quota: 512,
@@ -132,7 +91,20 @@ export default class Vault {
      * @param hiveUrl
      */
     async getBackups(hiveUrl: string): Promise<Array<VaultDetail>> {
-        return await this.getVaults(hiveUrl);
+        // try {
+        //     const backups = await (await this.getProviderService(hiveUrl)).getBackups();
+        //     return backups.map(e => ({
+        //         url: hiveUrl,
+        //         quota: e.getMaxStorage(),
+        //         used: e.getUseStorage(),
+        //         pricingPlan: e.getPricingName(),
+        //         userDid: e.getUserDid()
+        //     }));
+        // } catch (e) {
+        //     console.error(`getVaults error: ${e}`);
+        //     return []
+        // }
+        return this.getVaults(hiveUrl);
     }
 
     /**

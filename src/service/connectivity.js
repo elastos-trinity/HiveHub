@@ -12,8 +12,10 @@ let connectivityInitialized = false;
 export function useConnectivitySDK() {
   const { setIsLinkedToEssentials } = useContext(ConnectivityContext);
 
-  if (connectivityInitialized)
+  if (connectivityInitialized) {
+    console.log('connectivityInitialized = true.')
     return;
+  }
 
   console.log("Preparing the Elastos connectivity SDK");
 

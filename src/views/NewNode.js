@@ -28,6 +28,7 @@ import FormControl from "@material-ui/core/FormControl";
 import withStyles from "@material-ui/core/styles/withStyles";
 import HiveHubServer from "../service/hivehub";
 import SdkContext from "../hivejs/testdata";
+import {useConnectivitySDK} from "../service/connectivity";
 
 const customStyle = theme => ({
     ...styles,
@@ -150,6 +151,8 @@ export default function NewNode(props) {
     const [userDid, setUserDid] = useState('');
     const [info, setInfo] = useState({name: '', email: '',
         country: '', province: '', district: '', url: '', remark: ''});
+
+    useConnectivitySDK();
 
     const handleAddHiveNode = async () => {
         console.log(`name: ${info}`);

@@ -19,6 +19,7 @@ import Vault from "../hivejs/vault";
 import UserContext from "../contexts/UserContext";
 import HiveHubServer from "../service/hivehub";
 import Button from "@material-ui/core/Button";
+import SdkContext from "../hivejs/testdata";
 
 const useStyles = makeStyles((theme) => ({
     nodeVolumeBox: {
@@ -89,7 +90,7 @@ export default function Statistic() {
     let [online, setOnline] = useState(false);
     let [vault, setVault] = useState(null);
     let [nodes, setNodes] = useState([]);
-    let ownerDid = `did:elastos:${user}`;
+    let ownerDid = SdkContext.getLoginUserDid();
 
     // init page data.
     useEffect(async () => {
@@ -144,20 +145,22 @@ export default function Statistic() {
                     <Grid item className={classes.data}>
                         <Box component="div" className={classes.number}>{vault ? 1 : 0}</Box>
                         <Box component="div"><center>我参与的</center></Box>
-                        <Box component="div" className={classes.contentBox}>
-                            <Button variant="contained" color="default" onClick={handleBackup}
-                                    style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
-                                备份
-                            </Button>
-                            <Button variant="contained" color="default" onClick={handleMigration}
-                                    style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
-                                迁移
-                            </Button>
-                            <Button variant="contained" color="default" onClick={handleUnsubscribe}
-                                    style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
-                                解绑
-                            </Button>
-                        </Box>
+                        { vault &&
+                            <Box component="div" className={classes.contentBox}>
+                                <Button variant="contained" color="default" onClick={handleBackup}
+                                        style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
+                                    备份
+                                </Button>
+                                <Button variant="contained" color="default" onClick={handleMigration}
+                                        style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
+                                    迁移
+                                </Button>
+                                <Button variant="contained" color="default" onClick={handleUnsubscribe}
+                                        style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
+                                    解绑
+                                </Button>
+                            </Box>
+                        }
                     </Grid>
                 </Grid>
             </Box>

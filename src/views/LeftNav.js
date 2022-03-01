@@ -65,7 +65,8 @@ export default function LeftNav() {
                 aria-labelledby="nested-list-subheader"
                 className={classes.root}
             >
-                <ListItem button style={{backgroundColor: "#005996", borderRadius: "4px"}}
+                <ListItem button
+                          // style={{backgroundColor: "#005996", borderRadius: "4px"}}
                           component="a" href={`/dashboard/main`}>
                     <ListItemText primary={t('main')} />
                 </ListItem>
@@ -77,15 +78,15 @@ export default function LeftNav() {
                     <List component="div" disablePadding>
                         {nodes.map((node) => (
                             <ListItem button className={classes.nested}
-                                      component="a" href={node.online ? `/dashboard/node/${node.nid}` : '#'}>
+                                      component="a" href={`/dashboard/node/${node.nid}`}>
                                 <ListItemText primary={node.name} />
                             </ListItem>
                         ))}
                     </List>
                 </Collapse>
-                <ListItem button>
-                    <ListItemText primary={t('my-vault')} />
-                </ListItem>
+                {/*<ListItem button>*/}
+                {/*    <ListItemText primary={t('my-vault')} />*/}
+                {/*</ListItem>*/}
             </List>
         </Box>
     )

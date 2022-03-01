@@ -26,7 +26,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Statistic from "./Statistic";
 import UserContext from "../contexts/UserContext";
-import {essentialsConnector} from "../service/connectivity";
+import {essentialsConnector, useConnectivitySDK} from "../service/connectivity";
 import ConnectivityContext from "../contexts/ConnectivityContext";
 import NodeDetails from "./NodeDetails/NodeDetails";
 
@@ -82,6 +82,8 @@ export default function Dashboard(props) {
     const classes = useStyles();
     const { user, signOut, setUser } = useContext(UserContext);
     const { isLinkedToEssentials, setIsLinkedToEssentials } = useContext(ConnectivityContext);
+
+    useConnectivitySDK();
 
     if(user === null) {
         history.push("/")

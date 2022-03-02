@@ -90,10 +90,10 @@ export default function Statistic() {
     let [online, setOnline] = useState(false);
     let [vault, setVault] = useState(null);
     let [nodes, setNodes] = useState([]);
-    let ownerDid = SdkContext.getLoginUserDid();
 
     // init page data.
     useEffect(async () => {
+        let ownerDid = SdkContext.getLoginUserDid();
         let vault = new Vault();
         let url = await Vault.getHiveUrlByDid(ownerDid);
         if (url) {
@@ -108,11 +108,11 @@ export default function Statistic() {
                 }
             }
         }
-        let data = await HiveHubServer.getHiveNodes(null, ownerDid);
-        for (const node of data.nodes) {
-            node.online = await HiveHubServer.isOnline(node.url);
-        }
-        setNodes(data.nodes);
+        // let data = await HiveHubServer.getHiveNodes(null, ownerDid);
+        // for (const node of data.nodes) {
+        //     node.online = await HiveHubServer.isOnline(node.url);
+        // }
+        setNodes(await new Vault().getOwnedNodes(true));
     }, []);
 
     const handleBackup = async () => {

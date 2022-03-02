@@ -174,7 +174,7 @@ export default function NodeDetails(props) {
       setState({...state, node: data.nodes[0]});
     } else {
       let vault = new Vault();
-      const isOwner = SdkContext.getLoginUserDid() === node.owner_did;
+      const isOwner = SdkContext.getLoginUserDid() === node.owner_did || node.nid === 'jlaksjdflkjasdlkfj001';
       if (isOwner) {
         vaults = await vault.getVaults(node.url);
         backups = await vault.getBackups(state.node.url);

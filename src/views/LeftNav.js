@@ -17,6 +17,7 @@ import {useTranslation} from "react-i18next";
 import HiveHubServer from "../service/hivehub";
 import SdkContext from "../hivejs/testdata";
 import Badge from "../components/Badge/Badge";
+import Vault from "../hivejs/vault";
 // import Link from "@material-ui/core/Link";
 // import NavLink from "react-router-dom/modules/NavLink";
 
@@ -50,12 +51,7 @@ export default function LeftNav() {
     };
 
     useEffect(async () => {
-        const userDid = SdkContext.getLoginUserDid();
-        const data = await HiveHubServer.getHiveNodes(null, userDid);
-        for (const node of data.nodes) {
-            node.online = await HiveHubServer.isOnline(node.url);
-        }
-        setNodes(data.nodes);
+        setNodes(await new Vault().getOwnedNodes());
     }, [])
 
     return (

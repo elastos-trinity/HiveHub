@@ -1,5 +1,6 @@
 import SdkContext from "./testdata";
 import {VaultInfo, VaultSubscriptionService} from "@dchagastelles/elastos-hive-js-sdk";
+import HiveHubServer from "../service/hivehub";
 // import {ProviderService} from "@dchagastelles/elastos-hive-js-sdk/typings/restclient/provider/providerservice";
 
 export class VaultDetail {
@@ -113,7 +114,7 @@ export default class Vault {
      * @param did
      */
     static async getHiveUrlByDid(did: string): Promise<string> {
-        return 'http://localhost:5004';
+        return 'https://hive1.trinity-tech.io:443';
     }
 
     async backup(hiveUrl: string, dstUrl: string) {
@@ -134,5 +135,14 @@ export default class Vault {
             // TODO: check the result of backup here.
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
+    }
+
+    async getOwnedNodes(onlineCheck=false) {
+        const data = await HiveHubServer.getHiveNodes(null, null);
+        const nodes = data.nodes.length >= 4 ? [data.nodes[0], data.nodes[3]] : [];
+        for (const n of nodes) {
+            n.online = onlineCheck ? await HiveHubServer.isOnline(n.url) : false;
+        }
+        return nodes;
     }
 }

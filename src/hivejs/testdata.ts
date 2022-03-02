@@ -344,18 +344,11 @@ export default class SdkContext {
         if (!service) {
             return null;
         }
-        // const url: string = service.getServiceEndpoint();
-        // if (url.includes(':')) {
-        //     return service.getServiceEndpoint();
-        // } else if (url.startsWith('https')) {
-        //     return url + ":443";
-        // }
-        // return url + ":80";
-        return service.getServiceEndpoint();
+        return service.getServiceEndpoint() + ':443';
     }
 
     public async updateLoginUserNodeUrl(url: string): Promise<void> {
-        // TODO:
+        // TODO: Need essentials connector support first.
         console.warn(`TODO: publish the node url (${url}) for login user.`);
     }
 

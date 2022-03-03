@@ -163,23 +163,23 @@ export default function NodeDetails(props) {
 
   // init the page's data.
   useEffect(async () => {
-    let data = await HiveHubServer.getHiveNodes(props.match.params.nid);
+    let nodes = await HiveHubServer.getHiveNodes(props.match.params.nid);
     let online = false;
-    let node = data.nodes[0];
+    let node = nodes[0];
     let vaults = [];
     let backups = [];
     if (!node) return;
     online = await HiveHubServer.isOnline(node.url);
     if (!online) {
-      setState({...state, node: data.nodes[0]});
+      setState({...state, node: nodes[0]});
     } else {
       let vault = new Vault();
-      const isOwner = SdkContext.getLoginUserDid() === node.owner_did || node.nid === 'jlaksjdflkjasdlkfj001';
+      const isOwner = SdkContext.getLoginUserDid() === node.owner_did || node._id === 'jlaksjdflkjasdlkfj001';
       if (isOwner) {
         vaults = await vault.getVaults(node.url);
         backups = await vault.getBackups(state.node.url);
       }
-      setState({...state, node: data.nodes[0], online: online, isOwner: isOwner, vaults: vaults, backups: backups});
+      setState({...state, node: nodes[0], online: online, isOwner: isOwner, vaults: vaults, backups: backups});
 
       try {
         let detail = await vault.getVaultDetail(node.url);

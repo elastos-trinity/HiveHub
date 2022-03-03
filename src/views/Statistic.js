@@ -108,11 +108,7 @@ export default function Statistic() {
                 }
             }
         }
-        // let data = await HiveHubServer.getHiveNodes(null, ownerDid);
-        // for (const node of data.nodes) {
-        //     node.online = await HiveHubServer.isOnline(node.url);
-        // }
-        setNodes(await new Vault().getOwnedNodes(true));
+        setNodes(await new Vault().getLoginUserNodes(true));
     }, []);
 
     const handleBackup = async () => {
@@ -180,7 +176,7 @@ export default function Statistic() {
                             </TableHead>
                             <TableBody>
                                 {nodes.map((node) => (
-                                    <TableRow key={node.nid}>
+                                    <TableRow key={node._id}>
                                         <TableCell component="th" scope="row">
                                             {node.name}
                                         </TableCell>

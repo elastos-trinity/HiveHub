@@ -137,9 +137,9 @@ export default class Vault {
         }
     }
 
-    async getOwnedNodes(onlineCheck=false) {
-        const data = await HiveHubServer.getHiveNodes(null, null);
-        const nodes = data.nodes.length >= 4 ? [data.nodes[0], data.nodes[3]] : [];
+    async getLoginUserNodes(onlineCheck=false) {
+        const ownerDid = SdkContext.getLoginUserDid();
+        let nodes = await HiveHubServer.getHiveNodes(null, ownerDid);
         for (const n of nodes) {
             n.online = onlineCheck ? await HiveHubServer.isOnline(n.url) : false;
         }

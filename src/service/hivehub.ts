@@ -22,7 +22,13 @@ export default class HiveHubServer {
             // },
             // body: JSON.stringify(requestBody)
         });
-        return await response.json();
+        const data = await response.json();
+        if (!data) {
+            return [];
+        }
+        const nodes = await data.nodes;
+        console.log(`get hive nodes: ${nodes}`);
+        return nodes;
     }
 
     static async isOnline(nodeRoot) {

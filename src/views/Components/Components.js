@@ -177,16 +177,16 @@ export default function Components(props) {
 
   // init the page's data.
   useEffect(async () => {
-    let data = await HiveHubServer.getHiveNodes();
-    if (!data || !data.nodes) {
+    setLogined(SdkContext.isLogined());
+    let nodes = await HiveHubServer.getHiveNodes();
+    if (!nodes) {
       return;
     }
-    for (const node of data.nodes) {
+    for (const node of nodes) {
       node.online = await HiveHubServer.isOnline(node.url);
     }
-    setState({...state, nodes: data.nodes});
-    setLogined(SdkContext.isLogined());
-  }, []);
+    setState({...state, nodes: nodes});
+  }, [setState, setLogined]);
 
   // const handleLoginWithHiveJs = async () => {
   //   // // OK: the doc can be got.
@@ -270,9 +270,9 @@ export default function Components(props) {
             {/*</Box>*/}
 
             {state.nodes.map((node, index) =>
-              <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid} key={node.nid}>
+              <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid} key={node._id}>
                 <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
-                  <Link href={`/node/${node.nid}`} underline="none">
+                  <Link href={`/node/${node._id}`} underline="none">
                     <Box component="span" className={classes.nodeName}>{node.name} <Badge color={node.online ? "success" : "gray"}>{node.online ? "在线" : "离线"}</Badge></Box>
                   </Link>
                   <Box component="span" className={classes.nodeTime}>{node.created}</Box>

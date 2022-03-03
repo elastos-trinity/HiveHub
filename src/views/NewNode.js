@@ -165,9 +165,12 @@ export default function NewNode(props) {
         if (!info.remark) {alert('Please input hive node remark.'); return;}
         await HiveHubServer.addHiveNode({
             name: info.name,
+            created: '2021-11-09 21:00:32', // TODO:
+            ip: '192.115.24.2', // TODO:
             owner_did: userDid,
             area: `${info.country} ${info.province} ${info.district}`,
             email: info.email,
+            url: info.url,
             remark: info.remark
         });
         alert('Successfully add new hive node.');

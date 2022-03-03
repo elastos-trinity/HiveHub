@@ -51,7 +51,7 @@ export default function LeftNav() {
     };
 
     useEffect(async () => {
-        setNodes(await new Vault().getOwnedNodes());
+        setNodes(await new Vault().getLoginUserNodes());
     }, [])
 
     return (

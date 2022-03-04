@@ -8,7 +8,7 @@ import {
     ListItemIcon,
     ListItemText,
     ListSubheader, Table, TableBody, TableCell,
-    TableContainer, TableHead, TableRow
+    TableContainer, TableHead, TableRow, TextField
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
@@ -20,6 +20,11 @@ import UserContext from "../contexts/UserContext";
 import HiveHubServer from "../service/hivehub";
 import Button from "@material-ui/core/Button";
 import SdkContext from "../hivejs/testdata";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
 const useStyles = makeStyles((theme) => ({
     nodeVolumeBox: {
@@ -70,17 +75,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createData(name, visitor, capacity, status) {
-    return { name, visitor, capacity, status };
-}
-
-const rows = [
-    createData('Hive Node 1', 112, "2.2GB/20.1GB", 1),
-    createData('Hive Node 1', 237, "2.2GB/20.1GB", 1),
-    createData('Hive Node 1', 262, "2.2GB/20.1GB", 1),
-    createData('Hive Node 1', 305, "2.2GB/20.1GB", 0),
-    createData('Hive Node 1', 356, "2.2GB/20.1GB", 1),
-];
+// function createData(name, visitor, capacity, status) {
+//     return { name, visitor, capacity, status };
+// }
+//
+// const rows = [
+//     createData('Hive Node 1', 112, "2.2GB/20.1GB", 1),
+//     createData('Hive Node 1', 237, "2.2GB/20.1GB", 1),
+//     createData('Hive Node 1', 262, "2.2GB/20.1GB", 1),
+//     createData('Hive Node 1', 305, "2.2GB/20.1GB", 0),
+//     createData('Hive Node 1', 356, "2.2GB/20.1GB", 1),
+// ];
 
 export default function Statistic() {
     const classes = useStyles();
@@ -90,6 +95,9 @@ export default function Statistic() {
     let [online, setOnline] = useState(false);
     let [vault, setVault] = useState(null);
     let [nodes, setNodes] = useState([]);
+    let [showDialog, setShowDialog] = useState(false); // whether show dialog.
+    let [isBackup, setIsBackup] = useState(true); // backup or migration.
+    let [targetAddress, setTargetAddress] = useState(''); // target address for backup or migration.
 
     // init page data.
     useEffect(async () => {
@@ -113,13 +121,13 @@ export default function Statistic() {
 
     const handleBackup = async () => {
         console.log('enter handleBackup');
-        await new Vault().backup(vault.url, "http://localhost:5004");
-        alert('Successfully backup.');
+        setIsBackup(true);
+        setShowDialog(true);
     };
     const handleMigration = async () => {
         console.log('enter handleMigration');
-        await new Vault().migrate(vault.url, "http://localhost:5004");
-        alert('Successfully migrate.');
+        setIsBackup(false);
+        setShowDialog(true);
     };
     const handleUnsubscribe = async () => {
         console.log('enter handleUnsubscribe');
@@ -127,6 +135,23 @@ export default function Statistic() {
         setVault(null);
         alert('Successfully unsubscribe.');
     };
+    const handleDialogClose = async (value) => {
+        setShowDialog(false);
+        if (!value) {
+            return;
+        }
+        if (!targetAddress) {
+            alert('输入的目标地址无效！');
+            return;
+        }
+        if (isBackup) {
+            await new Vault().backup(vault.url, targetAddress);
+            alert('Successfully backup.');
+        } else {
+            await new Vault().migrate(vault.url, targetAddress);
+            alert('Successfully migrate.');
+        }
+    }
 
     return (
         <div>
@@ -225,6 +250,34 @@ export default function Statistic() {
                     </Grid>
                 </Grid>
             </div>
+
+            <Dialog
+                open={showDialog}
+                onClose={() => handleDialogClose(false)}
+                fullWidth
+                maxWidth="sm"
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">Please Input The Value ?</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        id="outlined-full-width"
+                        placeholder="请输入备份或迁移的目标地址"
+                        fullWidth
+                        margin="normal"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        variant="outlined"
+                        value={targetAddress}
+                        onChange={(e)=>setTargetAddress(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleDialogClose(false)}>No</Button>
+                    <Button onClick={() => handleDialogClose(true)} autoFocus>Yes</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

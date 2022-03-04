@@ -1,5 +1,6 @@
 import SdkContext from "./testdata";
-import {VaultInfo, VaultSubscriptionService} from "@dchagastelles/elastos-hive-js-sdk";
+import {VaultInfo, VaultSubscriptionService, Backup, BackupSubscriptionService,
+    BackupInfo, NotFoundException, VaultServices, BackupService, PromotionService} from "@elastosfoundation/hive-js-sdk";
 import HiveHubServer from "../service/hivehub";
 // import {ProviderService} from "@dchagastelles/elastos-hive-js-sdk/typings/restclient/provider/providerservice";
 
@@ -25,6 +26,25 @@ export default class Vault {
     //     const sdkContext = await this.getSdkContext();
     //     return new ProviderService(sdkContext.getAppContext(), hiveUrl);
     // }
+
+    private async getBackupService(hiveUrl: string, targetUrl: string, targetDid: string): BackupService {
+        const sdkContext = await this.getSdkContext();
+        const vaultService = new VaultServices(sdkContext.getAppContext(), hiveUrl);
+        const backupService: BackupService = vaultService.getBackupService();
+        backupService.setBackupContext(sdkContext.getLoginBackupAppContext(targetUrl, targetDid));
+        return backupService;
+    }
+
+    private async getBackupSubscriptionService(hiveUrl: string): Promise<BackupSubscriptionService> {
+        const sdkContext = await this.getSdkContext();
+        return new BackupSubscriptionService(sdkContext.getAppContext(), hiveUrl);
+    }
+
+    private async getPromotionService(hiveUrl: string): PromotionService {
+        const sdkContext = await this.getSdkContext();
+        const backup: Backup = new Backup(sdkContext.getAppContext(), hiveUrl);
+        return backup.getPromotionService();
+    }
 
     async getVaultDetail(hiveUrl: string): Promise<VaultDetail> {
         let vaultInfo: VaultInfo = await (await this.getVaultSubscriptionService(hiveUrl)).checkSubscription();
@@ -117,15 +137,31 @@ export default class Vault {
         return 'https://hive1.trinity-tech.io:443';
     }
 
+    private async subscribeBackup(dstUrl: string) {
+        let backupSubscriptionService = await this.getBackupSubscriptionService(dstUrl);
+        try {
+            return backupSubscriptionService.checkSubscription().getServiceDid();
+        } catch (e) {
+            if (e instanceof NotFoundException) {
+                return backupSubscriptionService.subscribe().getServiceDid();
+            } else {
+                throw e;
+            }
+        }
+    }
+
     async backup(hiveUrl: string, dstUrl: string) {
-        await (await this.getSdkContext()).getBackupService().startBackup();
+        console.log('start backup: TODO: need the BackupAppContext ready.');
+        // const targetDid = await this.subscribeBackup(dstUrl);
+        // await this.getBackupService(hiveUrl, dstUrl, targetDid).startBackup();
     }
 
     async migrate(hiveUrl: string, dstUrl: string) {
-        await (await this.getSdkContext()).getBackupService().startBackup();
+        console.log('start promote: TODO: need backup and update hive node url ready.');
+        // await this.backup(hiveUrl, dstUrl);
         // await this.waitBackupFinished();
-        // await (await this.getSdkContext()).newBackup().getPromotionService().promote();
-        await (await this.getSdkContext()).updateLoginUserNodeUrl(dstUrl);
+        // await (await this.getPromotionService(dstUrl)).promote();
+        // await (await this.getSdkContext()).updateLoginUserNodeUrl(dstUrl);
     }
 
     private async waitBackupFinished() {

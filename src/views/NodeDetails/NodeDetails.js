@@ -174,10 +174,10 @@ export default function NodeDetails(props) {
       setState({...state, node: nodes[0]});
     } else {
       let vault = new Vault();
-      const isOwner = SdkContext.getLoginUserDid() === node.owner_did || node._id === 'jlaksjdflkjasdlkfj001';
+      const isOwner = SdkContext.getLoginUserDid() === node.owner_did;
       if (isOwner) {
         vaults = await vault.getVaults(node.url);
-        backups = await vault.getBackups(state.node.url);
+        backups = await vault.getBackups(node.url);
       }
       setState({...state, node: nodes[0], online: online, isOwner: isOwner, vaults: vaults, backups: backups});
 

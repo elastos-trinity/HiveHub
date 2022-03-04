@@ -1,6 +1,7 @@
 import SdkContext from "./testdata";
 import {VaultInfo, VaultSubscriptionService, Backup, BackupSubscriptionService,
-    BackupInfo, NotFoundException, VaultServices, BackupService, PromotionService} from "@elastosfoundation/hive-js-sdk";
+    NotFoundException, VaultServices, BackupService, PromotionService,
+    ProviderService} from "@elastosfoundation/hive-js-sdk";
 import HiveHubServer from "../service/hivehub";
 // import {ProviderService} from "@dchagastelles/elastos-hive-js-sdk/typings/restclient/provider/providerservice";
 
@@ -22,10 +23,10 @@ export default class Vault {
         return new VaultSubscriptionService(sdkContext.getAppContext(), hiveUrl);
     }
 
-    // private async getProviderService(hiveUrl: string) {
-    //     const sdkContext = await this.getSdkContext();
-    //     return new ProviderService(sdkContext.getAppContext(), hiveUrl);
-    // }
+    private async getProviderService(hiveUrl: string): ProviderService {
+        const sdkContext = await this.getSdkContext();
+        return new ProviderService(sdkContext.getAppContext(), hiveUrl);
+    }
 
     private async getBackupService(hiveUrl: string, targetUrl: string, targetDid: string): BackupService {
         const sdkContext = await this.getSdkContext();
@@ -79,32 +80,19 @@ export default class Vault {
      * @param hiveUrl
      */
     async getVaults(hiveUrl: string): Promise<Array<VaultDetail>> {
-        // try {
-        //     const vaults = await (await this.getProviderService(hiveUrl)).getVaults();
-        //     return vaults.map(e => ({
-        //         url: hiveUrl,
-        //         quota: e.getMaxStorage(),
-        //         used: e.getDatabaseUseStorage() + e.getFileUseStorage(),
-        //         pricingPlan: e.getPricingName(),
-        //         userDid: e.getUserDid()
-        //     }));
-        // } catch (e) {
-        //     console.error(`getVaults error: ${e}`);
-        //     return []
-        // }
-        return [{
-            url: hiveUrl,
-            quota: 512,
-            used: 20,
-            pricingPlan: 'Free',
-            userDid: 'did1'
-        }, {
-            url: hiveUrl,
-            quota: 512,
-            used: 100,
-            pricingPlan: 'Free',
-            userDid: 'did2'
-        }];
+        try {
+            const vaults = await (await this.getProviderService(hiveUrl)).getVaults();
+            return vaults.map(e => ({
+                url: hiveUrl,
+                quota: e.getMaxStorage(),
+                used: e.getDatabaseUseStorage() + e.getFileUseStorage(),
+                pricingPlan: e.getPricingName(),
+                userDid: e.getUserDid()
+            }));
+        } catch (e) {
+            console.error(`getVaults error: ${e}`);
+            return []
+        }
     }
 
     /**
@@ -112,20 +100,19 @@ export default class Vault {
      * @param hiveUrl
      */
     async getBackups(hiveUrl: string): Promise<Array<VaultDetail>> {
-        // try {
-        //     const backups = await (await this.getProviderService(hiveUrl)).getBackups();
-        //     return backups.map(e => ({
-        //         url: hiveUrl,
-        //         quota: e.getMaxStorage(),
-        //         used: e.getUseStorage(),
-        //         pricingPlan: e.getPricingName(),
-        //         userDid: e.getUserDid()
-        //     }));
-        // } catch (e) {
-        //     console.error(`getVaults error: ${e}`);
-        //     return []
-        // }
-        return this.getVaults(hiveUrl);
+        try {
+            const backups = await (await this.getProviderService(hiveUrl)).getBackups();
+            return backups.map(e => ({
+                url: hiveUrl,
+                quota: e.getMaxStorage(),
+                used: e.getUseStorage(),
+                pricingPlan: e.getPricingName(),
+                userDid: e.getUserDid()
+            }));
+        } catch (e) {
+            console.error(`getVaults error: ${e}`);
+            return []
+        }
     }
 
     /**

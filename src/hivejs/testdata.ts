@@ -5,7 +5,7 @@ import {
     VerifiableCredential,
     VerifiablePresentation, DID
 } from "@elastosfoundation/did-js-sdk";
-import {AppContext, BackupService, HiveException, VaultServices} from "@dchagastelles/elastos-hive-js-sdk";
+import {AppContext, BackupService, HiveException, VaultServices, Backup} from "@elastosfoundation/hive-js-sdk";
 import {AppDID} from "./did/appdid";
 import {UserDID} from "./did/userdid";
 import {connectivity, DID as ConDID} from "@elastosfoundation/elastos-connectivity-sdk-js";
@@ -258,6 +258,38 @@ export default class SdkContext {
             }
         }, userDidStr);
         return context;
+    }
+
+    getLoginBackupAppContext(targetUrl: string, targetDid: string) {
+        const self = this;
+        return {
+            getParameter(parameter:string): string {
+                switch (parameter) {
+                    case "targetAddress":
+                        return targetUrl;
+
+                    case "targetServiceDid":
+                        return targetDid;
+
+                    default:
+                        break;
+                }
+                return null;
+            },
+
+            getType(): string {
+                return null;
+            },
+
+            async getAuthorization(srcDid: string, targetDid: string, targetHost: string): Promise<string> {
+                try {
+                    // TODO: make this work with connectivity sdk after supported this.
+                    return (await self.userDid.issueBackupDiplomaFor(srcDid, targetHost, targetDid)).toString();
+                } catch (e) {
+                    throw new HiveException(e.toString());
+                }
+            }
+        }
     }
 
     public getLoginLocalStorePath(): string {

@@ -168,6 +168,7 @@ export default function Components(props) {
       const did = presentation.getHolder().getMethodSpecificId();
       localStorage.setItem("did", did);
       setUser(did)
+      setLogined(true);
       setLoading(false);
       console.log(did);
     }
@@ -273,7 +274,7 @@ export default function Components(props) {
               <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid} key={node._id}>
                 <Grid container justifyContent="space-between" style={{marginBottom: "15px"}}>
                   <Link href={`/node/${node._id}`} underline="none">
-                    <Box component="span" className={classes.nodeName}>{node.name} <Badge color={node.online ? "success" : "gray"}>{node.online ? "在线" : "离线"}</Badge></Box>
+                    <Box component="span" className={classes.nodeName}>{node.name} <Badge color={node.online ? "success" : "gray"}>{node.online ? t('online') : t('offline')}</Badge></Box>
                   </Link>
                   <Box component="span" className={classes.nodeTime}>{node.created}</Box>
                 </Grid>

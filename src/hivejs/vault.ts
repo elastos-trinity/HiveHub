@@ -139,13 +139,14 @@ export default class Vault {
 
     async backup(hiveUrl: string, dstUrl: string) {
         console.log('start backup: TODO: need the BackupAppContext ready.');
+        await this.waitBackupFinished();
         // const targetDid = await this.subscribeBackup(dstUrl);
         // await this.getBackupService(hiveUrl, dstUrl, targetDid).startBackup();
     }
 
     async migrate(hiveUrl: string, dstUrl: string) {
         console.log('start promote: TODO: need backup and update hive node url ready.');
-        // await this.backup(hiveUrl, dstUrl);
+        await this.backup(hiveUrl, dstUrl);
         // await this.waitBackupFinished();
         // await (await this.getPromotionService(dstUrl)).promote();
         // await (await this.getSdkContext()).updateLoginUserNodeUrl(dstUrl);
@@ -154,9 +155,10 @@ export default class Vault {
     private async waitBackupFinished() {
         let times = 0;
         let isBackup = false;
-        while (times < 10) {
+        while (times < 5) {
             // TODO: check the result of backup here.
             await new Promise(resolve => setTimeout(resolve, 1000));
+            times += 1;
         }
     }
 

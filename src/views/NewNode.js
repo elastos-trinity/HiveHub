@@ -202,7 +202,7 @@ export default function NewNode(props) {
                             <Grid item md={10} className={classes.itemValue}>
                                 <TextField
                                     id="outlined-full-width"
-                                    placeholder="不超过12个字符，不含有特殊字符"
+                                    placeholder="Please input node name, less than 12 characters."
                                     fullWidth
                                     margin="normal"
                                     InputLabelProps={{
@@ -218,6 +218,7 @@ export default function NewNode(props) {
                             <Grid item md={10} className={classes.itemValue}>
                                 <TextField
                                     id="outlined-full-width"
+                                    placeholder="Please input email, sample: abc@def.com."
                                     fullWidth
                                     margin="normal"
                                     InputLabelProps={{
@@ -246,7 +247,7 @@ export default function NewNode(props) {
                                     <TextField
                                         id="outlined-full-width"
                                         margin="normal"
-                                        placeholder="国家"
+                                        placeholder="Country"
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
@@ -259,7 +260,7 @@ export default function NewNode(props) {
                                     <TextField
                                         id="outlined-full-width"
                                         margin="normal"
-                                        placeholder="省"
+                                        placeholder="Province"
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
@@ -272,7 +273,7 @@ export default function NewNode(props) {
                                     <TextField
                                         id="outlined-full-width"
                                         margin="normal"
-                                        placeholder="区"
+                                        placeholder="District"
                                         InputLabelProps={{
                                             shrink: true,
                                         }}

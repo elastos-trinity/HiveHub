@@ -74,7 +74,7 @@ export default function LeftNav() {
                     <List component="div" disablePadding>
                         {nodes.map((node) => (
                             <ListItem button className={classes.nested}
-                                      component="a" href={`/dashboard/node/${node.nid}`}>
+                                      component="a" href={`/dashboard/node/${node._id}`}>
                                 <ListItemText primary={node.name} />
                             </ListItem>
                         ))}

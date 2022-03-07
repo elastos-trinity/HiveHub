@@ -190,7 +190,7 @@ export default function SearchResult(props) {
 
               <GridItem xs={12} sm={12} md={12} className={classes.nodeGrid}>
                 <Grid container xs={12} sm={12} md={12} justifyContent="space-between" style={{marginBottom: "15px"}}>
-                  <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="gray">离线</Badge></Box>
+                  <Box component="span" className={classes.nodeName}>HiveNode 节点名称 <Badge color="gray">{t('offline')}</Badge></Box>
                   <Box component="span" className={classes.nodeTime}>2021-11-09 21:00:32</Box>
                 </Grid>
 

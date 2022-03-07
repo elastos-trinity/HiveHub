@@ -124,7 +124,7 @@ export default function Dashboard(props) {
                                 <Grid item md={4}>
                                     <Box component="div" className={classes.login}>
                                         <AccountCircleIcon style={{position: "relative", top: "6px", marginRight: "5px"}} />
-                                        登入DID
+                                        Login DID
                                     </Box>
                                 </Grid>
                                 <Grid item md={8} className={classes.didBox}>
@@ -132,7 +132,7 @@ export default function Dashboard(props) {
                                     <Link onClick={ () => { logout() } } style={{textDecoration: "none", cursor: "pointer"}}>
                                         <Box component="span" className={classes.logout}>
                                             <PowerSettingsNewIcon style={{position: "relative", top: "6px", marginRight: "5px"}} />
-                                            登出
+                                            Logout
                                         </Box>
                                     </Link>
                                 </Grid>

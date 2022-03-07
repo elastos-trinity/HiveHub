@@ -157,7 +157,7 @@ export default function NodeDetails(props) {
     setState({...state, tabValue: newValue});
   };
 
-  const [needCreate, setNeedCreate] = useState(true);
+  const [needCreate, setNeedCreate] = useState(null);
 
   useConnectivitySDK();
 
@@ -229,7 +229,7 @@ export default function NodeDetails(props) {
       <div className={classNames(classes.main)} style={{paddingTop: "75px"}}>
         <div className={classes.container}>
 
-          <Box component="div" className={classes.nodeName}>{state.node.name} <Badge color={state.online ? "success" : "gray"}>{state.online ? "在线" : "离线"}</Badge>
+          <Box component="div" className={classes.nodeName}>{state.node.name} <Badge color={state.online ? "success" : "gray"}>{state.online ? t('online') : t('offline')}</Badge>
           </Box>
 
           <Box component="div" className={classes.nodeTime}>{state.node.created}</Box>
@@ -237,19 +237,19 @@ export default function NodeDetails(props) {
           <Box component="div" className={classes.nodeParam}>
             <Grid container>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>地址:</Box> {state.node.ip}
+                <Box component="span" className={classes.paramKey}>IP:</Box> {state.node.ip}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>发起人DID：</Box> {state.node.owner_did}
+                <Box component="span" className={classes.paramKey}>{t('owner-did')}：</Box> {state.node.owner_did}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>国家/地区：</Box> {state.node.area}
+                <Box component="span" className={classes.paramKey}>{t('form-node-country')}：</Box> {state.node.area}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>邮箱：</Box> {state.node.email}
+                <Box component="span" className={classes.paramKey}>{t('form-node-email')}：</Box> {state.node.email}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.paramGrid}>
-                <Box component="span" className={classes.paramKey}>URL地址：</Box> {state.node.url}
+                <Box component="span" className={classes.paramKey}>{t('form-node-url')}：</Box> {state.node.url}
               </Grid>
             </Grid>
           </Box>
@@ -302,7 +302,7 @@ export default function NodeDetails(props) {
         </div>
       </div>
 
-      {state.online &&
+      {state.online && needCreate !== null &&
         <Box component="div" className={classes.bottomBox}>
           <Button variant="contained" color="default"
                   style={{backgroundColor: "#5297FF", color: "white", width: "200px"}}

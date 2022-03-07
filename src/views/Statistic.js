@@ -156,29 +156,29 @@ export default function Statistic() {
     return (
         <div>
             <Box component="div" className={classes.nodeVolumeBox}>
-                <Box component="div" className={classes.title}>Hive Node 数量统计</Box>
+                <Box component="div" className={classes.title}>Hive Node Statistics</Box>
                 <Grid container justifyContent="space-around" style={{margin: "60px 0", height: "60px"}}>
                     <Grid item className={classes.data}>
                         <Box component="div" className={classes.number}>{nodes.length}</Box>
-                        <Box component="div">我创建的</Box>
+                        <Box component="div">Created By Myself</Box>
                     </Grid>
                     <Divider orientation="vertical" />
                     <Grid item className={classes.data}>
                         <Box component="div" className={classes.number}>{vault ? 1 : 0}</Box>
-                        <Box component="div"><center>我参与的</center></Box>
+                        <Box component="div"><center>Participated By Myself</center></Box>
                         { vault &&
                             <Box component="div" className={classes.contentBox}>
                                 <Button variant="contained" color="default" onClick={handleBackup}
                                         style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
-                                    备份
+                                    Backup
                                 </Button>
                                 <Button variant="contained" color="default" onClick={handleMigration}
                                         style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
-                                    迁移
+                                    Migrate
                                 </Button>
                                 <Button variant="contained" color="default" onClick={handleUnsubscribe}
                                         style={{backgroundColor: "#5297FF", color: "white", width: "100px"}}>
-                                    解绑
+                                    Unbind
                                 </Button>
                             </Box>
                         }
@@ -189,7 +189,7 @@ export default function Statistic() {
             <div>
                 <Grid container justifyContent={"space-between"}>
                     <Grid item className={classes.allNodeBox}>
-                        <Box component="div" className={classes.title}>Hive Node 全览</Box>
+                        <Box component="div" className={classes.title}>Hive Node Summary</Box>
                         <Table className={classes.table} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
@@ -218,7 +218,7 @@ export default function Statistic() {
                         </Table>
                     </Grid>
                     <Grid item className={classes.allNodeBox}>
-                        <Box component="div" className={classes.title}>Vault 全览</Box>
+                        <Box component="div" className={classes.title}>Vault Summary</Box>
                         <Table className={classes.table} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
@@ -262,7 +262,7 @@ export default function Statistic() {
                 <DialogContent>
                     <TextField
                         id="outlined-full-width"
-                        placeholder="请输入备份或迁移的目标地址"
+                        placeholder="Please input the destination address."
                         fullWidth
                         margin="normal"
                         InputLabelProps={{

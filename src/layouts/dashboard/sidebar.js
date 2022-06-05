@@ -5,11 +5,11 @@ import { styled } from '@mui/material/styles';
 import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
 // components
 import React, { useContext, useEffect, useState } from 'react';
-import HiveLogo from '../components/_dashboard/hive/HiveLogo';
-import Scrollbar from '../components/Scrollbar';
-import { MHidden } from '../components/@material-extend';
-import SmallHexagon from '../components/SmallHexagon';
-import UserContext from '../contexts/UserContext';
+import HiveLogo from '../../components/hive/HiveLogo';
+import Scrollbar from '../../components/Scrollbar';
+import { MHidden } from '../../components/@material-extend';
+import SmallHexagon from '../../components/SmallHexagon';
+import UserContext from '../../contexts/UserContext';
 
 // ----------------------------------------------------------------------
 

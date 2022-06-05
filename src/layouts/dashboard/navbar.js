@@ -4,8 +4,8 @@ import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 // material
 import { alpha, styled } from '@mui/material/styles';
 import { AppBar, Toolbar, IconButton, Box } from '@mui/material';
-import { MHidden } from '../components/@material-extend';
-import LanguageBar from '../components/LanguageBar';
+import { MHidden } from '../../components/@material-extend';
+import LanguageBar from '../../components/LanguageBar';
 // components
 
 // ----------------------------------------------------------------------

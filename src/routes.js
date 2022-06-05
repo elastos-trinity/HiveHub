@@ -1,6 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
-import LandingPage from './components/_dashboard/hive/LandingPage';
 // import DashboardLayout from './layouts/dashboard';
 // import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
@@ -11,13 +10,14 @@ import LandingPage from './components/_dashboard/hive/LandingPage';
 // import Blog from './pages/Blog';
 // import User from './pages/User';
 // import NotFound from './pages/Page404';
-import HiveMainPage from './layouts/HiveMainPage';
-import HiveDashboard from './layouts/HiveDashboard';
-import HiveHome from './pages/HiveHome';
-import HiveNodes from './pages/HiveNodes';
-import HiveVaults from './pages/HiveVaults';
-import HiveNodeAdd from './pages/HiveNodeAdd';
-import HiveNodeDetail from './pages/HiveNodeDetail';
+import LandingPage from './pages/Landing';
+import HiveMainPage from './layouts/Landing';
+import HiveDashboard from './layouts/Dashboard';
+import HiveHome from './pages/Dashboard/Home';
+import HiveNodes from './pages/Dashboard/MyNodes';
+import HiveVaults from './pages/Dashboard/MyVaults';
+import HiveNodeAdd from './pages/Dashboard/MyNodes/HiveNodeAdd';
+import HiveNodeDetail from './pages/Dashboard/MyNodes/HiveNodeDetail';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +31,6 @@ export default function Router() {
         { path: 'landing', element: <LandingPage /> }
       ]
     },
-
     {
       path: '/dashboard',
       element: <HiveDashboard />,
@@ -66,7 +65,6 @@ export default function Router() {
     //     { path: '*', element: <Navigate to="/404" /> }
     //   ]
     // },
-
     { path: '*', element: <Navigate to="/404" replace /> }
   ]);
 }

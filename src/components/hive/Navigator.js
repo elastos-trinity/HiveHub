@@ -1,8 +1,9 @@
 import { Box, Grid, Link } from '@mui/material';
 import * as React from 'react';
 import HiveLogo from './HiveLogo';
-import WebAppBackground from '../../WebAppBackground';
-import LanguageBar from '../../LanguageBar';
+import WebAppBackground from '../WebAppBackground';
+import LanguageBar from '../LanguageBar';
+import palette from '../../theme/palette';
 
 export default function Navigator() {
   return (
@@ -20,7 +21,9 @@ export default function Navigator() {
         sx={{
           position: 'fixed',
           width: '100%',
-          height: '120px'
+          height: '120px',
+          backgroundColor: palette.common.white,
+          zIndex: 1
         }}
       >
         <Grid

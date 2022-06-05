@@ -3,9 +3,9 @@ import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import SmallHexagon from '../../SmallHexagon';
-import UserContext from '../../../contexts/UserContext';
-import { essentialsConnector, useConnectivitySDK } from '../../../service/connectivity';
+import SmallHexagon from '../../components/SmallHexagon';
+import UserContext from '../../contexts/UserContext';
+import { essentialsConnector, useConnectivitySDK } from '../../service/connectivity';
 
 const ConnectButton = styled(Button)({
   color: '#FF931E',

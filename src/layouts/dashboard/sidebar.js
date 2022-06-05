@@ -3,6 +3,7 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
+import { Icon } from '@iconify/react';
 // components
 import React, { useContext, useEffect, useState } from 'react';
 import HiveLogo from '../../components/hive/HiveLogo';
@@ -55,7 +56,7 @@ export default function HiveDashboardSidebar({ isOpenSidebar, onCloseSidebar }) 
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = useLocation();
-  const [activeSection, setActiveSection] = React.useState(location.pathname.split('/')[2]); // value can be 'home' 'nodes' 'vaults'
+  const [activeSection, setActiveSection] = useState(location.pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
 
   useEffect(() => {
     if (!user.did) {
@@ -65,8 +66,41 @@ export default function HiveDashboardSidebar({ isOpenSidebar, onCloseSidebar }) 
     if (isOpenSidebar) {
       onCloseSidebar();
     }
+
+    setActiveSection(pathname.split('/')[2]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  const menuItemsList = [
+    {
+      title: 'Home',
+      path: '/dashboard/home',
+      icon: 'bx:home-alt-2',
+      iconActive: 'bxs:home-alt-2',
+      label: 'home'
+    },
+    {
+      title: 'Explore',
+      path: '/dashboard/explore',
+      icon: 'mdi:hexagon-multiple-outline',
+      iconActive: 'mdi:hexagon-multiple',
+      label: 'explore'
+    },
+    {
+      title: 'My Nodes',
+      path: '/dashboard/nodes',
+      icon: 'mdi:hexagon-outline',
+      iconActive: 'mdi:hexagon',
+      label: 'nodes'
+    },
+    {
+      title: 'My Vaults',
+      path: '/dashboard/vaults',
+      icon: 'tabler:square-dot',
+      iconActive: 'tabler:square-dot',
+      label: 'vaults'
+    }
+  ];
 
   const renderContent = (
     <Scrollbar
@@ -94,137 +128,41 @@ export default function HiveDashboardSidebar({ isOpenSidebar, onCloseSidebar }) 
         </Link>
       </Box>
 
-      <Stack sx={{ mx: 2.5, mt: 4 }}>
-        <Link href="/dashboard/home" sx={{ textDecoration: 'none' }}>
-          <NavBox>
-            <Stack direction="row" alignItems="center" justifyContent="center">
-              <Box sx={{ position: 'relative', top: '-35px', marginRight: '15px' }}>
-                <Box
-                  sx={{
-                    width: 0,
-                    height: 0,
-                    border: '22px solid transparent',
-                    borderBottom: `22px solid ${
-                      activeSection === 'home' ? 'black' : 'rgba(0, 0, 0, 0.3)'
-                    }`,
-                    position: 'relative',
-                    top: '40px'
-                  }}
-                />
-                <Box
-                  sx={{
-                    width: 0,
-                    height: 0,
-                    border: '18px solid transparent',
-                    borderBottom: `18px solid ${
-                      activeSection === 'home' ? 'transparent' : 'white'
-                    }`,
-                    position: 'relative',
-                    top: '2px',
-                    left: '3.7px'
-                  }}
-                />
-                <Box
-                  sx={{
-                    width: '30px',
-                    height: '20px',
-                    border: `2px solid ${
-                      activeSection === 'home' ? 'black' : 'rgba(0, 0, 0, 0.3)'
-                    }`,
-                    borderTop: 'none',
-                    margin: '0 auto',
-                    backgroundColor: `${activeSection === 'home' ? 'black' : 'white'}`
-                  }}
-                />
-              </Box>
-              <Typography variant="h5" sx={{ ...(activeSection === 'home' && activeLink) }}>
-                Home
-              </Typography>
-            </Stack>
-          </NavBox>
-        </Link>
-        <Link href="/dashboard/nodes" sx={{ textDecoration: 'none' }}>
-          <NavBox>
+      <Stack sx={{ mx: 2.5, mt: 4 }} spacing="">
+        {menuItemsList.map((item, index) => (
+          <NavBox
+            key={`sidebar-menu-${index}`}
+            onClick={() => navigate(item.path)}
+            sx={{ cursor: 'pointer' }}
+          >
             <Stack
               direction="row"
               alignItems="center"
-              justifyContent="center"
-              sx={{ position: 'relative', top: '15px', left: '20px' }}
+              justifyContent="flex-start"
+              spacing="15px"
+              ml="70px"
             >
-              <Box sx={{ position: 'relative', top: '3px', marginRight: '15px' }}>
-                <SmallHexagon
-                  borderColor={activeSection === 'nodes' ? 'black' : 'rgba(0, 0, 0, 0.3)'}
-                  rootHexagon
-                  sideLength={20}
-                  borderWidth={2}
-                  backColor={activeSection === 'nodes' ? 'black' : 'transparent'}
-                />
-              </Box>
-              <Typography variant="h5" sx={{ ...(activeSection === 'nodes' && activeLink) }}>
-                My Nodes
+              <Icon
+                icon={activeSection === item.label ? item.iconActive : item.icon}
+                fontSize={50}
+                color={activeSection === item.label ? 'black' : 'rgba(0, 0, 0, 0.3)'}
+                rotate={item.label === 'explore' ? 3 : 0}
+              />
+              <Typography variant="h5" sx={{ ...(activeSection === item.label && activeLink) }}>
+                {item.title}
               </Typography>
             </Stack>
           </NavBox>
-        </Link>
-        <Link href="/dashboard/vaults" sx={{ textDecoration: 'none' }}>
-          <NavBox>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="center"
-              sx={{ position: 'relative', left: '20px' }}
-            >
-              <Box sx={{ marginRight: '15px' }}>
-                <Box
-                  sx={{
-                    width: '35px',
-                    height: '35px',
-                    margin: '0 auto',
-                    borderRadius: '2px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    border: `2px solid ${
-                      activeSection === 'vaults' ? 'black' : 'rgba(0, 0, 0, 0.3)'
-                    }`,
-                    backgroundColor: `${activeSection === 'vaults' ? 'black' : 'transparent'}`
-                  }}
-                >
-                  <Box
-                    sx={{
-                      color: '#FF931E',
-                      height: '10px',
-                      width: '10px',
-                      margin: '0 auto',
-                      borderRadius: '10px',
-                      backgroundColor: `${activeSection === 'vaults' ? 'black' : 'transparent'}`,
-                      border: `2px solid ${
-                        activeSection === 'vaults' ? 'white' : 'rgba(0, 0, 0, 0.3)'
-                      }`
-                    }}
-                  />
-                </Box>
-              </Box>
-              <Typography variant="h5" sx={{ ...(activeSection === 'vaults' && activeLink) }}>
-                My Vaults
-              </Typography>
-            </Stack>
-          </NavBox>
-        </Link>
+        ))}
       </Stack>
 
       <Box sx={{ flexGrow: 1 }} />
 
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-        <Stack
-          alignItems="center"
-          spacing={3}
-          sx={{
-            p: 2.5,
-            pt: 5,
-            position: 'relative'
-          }}
-        >
-          <Box component="img" src="/static/illustrations/github.png" sx={{ width: 90 }} />
+        <Stack alignItems="center" spacing={3} sx={{ p: 2.5, pt: 5, position: 'relative' }}>
+          <Link href="https://github.com" target="_blank">
+            <Box component="img" src="/static/illustrations/github.png" sx={{ width: 90 }} />
+          </Link>
 
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>

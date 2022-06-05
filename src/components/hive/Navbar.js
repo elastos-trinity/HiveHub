@@ -5,7 +5,7 @@ import WebAppBackground from '../WebAppBackground';
 import LanguageBar from '../LanguageBar';
 import palette from '../../theme/palette';
 
-export default function Navigator() {
+export default function Navbar() {
   return (
     <>
       <Box

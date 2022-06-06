@@ -144,7 +144,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ px: 2.5, pb: 3, mt: `${matchSmDown ? '10rem' : '5rem'}` }}>
         <Stack alignItems="center" spacing={3} sx={{ p: 2.5, pt: 5, position: 'relative' }}>
-          <Link href="https://github.com" target="_blank">
+          <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
             <Box component="img" src="/static/illustrations/github.png" sx={{ width: 50 }} />
           </Link>
           <Box sx={{ textAlign: 'center' }}>

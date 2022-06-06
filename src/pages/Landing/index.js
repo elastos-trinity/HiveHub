@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
@@ -72,6 +73,7 @@ export default function LandingPage() {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
+  const navigate = useNavigate();
 
   console.log(user);
 
@@ -145,7 +147,7 @@ export default function LandingPage() {
               Connect Wallet
             </ConnectButton>
           ) : (
-            <ConnectButton variant="outlined" href="/dashboard/home">
+            <ConnectButton variant="outlined" onClick={() => navigate('/dashboard/home')}>
               Dashboard
             </ConnectButton>
           )}

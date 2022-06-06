@@ -66,7 +66,10 @@ export default function UserAvatar({ did, avatar }) {
           onClick={handleToggle}
           sx={{ color: 'black' }}
         >
-          <Typography variant="subtitle1" sx={{ color: '#FF931E' }}>
+          <Typography
+            variant="subtitle1"
+            sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
             {did}
           </Typography>
         </Button>

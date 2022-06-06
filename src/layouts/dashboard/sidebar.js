@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
 // components
-import HiveLogo from '../../components/hive/HiveLogo';
+import HiveLogo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import { MHidden } from '../../components/@material-extend';
 import UserContext from '../../contexts/UserContext';

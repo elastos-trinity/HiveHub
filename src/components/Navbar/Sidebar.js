@@ -52,7 +52,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
   const theme = useTheme();
   const matchSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -106,9 +106,11 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         </Box>
       </Box>
 
-      <Box sx={{ my: 12, mx: 2.5, visibility: `${user.did ? 'block' : 'hidden'}` }}>
-        <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
-      </Box>
+      {(!pathname.includes('dashboard') || matchSmDown) && (
+        <Box sx={{ my: 12, mx: 2.5, visibility: `${user.did ? 'block' : 'hidden'}` }}>
+          <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
+        </Box>
+      )}
       {user.did && pathname.includes('dashboard') && (
         <MHidden width="smDown">
           <Stack sx={{ mx: 2.5, mt: 4 }} spacing={1}>
@@ -140,9 +142,9 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           </Stack>
         </MHidden>
       )}
-      <LanguageBar sx={{mt: `${matchSmDown ? '13rem' : '0rem'}`}} />
+      <LanguageBar sx={{ mt: `${matchSmDown ? '13rem' : '6rem'}` }} />
       <Box sx={{ flexGrow: 1 }} />
-      <Box sx={{ px: 2.5, pb: 3, mt: `${matchSmDown ? '10rem' : '5rem'}` }}>
+      <Box sx={{ px: 2.5, pb: 3, mt: `${matchSmDown ? '10rem' : '2rem'}` }}>
         <Stack alignItems="center" spacing={3} sx={{ p: 2.5, pt: 5, position: 'relative' }}>
           <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
             <Box component="img" src="/static/illustrations/github.png" sx={{ width: 50 }} />

@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import WebAppBackground from '../../components/WebAppBackground';
-import HiveDashboardNavbar from './navbar';
-import HiveDashboardSidebar from '../../components/Navbar/Sidebar';
+import TopNavbar from '../../components/Navbar/TopNavbar';
+import Sidebar from '../../components/Navbar/Sidebar';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -35,9 +34,8 @@ export default function HiveDashboard() {
 
   return (
     <RootStyle>
-      {/* <WebAppBackground /> */}
-      <HiveDashboardNavbar onOpenSidebar={() => setOpen(true)} />
-      <HiveDashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+      <TopNavbar onOpenSidebar={() => setOpen(true)} />
+      <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>
         <Outlet />
       </MainStyle>

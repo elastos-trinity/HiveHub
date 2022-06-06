@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Box, Link, Stack, IconButton } from '@mui/material';
+import { Box, Stack, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 import HiveLogo from '../Logo';
@@ -17,16 +17,21 @@ TopNavbar.propTypes = {
 
 export default function TopNavbar({ onOpenSidebar }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
+  useEffect(() => {
+    if (pathname.includes('dashboard') && !user.did) navigate('/');
+  }, [pathname, user]);
+
   return (
-    <>
-      <MHidden width="smDown">
+    <Box>
+      <MHidden width="lgDown">
         <Box
           sx={{
             position: 'fixed',
             width: '100%',
-            height: '150px',
+            height: '120px',
             backgroundColor: palette.common.white,
             zIndex: 111
           }}
@@ -39,13 +44,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             width="90%"
             sx={{ margin: '0 auto' }}
           >
-            <Box
-              component={RouterLink}
-              to="/"
-              sx={{ display: 'inline-flex', textDecoration: 'none' }}
-            >
-              <HiveLogo />
-            </Box>
+            <HiveLogo />
             {user.did && pathname.includes('dashboard') ? (
               <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
             ) : (
@@ -54,13 +53,12 @@ export default function TopNavbar({ onOpenSidebar }) {
           </Stack>
         </Box>
       </MHidden>
-
-      <MHidden width="smUp">
+      <MHidden width="lgUp">
         <Box
           sx={{
             position: 'fixed',
             width: '100%',
-            height: '150px',
+            height: '120px',
             backgroundColor: palette.common.white,
             zIndex: 111
           }}
@@ -79,16 +77,10 @@ export default function TopNavbar({ onOpenSidebar }) {
             >
               <Icon icon={menu2Fill} />
             </IconButton>
-            <Box
-              component={RouterLink}
-              to="/"
-              sx={{ display: 'inline-flex', textDecoration: 'none' }}
-            >
-              <HiveLogo />
-            </Box>
+            <HiveLogo small={Boolean(true)} />
           </Stack>
         </Box>
       </MHidden>
-    </>
+    </Box>
   );
 }

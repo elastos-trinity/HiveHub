@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import TopNavbar from '../../components/Navbar/TopNavbar';
 import Sidebar from '../../components/Navbar/Sidebar';
+import BottomNavbar from '../../components/Navbar/BottomNavbar';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -39,6 +40,7 @@ export default function HiveDashboard() {
       <MainStyle>
         <Outlet />
       </MainStyle>
+      <BottomNavbar />
     </RootStyle>
   );
 }

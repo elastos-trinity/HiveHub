@@ -1,63 +1,46 @@
-import { Box } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Stack, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const CustomBox = styled(Box)({
-  position: 'absolute',
-  height: 20,
-  width: 34.64,
-  backgroundColor: 'transparent',
-  transformOrigin: 'center center'
+const LogoText = styled(Typography)({
+  font: 'Montserrat',
+  color: 'black'
 });
 
-export default function HiveLogo() {
-  return (
-    <Box sx={{ width: 240, height: 50 }}>
-      <Box component="span" sx={{ width: 60, height: 50, lineHeight: '50px' }}>
-        <Box
-          component="span"
-          sx={{
-            position: 'relative',
-            top: '15px',
-            width: 34.64,
-            height: 40
-          }}
-        >
-          <CustomBox sx={{ borderRight: `5px solid #FF931E` }} />
-          <CustomBox sx={{ borderRight: `5px solid #FF931E`, transform: `rotate(60deg)` }} />
-          <CustomBox sx={{ borderRight: `5px solid #FF931E`, transform: `rotate(300deg)` }} />
-        </Box>
+HiveLogo.propTypes = {
+  small: PropTypes.bool
+};
 
-        <Box
-          component="span"
-          sx={{
-            position: 'relative',
-            top: '15px',
-            left: '42px',
-            width: 34.64,
-            height: 40
-          }}
-        >
-          <CustomBox sx={{ borderLeft: `5px solid #FF931E` }} />
-          <CustomBox sx={{ borderLeft: `5px solid #FF931E`, transform: `rotate(60deg)` }} />
-          <CustomBox sx={{ borderLeft: `5px solid #FF931E`, transform: `rotate(300deg)` }} />
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          fontSize: '40px',
-          font: 'Montserrat',
-          color: 'black',
-          lineHeight: '50px',
-          marginLeft: 9.5
-        }}
-      >
-        <Box component="span" sx={{ fontWeight: 600 }}>
-          Hive
-        </Box>
-        <Box component="span" sx={{ fontWeight: 300 }}>
-          Hub
-        </Box>
-      </Box>
+export default function HiveLogo({ small = false }) {
+  const logoWidth = small ? '25px' : '50px';
+  return (
+    <Box component={RouterLink} to="/" sx={{ textDecoration: 'none' }}>
+      <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
+        <Stack sx={{ width: logoWidth, height: logoWidth }}>
+          <img src="/static/logo.svg" alt="logo" width="100%" height="100%" />
+        </Stack>
+        <Stack direction="row" spacing={0}>
+          <LogoText
+            sx={{
+              lineHeight: small ? '24px' : '48px',
+              fontSize: small ? '20px' : '40px',
+              fontWeight: 600
+            }}
+          >
+            Hive
+          </LogoText>
+          <LogoText
+            sx={{
+              lineHeight: small ? '24px' : '48px',
+              fontSize: small ? '20px' : '40px',
+              fontWeight: 300
+            }}
+          >
+            Hub
+          </LogoText>
+        </Stack>
+      </Stack>
     </Box>
   );
 }

@@ -52,12 +52,12 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
   const theme = useTheme();
   const matchSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const isHideAvatar = !pathname.includes('dashboard') || matchSmDown;
 
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
     }
-
     setActiveSection(pathname.split('/')[2]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
@@ -100,13 +100,10 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' }
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, mx: '20px' }}>
-        <Box component={RouterLink} to="/" sx={{ display: 'inline-flex', textDecoration: 'none' }}>
-          <HiveLogo />
-        </Box>
+      <Box sx={{ height: '120px', px: 2.5, py: 3, mx: '20px', alignItems: 'center' }}>
+        <HiveLogo small={Boolean(true)} />
       </Box>
-
-      {(!pathname.includes('dashboard') || matchSmDown) && (
+      {isHideAvatar && (
         <Box sx={{ my: 12, mx: 2.5, visibility: `${user.did ? 'block' : 'hidden'}` }}>
           <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
         </Box>
@@ -142,9 +139,9 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           </Stack>
         </MHidden>
       )}
-      <LanguageBar sx={{ mt: `${matchSmDown ? '13rem' : '6rem'}` }} />
+      <LanguageBar sx={{ mt: `${isHideAvatar ? '13rem' : '6rem'}` }} />
       <Box sx={{ flexGrow: 1 }} />
-      <Box sx={{ px: 2.5, pb: 3, mt: `${matchSmDown ? '10rem' : '2rem'}` }}>
+      <Box sx={{ px: 2.5, pb: 3, mt: `${isHideAvatar ? '10rem' : '2rem'}` }}>
         <Stack alignItems="center" spacing={3} sx={{ p: 2.5, pt: 5, position: 'relative' }}>
           <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
             <Box component="img" src="/static/illustrations/github.png" sx={{ width: 50 }} />
@@ -172,23 +169,24 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           {renderContent}
         </Drawer>
       </MHidden>
-
-      <MHidden width="lgDown">
-        <Drawer
-          open
-          variant="persistent"
-          PaperProps={{
-            sx: {
-              width: DRAWER_WIDTH,
-              backgroundColor: 'background.default',
-              borderRight: 'none',
-              boxShadow: '10px 0px 20px rgba(255, 147, 30, 0.2)'
-            }
-          }}
-        >
-          {renderContent}
-        </Drawer>
-      </MHidden>
+      {pathname.includes('dashboard') && (
+        <MHidden width="lgDown">
+          <Drawer
+            open
+            variant="persistent"
+            PaperProps={{
+              sx: {
+                width: DRAWER_WIDTH,
+                backgroundColor: 'background.default',
+                borderRight: 'none',
+                boxShadow: '10px 0px 20px rgba(255, 147, 30, 0.2)'
+              }
+            }}
+          >
+            {renderContent}
+          </Drawer>
+        </MHidden>
+      )}
     </RootStyle>
   );
 }

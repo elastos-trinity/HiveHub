@@ -1,11 +1,15 @@
+import React, { useContext } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { AppBar, Toolbar, IconButton, Box } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Box, Avatar, Link, Typography } from '@mui/material';
+import HiveLogo from '../../components/hive/HiveLogo';
 import { MHidden } from '../../components/@material-extend';
 import LanguageBar from '../../components/LanguageBar';
+import UserContext from '../../contexts/UserContext';
 // components
 
 // ----------------------------------------------------------------------
@@ -25,6 +29,15 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
   }
 }));
 
+const AccountStyle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(2, 2, 2, 1.5),
+  height: '62px',
+  borderRadius: '31px',
+  backgroundColor: theme.palette.grey[200]
+}));
+
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
   minHeight: APPBAR_MOBILE,
   [theme.breakpoints.up('lg')]: {
@@ -40,6 +53,8 @@ HiveDashboardNavbar.propTypes = {
 };
 
 export default function HiveDashboardNavbar({ onOpenSidebar }) {
+  const { user } = useContext(UserContext);
+
   return (
     <RootStyle>
       <ToolbarStyle>
@@ -48,7 +63,18 @@ export default function HiveDashboardNavbar({ onOpenSidebar }) {
             <Icon icon={menu2Fill} />
           </IconButton>
         </MHidden>
-
+        <Box sx={{ my: 12, mx: 2.5 }}>
+          <Link underline="none" component={RouterLink} to="#">
+            <AccountStyle>
+              <Avatar src="/static/mock-images/avatars/avatar_default.jpg" alt="photoURL" />
+              <Box sx={{ ml: 1.5, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <Typography variant="subtitle1" sx={{ color: '#FF931E' }}>
+                  {user.did}
+                </Typography>
+              </Box>
+            </AccountStyle>
+          </Link>
+        </Box>
         <Box sx={{ margin: '0 20px 0 auto' }}>
           <LanguageBar />
         </Box>

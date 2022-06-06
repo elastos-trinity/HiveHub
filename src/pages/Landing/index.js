@@ -1,7 +1,7 @@
+import React, { useContext, useState } from 'react';
 import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect, useState } from 'react';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import SmallHexagon from '../../components/SmallHexagon';
 import UserContext from '../../contexts/UserContext';

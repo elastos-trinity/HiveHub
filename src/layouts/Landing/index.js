@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Navbar from '../../components/hive/Navbar';
+import Navbar from '../../components/Navbar';
 
 export default function HiveMainPage() {
   return (

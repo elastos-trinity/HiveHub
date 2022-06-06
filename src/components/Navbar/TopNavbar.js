@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Box, Grid, Link, Typography, Avatar, Stack, IconButton } from '@mui/material';
+import { Box, Link, Stack, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 import HiveLogo from '../Logo';
@@ -15,6 +16,7 @@ TopNavbar.propTypes = {
 };
 
 export default function TopNavbar({ onOpenSidebar }) {
+  const { pathname } = useLocation();
   const { user } = useContext(UserContext);
 
   return (
@@ -37,10 +39,14 @@ export default function TopNavbar({ onOpenSidebar }) {
             width="90%"
             sx={{ margin: '0 auto' }}
           >
-            <Link href="/" sx={{ textDecoration: 'none' }}>
+            <Box
+              component={RouterLink}
+              to="/"
+              sx={{ display: 'inline-flex', textDecoration: 'none' }}
+            >
               <HiveLogo />
-            </Link>
-            {user.did ? (
+            </Box>
+            {user.did && pathname.includes('dashboard') ? (
               <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
             ) : (
               <LanguageBar />
@@ -73,9 +79,13 @@ export default function TopNavbar({ onOpenSidebar }) {
             >
               <Icon icon={menu2Fill} />
             </IconButton>
-            <Link href="/" sx={{ textDecoration: 'none' }}>
+            <Box
+              component={RouterLink}
+              to="/"
+              sx={{ display: 'inline-flex', textDecoration: 'none' }}
+            >
               <HiveLogo />
-            </Link>
+            </Box>
           </Stack>
         </Box>
       </MHidden>

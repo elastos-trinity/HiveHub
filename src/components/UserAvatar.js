@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  Box,
   Button,
   Typography,
   Avatar,
@@ -54,55 +53,53 @@ export default function UserAvatar({ did, avatar }) {
   }, [open]);
 
   return (
-    <Box>
-      <AccountStyle direction="row" spacing={1}>
-        <Avatar src={avatar} alt="photoURL" />
-        <Button
-          ref={anchorRef}
-          id="composition-button"
-          aria-controls={open ? 'composition-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
-          onClick={handleToggle}
-          sx={{ color: 'black' }}
+    <AccountStyle direction="row" spacing={1} justifyContent="center">
+      <Avatar src={avatar} alt="photoURL" />
+      <Button
+        ref={anchorRef}
+        id="composition-button"
+        aria-controls={open ? 'composition-menu' : undefined}
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="true"
+        onClick={handleToggle}
+        sx={{ color: 'black' }}
+      >
+        <Typography
+          variant="subtitle1"
+          sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          <Typography
-            variant="subtitle1"
-            sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          {did}
+        </Typography>
+      </Button>
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        placement="bottom-start"
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom'
+            }}
           >
-            {did}
-          </Typography>
-        </Button>
-        <Popper
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          placement="bottom-start"
-          transition
-          disablePortal
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom'
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
-                  >
-                    <MenuItem onClick={handleClose}>Sign out</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </AccountStyle>
-    </Box>
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={open}
+                  id="composition-menu"
+                  aria-labelledby="composition-button"
+                >
+                  <MenuItem onClick={handleClose}>Log out</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </AccountStyle>
   );
 }

@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import WebAppBackground from '../../components/WebAppBackground';
 import HiveDashboardNavbar from './navbar';
-import HiveDashboardSidebar from './sidebar';
+import HiveDashboardSidebar from '../../components/Navbar/Sidebar';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -35,7 +35,7 @@ export default function HiveDashboard() {
 
   return (
     <RootStyle>
-      <WebAppBackground />
+      {/* <WebAppBackground /> */}
       <HiveDashboardNavbar onOpenSidebar={() => setOpen(true)} />
       <HiveDashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>

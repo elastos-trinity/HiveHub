@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Button,
@@ -10,7 +11,11 @@ import {
   Popper
 } from '@mui/material';
 
-export default function LanguageBar() {
+LanguageBar.propTypes = {
+  sx: PropTypes.object
+};
+
+export default function LanguageBar({ sx }) {
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState('English');
   const anchorRef = React.useRef(null);
@@ -19,11 +24,11 @@ export default function LanguageBar() {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleChange = (event, value) => {
+  const handleChange = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    setActive(value);
+    setActive((prevActive) => (prevActive === 'English' ? '中文' : 'English'));
     setOpen(false);
   };
 
@@ -54,7 +59,7 @@ export default function LanguageBar() {
   }, [open]);
 
   return (
-    <Box>
+    <Box sx={{ textAlign: 'center', ...sx }}>
       <Button
         ref={anchorRef}
         id="composition-button"
@@ -90,16 +95,10 @@ export default function LanguageBar() {
                   // onKeyDown={handleListKeyDown}
                 >
                   <MenuItem
-                    sx={{ color: active === 'English' ? 'black' : 'rgba(0, 0, 0, 0.3)' }}
-                    onClick={(event) => handleChange(event, 'English')}
+                    sx={{ color: 'rgba(0, 0, 0, 0.3)' }}
+                    onClick={(event) => handleChange(event)}
                   >
-                    English
-                  </MenuItem>
-                  <MenuItem
-                    sx={{ color: active === '中文' ? 'black' : 'rgba(0, 0, 0, 0.3)' }}
-                    onClick={(event) => handleChange(event, '中文')}
-                  >
-                    中文
+                    {active === 'English' ? '中文' : 'English'}
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Box, Stack, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
@@ -26,7 +26,7 @@ export default function TopNavbar({ onOpenSidebar }) {
 
   return (
     <Box>
-      <MHidden width="lgDown">
+      <MHidden width="mdDown">
         <Box
           sx={{
             position: 'fixed',
@@ -53,7 +53,7 @@ export default function TopNavbar({ onOpenSidebar }) {
           </Stack>
         </Box>
       </MHidden>
-      <MHidden width="lgUp">
+      <MHidden width="mdUp">
         <Box
           sx={{
             position: 'fixed',

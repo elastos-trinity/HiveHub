@@ -40,7 +40,7 @@ export default function HiveDashboard() {
       <MainStyle>
         <Outlet />
       </MainStyle>
-      {/* <BottomNavbar /> */}
+      <BottomNavbar />
     </RootStyle>
   );
 }

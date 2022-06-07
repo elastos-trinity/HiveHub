@@ -1,13 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { Box, Stack, IconButton, Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Stack, Typography, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
-import menu2Fill from '@iconify/icons-eva/menu-2-fill';
-import HiveLogo from '../Logo';
-import LanguageBar from '../LanguageBar';
-import UserAvatar from '../UserAvatar';
 import palette from '../../theme/palette';
 import { MHidden } from '../@material-extend';
 import UserContext from '../../contexts/UserContext';
@@ -20,11 +17,10 @@ const activeLink = {
   color: 'black'
 };
 
-const NavBox = styled(Box)({
+const NavButton = styled(Button)({
   width: '100%',
   height: '80px',
-  margin: '10px auto',
-  textAlign: 'left',
+  textAlign: 'center',
   color: 'rgba(0, 0, 0, 0.3)'
 });
 
@@ -33,9 +29,11 @@ export default function BottomNavbar() {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
+  const matchXsDown = useMediaQuery('(max-width:450px)');
 
   useEffect(() => {
     if (pathname.includes('dashboard') && !user.did) navigate('/');
+    setActiveSection(pathname.split('/')[2]);
   }, [pathname, user]);
 
   const menuItemsList = [
@@ -72,44 +70,44 @@ export default function BottomNavbar() {
   return (
     <div>
       {user.did && pathname.includes('dashboard') && (
-        <MHidden width="lgUp">
+        <MHidden width="mdUp">
           <Stack
             direction="row"
             sx={{
               position: 'fixed',
               width: '100%',
-              height: '75px',
               left: '0px',
               bottom: '0px',
+              padding: '20px',
               backgroundColor: palette.common.white,
               zIndex: 111
             }}
             spacing={1}
           >
             {menuItemsList.map((item, index) => (
-              <NavBox
+              <NavButton
                 key={`sidebar-menu-${index}`}
                 onClick={() => navigate(item.path)}
-                sx={{ cursor: 'pointer' }}
+                sx={{ cursor: 'pointer', justifyContent: 'center' }}
               >
-                <Stack alignItems="center" justifyContent="flex-start" spacing="15px" ml="70px">
+                <Stack alignItems="center" spacing={0.5}>
                   <Icon
                     icon={activeSection === item.label ? item.iconActive : item.icon}
-                    fontSize={50}
+                    fontSize={matchXsDown ? 30 : 50}
                     color={activeSection === item.label ? 'black' : 'rgba(0, 0, 0, 0.3)'}
                     rotate={item.label === 'explore' ? 3 : 0}
                   />
                   <Typography
                     sx={{
-                      fontSize: '10px',
                       fontWeight: 600,
+                      fontSize: matchXsDown ? '10px' : '1rem',
                       ...(activeSection === item.label && activeLink)
                     }}
                   >
                     {item.title}
                   </Typography>
                 </Stack>
-              </NavBox>
+              </NavButton>
             ))}
           </Stack>
         </MHidden>

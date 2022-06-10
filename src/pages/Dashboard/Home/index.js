@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Grid, LinearProgress, Stack, Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import NodeItem from '../../../components/NodeSummaryItem';
+import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from './style';
 
 const NodeStatisticLabel = styled(Typography)({
@@ -69,10 +69,22 @@ const nodeItemList = [
   }
 ];
 
+const vaultItemList = [
+  {
+    name: 'Vault Service-0 (Free)',
+    total: 524,
+    used: 262
+  },
+  {
+    name: 'Vault Service-1 (Free)',
+    total: 524,
+    used: 112
+  }
+];
+
 export default function HiveHome() {
-  const theme = useTheme();
-  const matchMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [nodeItems, setNodeItems] = useState(nodeItemList);
+  const [vaultItems, setVaultItems] = useState(vaultItemList);
 
   return (
     <>
@@ -153,32 +165,15 @@ export default function HiveHome() {
           </NodeSummaryBox>
           <NodeSummaryBox>
             <Typography variant="h5">Vault Summary</Typography>
-            <Stack spacing={2} mt={{ xs: 4, md: 12 }}>
-              <Typography
-                sx={{
-                  fontSize: { xs: '12px', md: '15px' },
-                  fontWeight: 600,
-                  lineHeight: { xs: '15px', md: '18px' }
-                }}
-              >
-                Vault Service-0 (Free)
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: { xs: '8px', md: '10px' },
-                  fontWeight: 400,
-                  lineHeight: { xs: '10px', md: '12px' }
-                }}
-                variant="body2"
-              >
-                262 MB / 524 MB
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={50}
-                color="warning"
-                sx={{ height: '10px', width: '100%' }}
-              />
+            <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 12 }}>
+              {vaultItems.map((item, index) => (
+                <VaultSummaryItem
+                  key={`vault-summary-${index}`}
+                  vaultName={item.name}
+                  vaultTotal={item.total}
+                  vaultUsed={item.used}
+                />
+              ))}
             </Stack>
           </NodeSummaryBox>
         </Stack>

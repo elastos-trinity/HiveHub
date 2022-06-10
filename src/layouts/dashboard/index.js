@@ -20,7 +20,7 @@ const MainStyle = styled('div')(({ theme }) => ({
   overflow: 'auto',
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 24,
-  paddingBottom: theme.spacing(15),
+  paddingBottom: theme.spacing(12),
   paddingLeft: theme.spacing(4),
   paddingRight: theme.spacing(4),
   [theme.breakpoints.up('md')]: {

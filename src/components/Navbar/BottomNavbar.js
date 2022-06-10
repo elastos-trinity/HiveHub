@@ -21,7 +21,7 @@ const NavButton = styled(Button)({
   width: '100%',
   // height: '80px',
   // margin: '10px auto',
-  color: 'rgba(0, 0, 0, 0.3)',
+  color: 'rgba(0, 0, 0, 0.3)'
 });
 
 export default function BottomNavbar() {
@@ -78,10 +78,11 @@ export default function BottomNavbar() {
               width: '100%',
               left: '0px',
               bottom: '0px',
-              padding: '20px',
-              pt: '15px',
+              paddingX: '20px',
+              paddingBottom: '8px',
               backgroundColor: palette.common.white,
-              zIndex: 111
+              zIndex: 111,
+              borderTop: '1px solid red'
             }}
             spacing={1}
           >
@@ -94,14 +95,14 @@ export default function BottomNavbar() {
                 <Stack alignItems="center" spacing={0.5}>
                   <Icon
                     icon={activeSection === item.label ? item.iconActive : item.icon}
-                    fontSize={matchXsDown ? 20 : 40}
+                    fontSize={matchXsDown ? 20 : 30}
                     color={activeSection === item.label ? 'black' : 'rgba(0, 0, 0, 0.3)'}
                     rotate={item.label === 'explore' ? 3 : 0}
                   />
                   <Typography
                     sx={{
                       fontWeight: 600,
-                      fontSize: matchXsDown ? '10px' : '15px',
+                      fontSize: matchXsDown ? '10px' : '12px',
                       ...(activeSection === item.label && activeLink)
                     }}
                   >

@@ -20,21 +20,21 @@ const MainStyle = styled('div')(({ theme }) => ({
   overflow: 'auto',
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 24,
-  paddingBottom: theme.spacing(10),
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
+  paddingBottom: theme.spacing(15),
+  paddingLeft: theme.spacing(4),
+  paddingRight: theme.spacing(4),
   [theme.breakpoints.up('md')]: {
-    paddingTop: APP_BAR_DESKTOP + 24,
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4)
+    paddingBottom: theme.spacing(8)
   },
   [theme.breakpoints.up('lg')]: {
     paddingTop: APP_BAR_DESKTOP + 24,
+    paddingBottom: theme.spacing(8),
     paddingLeft: theme.spacing(8),
     paddingRight: theme.spacing(8)
   },
   [theme.breakpoints.up('xl')]: {
     paddingTop: APP_BAR_DESKTOP + 24,
+    paddingBottom: theme.spacing(12),
     paddingLeft: theme.spacing(12),
     paddingRight: theme.spacing(12)
   }

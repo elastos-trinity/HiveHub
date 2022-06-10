@@ -1,13 +1,29 @@
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, Button, Grid, LinearProgress, Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import NodeItem from '../../../components/NodeItem';
+import NodeItem from '../../../components/NodeSummaryItem';
 import { PageTitleTypo } from './style';
 
-const CustomTypography = styled(Typography)({
+const NodeStatisticLabel = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
-  fontSize: '18px',
-  marginBottom: '10px'
+  // marginBottom: '10px',
+  fontWeight: 400,
+  fontSize: '25px',
+  textAlign: 'center',
+  '@media (max-width:500px)': {
+    fontSize: '12px'
+  }
+});
+
+const NodeStatisticBody = styled(Typography)({
+  color: '#000',
+  fontWeight: 700,
+  fontSize: '50px',
+  textAlign: 'center',
+  '@media (max-width:500px)': {
+    fontSize: '25px'
+  }
 });
 
 const CustomButton = styled(Button)({
@@ -22,113 +38,151 @@ const CustomButton = styled(Button)({
   color: '#000',
   fontSize: '15px',
   fontWeight: 600,
-
   '&:hover': {
     backgroundColor: 'rgba(255, 147, 30, 0.3)',
     color: '#fff'
   }
 });
 
-const ContainerBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+const NodeSummaryBox = styled(Box)(({ theme }) => ({
+  backgroundColor: '#fff',
+  border: '2px solid #E5E5E5',
+  // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
+  borderRadius: '18px',
+  width: '100%',
+  padding: '15px 20px',
   [theme.breakpoints.up('md')]: {
-    flexDirection: 'row'
+    padding: '20px 30px'
   }
 }));
 
-const CustomBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-  borderRadius: '18px',
-  height: '460px',
-  width: '100%',
-  marginBottom: '20px',
-  padding: '10px 20px',
-  [theme.breakpoints.up('md')]: {
-    width: '48%'
+const nodeItemList = [
+  {
+    name: 'Node A',
+    url: 'http://localhost:5005',
+    status: true
+  },
+  {
+    name: 'Node B',
+    url: 'http://localhost:5005',
+    status: false
   }
-}));
+];
 
 export default function HiveHome() {
   const theme = useTheme();
-  const matchMdDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const [nodeItems, setNodeItems] = useState(nodeItemList);
 
   return (
     <>
-      <PageTitleTypo sx={{ mt: 16, mb: 8 }}>Home</PageTitleTypo>
-      <PageTitleTypo sub sx={{ my: 4 }}>Hive Node Statistics</PageTitleTypo>
-      <Stack
-        direction="row"
-        justifyContent="space-around"
-        alignItems="center"
-        sx={{
-          width: '100%',
-          height: '200px',
-          // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-          border: '2px solid #E5E5E5',
-          borderRadius: '20px',
-          backgroundColor: 'white',
-          boxSizing: 'border-box'
-        }}
-      >
-        <Box>
-          <CustomTypography variant="body1">Created by me</CustomTypography>
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            2
-          </Typography>
-        </Box>
-        <Box>
-          <CustomTypography variant="body1">Participated by me</CustomTypography>
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            1
-          </Typography>
-        </Box>
-      </Stack>
-      <Stack
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-        sx={{ width: '60%', margin: '40px auto' }}
-      >
-        <CustomButton>Backup</CustomButton>
-        <CustomButton>Migrate</CustomButton>
-        <CustomButton>Unbind</CustomButton>
-      </Stack>
-      <ContainerBox>
-        <CustomBox>
-          <Box sx={{ height: '35px' }}>
+      <PageTitleTypo mt={{ xs: 7, md: 15 }}>Home</PageTitleTypo>
+      <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 8 }}>
+        <PageTitleTypo sub>Hive Node Statistics</PageTitleTypo>
+        <Stack
+          direction="row"
+          justifyContent="space-around"
+          alignItems="center"
+          py={5}
+          sx={{
+            width: '100%',
+            // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
+            border: '2px solid #E5E5E5',
+            borderRadius: '20px',
+            backgroundColor: 'white',
+            boxSizing: 'border-box',
+            marginTop: { xs: '10px !important', md: '40px !important' }
+          }}
+        >
+          <Stack spacing={{ xs: 1, sm: 2 }}>
+            <NodeStatisticLabel>Created by me</NodeStatisticLabel>
+            <NodeStatisticBody>2</NodeStatisticBody>
+          </Stack>
+          <Stack spacing={{ xs: 1, sm: 2 }}>
+            <NodeStatisticLabel>Participated by me</NodeStatisticLabel>
+            <NodeStatisticBody>1</NodeStatisticBody>
+          </Stack>
+        </Stack>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={{ xs: 2, sm: 5 }}
+          px={1}
+          sx={{ width: '100%', margin: '40px auto' }}
+        >
+          <CustomButton onClick={() => {}}>Backup</CustomButton>
+          <CustomButton onClick={() => {}}>Migrate</CustomButton>
+          <CustomButton onClick={() => {}}>Unbind</CustomButton>
+        </Stack>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={{ xs: 4, md: 5 }}
+          justifyContent="space-between"
+        >
+          <NodeSummaryBox>
             <Typography variant="h5">Node Summary</Typography>
-          </Box>
-          <Grid container sx={{ height: '35', textAlign: 'center', color: 'rgba(0,0,0,0.3)' }}>
-            <Grid item lg={2} md={2} sm={2} xs={2}>
-              <Typography variant="body1" sx={{ fontSize: '13px', textAlign: 'left' }}>
-                Node Name
-              </Typography>
-            </Grid>
-            <Grid item lg={8} md={8} sm={8} xs={8}>
-              <Typography variant="body1" sx={{ fontSize: '13px' }}>
-                URL
-              </Typography>
-            </Grid>
-            <Grid item lg={2} md={2} sm={2} xs={2}>
-              <Typography variant="body1" sx={{ fontSize: '13px' }}>
-                Status
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <NodeItem nodeName="Node A" nodeURL="http://localhost:5005" nodeStatus />
-          <NodeItem nodeName="Node B" nodeURL="http://localhost:5005" nodeStatus={false} />
-        </CustomBox>
-        <CustomBox>
-          <Box sx={{ height: '40px' }}>
+            <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 5 }}>
+              <Grid
+                container
+                sx={{
+                  fontSize: { xs: '12px', md: '15px' },
+                  textAlign: 'center',
+                  color: 'rgba(0,0,0,0.3)'
+                }}
+              >
+                <Grid item xs={2} md={2} textAlign="left">
+                  Name
+                </Grid>
+                <Grid item xs={8} md={8}>
+                  URL
+                </Grid>
+                <Grid item xs={2} md={2}>
+                  Status
+                </Grid>
+              </Grid>
+              {nodeItems.map((item, index) => (
+                <NodeItem
+                  key={`node-summary-${index}`}
+                  nodeName={item.name}
+                  nodeURL={item.url}
+                  nodeStatus={item.status}
+                />
+              ))}
+            </Stack>
+          </NodeSummaryBox>
+          <NodeSummaryBox>
             <Typography variant="h5">Vault Summary</Typography>
-          </Box>
-        </CustomBox>
-      </ContainerBox>
+            <Stack spacing={2} mt={{ xs: 4, md: 12 }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: '12px', md: '15px' },
+                  fontWeight: 600,
+                  lineHeight: { xs: '15px', md: '18px' }
+                }}
+              >
+                Vault Service-0 (Free)
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: { xs: '8px', md: '10px' },
+                  fontWeight: 400,
+                  lineHeight: { xs: '10px', md: '12px' }
+                }}
+                variant="body2"
+              >
+                262 MB / 524 MB
+              </Typography>
+              <LinearProgress
+                variant="determinate"
+                value={50}
+                color="warning"
+                sx={{ height: '10px', width: '100%' }}
+              />
+            </Stack>
+          </NodeSummaryBox>
+        </Stack>
+      </Stack>
     </>
   );
 }

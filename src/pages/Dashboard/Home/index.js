@@ -1,6 +1,6 @@
-import { Box, Button, Chip, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import PropTypes from 'prop-types';
+import NodeItem from '../../../components/NodeItem';
 
 const CustomTypography = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
@@ -10,7 +10,7 @@ const CustomTypography = styled(Typography)({
 
 const CustomButton = styled(Button)({
   backgroundColor: '#fff',
-  boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
+  // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
   width: '160px',
   height: '40px',
   color: '#000',
@@ -29,7 +29,7 @@ const ContainerBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  [theme.breakpoints.up('lg')]: {
+  [theme.breakpoints.up('md')]: {
     flexDirection: 'row'
   }
 }));
@@ -42,46 +42,10 @@ const CustomBox = styled(Box)(({ theme }) => ({
   width: '100%',
   marginBottom: '20px',
   padding: '10px 20px',
-  [theme.breakpoints.up('lg')]: {
+  [theme.breakpoints.up('md')]: {
     width: '48%'
   }
 }));
-
-NodeItem.prototype = {
-  nodeName: PropTypes.string,
-  nodeURL: PropTypes.string,
-  nodeStatus: PropTypes.bool
-};
-
-function NodeItem({ nodeName, nodeURL, nodeStatus }) {
-  return (
-    <Grid container sx={{ height: '35px', textAlign: 'center' }}>
-      <Grid item lg={2} md={2} sm={2} xs={2}>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: '13px', fontWeight: 'bold', textAlign: 'left', lineHeight: '35px' }}
-        >
-          {nodeName}
-        </Typography>
-      </Grid>
-      <Grid item lg={8} md={8} sm={8} xs={8}>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: '13px', fontWeight: 'bold', lineHeight: '35px' }}
-        >
-          {nodeURL}
-        </Typography>
-      </Grid>
-      <Grid item lg={2} md={2} sm={2} xs={2} sx={{ height: '35px', lineHeight: '35px' }}>
-        {nodeStatus ? (
-          <Chip label="online" color="success" sx={{ height: '25px', color: 'white' }} />
-        ) : (
-          <Chip label="offline" sx={{ height: '25px' }} />
-        )}
-      </Grid>
-    </Grid>
-  );
-}
 
 export default function HiveHome() {
   return (
@@ -99,8 +63,9 @@ export default function HiveHome() {
         sx={{
           width: '100%',
           height: '200px',
-          boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-          borderRadius: '14px',
+          // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
+          border: '2px solid #E5E5E5',
+          borderRadius: '20px',
           backgroundColor: 'white'
         }}
       >
@@ -120,8 +85,9 @@ export default function HiveHome() {
 
       <Stack
         direction="row"
-        justifyContent="space-around"
+        justifyContent="center"
         alignItems="center"
+        spacing={1}
         sx={{ width: '60%', height: '80px', margin: '40px auto' }}
       >
         <CustomButton>Backup</CustomButton>

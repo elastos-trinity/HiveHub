@@ -41,8 +41,9 @@ export default function TopNavbar({ onOpenSidebar }) {
             alignItems="center"
             justifyContent="space-between"
             height="100%"
-            width="90%"
-            sx={{ margin: '0 auto' }}
+            // width="90%"
+            // sx={{ margin: '0 auto' }}
+            mx={{md: 5, lg: 7.5}}
           >
             <HiveLogo />
             {user.did && pathname.includes('dashboard') ? (

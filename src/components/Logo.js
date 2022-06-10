@@ -13,7 +13,7 @@ HiveLogo.propTypes = {
 };
 
 export default function HiveLogo({ small = false }) {
-  const logoWidth = small ? '25px' : '50px';
+  const logoWidth = small ? '25px' : { lg: '50px', md: '40px' };
   return (
     <Box component={RouterLink} to="/" sx={{ textDecoration: 'none' }}>
       <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
@@ -23,8 +23,8 @@ export default function HiveLogo({ small = false }) {
         <Stack direction="row" spacing={0}>
           <LogoText
             sx={{
-              lineHeight: small ? '24px' : '48px',
-              fontSize: small ? '20px' : '40px',
+              lineHeight: small ? '24px' : { lg: '48px', md: '43px' },
+              fontSize: small ? '20px' : { lg: '40px', md: '35px' },
               fontWeight: 600
             }}
           >
@@ -32,8 +32,8 @@ export default function HiveLogo({ small = false }) {
           </LogoText>
           <LogoText
             sx={{
-              lineHeight: small ? '24px' : '48px',
-              fontSize: small ? '20px' : '40px',
+              lineHeight: small ? '24px' : { lg: '48px', md: '43px' },
+              fontSize: small ? '20px' : { lg: '40px', md: '35px' },
               fontWeight: 300
             }}
           >

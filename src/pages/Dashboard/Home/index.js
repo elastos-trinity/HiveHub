@@ -1,6 +1,8 @@
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import NodeItem from '../../../components/NodeItem';
+import { PageTitleTypo } from './style';
 
 const CustomTypography = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
@@ -13,11 +15,13 @@ const CustomButton = styled(Button)({
   // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
   width: '160px',
   height: '40px',
-  color: '#000',
-  borderRadius: '18px',
-  fontSize: '17px',
-  fontWeight: 'bold',
   padding: '10px',
+  border: '2px solid #E5E5E5',
+  borderRadius: '100px',
+  boxSizing: 'border-box',
+  color: '#000',
+  fontSize: '15px',
+  fontWeight: 600,
 
   '&:hover': {
     backgroundColor: 'rgba(255, 147, 30, 0.3)',
@@ -48,14 +52,13 @@ const CustomBox = styled(Box)(({ theme }) => ({
 }));
 
 export default function HiveHome() {
+  const theme = useTheme();
+  const matchMdDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <>
-      <Box sx={{ my: 8 }}>
-        <Typography variant="h3">Home</Typography>
-      </Box>
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4">Hive Node Statistics</Typography>
-      </Box>
+      <PageTitleTypo sx={{ mt: 16, mb: 8 }}>Home</PageTitleTypo>
+      <PageTitleTypo sub sx={{ my: 4 }}>Hive Node Statistics</PageTitleTypo>
       <Stack
         direction="row"
         justifyContent="space-around"
@@ -66,7 +69,8 @@ export default function HiveHome() {
           // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
           border: '2px solid #E5E5E5',
           borderRadius: '20px',
-          backgroundColor: 'white'
+          backgroundColor: 'white',
+          boxSizing: 'border-box'
         }}
       >
         <Box>
@@ -82,19 +86,17 @@ export default function HiveHome() {
           </Typography>
         </Box>
       </Stack>
-
       <Stack
         direction="row"
         justifyContent="center"
         alignItems="center"
         spacing={1}
-        sx={{ width: '60%', height: '80px', margin: '40px auto' }}
+        sx={{ width: '60%', margin: '40px auto' }}
       >
         <CustomButton>Backup</CustomButton>
         <CustomButton>Migrate</CustomButton>
         <CustomButton>Unbind</CustomButton>
       </Stack>
-
       <ContainerBox>
         <CustomBox>
           <Box sx={{ height: '35px' }}>

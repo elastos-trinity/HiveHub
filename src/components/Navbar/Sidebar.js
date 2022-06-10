@@ -16,12 +16,17 @@ import LanguageBar from '../LanguageBar';
 
 // ----------------------------------------------------------------------
 
-const DRAWER_WIDTH = 320;
+const DRAWER_WIDTH_LG = 320;
+const DRAWER_WIDTH_MD = 280;
 
 const RootStyle = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    flexShrink: 0,
+    width: DRAWER_WIDTH_MD
+  },
   [theme.breakpoints.up('lg')]: {
     flexShrink: 0,
-    width: DRAWER_WIDTH
+    width: DRAWER_WIDTH_LG
   }
 }));
 
@@ -129,7 +134,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
                   alignItems="center"
                   justifyContent="flex-start"
                   spacing="15px"
-                  ml="70px"
+                  ml={{ lg: '70px', md: '50px' }}
                   py={4}
                 >
                   <Icon
@@ -170,9 +175,11 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         <Drawer
           open={isOpenSidebar}
           onClose={onCloseSidebar}
-          PaperProps={{
-            sx: { width: DRAWER_WIDTH }
-          }}
+          // PaperProps={{
+          //   sx: {
+          //     width: { lg: DRAWER_WIDTH_LG, md: DRAWER_WIDTH_MD }
+          //   }
+          // }}
         >
           {renderContent}
         </Drawer>
@@ -184,7 +191,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
             variant="persistent"
             PaperProps={{
               sx: {
-                width: DRAWER_WIDTH,
+                width: { md: DRAWER_WIDTH_MD, lg: DRAWER_WIDTH_LG },
                 backgroundColor: 'background.default',
                 borderRight: 'none',
                 // boxShadow: '10px 0px 20px rgba(255, 147, 30, 0.2)',

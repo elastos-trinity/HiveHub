@@ -39,10 +39,10 @@ const activeLink = {
 
 const NavBox = styled(Box)({
   width: '100%',
-  height: '80px',
-  margin: '10px auto',
-  textAlign: 'left',
-  color: 'rgba(0, 0, 0, 0.3)'
+  // height: '80px',
+  // margin: '10px auto',
+  color: 'rgba(0, 0, 0, 0.3)',
+  cursor: 'pointer'
 });
 
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
@@ -116,28 +116,25 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
       </Box>
       <Stack justifyContent="space-between">
         {showAvatar && (
-          <Box sx={{ my: 5, mx: 2.5, visibility: `${user.did ? 'block' : 'hidden'}` }}>
+          <Box sx={{ pb: 7.5, px: 2.5, mt: 2.5, visibility: `${user.did ? 'block' : 'hidden'}` }}>
             <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
           </Box>
         )}
         {showMenu && (
-          <Stack sx={{ mx: 2.5, mt: 4 }} spacing={1}>
+          <Stack sx={{ padding: 2.5, mt: 8.5 }} spacing={1}>
             {menuItemsList.map((item, index) => (
-              <NavBox
-                key={`sidebar-menu-${index}`}
-                onClick={() => navigate(item.path)}
-                sx={{ cursor: 'pointer' }}
-              >
+              <NavBox key={`sidebar-menu-${index}`} onClick={() => navigate(item.path)}>
                 <Stack
                   direction="row"
                   alignItems="center"
                   justifyContent="flex-start"
                   spacing="15px"
                   ml="70px"
+                  py={4}
                 >
                   <Icon
                     icon={activeSection === item.label ? item.iconActive : item.icon}
-                    fontSize={50}
+                    fontSize={30}
                     color={activeSection === item.label ? 'black' : 'rgba(0, 0, 0, 0.3)'}
                     rotate={item.label === 'explore' ? 3 : 0}
                   />
@@ -149,12 +146,12 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
             ))}
           </Stack>
         )}
-        <LanguageBar sx={{ padding: 5, my: 5 }} />
+        <LanguageBar sx={{ padding: 5, mt: showMenu ? 16 : 15 }} />
         <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ px: 2.5, pb: 3, mt: 5 }}>
-          <Stack alignItems="center" spacing={3} sx={{ p: 2.5, pt: 5, position: 'relative' }}>
+        <Box sx={{ px: 2.5, pb: 2, mt: showMenu ? 5 : 25 }}>
+          <Stack alignItems="center" spacing={2.5} sx={{ p: 2.5, position: 'relative' }}>
             <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
-              <Box component="img" src="/static/illustrations/github.png" sx={{ width: 50 }} />
+              <Box component="img" src="/static/illustrations/github.png" sx={{ width: 40 }} />
             </Link>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>

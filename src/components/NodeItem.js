@@ -1,31 +1,8 @@
-import { Stack, Box, Typography, Chip, Button, Grid } from '@mui/material';
+import { Stack, Box, Typography, Chip, Button } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { MHidden } from './@material-extend';
 import ItemBox from './ItemBox';
-
-const ContainerBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
-  borderRadius: '18px',
-  width: '100%',
-  padding: '10px 10px 10px 20px',
-  [theme.breakpoints.up('sm')]: {
-    padding: '20px 20px 20px 40px'
-  }
-}));
-
-const NodeTimeLable = styled(Typography)(({ theme }) => ({
-  color: 'rgba(0,0,0, 0.3)',
-  fontWeight: 400,
-  fontSize: '10px',
-  lineHeight: '12px',
-  textAlign: 'right',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '15px',
-    lineHeight: '18px'
-  }
-}));
 
 const NodeTitle = styled(Typography)(({ theme }) => ({
   color: '#000',
@@ -62,10 +39,8 @@ const NodeValue = styled(Typography)(({ theme }) => ({
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#FF931E',
-  // width: '160px',
   height: '25px',
   padding: '6px 14px',
-  // border: '2px solid #E5E5E5',
   borderRadius: '200px',
   boxSizing: 'border-box',
   color: '#FFF',
@@ -88,10 +63,11 @@ NodeItem.propTypes = {
   description: PropTypes.string,
   ip: PropTypes.string,
   did: PropTypes.string,
-  time: PropTypes.string
+  time: PropTypes.string,
+  showButton: PropTypes.bool,
 };
 
-export default function NodeItem({ name, status, description, ip, did, time }) {
+export default function NodeItem({ name, status, description, ip, did, time, showButton }) {
   return (
     <ItemBox time={time}>
       <Stack>
@@ -106,7 +82,7 @@ export default function NodeItem({ name, status, description, ip, did, time }) {
                   height: { xs: '11px !important', md: '19px !important' },
                   color: 'white',
                   '& .MuiChip-label': {
-                    px: { xs: '5px !important', md: '12px !important' }
+                    px: { xs: '5px !important', sm: '12px !important' }
                   }
                 }}
               />
@@ -117,7 +93,7 @@ export default function NodeItem({ name, status, description, ip, did, time }) {
                   height: { xs: '11px !important', md: '19px !important' },
                   color: 'black',
                   '& .MuiChip-label': {
-                    px: { xs: '5px !important', md: '12px !important' }
+                    px: { xs: '5px !important', sm: '12px !important' }
                   }
                 }}
               />
@@ -153,7 +129,7 @@ export default function NodeItem({ name, status, description, ip, did, time }) {
               </Stack>
             </Typography>
           </MHidden>
-          <CustomButton disabled={!status}>Access</CustomButton>
+          {showButton && <CustomButton disabled={!status}>Access</CustomButton>}
         </Stack>
       </Stack>
     </ItemBox>

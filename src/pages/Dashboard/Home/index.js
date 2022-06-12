@@ -3,11 +3,10 @@ import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import NodeItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
-import { PageTitleTypo } from './style';
+import { PageTitleTypo } from '../style';
 
 const NodeStatisticLabel = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
-  // marginBottom: '10px',
   fontWeight: 400,
   fontSize: '25px',
   textAlign: 'center',

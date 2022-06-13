@@ -27,13 +27,15 @@ const NodeTimeLable = styled(Typography)(({ theme }) => ({
 }));
 
 ItemBox.propTypes = {
-  time: PropTypes.string,
-  children: PropTypes.any,
+  time: PropTypes.string.isRequired,
+  children: PropTypes.any.isRequired,
+  sx: PropTypes.any,
+  onClick: PropTypes.func,
 };
 
-export default function ItemBox({ time, children }) {
+export default function ItemBox({ time, children, onClick, sx }) {
   return (
-    <ContainerBox>
+    <ContainerBox onClick={onClick} sx={{...sx}}>
       <NodeTimeLable
         sx={{ whiteSpace: 'nowrap', position: 'absolute', right: { xs: '10px', sm: '20px' }, top: { xs: '10px', sm: '30px' } }}
       >

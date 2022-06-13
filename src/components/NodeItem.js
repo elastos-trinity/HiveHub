@@ -1,4 +1,5 @@
-import { Stack, Box, Typography, Chip, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Stack, Typography, Chip, Button } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { MHidden } from './@material-extend';
@@ -65,16 +66,25 @@ NodeItem.propTypes = {
   ip: PropTypes.string.isRequired,
   did: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
-  showButton: PropTypes.bool,
+  isMyNode: PropTypes.bool,
+  sx: PropTypes.any
 };
 
-export default function NodeItem({ id, name, status, description, ip, did, time, showButton = false }) {
+export default function NodeItem({ id, name, status, description, ip, did, time, isMyNode = false, sx }) {
+  const navigate = useNavigate();
+
   return (
-    <ItemBox time={time}>
+    <ItemBox
+      time={time}
+      sx={{ ...sx }}
+      onClick={() => {
+        if (isMyNode) navigate(`/dashboard/nodes/detail/${id}`);
+      }}
+    >
       <Stack>
         <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
           <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
-            <NodeTitle>{`${name}'s Node`}</NodeTitle>
+            <NodeTitle>{isMyNode ? name : `${name}'s Node`}</NodeTitle>
             {status ? (
               <Chip
                 label="online"
@@ -130,7 +140,7 @@ export default function NodeItem({ id, name, status, description, ip, did, time,
               </Stack>
             </Typography>
           </MHidden>
-          {showButton && <CustomButton disabled={!status}>Access</CustomButton>}
+          {!isMyNode && <CustomButton disabled={!status} onClick={() => navigate(`/dashboard/nodes/detail/${id}`)}>Access</CustomButton>}
         </Stack>
       </Stack>
     </ItemBox>

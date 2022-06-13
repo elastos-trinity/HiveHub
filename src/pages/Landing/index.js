@@ -115,7 +115,7 @@ export default function LandingPage() {
   };
 
   return (
-    <Container maxWidth="1000" sx={{ paddingTop: 15 }}>
+    <Container maxWidth="1000" sx={{ pt: 15, pb: 2.5 }}>
       <Box>
         <Box
           sx={{ maxWidth: '800px', height: '160px', lineHeight: '80px', margin: '140px auto 0' }}

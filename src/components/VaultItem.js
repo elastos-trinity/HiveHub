@@ -47,14 +47,15 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 VaultItem.propTypes = {
-  name: PropTypes.string,
-  total: PropTypes.number,
-  used: PropTypes.number,
-  time: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
+  used: PropTypes.number.isRequired,
+  time: PropTypes.string.isRequired,
   showButton: PropTypes.bool
 };
 
-export default function VaultItem({ name, total, used, time, showButton }) {
+export default function VaultItem({ id, name, total, used, time, showButton = false }) {
   return (
     <ItemBox time={time}>
       <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>

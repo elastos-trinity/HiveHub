@@ -18,6 +18,7 @@ const FilterByTypo = styled(Typography)(({ theme }) => ({
 
 const nodeItemList = [
   {
+    id: 1,
     name: 'Rong',
     description: 'This is my node.',
     ip: '192.115.24.2',
@@ -26,6 +27,7 @@ const nodeItemList = [
     status: true
   },
   {
+    id: 2,
     name: 'Frost',
     description: 'Hey! You can access my node.',
     ip: '192.115.24.2',
@@ -37,12 +39,14 @@ const nodeItemList = [
 
 const vaultItemList = [
   {
+    id: 1,
     name: 'Sarah',
     total: 524,
     used: 112,
     time: '05-04-2022 21:00:00'
   },
   {
+    id: 2,
     name: 'Teru',
     total: 524,
     used: 352,
@@ -66,6 +70,7 @@ export default function HiveExplore() {
           {nodeItems.map((item, index) => (
             <NodeItem
               key={`node-item-${index}`}
+              id={item.id}
               name={item.name}
               description={item.description}
               ip={item.ip}
@@ -86,6 +91,7 @@ export default function HiveExplore() {
           {vaultItems.map((item, index) => (
             <VaultItem
               key={`vault-item-${index}`}
+              id={item.id}
               name={item.name}
               total={item.total}
               used={item.used}

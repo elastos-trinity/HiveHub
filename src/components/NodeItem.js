@@ -58,16 +58,17 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 NodeItem.propTypes = {
-  name: PropTypes.string,
-  status: PropTypes.bool,
-  description: PropTypes.string,
-  ip: PropTypes.string,
-  did: PropTypes.string,
-  time: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  status: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  ip: PropTypes.string.isRequired,
+  did: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
   showButton: PropTypes.bool,
 };
 
-export default function NodeItem({ name, status, description, ip, did, time, showButton }) {
+export default function NodeItem({ id, name, status, description, ip, did, time, showButton = false }) {
   return (
     <ItemBox time={time}>
       <Stack>

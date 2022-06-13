@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import SmallHexagon from '../../components/SmallHexagon';
 import UserContext from '../../contexts/UserContext';
 import { essentialsConnector, useConnectivitySDK } from '../../service/connectivity';
+import generatedGitInfo from '../../generatedGitInfo.json';
 
 const ConnectButton = styled(Button)({
   color: '#FF931E',
@@ -396,9 +397,29 @@ export default function LandingPage() {
       </Box>
 
       <Box sx={{ padding: '200px 0 0' }}>
-        <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          @ 2022 Trinity Tech Ltd.
-        </Typography>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ textAlign: 'center' }}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            @ 2022 Trinity Tech Ltd.
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#1890FF',
+              paddingX: 1,
+              paddingY: 0.5,
+              borderRadius: 2,
+              background: '#E8F4FF'
+            }}
+          >
+            v1 - {generatedGitInfo.gitCommitHash}
+          </Typography>
+        </Stack>
       </Box>
     </Container>
   );

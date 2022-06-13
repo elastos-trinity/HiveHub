@@ -13,6 +13,7 @@ import { MHidden } from '../@material-extend';
 import UserContext from '../../contexts/UserContext';
 import UserAvatar from '../UserAvatar';
 import LanguageBar from '../LanguageBar';
+import generatedGitInfo from '../../generatedGitInfo.json';
 
 // ----------------------------------------------------------------------
 
@@ -44,8 +45,6 @@ const activeLink = {
 
 const NavBox = styled(Box)({
   width: '100%',
-  // height: '80px',
-  // margin: '10px auto',
   color: 'rgba(0, 0, 0, 0.3)',
   cursor: 'pointer'
 });
@@ -153,16 +152,34 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         )}
         <LanguageBar sx={{ padding: 5, mt: showMenu ? 16 : 15 }} />
         <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ px: 2.5, pb: 2, mt: showMenu ? 5 : 25 }}>
-          <Stack alignItems="center" spacing={2.5} sx={{ p: 2.5, position: 'relative' }}>
+        <Box sx={{ px: 0, pb: 2, mt: showMenu ? 5 : 25 }}>
+          <Stack alignItems="center" spacing={2.5} sx={{ py: 2.5, position: 'relative' }}>
             <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
               <Box component="img" src="/static/illustrations/github.png" sx={{ width: 40 }} />
             </Link>
-            <Box sx={{ textAlign: 'center' }}>
+            <Stack
+              // direction={{ xs: 'column', md: 'row' }}
+              spacing={1}
+              sx={{ textAlign: 'center' }}
+              alignItems="center"
+              justifyContent="center"
+            >
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 @ 2022 Trinity Tech Ltd.
               </Typography>
-            </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#1890FF',
+                  paddingX: 1,
+                  paddingY: 0.5,
+                  borderRadius: 2,
+                  background: '#E8F4FF'
+                }}
+              >
+                v1 - {generatedGitInfo.gitCommitHash}
+              </Typography>
+            </Stack>
           </Stack>
         </Box>
       </Stack>
@@ -172,15 +189,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   return (
     <RootStyle>
       <MHidden width="mdUp">
-        <Drawer
-          open={isOpenSidebar}
-          onClose={onCloseSidebar}
-          // PaperProps={{
-          //   sx: {
-          //     width: { lg: DRAWER_WIDTH_LG, md: DRAWER_WIDTH_MD }
-          //   }
-          // }}
-        >
+        <Drawer open={isOpenSidebar} onClose={onCloseSidebar}>
           {renderContent}
         </Drawer>
       </MHidden>
@@ -194,7 +203,6 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
                 width: { md: DRAWER_WIDTH_MD, lg: DRAWER_WIDTH_LG },
                 backgroundColor: 'background.default',
                 borderRight: 'none',
-                // boxShadow: '10px 0px 20px rgba(255, 147, 30, 0.2)',
                 zIndex: 1
               }
             }}

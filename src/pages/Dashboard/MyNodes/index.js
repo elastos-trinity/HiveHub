@@ -1,141 +1,92 @@
-import { Box, Button, Chip, Link, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import PropTypes from 'prop-types';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { PageTitleTypo } from '../style';
+import NodeItem from '../../../components/NodeItem';
 
-const CustomButton = styled(Button)({
+const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
-  boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-  width: '180px',
   height: '50px',
   color: '#FF931E',
-  borderRadius: '25px',
+  border: '1px solid #FF931E',
+  borderRadius: '200px',
+  fontWeight: 600,
+  lineHeight: '18px',
   fontSize: '15px',
-  fontWeight: 'bold',
-  padding: '10px',
+  padding: '15px 11px',
+  [theme.breakpoints.up('md')]: {
+    height: '70px',
+    lineHeight: '24px',
+    fontSize: '20px',
+    padding: '23px 17px',
+    border: '2px solid #FF931E'
+  },
   '&:hover': {
     backgroundColor: 'rgba(255, 147, 30, 0.3)',
     color: '#fff'
   }
-});
+}));
 
-const CustomBox = styled(Box)({
-  backgroundColor: '#fff',
-  boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-  borderRadius: '18px',
-  height: '200px',
-  width: '100%',
-  marginBottom: '20px',
-  padding: '10px 20px'
-});
-
-NodeItem.propTypes = {
-  id: PropTypes.number.isRequired,
-  nodeName: PropTypes.string.isRequired,
-  nodeStatus: PropTypes.bool.isRequired,
-  date: PropTypes.string.isRequired,
-  nodeDescription: PropTypes.string,
-  nodeIP: PropTypes.string.isRequired,
-  ownerDID: PropTypes.string.isRequired
-};
-
-function NodeItem({ id, nodeName, nodeStatus, date, nodeDescription, nodeIP, ownerDID }) {
-  return (
-    <CustomBox>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ my: 2 }}>
-        <Typography variant="h5">
-          <Link
-            href={`/dashboard/nodes/detail/${id}`}
-            sx={{ textDecoration: 'none', color: '#000' }}
-          >
-            {nodeName}
-          </Link>
-          <Box component="span" sx={{ ml: 2 }}>
-            {nodeStatus ? (
-              <Chip label="online" color="success" sx={{ height: '20px', color: 'white' }} />
-            ) : (
-              <Chip label="offline" sx={{ height: '20px' }} />
-            )}
-          </Box>
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'rgba(0,0,0,0.3)' }}>
-          {date}
-        </Typography>
-      </Stack>
-      <Typography variant="body1" sx={{ color: 'rgba(0,0,0,0.3)' }}>
-        {nodeDescription}
-      </Typography>
-
-      <Stack direction="row" alignItems="center" sx={{ mb: 2, mt: 6 }}>
-        <Typography variant="body1" sx={{ mr: 2 }}>
-          <Box component="span" sx={{ mr: 1, color: 'rgba(0,0,0,0.3)' }}>
-            IP:
-          </Box>
-          {nodeIP}
-        </Typography>
-        <Typography variant="body1">
-          <Box component="span" sx={{ mr: 1, color: 'rgba(0,0,0,0.3)' }}>
-            Owner DID:
-          </Box>
-          {ownerDID}
-        </Typography>
-      </Stack>
-    </CustomBox>
-  );
-}
+const PlusTypo = styled(Typography)(({ theme }) => ({
+  fontWeight: 400,
+  lineHeight: '37px',
+  fontSize: '30px',
+  marginRight: '5px',
+  [theme.breakpoints.up('md')]: {
+    lineHeight: '43px',
+    fontSize: '35px'
+  }
+}));
 
 const NodeList = [
   {
     id: 1,
-    nodeName: 'Node A',
-    nodeStatus: true,
-    date: '2022-01-01 20:00:00',
-    nodeDescription: 'This is a local hive node',
-    nodeIP: '192.115.24.2',
-    ownerDID: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n'
+    name: 'Node A',
+    status: true,
+    time: '2022-01-01 20:00:00',
+    description: 'This is a local hive node',
+    ip: '192.115.24.2',
+    did: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n'
   },
   {
     id: 2,
-    nodeName: 'Node B',
-    nodeStatus: false,
-    date: '2022-01-01 20:00:00',
-    nodeDescription: 'This is a local hive node',
-    nodeIP: '192.115.24.2',
-    ownerDID: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n'
+    name: 'Node B',
+    status: false,
+    time: '2022-01-01 20:00:00',
+    description: 'This is a local hive node',
+    ip: '192.115.24.2',
+    did: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n'
   }
 ];
 
 export default function HiveNodes() {
-  const [nodeList, setNodeList] = React.useState(NodeList);
+  const navigate = useNavigate();
+  const [myNodeList, setMyNodeList] = React.useState(NodeList);
 
   return (
     <>
-      <Box sx={{ my: 8 }}>
-        <Typography variant="h3">My Nodes</Typography>
-      </Box>
-
-      <Box sx={{ my: 4 }}>
-        {nodeList.map((node, index) => (
+      <PageTitleTypo mt={{ xs: 7, md: 15 }} mb={myNodeList.length ? 0 : 1.25}>
+        My Nodes
+      </PageTitleTypo>
+      <Stack mt={{ xs: 1.75, md: 5 }} spacing={{ xs: 3.75, md: 6.25 }}>
+        {myNodeList.map((node, index) => (
           <NodeItem
             key={index}
             id={node.id}
-            nodeName={node.nodeName}
-            nodeStatus={node.nodeStatus}
-            date={node.date}
-            nodeDescription={node.nodeDescription}
-            nodeIP={node.nodeIP}
-            ownerDID={node.ownerDID}
+            name={node.name}
+            status={node.status}
+            time={node.time}
+            description={node.description}
+            ip={node.ip}
+            did={node.did}
+            isMyNode
+            sx={{ cursor: 'pointer' }}
           />
         ))}
-      </Box>
-
-      <CustomButton href="/dashboard/nodes/add">
-        <Box
-          component="span"
-          sx={{ fontSize: '25px', display: 'inline-block', marginRight: '8px' }}
-        >
-          +
-        </Box>
+      </Stack>
+      <CustomButton onClick={() => navigate("/dashboard/nodes/add")} sx={{ mt: { xs: 3, md: 5 }, mb: 10 }}>
+        <PlusTypo>+</PlusTypo>
         Create Hive Node
       </CustomButton>
     </>

@@ -77,7 +77,6 @@ export default function HiveExplore() {
               did={item.did}
               status={item.status}
               time={item.time}
-              showButton
             />
           ))}
         </Stack>

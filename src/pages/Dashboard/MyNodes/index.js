@@ -8,6 +8,7 @@ import NodeItem from '../../../components/NodeItem';
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
   height: '50px',
+  width: 'fit-content',
   color: '#FF931E',
   border: '1px solid #FF931E',
   borderRadius: '200px',
@@ -69,7 +70,7 @@ export default function HiveNodes() {
       <PageTitleTypo mt={{ xs: 7, md: 15 }} mb={myNodeList.length ? 0 : 1.25}>
         My Nodes
       </PageTitleTypo>
-      <Stack mt={{ xs: 1.75, md: 5 }} spacing={{ xs: 3.75, md: 6.25 }}>
+      <Stack mt={{ xs: 1.75, md: 5 }} mb={10} spacing={{ xs: 3.75, md: 6.25 }}>
         {myNodeList.map((node, index) => (
           <NodeItem
             key={index}
@@ -84,14 +85,11 @@ export default function HiveNodes() {
             sx={{ cursor: 'pointer' }}
           />
         ))}
+        <CustomButton onClick={() => navigate('/dashboard/nodes/create')}>
+          <PlusTypo>+</PlusTypo>
+          Create Hive Node
+        </CustomButton>
       </Stack>
-      <CustomButton
-        onClick={() => navigate('/dashboard/nodes/create')}
-        sx={{ mt: { xs: 3, md: 5 }, mb: 10 }}
-      >
-        <PlusTypo>+</PlusTypo>
-        Create Hive Node
-      </CustomButton>
     </>
   );
 }

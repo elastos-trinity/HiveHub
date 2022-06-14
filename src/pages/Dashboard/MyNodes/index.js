@@ -85,7 +85,10 @@ export default function HiveNodes() {
           />
         ))}
       </Stack>
-      <CustomButton onClick={() => navigate("/dashboard/nodes/add")} sx={{ mt: { xs: 3, md: 5 }, mb: 10 }}>
+      <CustomButton
+        onClick={() => navigate('/dashboard/nodes/create')}
+        sx={{ mt: { xs: 3, md: 5 }, mb: 10 }}
+      >
         <PlusTypo>+</PlusTypo>
         Create Hive Node
       </CustomButton>

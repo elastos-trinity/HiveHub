@@ -14,11 +14,11 @@ import LandingPage from './pages/Landing';
 import HiveMainPage from './layouts/Landing';
 import HiveDashboard from './layouts/Dashboard';
 import HiveHome from './pages/Dashboard/Home';
+import HiveExplore from './pages/Dashboard/Explore';
 import HiveNodes from './pages/Dashboard/MyNodes';
 import HiveVaults from './pages/Dashboard/MyVaults';
 import CreateNode from './pages/Dashboard/MyNodes/CreateNode';
-import HiveNodeDetail from './pages/Dashboard/MyNodes/HiveNodeDetail';
-import HiveExplore from './pages/Dashboard/Explore';
+import NodeDetail from './pages/Dashboard/MyNodes/NodeDetail';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ export default function Router() {
         { path: 'explore', element: <HiveExplore /> },
         { path: 'nodes', element: <HiveNodes /> },
         { path: 'nodes/create', element: <CreateNode /> },
-        { path: 'nodes/detail/:nodeId', element: <HiveNodeDetail /> },
+        { path: 'nodes/detail/:nodeId', element: <NodeDetail /> },
         { path: 'vaults', element: <HiveVaults /> }
       ]
     },

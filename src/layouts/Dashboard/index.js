@@ -24,19 +24,20 @@ const MainStyle = styled('div')(({ theme }) => ({
   paddingLeft: theme.spacing(4),
   paddingRight: theme.spacing(4),
   [theme.breakpoints.up('md')]: {
+    paddingRight: theme.spacing(6),
     paddingBottom: theme.spacing(8)
   },
   [theme.breakpoints.up('lg')]: {
     paddingTop: APP_BAR_DESKTOP + 24,
     paddingBottom: theme.spacing(8),
     paddingLeft: theme.spacing(8),
-    paddingRight: theme.spacing(8)
+    paddingRight: theme.spacing(12)
   },
   [theme.breakpoints.up('xl')]: {
     paddingTop: APP_BAR_DESKTOP + 24,
     paddingBottom: theme.spacing(12),
     paddingLeft: theme.spacing(12),
-    paddingRight: theme.spacing(12)
+    paddingRight: theme.spacing(18)
   }
 }));
 

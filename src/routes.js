@@ -19,6 +19,7 @@ import HiveNodes from './pages/Dashboard/MyNodes';
 import HiveVaults from './pages/Dashboard/MyVaults';
 import CreateNode from './pages/Dashboard/MyNodes/CreateNode';
 import NodeDetail from './pages/Dashboard/MyNodes/NodeDetail';
+import NodeEnvConfig from './pages/Dashboard/MyNodes/NodeEnvConfig';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,7 @@ export default function Router() {
         { path: 'nodes', element: <HiveNodes /> },
         { path: 'nodes/create', element: <CreateNode /> },
         { path: 'nodes/detail/:nodeId', element: <NodeDetail /> },
+        { path: 'nodes/envconfig', element: <NodeEnvConfig /> },
         { path: 'vaults', element: <HiveVaults /> }
       ]
     },

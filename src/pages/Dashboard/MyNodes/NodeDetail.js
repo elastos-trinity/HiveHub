@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';

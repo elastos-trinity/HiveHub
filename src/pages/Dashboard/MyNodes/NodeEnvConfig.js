@@ -46,34 +46,25 @@ const CustomButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-export default function CreateNode() {
+export default function NodeEnvConfig() {
   const navigate = useNavigate();
 
-  const handleCreateNode = () => {
+  const handleSaveEnvConfig = () => {
     navigate('/dashboard/nodes');
   };
 
   return (
     <>
-      <PageTitleTypo mt={{ xs: 6.25, md: 3.15 }}>Create Node</PageTitleTypo>
+      <PageTitleTypo mt={{ xs: 6.25, md: 3.15 }}>Env Configuration</PageTitleTypo>
       <ContainerBox mt={{ xs: 2.5, md: 5 }}>
         <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 3.75, md: 5 }}>
           <CustomTextField placeholder="Owner DID" variant="standard" />
-          <CustomTextField placeholder="Node Name" variant="standard" />
+          <CustomTextField placeholder="Service private Key" variant="standard" />
+          <CustomTextField placeholder="Node name" variant="standard" />
           <CustomTextField placeholder="Email" variant="standard" />
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            alignItems="center"
-            spacing={{ xs: 5, md: 12.5 }}
-          >
-            <CustomTextField placeholder="Country" variant="standard" />
-            <CustomTextField placeholder="Province" variant="standard" />
-            <CustomTextField placeholder="District" variant="standard" />
-          </Stack>
-          <CustomTextField placeholder="URL" variant="standard" />
-          <CustomTextField placeholder="Description" variant="standard" />
+          <CustomTextField placeholder="Node description" variant="standard" />
         </Stack>
-        <Stack direction="row" mt={{ xs: 10, md: 17.5 }} spacing={{ xs: 2.5, md: 5 }}>
+        <Stack direction="row" mt={{ xs: 14.5, md: 31.25 }} spacing={{ xs: 2.5, md: 5 }}>
           <CustomButton
             sx={{
               background: '#B3B3B3',
@@ -85,7 +76,7 @@ export default function CreateNode() {
           >
             Cancel
           </CustomButton>
-          <CustomButton onClick={handleCreateNode}>Confirm</CustomButton>
+          <CustomButton onClick={handleSaveEnvConfig}>Confirm</CustomButton>
         </Stack>
       </ContainerBox>
     </>

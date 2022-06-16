@@ -119,7 +119,7 @@ const PlusTypo = styled(Typography)(({ theme }) => ({
 function InfoItem({ label, value }) {
   return (
     <Grid item lg={6} md={12} sm={12} xs={12} sx={{ textAlign: 'left', mb: 2 }}>
-      <Typography variant="body1" noWrap>
+      <Typography component="div" variant="body1" noWrap>
         <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
           <NodeDescription>{label}:</NodeDescription>
           <NodeValue noWrap>{value}</NodeValue>

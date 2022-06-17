@@ -13,19 +13,27 @@ export function useConnectivitySDK() {
   const { setIsLinkedToEssentials } = useContext(ConnectivityContext);
 
   if (connectivityInitialized) {
-    console.log('connectivityInitialized = true.');
+    // console.log('EssentialsConnector has already initialized.');
     return;
   }
-  connectivityInitialized = true;
 
-  console.log('Preparing the Elastos connectivity SDK');
+  // console.log('Preparing the Elastos connectivity SDK');
+  // unregistear if already registerd
+  const arrIConnectors = connectivity.getAvailableConnectors();
+  if (arrIConnectors.findIndex((option) => option.name === essentialsConnector.name) !== -1) {
+    connectivity.unregisterConnector(essentialsConnector.name);
+    // console.log('unregister connector succeed.');
+  }
 
   connectivity.registerConnector(essentialsConnector).then(() => {
-    console.log('essentialsConnector', essentialsConnector);
-    console.log('Wallet connect provider', essentialsConnector.getWalletConnectProvider());
+    connectivityInitialized = true;
+    // const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+
+    // console.log('essentialsConnector', essentialsConnector);
+    // console.log('Wallet connect provider', walletConnectProvider);
 
     const hasLink = isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession();
-    console.log('Has link to essentials?', hasLink);
+    // console.log('Has link to essentials?', hasLink);
     setIsLinkedToEssentials(hasLink);
 
     // Restore the wallet connect session - TODO: should be done by the connector itself?
@@ -35,8 +43,7 @@ export function useConnectivitySDK() {
 }
 
 export function isUsingEssentialsConnector() {
-  return (
-    connectivity.getActiveConnector() &&
-    connectivity.getActiveConnector().name === essentialsConnector.name
-  );
+  const activeConnector = connectivity.getActiveConnector();
+  if (!activeConnector) return false;
+  return activeConnector && activeConnector.name === essentialsConnector.name;
 }

@@ -8,6 +8,7 @@ import { useSnackbar } from 'notistack';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import SmallHexagon from '../../components/SmallHexagon';
 import UserContext from '../../contexts/UserContext';
+import { SignInContext } from '../../contexts/SignInContext';
 import {
   essentialsConnector,
   useConnectivitySDK,
@@ -80,6 +81,7 @@ function CustomBox({ children }) {
 
 export default function LandingPage() {
   const { user } = useContext(UserContext);
+  const { did, setDid } = useContext(SignInContext);
   const [walletConnectProvider] = useState(essentialsConnector.getWalletConnectProvider());
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
@@ -142,11 +144,13 @@ export default function LandingPage() {
       const did = presentation.getHolder().getMethodSpecificId();
       localStorage.setItem('did', did);
       user.did = did;
+      setDid(did);
       setCurrentUser({ ...user });
       console.log(did);
     }
   };
 
+  console.log(did, '--------');
   const signOutWithEssentialsWithoutRefresh = async () => {
     console.log('Signing out user. Deleting session info');
     localStorage.removeItem('did');
@@ -176,10 +180,10 @@ export default function LandingPage() {
 
   useEffect(() => {
     const handleEEAccountsChanged = (accounts) => {
-      console.log("Account Changed: ", accounts);
+      console.log('Account Changed: ', accounts);
     };
     const handleEEChainChanged = (chainId) => {
-      console.log("ChainId Changed", chainId)
+      console.log('ChainId Changed', chainId);
       if (chainId && !isSupportedNetwork(chainId)) showChainErrorSnackBar();
     };
     const handleEEDisconnect = (code, reason) => {
@@ -219,6 +223,10 @@ export default function LandingPage() {
     };
   }, [walletConnectProvider]);
 
+  // useEffect(() => {
+  //   if (!user.did) signOutWithEssentials();
+  // }, [user]);
+
   return (
     <Container maxWidth="1000" sx={{ pt: 15, pb: 2.5 }}>
       <Box>
@@ -248,7 +256,7 @@ export default function LandingPage() {
         </Box>
         <Box sx={{ margin: '40px auto', textAlign: 'center' }}>
           {!currentUser.did ? (
-            <ConnectButton variant="outlined" onClick={login} loading={loading} disabled={loading}>
+            <ConnectButton variant="outlined" onClick={login} disabled={loading}>
               Connect Wallet
             </ConnectButton>
           ) : (

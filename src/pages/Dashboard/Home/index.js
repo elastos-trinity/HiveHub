@@ -89,7 +89,7 @@ export default function HiveHome() {
     <>
       <PageTitleTypo mt={{ xs: 7, md: 15 }}>Home</PageTitleTypo>
       <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 8 }}>
-        <PageTitleTypo sub>Hive Node Statistics</PageTitleTypo>
+        <PageTitleTypo sub="true">Hive Node Statistics</PageTitleTypo>
         <Stack
           direction="row"
           justifyContent="space-around"

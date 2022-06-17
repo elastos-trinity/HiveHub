@@ -176,9 +176,10 @@ export default function LandingPage() {
 
   useEffect(() => {
     const handleEEAccountsChanged = (accounts) => {
-      console.log(accounts);
+      console.log("Account Changed: ", accounts);
     };
     const handleEEChainChanged = (chainId) => {
+      console.log("ChainId Changed", chainId)
       if (chainId && !isSupportedNetwork(chainId)) showChainErrorSnackBar();
     };
     const handleEEDisconnect = (code, reason) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Box, Stack, IconButton } from '@mui/material';
@@ -9,7 +9,7 @@ import LanguageBar from '../LanguageBar';
 import UserAvatar from '../UserAvatar';
 import palette from '../../theme/palette';
 import { MHidden } from '../@material-extend';
-import UserContext from '../../contexts/UserContext';
+import useUser from '../../hooks/useUser';
 
 TopNavbar.propTypes = {
   onOpenSidebar: PropTypes.func
@@ -18,7 +18,7 @@ TopNavbar.propTypes = {
 export default function TopNavbar({ onOpenSidebar }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
 
   useEffect(() => {
     if (pathname.includes('dashboard') && !user.did) navigate('/');
@@ -43,7 +43,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             height="100%"
             // width="90%"
             // sx={{ margin: '0 auto' }}
-            mx={{md: 5, lg: 7.5}}
+            mx={{ md: 5, lg: 7.5 }}
           >
             <HiveLogo />
             {user.did && pathname.includes('dashboard') ? (

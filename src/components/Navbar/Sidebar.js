@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // material
@@ -10,7 +10,7 @@ import { Icon } from '@iconify/react';
 import HiveLogo from '../Logo';
 import Scrollbar from '../Scrollbar';
 import { MHidden } from '../@material-extend';
-import UserContext from '../../contexts/UserContext';
+import useUser from '../../hooks/useUser';
 import UserAvatar from '../UserAvatar';
 import LanguageBar from '../LanguageBar';
 import generatedGitInfo from '../../generatedGitInfo.json';
@@ -50,7 +50,7 @@ const NavBox = styled(Box)({
 });
 
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'

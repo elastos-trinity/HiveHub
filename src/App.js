@@ -1,3 +1,6 @@
+import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import { SnackbarProvider } from 'notistack';
 // routes
 import Router from './routes';
 // theme
@@ -11,11 +14,17 @@ import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 
 export default function App() {
   return (
-    <ThemeConfig>
-      <ScrollToTop />
-      <GlobalStyles />
-      <BaseOptionChartStyle />
-      <Router />
-    </ThemeConfig>
+    <HelmetProvider>
+      <SnackbarProvider maxSnack={1}>
+        <BrowserRouter>
+          <ThemeConfig>
+            <ScrollToTop />
+            <GlobalStyles />
+            <BaseOptionChartStyle />
+            <Router />
+          </ThemeConfig>
+        </BrowserRouter>
+      </SnackbarProvider>
+    </HelmetProvider>
   );
 }

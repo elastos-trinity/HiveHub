@@ -1,22 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, Grid, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import Web3 from 'web3';
-import { useSnackbar } from 'notistack';
-import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
+import useUser from '../../hooks/useUser';
 import SmallHexagon from '../../components/SmallHexagon';
-import UserContext from '../../contexts/UserContext';
-import { SignInContext } from '../../contexts/SignInContext';
-import {
-  essentialsConnector,
-  useConnectivitySDK,
-  isUsingEssentialsConnector
-} from '../../service/connectivity';
 import generatedGitInfo from '../../generatedGitInfo.json';
-import { isInAppBrowser, isSupportedNetwork } from '../../service/common';
-import SnackMessage from '../../components/SnackMessage';
 
 const ConnectButton = styled(Button)({
   color: '#FF931E',
@@ -80,37 +69,14 @@ function CustomBox({ children }) {
 }
 
 export default function LandingPage() {
-  const { user } = useContext(UserContext);
-  const { did, setDid } = useContext(SignInContext);
-  const [walletConnectProvider] = useState(essentialsConnector.getWalletConnectProvider());
+  const { user, isConnetedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
+    useUser();
   const [loading, setLoading] = useState(false);
-  const [currentUser, setCurrentUser] = useState(user);
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const showChainErrorSnackBar = async () => {
-    // enqueueSnackbar('', {
-    //   anchorOrigin: { horizontal: 'right', vertical: 'top' },
-    //   autoHideDuration: 5000,
-    //   content: (key) => (
-    //     <SnackMessage
-    //       id={key}
-    //       message="Wrong network, only Elastos Smart Chain is supported"
-    //       variant="error"
-    //     />
-    //   )
-    // });
-    enqueueSnackbar('Wrong network, only Elastos Smart Chain is supported', {
-      variant: 'error',
-      anchorOrigin: { horizontal: 'right', vertical: 'top' }
-    });
-  };
-  // ------------------------------ EE Connection ------------------------------ //
-  useConnectivitySDK();
 
   const login = async () => {
     setLoading(true);
-    if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
+    if (isConnetedEE) {
       await signOutWithEssentialsWithoutRefresh();
       await signInWithEssentials();
     } else {
@@ -118,114 +84,6 @@ export default function LandingPage() {
     }
     setLoading(false);
   };
-
-  const signInWithEssentials = async () => {
-    const didAccess = new DID.DIDAccess();
-    let presentation;
-    console.log('Trying to sign in using the connectivity SDK');
-    try {
-      presentation = await didAccess.requestCredentials({
-        claims: [
-          DID.simpleIdClaim('Your name', 'name', false),
-          DID.simpleIdClaim('Your description', 'description', false)
-        ]
-      });
-    } catch (e) {
-      console.warn('Error while getting credentials', e);
-      try {
-        await essentialsConnector.getWalletConnectProvider().disconnect();
-      } catch (e) {
-        console.error('Error while trying to disconnect wallet connect session', e);
-      }
-      return;
-    }
-
-    if (presentation) {
-      const did = presentation.getHolder().getMethodSpecificId();
-      localStorage.setItem('did', did);
-      user.did = did;
-      setDid(did);
-      setCurrentUser({ ...user });
-      console.log(did);
-    }
-  };
-
-  console.log(did, '--------');
-  const signOutWithEssentialsWithoutRefresh = async () => {
-    console.log('Signing out user. Deleting session info');
-    localStorage.removeItem('did');
-    try {
-      if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
-        await essentialsConnector.getWalletConnectProvider().disconnect();
-      if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
-        await window.elastos.getWeb3Provider().disconnect();
-    } catch (e) {
-      console.error('Error while disconnecting the wallet', e);
-    }
-  };
-
-  const signOutWithEssentials = async () => {
-    console.log('Signing out user. Deleting session info');
-    localStorage.removeItem('did');
-    try {
-      if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
-        await essentialsConnector.getWalletConnectProvider().disconnect();
-      if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
-        await window.elastos.getWeb3Provider().disconnect();
-    } catch (e) {
-      console.error('Error while disconnecting the wallet', e);
-    }
-    window.location.reload();
-  };
-
-  useEffect(() => {
-    const handleEEAccountsChanged = (accounts) => {
-      console.log('Account Changed: ', accounts);
-    };
-    const handleEEChainChanged = (chainId) => {
-      console.log('ChainId Changed', chainId);
-      if (chainId && !isSupportedNetwork(chainId)) showChainErrorSnackBar();
-    };
-    const handleEEDisconnect = (code, reason) => {
-      console.log('Disconnect code: ', code, ', reason: ', reason);
-      signOutWithEssentials();
-    };
-    const handleEEError = (code, reason) => {
-      console.error(code, reason);
-    };
-
-    if (isInAppBrowser()) {
-      const inAppProvider = window.elastos.getWeb3Provider();
-      const inAppWeb3 = new Web3(inAppProvider);
-      inAppWeb3.eth.getBalance(inAppProvider.address).then((balance) => {
-        console.log('Wallet balance: ', parseFloat((parseFloat(balance) / 1e18).toFixed(2)));
-      });
-      inAppWeb3.eth.getChainId().then((chainId) => {
-        if (chainId && !isSupportedNetwork(chainId)) showChainErrorSnackBar();
-      });
-    } else {
-      // Subscribe to accounts change
-      walletConnectProvider.on('accountsChanged', handleEEAccountsChanged);
-      // Subscribe to chainId change
-      walletConnectProvider.on('chainChanged', handleEEChainChanged);
-      // Subscribe to session disconnection
-      walletConnectProvider.on('disconnect', handleEEDisconnect);
-      // Subscribe to session disconnection
-      walletConnectProvider.on('error', handleEEError);
-    }
-    return () => {
-      if (walletConnectProvider.removeListener) {
-        walletConnectProvider.removeListener('accountsChanged', handleEEAccountsChanged);
-        walletConnectProvider.removeListener('chainChanged', handleEEChainChanged);
-        walletConnectProvider.removeListener('disconnect', handleEEDisconnect);
-        walletConnectProvider.removeListener('error', handleEEError);
-      }
-    };
-  }, [walletConnectProvider]);
-
-  // useEffect(() => {
-  //   if (!user.did) signOutWithEssentials();
-  // }, [user]);
 
   return (
     <Container maxWidth="1000" sx={{ pt: 15, pb: 2.5 }}>
@@ -255,7 +113,7 @@ export default function LandingPage() {
           </Typography>
         </Box>
         <Box sx={{ margin: '40px auto', textAlign: 'center' }}>
-          {!currentUser.did ? (
+          {!user.did ? (
             <ConnectButton variant="outlined" onClick={login} disabled={loading}>
               Connect Wallet
             </ConnectButton>

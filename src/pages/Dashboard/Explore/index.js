@@ -63,7 +63,7 @@ export default function HiveExplore() {
       <PageTitleTypo mt={{ xs: 7, md: 15 }}>Explore</PageTitleTypo>
       <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 8 }}>
         <Stack direction="row" spacing={{ xs: '25px', md: '50px' }} alignItems="baseline">
-          <PageTitleTypo sub>Nodes</PageTitleTypo>
+          <PageTitleTypo sub="true">Nodes</PageTitleTypo>
           <FilterByTypo>Filter by</FilterByTypo>
         </Stack>
         <Stack spacing={3.75}>
@@ -83,7 +83,7 @@ export default function HiveExplore() {
       </Stack>
       <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 6.25, md: 12.5 }}>
         <Stack direction="row" spacing={{ xs: '25px', md: '50px' }} alignItems="baseline">
-          <PageTitleTypo sub>Vaults</PageTitleTypo>
+          <PageTitleTypo sub="true">Vaults</PageTitleTypo>
           <FilterByTypo>Filter by</FilterByTypo>
         </Stack>
         <Stack spacing={3.75}>

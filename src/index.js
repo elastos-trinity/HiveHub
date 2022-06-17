@@ -1,10 +1,7 @@
 // scroll bar
 import 'simplebar/src/simplebar.css';
-
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import { SnackbarProvider } from 'notistack';
 
 //
 import App from './App';
@@ -14,13 +11,9 @@ import reportWebVitals from './reportWebVitals';
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
-  <HelmetProvider>
-    <SnackbarProvider maxSnack={1}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </SnackbarProvider>
-  </HelmetProvider>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

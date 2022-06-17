@@ -28,7 +28,7 @@ const NodeTimeLable = styled(Typography)(({ theme }) => ({
 
 ItemBox.propTypes = {
   time: PropTypes.string.isRequired,
-  children: PropTypes.any.isRequired,
+  children: PropTypes.node.isRequired,
   sx: PropTypes.any,
   onClick: PropTypes.func,
 };

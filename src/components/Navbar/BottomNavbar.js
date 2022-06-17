@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
@@ -7,7 +7,7 @@ import { Stack, Typography, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
 import palette from '../../theme/palette';
 import { MHidden } from '../@material-extend';
-import UserContext from '../../contexts/UserContext';
+import useUser from '../../hooks/useUser';
 
 BottomNavbar.propTypes = {
   onOpenSidebar: PropTypes.func
@@ -19,15 +19,13 @@ const activeLink = {
 
 const NavButton = styled(Button)({
   width: '100%',
-  // height: '80px',
-  // margin: '10px auto',
   color: 'rgba(0, 0, 0, 0.3)'
 });
 
 export default function BottomNavbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
   const matchXsDown = useMediaQuery('(max-width:450px)');
 

@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+// import { useContext } from 'react';
 import { connectivity } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import { EssentialsConnector } from '@elastosfoundation/essentials-connector-client-browser';
-import ConnectivityContext from '../contexts/ConnectivityContext';
+// import ConnectivityContext from '../contexts/ConnectivityContext';
 
 export const essentialsConnector = new EssentialsConnector();
 
@@ -9,8 +9,8 @@ console.log(essentialsConnector);
 
 let connectivityInitialized = false;
 
-export function useConnectivitySDK() {
-  const { setIsLinkedToEssentials } = useContext(ConnectivityContext);
+export function initConnectivitySDK() {
+  // const { setIsLinkedToEssentials } = useContext(ConnectivityContext);
 
   if (connectivityInitialized) {
     // console.log('EssentialsConnector has already initialized.');
@@ -34,7 +34,7 @@ export function useConnectivitySDK() {
 
     const hasLink = isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession();
     // console.log('Has link to essentials?', hasLink);
-    setIsLinkedToEssentials(hasLink);
+    // setIsLinkedToEssentials(hasLink);
 
     // Restore the wallet connect session - TODO: should be done by the connector itself?
     if (hasLink && !essentialsConnector.getWalletConnectProvider().connected)

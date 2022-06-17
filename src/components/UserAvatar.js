@@ -13,6 +13,7 @@ import {
   Popper
 } from '@mui/material';
 import PropTypes from 'prop-types';
+import useUser from '../hooks/useUser';
 
 UserAvatar.propTypes = {
   did: PropTypes.string,
@@ -28,6 +29,7 @@ export const AccountStyle = styled(Stack)(({ theme }) => ({
 }));
 
 export default function UserAvatar({ did, avatar }) {
+  const { user, signOutWithEssentials } = useUser();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -93,7 +95,14 @@ export default function UserAvatar({ did, avatar }) {
                   id="composition-menu"
                   aria-labelledby="composition-button"
                 >
-                  <MenuItem onClick={handleClose}>Log out</MenuItem>
+                  <MenuItem
+                    onClick={(event) => {
+                      signOutWithEssentials();
+                      handleClose(event);
+                    }}
+                  >
+                    Log out
+                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>

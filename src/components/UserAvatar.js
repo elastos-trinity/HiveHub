@@ -12,13 +12,7 @@ import {
   Paper,
   Popper
 } from '@mui/material';
-import PropTypes from 'prop-types';
 import useUser from '../hooks/useUser';
-
-UserAvatar.propTypes = {
-  did: PropTypes.string,
-  avatar: PropTypes.string
-};
 
 export const AccountStyle = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
@@ -28,7 +22,7 @@ export const AccountStyle = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.grey[200]
 }));
 
-export default function UserAvatar({ did, avatar }) {
+export default function UserAvatar() {
   const { user, signOutWithEssentials } = useUser();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -56,7 +50,7 @@ export default function UserAvatar({ did, avatar }) {
 
   return (
     <AccountStyle direction="row" spacing={1} justifyContent="center">
-      <Avatar src={avatar} alt="photoURL" />
+      <Avatar src={user.avatar} alt="photoURL" />
       <Button
         ref={anchorRef}
         id="composition-button"
@@ -70,7 +64,7 @@ export default function UserAvatar({ did, avatar }) {
           variant="subtitle1"
           sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          {did}
+          {user.did}
         </Typography>
       </Button>
       <Popper

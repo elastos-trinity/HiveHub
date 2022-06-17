@@ -1,7 +1,6 @@
-import { Stack, Box, Typography, Chip, Button, LinearProgress } from '@mui/material';
+import { Stack, Typography, Button, LinearProgress } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { MHidden } from './@material-extend';
 import ItemBox from './ItemBox';
 
 const VaultTitle = styled(Typography)(({ theme }) => ({

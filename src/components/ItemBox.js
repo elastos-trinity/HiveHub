@@ -30,14 +30,19 @@ ItemBox.propTypes = {
   time: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   sx: PropTypes.any,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func
 };
 
 export default function ItemBox({ time, children, onClick, sx }) {
   return (
-    <ContainerBox onClick={onClick} sx={{...sx}}>
+    <ContainerBox onClick={onClick} sx={{ ...sx }}>
       <NodeTimeLable
-        sx={{ whiteSpace: 'nowrap', position: 'absolute', right: { xs: '10px', sm: '20px' }, top: { xs: '10px', sm: '30px' } }}
+        sx={{
+          whiteSpace: 'nowrap',
+          position: 'absolute',
+          right: { xs: '10px', sm: '20px' },
+          top: { xs: '10px', sm: '30px' }
+        }}
       >
         {time}
       </NodeTimeLable>

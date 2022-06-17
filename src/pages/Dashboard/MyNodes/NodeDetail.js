@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -116,6 +117,11 @@ const PlusTypo = styled(Typography)(({ theme }) => ({
   }
 }));
 
+InfoItem.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+};
+
 function InfoItem({ label, value }) {
   return (
     <Grid item lg={6} md={12} sm={12} xs={12} sx={{ textAlign: 'left', mb: 2 }}>
@@ -229,14 +235,14 @@ export default function NodeDetail() {
           <Tab value="backup" label="Backup Service" />
         </Tabs>
         {value === 'vault' ? (
-          <Box sx={{ mt: { xs: 5, md: 12.5 }, height: '300px', width: '100%', textAlign: "left" }}>
+          <Box sx={{ mt: { xs: 5, md: 12.5 }, height: '300px', width: '100%', textAlign: 'left' }}>
             <CustomButton sx={{ height: { xs: '30px', md: '70px' } }} onClick={() => {}}>
               <PlusTypo>+</PlusTypo>
               Add Vault
             </CustomButton>
           </Box>
         ) : (
-          <Box sx={{ mt: {xs: 5, md: 9.375}, width: '100%', height: '300px', textAlign: "left" }}>
+          <Box sx={{ mt: { xs: 5, md: 9.375 }, width: '100%', height: '300px', textAlign: 'left' }}>
             <VaultSummaryItem
               vaultName={nodeDetail.vaultName}
               vaultTotal={nodeDetail.total}

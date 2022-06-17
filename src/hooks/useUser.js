@@ -10,7 +10,10 @@ import {
 } from '../service/connectivity';
 
 export default function useUser() {
-  const [user, setUser] = useState({ did: localStorage.getItem('did') });
+  const [user, setUser] = useState({
+    did: localStorage.getItem('did'),
+    avatar: '/static/mock-images/avatars/avatar_default.jpg'
+  });
   const [walletConnectProvider] = useState(essentialsConnector.getWalletConnectProvider());
   const { enqueueSnackbar } = useSnackbar();
   initConnectivitySDK();

@@ -121,7 +121,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
       <Stack justifyContent="space-between">
         {showAvatar && (
           <Box sx={{ pb: 7.5, px: 2.5, mt: 2.5, visibility: `${user.did ? 'block' : 'hidden'}` }}>
-            <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
+            <UserAvatar />
           </Box>
         )}
         {showMenu && (

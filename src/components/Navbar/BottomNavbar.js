@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Stack, Typography, Button } from '@mui/material';
@@ -8,10 +7,6 @@ import { Icon } from '@iconify/react';
 import palette from '../../theme/palette';
 import { MHidden } from '../@material-extend';
 import useUser from '../../hooks/useUser';
-
-BottomNavbar.propTypes = {
-  onOpenSidebar: PropTypes.func
-};
 
 const activeLink = {
   color: 'black'

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Stack, Typography, LinearProgress } from '@mui/material';
 
-VaultSummaryItem.prototype = {
+VaultSummaryItem.propTypes = {
   vaultName: PropTypes.string,
   vaultTotal: PropTypes.number,
   vaultUsed: PropTypes.number

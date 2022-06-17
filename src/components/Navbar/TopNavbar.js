@@ -46,11 +46,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             mx={{ md: 5, lg: 7.5 }}
           >
             <HiveLogo />
-            {user.did && pathname.includes('dashboard') ? (
-              <UserAvatar did={user.did} avatar="/static/mock-images/avatars/avatar_default.jpg" />
-            ) : (
-              <LanguageBar />
-            )}
+            {user.did && pathname.includes('dashboard') ? <UserAvatar /> : <LanguageBar />}
           </Stack>
         </Box>
       </MHidden>

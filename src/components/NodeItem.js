@@ -70,7 +70,17 @@ NodeItem.propTypes = {
   sx: PropTypes.any
 };
 
-export default function NodeItem({ id, name, status, description, ip, did, time, isMyNode = false, sx }) {
+export default function NodeItem({
+  id,
+  name,
+  status,
+  description,
+  ip,
+  did,
+  time,
+  isMyNode = false,
+  sx
+}) {
   const navigate = useNavigate();
 
   return (
@@ -140,7 +150,14 @@ export default function NodeItem({ id, name, status, description, ip, did, time,
               </Stack>
             </Typography>
           </MHidden>
-          {!isMyNode && <CustomButton disabled={!status} onClick={() => navigate(`/dashboard/nodes/detail/${id}`)}>Access</CustomButton>}
+          {!isMyNode && (
+            <CustomButton
+              disabled={!status}
+              onClick={() => navigate(`/dashboard/nodes/detail/${id}`)}
+            >
+              Access
+            </CustomButton>
+          )}
         </Stack>
       </Stack>
     </ItemBox>

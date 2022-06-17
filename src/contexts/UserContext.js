@@ -2,7 +2,7 @@ import { createContext } from 'react';
 
 const UserContext = createContext({
   user: {
-    did: localStorage.getItem('did')
+    did: localStorage.getItem('did'),
   }
 });
 

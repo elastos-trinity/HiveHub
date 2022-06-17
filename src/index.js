@@ -4,6 +4,7 @@ import 'simplebar/src/simplebar.css';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { SnackbarProvider } from 'notistack';
 
 //
 import App from './App';
@@ -14,9 +15,11 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <HelmetProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <SnackbarProvider maxSnack={1}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </SnackbarProvider>
   </HelmetProvider>,
   document.getElementById('root')
 );

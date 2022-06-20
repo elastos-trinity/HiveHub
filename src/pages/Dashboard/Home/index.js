@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import NodeItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
+import { getHiveNodesList } from '../../../service/fetch';
 
 const NodeStatisticLabel = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
@@ -84,6 +85,12 @@ const vaultItemList = [
 export default function HiveHome() {
   const [nodeItems, setNodeItems] = useState(nodeItemList);
   const [vaultItems, setVaultItems] = useState(vaultItemList);
+
+  useEffect(async () => {
+    const nodeList = await getHiveNodesList();
+    console.log(nodeList)
+    setNodeItems(nodeList);
+  }, []);
 
   return (
     <>

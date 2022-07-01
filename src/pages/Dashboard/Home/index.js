@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import NodeItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList } from '../../../service/fetch';
+import { getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
 
 const NodeStatisticLabel = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
@@ -56,19 +56,6 @@ const NodeSummaryBox = styled(Box)(({ theme }) => ({
   }
 }));
 
-const nodeItemList = [
-  {
-    name: 'Node A',
-    url: 'http://localhost:5005',
-    status: true
-  },
-  {
-    name: 'Node B',
-    url: 'http://localhost:5005',
-    status: false
-  }
-];
-
 const vaultItemList = [
   {
     name: 'Vault Service-0 (Free)',
@@ -83,13 +70,14 @@ const vaultItemList = [
 ];
 
 export default function HiveHome() {
-  const [nodeItems, setNodeItems] = useState(nodeItemList);
+  const [nodeItems, setNodeItems] = useState([]);
   const [vaultItems, setVaultItems] = useState(vaultItemList);
 
   useEffect(async () => {
     const nodeList = await getHiveNodesList();
-    console.log(nodeList)
     setNodeItems(nodeList);
+    const vaultList = await getHiveVaultsList();
+    setVaultItems(vaultList);
   }, []);
 
   return (

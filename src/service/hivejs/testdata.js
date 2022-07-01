@@ -12,7 +12,7 @@ import {
   AppContext,
   BackupService,
   HiveException,
-  VaultServices,
+  Vault,
   Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { connectivity, DID as ConDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
@@ -220,7 +220,7 @@ export default class SdkContext {
   }
 
   newVault() {
-    return new VaultServices(this.context, this.getProviderAddress());
+    return new Vault(this.context, this.getProviderAddress());
   }
 
   // newBackup(): Backup {

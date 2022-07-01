@@ -1,13 +1,13 @@
 import {
   VaultInfo,
-  VaultSubscriptionService,
+  VaultSubscription,
   Backup,
-  BackupSubscriptionService,
+  BackupSubscription,
   NotFoundException,
-  VaultServices,
+  Vault as Vaults,
   BackupService,
   PromotionService,
-  ProviderService
+  Provider
 } from '@elastosfoundation/hive-js-sdk';
 import SdkContext from './testdata';
 import HiveHubServer from '../hivehub';
@@ -29,17 +29,17 @@ export default class Vault {
 
   async getVaultSubscriptionService(hiveUrl) {
     const sdkContext = await this.getSdkContext();
-    return new VaultSubscriptionService(sdkContext.getAppContext(), hiveUrl);
+    return new VaultSubscription(sdkContext.getAppContext(), hiveUrl);
   }
 
   async getProviderService(hiveUrl) {
     const sdkContext = await this.getSdkContext();
-    return new ProviderService(sdkContext.getAppContext(), hiveUrl);
+    return new Provider(sdkContext.getAppContext(), hiveUrl);
   }
 
   async getBackupService(hiveUrl, targetUrl, targetDid) {
     const sdkContext = await this.getSdkContext();
-    const vaultService = new VaultServices(sdkContext.getAppContext(), hiveUrl);
+    const vaultService = new Vaults(sdkContext.getAppContext(), hiveUrl);
     const backupService = vaultService.getBackupService();
     backupService.setBackupContext(sdkContext.getLoginBackupAppContext(targetUrl, targetDid));
     return backupService;
@@ -47,7 +47,7 @@ export default class Vault {
 
   async getBackupSubscriptionService(hiveUrl) {
     const sdkContext = await this.getSdkContext();
-    return new BackupSubscriptionService(sdkContext.getAppContext(), hiveUrl);
+    return new BackupSubscription(sdkContext.getAppContext(), hiveUrl);
   }
 
   async getPromotionService(hiveUrl) {
@@ -184,10 +184,6 @@ export default class Vault {
         n.online = onlineCheck ? isOnline : false;
       })
     );
-    // for (const n of nodes) {
-    //   const isOnline = await HiveHubServer.isOnline(n.url);
-    //   n.online = onlineCheck ? isOnline : false;
-    // }
     return nodes;
   }
 }

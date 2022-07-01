@@ -8,6 +8,7 @@ export const getHiveNodesList = async () => {
   const nodeList = await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };
+      console.log(node);
       node.did = item.owner_did;
       node.url = 'https://hive-testnet1.trinity-tech.io';
       try {

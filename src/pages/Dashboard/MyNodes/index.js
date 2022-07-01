@@ -1,9 +1,11 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PageTitleTypo } from '../style';
 import NodeItem from '../../../components/NodeItem';
+import { getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
+import useUser from '../../../hooks/useUser';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -40,30 +42,15 @@ const PlusTypo = styled(Typography)(({ theme }) => ({
   }
 }));
 
-const NodeList = [
-  {
-    id: 1,
-    name: 'Node A',
-    status: true,
-    time: '2022-01-01 20:00:00',
-    description: 'This is a local hive node',
-    ip: '192.115.24.2',
-    did: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n'
-  },
-  {
-    id: 2,
-    name: 'Node B',
-    status: false,
-    time: '2022-01-01 20:00:00',
-    description: 'This is a local hive node',
-    ip: '192.115.24.2',
-    did: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n'
-  }
-];
-
 export default function HiveNodes() {
   const navigate = useNavigate();
-  const [myNodeList, setMyNodeList] = React.useState(NodeList);
+  const { user } = useUser();
+  const [myNodeList, setMyNodeList] = useState([]);
+
+  useEffect(async () => {
+    const nodeList = await getHiveNodesList(undefined, user.did);
+    setMyNodeList(nodeList);
+  }, []);
 
   return (
     <>

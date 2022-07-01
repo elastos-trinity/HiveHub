@@ -3,8 +3,8 @@ import HiveHubServer from './hivehub';
 import SdkContext from './hivejs/testdata';
 import Vault from './hivejs/vault';
 
-export const getHiveNodesList = async () => {
-  const nodes = await HiveHubServer.getHiveNodes();
+export const getHiveNodesList = async (nid, did) => {
+  const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };

@@ -17,26 +17,6 @@ const FilterByTypo = styled(Typography)(({ theme }) => ({
   }
 }));
 
-const nodeItemList = [
-  {
-    id: 1,
-    name: 'Rong',
-    description: 'This is my node.',
-    ip: '192.115.24.2',
-    did: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n',
-    time: '05-04-2022 21:00:00',
-    status: true
-  },
-  {
-    id: 2,
-    name: 'Frost',
-    description: 'Hey! You can access my node.',
-    ip: '192.115.24.2',
-    did: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n',
-    time: '05-04-2022 21:00:00',
-    status: false
-  }
-];
 
 const vaultItemList = [
   {
@@ -56,7 +36,7 @@ const vaultItemList = [
 ];
 
 export default function HiveExplore() {
-  const [nodeItems, setNodeItems] = useState(nodeItemList);
+  const [nodeItems, setNodeItems] = useState([]);
   const [vaultItems, setVaultItems] = useState(vaultItemList);
 
   useEffect(async () => {

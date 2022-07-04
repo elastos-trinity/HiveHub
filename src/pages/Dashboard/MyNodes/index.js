@@ -4,7 +4,7 @@ import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PageTitleTypo } from '../style';
 import NodeItem from '../../../components/NodeItem';
-import { getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
+import { getDIDDocumentFromDID, getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
 
 const CustomButton = styled(Button)(({ theme }) => ({

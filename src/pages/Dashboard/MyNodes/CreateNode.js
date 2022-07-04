@@ -4,7 +4,10 @@ import { Box, Button, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { PageTitleTypo } from '../style';
+import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
+import { getTime } from '../../../service/common';
+import HiveHubServer from '../../../service/hivehub';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -40,7 +43,8 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 export default function CreateNode() {
   const navigate = useNavigate();
-  const [ownerDid, setOwnerDid] = useState('');
+  const { user } = useUser();
+  const [ownerDid, setOwnerDid] = useState(`did:elastos:${user.did}`);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [nodeName, setNodeName] = useState('');
   const [nodeNameErr, setNodeNameErr] = useState(false);
@@ -57,9 +61,23 @@ export default function CreateNode() {
   const [description, setDescription] = useState('');
   const [descriptionErr, setDescriptionErr] = useState(false);
 
-  const handleCreateNode = () => {
+  const handleCreateNode = async () => {
     if (ownerDid && nodeName && email && country && province && district && url && description) {
-      alert(1);
+      const curTime = getTime(new Date().getTime());
+      const newNode = {
+        name: nodeName,
+        created: `${curTime.date} ${curTime.time}`, // TODO:
+        ip: '192.115.24.2', // TODO:
+        owner_did: ownerDid,
+        area: `${country} ${province} ${district}`,
+        email,
+        url,
+        remark: description
+      };
+      console.log(newNode);
+      const json = await HiveHubServer.addHiveNode(newNode);
+      // acknowledged: true
+      // inserted_id: "62c2e6560d6930f229239199"
       navigate('/dashboard/nodes');
     } else {
       setOwnerDidErr(!ownerDid);
@@ -84,14 +102,12 @@ export default function CreateNode() {
           <CustomTextField
             placeholder="Owner DID"
             variant="standard"
+            inputValue={ownerDid}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}
             error={ownerDidErr}
             errorText="Owner DID can not be empty"
-            changeHandler={(value) => {
-              setOwnerDid(value);
-              setOwnerDidErr(false);
-            }}
+            disabled
           />
           <CustomTextField
             placeholder="Node Name"

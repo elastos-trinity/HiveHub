@@ -1,9 +1,10 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
+import { getHiveNodesList } from '../../../service/fetch';
 
 const NodeTitle = styled(Typography)(({ theme }) => ({
   color: '#000',
@@ -151,15 +152,20 @@ const nodeInfo = {
 };
 
 export default function NodeDetail() {
-  const [nodeDetail, setNodeDetail] = React.useState(nodeInfo);
-  const [value, setValue] = React.useState('vault');
+  const [nodeDetail, setNodeDetail] = useState(nodeInfo);
+  const [value, setValue] = useState('vault');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const { nodeId } = useParams();
-  console.log(nodeId);
+
+  useEffect(async () => {
+    const details = await getHiveNodesList(nodeId);
+    setNodeDetail(details.length ? details[0] : undefined);
+  }, []);
+
   return (
     <>
       <Stack
@@ -197,20 +203,20 @@ export default function NodeDetail() {
       <NodeTimeLable
         sx={{ whiteSpace: 'nowrap', textAlign: 'left', mt: { xs: '5px', md: '10px' }, mb: 2.5 }}
       >
-        {nodeDetail.time}
+        {nodeDetail.created}
       </NodeTimeLable>
 
       <ContainerBox>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <NodeDescription>{nodeInfo.description}</NodeDescription>
+          <NodeDescription>{nodeDetail.remark}</NodeDescription>
           <DestroyVaultButton>Destroy Vault</DestroyVaultButton>
         </Stack>
         <Grid container sx={{ mt: { xs: '43px', md: '77px' } }}>
-          <InfoItem label="IP" value={nodeInfo.ip} />
-          <InfoItem label="Owner DID" value={nodeInfo.did} />
-          <InfoItem label="Country/Region" value={nodeInfo.region} />
-          <InfoItem label="Email" value={nodeInfo.email} />
-          <InfoItem label="URL" value={nodeInfo.url} />
+          <InfoItem label="IP" value={nodeDetail.ip} />
+          <InfoItem label="Owner DID" value={nodeDetail.owner_did} />
+          <InfoItem label="Country/Region" value={nodeDetail.area} />
+          <InfoItem label="Email" value={nodeDetail.email} />
+          <InfoItem label="URL" value={nodeDetail.url} />
         </Grid>
         <Tabs
           // centered

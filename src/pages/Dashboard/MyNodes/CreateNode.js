@@ -7,7 +7,7 @@ import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
-import HiveHubServer from '../../../service/hivehub';
+import HiveHubServer from '../../../service/HiveHubServer';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',

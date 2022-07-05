@@ -61,13 +61,13 @@ export default function HiveNodes() {
         {myNodeList.map((node, index) => (
           <NodeItem
             key={index}
-            id={node.id}
+            id={node._id}
             name={node.name}
             status={node.status}
-            time={node.time}
-            description={node.description}
+            time={node.created}
+            description={node.remark}
             ip={node.ip}
-            did={node.did}
+            did={node.owner_did}
             isMyNode
             sx={{ cursor: 'pointer' }}
           />

@@ -1,9 +1,9 @@
 import {
   InsertOptions,
   File as HiveFile,
-  VaultServices,
+  Vault,
   AppContext,
-  Logger as HiveLogger
+  // Logger as HiveLogger
 } from '@elastosfoundation/hive-js-sdk';
 import {
   JWTParserBuilder,
@@ -15,15 +15,16 @@ import {
   VerifiablePresentation
 } from '@elastosfoundation/did-js-sdk';
 import { connectivity, DID as ConDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import { ApplicationDID } from '../../config';
+import config from '../config';
 
 let vaults;
 
-const creatAppContext = async (appInstanceDidDocument, userDidString) => {
+export const creatAppContext = async (appInstanceDidDocument, userDidString) => {
   try {
-    HiveLogger.setDefaultLevel(HiveLogger.TRACE);
+    // HiveLogger.setDefaultLevel(HiveLogger.TRACE);
     const resolver = 'https://api.trinity-tech.cn/eid';
-    DIDBackend.initialize(new DefaultDIDAdapter(resolver));
+    if (!DIDBackend.isInitialized()) 
+      DIDBackend.initialize(new DefaultDIDAdapter(resolver));
     try {
       const catchPath = '/data/userDir/data/store/catch';
       AppContext.setupResolver(resolver, catchPath);
@@ -56,11 +57,11 @@ const creatAppContext = async (appInstanceDidDocument, userDidString) => {
   }
 };
 
-const createVault = async (targetDid) => {
+export const createVault = async (targetDid) => {
   try {
     const appinstanceDocument = await getAppInstanceDIDDoc();
     const context = await creatAppContext(appinstanceDocument, targetDid);
-    const vault = new VaultServices(context);
+    const vault = new Vault(context);
     if (vaults === undefined) {
       vaults = {};
     }
@@ -71,7 +72,7 @@ const createVault = async (targetDid) => {
   }
 };
 
-const getVault = async (targetDid) => {
+export const getVault = async (targetDid) => {
   if (vaults === undefined) {
     await createVault(targetDid);
   }
@@ -83,7 +84,7 @@ const getVault = async (targetDid) => {
   return vault;
 };
 
-const getMyVault = async () => {
+export const getMyVault = async () => {
   const did = localStorage.getItem('did');
   const userDid = `did:elastos:${did}`;
   if (vaults === undefined) {
@@ -93,26 +94,26 @@ const getMyVault = async () => {
   return vault;
 };
 
-const getScriptingService = async (targetDid) => {
+export const getScriptingService = async (targetDid) => {
   const vault = await getVault(targetDid);
   const scriptingService = vault.getScriptingService();
 
   return scriptingService;
 };
 
-const getMyScriptingService = async () => {
+export const getMyScriptingService = async () => {
   const vault = await getMyVault();
   const scriptingService = vault.getScriptingService();
 
   return scriptingService;
 };
 
-const getDatabaseService = async () => {
+export const getDatabaseService = async () => {
   const databaseService = (await getMyVault()).getDatabaseService();
   return databaseService;
 };
 
-const getFilesService = async () => {
+export const getFilesService = async () => {
   const fileService = (await getMyVault()).getFilesService();
   return fileService;
 };
@@ -149,7 +150,7 @@ export const createCollection = async (channelName) => {
 //   }
 // }
 
-// export const callScript = async(scriptName, document, targetDid, appid = ApplicationDID) => {
+// export const callScript = async(scriptName, document, targetDid, appid = config.ApplicationDID) => {
 //   const scriptingService = await getScriptingService(targetDid)
 //   const result = await scriptingService.callScript(scriptName, document, targetDid, appid)
 //   return result
@@ -184,7 +185,7 @@ export const registerScript = (
       });
   });
 
-export const callScript = (scriptName, document, targetDid, appid = ApplicationDID) =>
+export const callScript = (scriptName, document, targetDid, appid = config.ApplicationDID) =>
   new Promise((resolve, reject) => {
     getScriptingService(targetDid)
       .then((scriptingService) =>
@@ -324,7 +325,7 @@ const createChallengeResponse = async (vp, hiveDid, storepass) => {
   return token;
 };
 
-async function getAppInstanceDIDDoc() {
+export async function getAppInstanceDIDDoc() {
   const didAccess = new ConDID.DIDAccess();
   const info = await didAccess.getOrCreateAppInstanceDID();
   const instanceDIDDocument = await info.didStore.loadDid(info.did.toString());
@@ -332,7 +333,7 @@ async function getAppInstanceDIDDoc() {
 }
 
 async function issueDiplomaFor() {
-  connectivity.setApplicationDID(ApplicationDID);
+  connectivity.setApplicationDID(config.ApplicationDID);
   const didAccess = new ConDID.DIDAccess();
   let credential = await didAccess.getExistingAppIdentityCredential();
   if (credential) {

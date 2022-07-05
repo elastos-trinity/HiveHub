@@ -10,7 +10,7 @@ import {
   Provider
 } from '@elastosfoundation/hive-js-sdk';
 import SdkContext from './testdata';
-import HiveHubServer from '../hivehub';
+import HiveHubServer from '../HiveHubServer';
 // import {ProviderService} from "@dchagastelles/elastos-hive-js-sdk/typings/restclient/provider/providerservice";
 
 // export class VaultDetail {

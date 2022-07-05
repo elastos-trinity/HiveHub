@@ -1,16 +1,16 @@
-import { VaultSubscription } from '@elastosfoundation/hive-js-sdk';
+import { VaultSubscription, AboutService, ServiceEndpoint, HttpClient } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
-import HiveHubServer from './hivehub';
+import HiveHubServer from './HiveHubServer';
 import SdkContext from './hivejs/testdata';
-import Vault from './hivejs/vault';
+import { creatAppContext, getAppInstanceDIDDoc } from './HiveService';
+import devConfig from './hivejs/config/developing.json';
 
 export const getHiveNodesList = async (nid, did) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };
-      node.did = item.owner_did;
-      node.url = 'https://hive-testnet1.trinity-tech.io';
+      node.url = devConfig.node.provider;
       try {
         node.status = await HiveHubServer.isOnline(node.url);
       } catch (e) {
@@ -52,4 +52,22 @@ export const getDIDDocumentFromDID = (did) =>
       .catch((error) => {
         reject(error);
       });
-  });
+});
+
+export const createAppContext = async (did) => {
+  const appDIDDoc = await getAppInstanceDIDDoc();  
+  const appContext = await creatAppContext(appDIDDoc, did);
+  return appContext;
+};
+
+export const getHiveNodeInfo = async (did) => {
+  const nodeProvider = "https://hive-testnet1.trinity-tech.io";
+  const appContext = await createAppContext(did);
+  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
+  const httpClient = new HttpClient(serviceEndpoint, true, HttpClient.DEFAULT_OPTIONS);
+  const aboutService = new AboutService(appContext, httpClient);
+  const nodeInfo = await aboutService.getInfo();
+  // const nodeInfo = await serviceEndpoint.getNodeInfo();
+  return nodeInfo;
+};
+

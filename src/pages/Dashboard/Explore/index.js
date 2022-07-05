@@ -58,11 +58,11 @@ export default function HiveExplore() {
               key={`node-item-${index}`}
               id={item._id}
               name={item.name}
-              description={item.description}
+              description={item.remark}
               ip={item.ip}
-              did={item.did}
+              did={item.owner_did}
               status={item.status}
-              time={item.time}
+              time={item.created}
             />
           ))}
         </Stack>

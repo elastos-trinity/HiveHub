@@ -152,7 +152,7 @@ const nodeInfo = {
 };
 
 export default function NodeDetail() {
-  const [nodeDetail, setNodeDetail] = useState(nodeInfo);
+  const [nodeDetail, setNodeDetail] = useState([]);
   const [value, setValue] = useState('vault');
 
   const handleChange = (event, newValue) => {

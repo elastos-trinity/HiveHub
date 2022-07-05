@@ -1,8 +1,11 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Stack, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Button, Stack } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { PageTitleTypo } from '../style';
+import useUser from '../../../hooks/useUser';
+import CustomTextField from '../../../components/CustomTextField';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -13,16 +16,6 @@ const ContainerBox = styled(Box)(({ theme }) => ({
   padding: '20px 50px 20px 20px',
   [theme.breakpoints.up('md')]: {
     padding: '30px 70px'
-  }
-}));
-
-const CustomTextField = styled(TextField)(({ theme }) => ({
-  width: '100%',
-  fontSize: '10px',
-  lineHeight: '12px',
-  [theme.breakpoints.up('md')]: {
-    fontSize: '20px',
-    lineHeight: '24px'
   }
 }));
 
@@ -48,21 +41,100 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const [ownerDid, setOwnerDid] = useState(`did:elastos:${user.did}`);
+  const [ownerDidErr, setOwnerDidErr] = useState(false);
+  const [servicePK, setServicePK] = useState('');
+  const [servicePKErr, setServicePKErr] = useState(false);
+  const [nodeName, setNodeName] = useState('');
+  const [nodeNameErr, setNodeNameErr] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailErr, setEmailErr] = useState(false);
+  const [nodeDescription, setNodeDescription] = useState('');
+  const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
   const handleSaveEnvConfig = () => {
-    navigate('/dashboard/nodes');
+    if (ownerDid && servicePK && nodeName && email && nodeDescription) {
+      navigate('/dashboard/nodes');
+    } else {
+      setOwnerDidErr(!ownerDid);
+      setServicePKErr(!servicePK);
+      setNodeNameErr(!nodeName);
+      setEmailErr(!email);
+      setNodeDescriptionErr(!nodeDescription);
+    }
   };
+
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <>
       <PageTitleTypo mt={{ xs: 6.25, md: 3.15 }}>Env Configuration</PageTitleTypo>
       <ContainerBox mt={{ xs: 2.5, md: 5 }}>
         <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 3.75, md: 5 }}>
-          <CustomTextField placeholder="Owner DID" variant="standard" />
-          <CustomTextField placeholder="Service private Key" variant="standard" />
-          <CustomTextField placeholder="Node name" variant="standard" />
-          <CustomTextField placeholder="Email" variant="standard" />
-          <CustomTextField placeholder="Node description" variant="standard" />
+          <CustomTextField
+            placeholder="Owner DID"
+            variant="standard"
+            inputValue={ownerDid}
+            fontSize={matchDownMd ? 10 : 20}
+            height={matchDownMd ? 12 : 24}
+            error={ownerDidErr}
+            errorText="Owner DID can not be empty"
+            disabled
+          />
+          <CustomTextField
+            placeholder="Service private Key"
+            variant="standard"
+            inputValue={servicePK}
+            fontSize={matchDownMd ? 10 : 20}
+            height={matchDownMd ? 12 : 24}
+            error={servicePKErr}
+            errorText="Service private key can not be empty"
+            changeHandler={(value) => {
+              setServicePK(value);
+              setServicePKErr(false);
+            }}
+          />
+          <CustomTextField
+            placeholder="Node name"
+            variant="standard"
+            inputValue={nodeName}
+            fontSize={matchDownMd ? 10 : 20}
+            height={matchDownMd ? 12 : 24}
+            error={nodeNameErr}
+            errorText="Node name can not be empty"
+            changeHandler={(value) => {
+              setNodeName(value);
+              setNodeNameErr(false);
+            }}
+          />
+          <CustomTextField
+            placeholder="Email"
+            variant="standard"
+            inputValue={email}
+            fontSize={matchDownMd ? 10 : 20}
+            height={matchDownMd ? 12 : 24}
+            error={emailErr}
+            errorText="Email can not be empty"
+            changeHandler={(value) => {
+              setEmail(value);
+              setEmailErr(false);
+            }}
+          />
+          <CustomTextField
+            placeholder="Node description"
+            variant="standard"
+            inputValue={nodeDescription}
+            fontSize={matchDownMd ? 10 : 20}
+            height={matchDownMd ? 12 : 24}
+            error={nodeDescriptionErr}
+            errorText="Node description can not be empty"
+            changeHandler={(value) => {
+              setNodeDescription(value);
+              setNodeDescriptionErr(false);
+            }}
+          />
         </Stack>
         <Stack direction="row" mt={{ xs: 14.5, md: 31.25 }} spacing={{ xs: 2.5, md: 5 }}>
           <CustomButton

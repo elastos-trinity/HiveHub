@@ -72,10 +72,16 @@ export default function HiveNodes() {
             sx={{ cursor: 'pointer' }}
           />
         ))}
-        <CustomButton onClick={() => navigate('/dashboard/nodes/create')}>
-          <PlusTypo>+</PlusTypo>
-          Create Hive Node
-        </CustomButton>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
+          <CustomButton onClick={() => navigate('/dashboard/nodes/create')}>
+            <PlusTypo>+</PlusTypo>
+            Create Hive Node
+          </CustomButton>
+          <CustomButton onClick={() => navigate('/dashboard/nodes/envconfig')}>
+            <PlusTypo>+</PlusTypo>
+            Create Hive Node Config
+          </CustomButton>
+        </Stack>
       </Stack>
     </>
   );

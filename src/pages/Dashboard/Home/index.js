@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import NodeItem from '../../../components/NodeSummaryItem';
+import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
+import { getHiveNodesList } from '../../../service/fetch';
+import useUser from '../../../hooks/useUser';
 
 const NodeStatisticLabel = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
@@ -70,14 +71,13 @@ const vaultItemList = [
 ];
 
 export default function HiveHome() {
+  const {user} = useUser();
   const [nodeItems, setNodeItems] = useState([]);
   const [vaultItems, setVaultItems] = useState(vaultItemList);
 
   useEffect(async () => {
     const nodeList = await getHiveNodesList();
     setNodeItems(nodeList);
-    const vaultList = await getHiveVaultsList();
-    setVaultItems(vaultList);
   }, []);
 
   return (
@@ -148,7 +148,7 @@ export default function HiveHome() {
                 </Grid>
               </Grid>
               {nodeItems.map((item, index) => (
-                <NodeItem
+                <NodeSummaryItem
                   key={`node-summary-${index}`}
                   nodeName={item.name}
                   nodeURL={item.url}

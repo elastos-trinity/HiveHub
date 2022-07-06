@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { getHiveNodesList } from '../../../service/fetch';
+import { emptyNodeItem } from '../../../utils/filler';
 
 const NodeTitle = styled(Typography)(({ theme }) => ({
   color: '#000',
@@ -137,22 +138,14 @@ function InfoItem({ label, value }) {
 }
 
 const nodeInfo = {
-  name: 'Node A',
-  status: true,
-  time: '2022-01-01 20:00:00',
-  description: 'This is a local hive node',
-  ip: '192.115.24.2',
-  region: 'China Shanghai Pudong',
-  email: 'abc@hivehub.xyz',
-  url: 'https://hivehub.xyz',
-  did: 'did:elastos:ikkFHgoUHrVDTU8HTYDAWH9Z8S377Qvt7n',
   vaultName: 'Vault Service-0 (Free)',
   total: 524,
   used: 262
 };
 
 export default function NodeDetail() {
-  const [nodeDetail, setNodeDetail] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);
   const [value, setValue] = useState('vault');
 
   const handleChange = (event, newValue) => {
@@ -162,101 +155,126 @@ export default function NodeDetail() {
   const { nodeId } = useParams();
 
   useEffect(async () => {
+    setLoading(true);
     const details = await getHiveNodesList(nodeId);
     setNodeDetail(details.length ? details[0] : undefined);
+    setLoading(false);
   }, []);
 
   return (
     <>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: '10px', sm: '20px' }}
-        mt={{ xs: 6.25, md: 3.15 }}
-      >
-        <NodeTitle>{nodeDetail.name}</NodeTitle>
-        {nodeDetail.status ? (
-          <Chip
-            label="online"
-            color="success"
-            sx={{
-              height: { xs: '11px !important', md: '19px !important' },
-              color: 'white',
-              '& .MuiChip-label': {
-                px: { xs: '5px !important', sm: '12px !important' }
+      {loading ? (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width="100%"
+          sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '40px', md: '70px' }, mt: { xs: 6.25, md: 3.15 }, mb: 2.5 }}
+        />
+      ) : (
+        <>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={{ xs: '10px', sm: '20px' }}
+            mt={{ xs: 6.25, md: 3.15 }}
+          >
+            <NodeTitle>{nodeDetail.name}</NodeTitle>
+            {nodeDetail.status ? (
+              <Chip
+                label="online"
+                color="success"
+                sx={{
+                  height: { xs: '11px !important', md: '19px !important' },
+                  color: 'white',
+                  '& .MuiChip-label': {
+                    px: { xs: '5px !important', sm: '12px !important' }
+                  }
+                }}
+              />
+            ) : (
+              <Chip
+                label="offline"
+                sx={{
+                  height: { xs: '11px !important', md: '19px !important' },
+                  color: 'black',
+                  '& .MuiChip-label': {
+                    px: { xs: '5px !important', sm: '12px !important' }
+                  }
+                }}
+              />
+            )}
+          </Stack>
+          <NodeTimeLable
+            sx={{ whiteSpace: 'nowrap', textAlign: 'left', mt: { xs: '5px', md: '10px' }, mb: 2.5 }}
+          >
+            {nodeDetail.created}
+          </NodeTimeLable>
+        </>
+      )}
+      {loading ? (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width="100%"
+          sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '500px', md: '800px' } }}
+        />
+      ) : (
+        <ContainerBox>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <NodeDescription>{nodeDetail.remark}</NodeDescription>
+            <DestroyVaultButton>Destroy Vault</DestroyVaultButton>
+          </Stack>
+          <Grid container sx={{ mt: { xs: '43px', md: '77px' } }}>
+            <InfoItem label="IP" value={nodeDetail.ip} />
+            <InfoItem label="Owner DID" value={nodeDetail.owner_did} />
+            <InfoItem label="Country/Region" value={nodeDetail.area} />
+            <InfoItem label="Email" value={nodeDetail.email} />
+            <InfoItem label="URL" value={nodeDetail.url} />
+          </Grid>
+          <Tabs
+            // centered
+            variant="fullWidth"
+            value={value}
+            onChange={handleChange}
+            textColor="inherit"
+            // aria-label="secondary tabs example"
+            TabIndicatorProps={{
+              sx: {
+                backgroundColor: 'black'
               }
             }}
-          />
-        ) : (
-          <Chip
-            label="offline"
             sx={{
-              height: { xs: '11px !important', md: '19px !important' },
-              color: 'black',
-              '& .MuiChip-label': {
-                px: { xs: '5px !important', sm: '12px !important' }
-              }
+              marginTop: { xs: '57px', md: '96px' },
+              fontSize: { xs: '12px', md: '25px' },
+              lineHeight: { xs: '15px', md: '30px' },
+              fontWeight: 700
             }}
-          />
-        )}
-      </Stack>
-      <NodeTimeLable
-        sx={{ whiteSpace: 'nowrap', textAlign: 'left', mt: { xs: '5px', md: '10px' }, mb: 2.5 }}
-      >
-        {nodeDetail.created}
-      </NodeTimeLable>
-
-      <ContainerBox>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <NodeDescription>{nodeDetail.remark}</NodeDescription>
-          <DestroyVaultButton>Destroy Vault</DestroyVaultButton>
-        </Stack>
-        <Grid container sx={{ mt: { xs: '43px', md: '77px' } }}>
-          <InfoItem label="IP" value={nodeDetail.ip} />
-          <InfoItem label="Owner DID" value={nodeDetail.owner_did} />
-          <InfoItem label="Country/Region" value={nodeDetail.area} />
-          <InfoItem label="Email" value={nodeDetail.email} />
-          <InfoItem label="URL" value={nodeDetail.url} />
-        </Grid>
-        <Tabs
-          // centered
-          variant="fullWidth"
-          value={value}
-          onChange={handleChange}
-          textColor="inherit"
-          // aria-label="secondary tabs example"
-          TabIndicatorProps={{
-            sx: {
-              backgroundColor: 'black'
-            }
-          }}
-          sx={{
-            marginTop: { xs: '57px', md: '96px' },
-            fontSize: { xs: '12px', md: '25px' },
-            lineHeight: { xs: '15px', md: '30px' },
-            fontWeight: 700
-          }}
-        >
-          <Tab value="vault" label="Vault Service" />
-          <Tab value="backup" label="Backup Service" />
-        </Tabs>
-        {value === 'vault' ? (
-          <Box sx={{ mt: { xs: 5, md: 12.5 }, height: '300px', width: '100%', textAlign: 'left' }}>
-            <CustomButton sx={{ height: { xs: '30px', md: '70px' } }} onClick={() => {}}>
-              <PlusTypo>+</PlusTypo>
-              Add Vault
-            </CustomButton>
-          </Box>
-        ) : (
-          <Box sx={{ mt: { xs: 5, md: 9.375 }, width: '100%', height: '300px', textAlign: 'left' }}>
-            <VaultSummaryItem
-              vaultName={nodeDetail.vaultName}
-              vaultTotal={nodeDetail.total}
-              vaultUsed={nodeDetail.used}
-            />
-          </Box>
-        )}
-      </ContainerBox>
+          >
+            <Tab value="vault" label="Vault Service" />
+            <Tab value="backup" label="Backup Service" />
+          </Tabs>
+          {value === 'vault' ? (
+            <Box
+              sx={{ mt: { xs: 5, md: 12.5 }, height: '300px', width: '100%', textAlign: 'left' }}
+            >
+              <CustomButton sx={{ height: { xs: '30px', md: '70px' } }} onClick={() => {}}>
+                <PlusTypo>+</PlusTypo>
+                Add Vault
+              </CustomButton>
+            </Box>
+          ) : (
+            <Box
+              sx={{ mt: { xs: 5, md: 9.375 }, width: '100%', height: '300px', textAlign: 'left' }}
+            >
+              <VaultSummaryItem
+                vaultName={nodeDetail.vaultName}
+                vaultTotal={nodeDetail.total}
+                vaultUsed={nodeDetail.used}
+              />
+            </Box>
+          )}
+        </ContainerBox>
+      )}
     </>
   );
 }

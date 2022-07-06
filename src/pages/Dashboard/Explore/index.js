@@ -17,7 +17,6 @@ const FilterByTypo = styled(Typography)(({ theme }) => ({
   }
 }));
 
-
 const vaultItemList = [
   {
     id: 1,

@@ -2,7 +2,7 @@ import {
   InsertOptions,
   File as HiveFile,
   Vault,
-  AppContext,
+  AppContext
   // Logger as HiveLogger
 } from '@elastosfoundation/hive-js-sdk';
 import {
@@ -23,8 +23,7 @@ export const creatAppContext = async (appInstanceDidDocument, userDidString) => 
   try {
     // HiveLogger.setDefaultLevel(HiveLogger.TRACE);
     const resolver = 'https://api.trinity-tech.cn/eid';
-    if (!DIDBackend.isInitialized()) 
-      DIDBackend.initialize(new DefaultDIDAdapter(resolver));
+    if (!DIDBackend.isInitialized()) DIDBackend.initialize(new DefaultDIDAdapter(resolver));
     try {
       const catchPath = '/data/userDir/data/store/catch';
       AppContext.setupResolver(resolver, catchPath);

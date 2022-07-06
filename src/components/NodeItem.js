@@ -59,7 +59,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 NodeItem.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   status: PropTypes.bool.isRequired,
   description: PropTypes.string.isRequired,

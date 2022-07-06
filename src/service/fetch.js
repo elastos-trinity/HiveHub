@@ -4,6 +4,7 @@ import HiveHubServer from './HiveHubServer';
 import SdkContext from './hivejs/testdata';
 import { creatAppContext, getAppInstanceDIDDoc } from './HiveService';
 import devConfig from './hivejs/config/developing.json';
+import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 
 export const getHiveNodesList = async (nid, did) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
@@ -64,10 +65,29 @@ export const getHiveNodeInfo = async (did) => {
   const nodeProvider = "https://hive-testnet1.trinity-tech.io";
   const appContext = await createAppContext(did);
   const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
-  const httpClient = new HttpClient(serviceEndpoint, true, HttpClient.DEFAULT_OPTIONS);
+  const httpClient = new HttpClient(serviceEndpoint, HttpClient.WITH_AUTHORIZATION, HttpClient.DEFAULT_OPTIONS);
   const aboutService = new AboutService(appContext, httpClient);
   const nodeInfo = await aboutService.getInfo();
   // const nodeInfo = await serviceEndpoint.getNodeInfo();
   return nodeInfo;
 };
+
+export const getVaultInfo = async (did) => {
+  const nodeProvider = "https://hive-testnet1.trinity-tech.io";
+  const appContext = await createAppContext(did);
+  const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
+  const vaultInfo = await vaultSubscription.getNodeVersion();
+  return vaultInfo;
+};
+
+export const getVaultInfos = async (did) => {
+  const didResolverUrl = 'https://api.trinity-tech.cn/eid';
+  const nodeProvider = "https://hive-testnet1.trinity-tech.io";
+  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(didResolverUrl);
+  const appContext = await instBCSHAH.getAppContext(did);
+  const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
+  const vaultInfo = await vaultSubscription.getNodeVersion();
+  return vaultInfo;
+};
+
 

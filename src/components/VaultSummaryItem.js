@@ -17,7 +17,7 @@ export default function VaultSummaryItem({ vaultName, vaultTotal, vaultUsed, isL
           animation="wave"
           width="100%"
           height="50px"
-          sx={{ bgcolor: '#E8F4FF' }}
+          sx={{ bgcolor: '#E8F4FF', borderRadius: 1 }}
         />
       ) : (
         <>

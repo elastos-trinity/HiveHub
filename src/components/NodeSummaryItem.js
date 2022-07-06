@@ -17,7 +17,7 @@ export default function NodeSummaryItem({ nodeName, nodeURL, nodeStatus, isLoadi
           animation="wave"
           width="100%"
           height="20px"
-          sx={{ bgcolor: '#E8F4FF' }}
+          sx={{ bgcolor: '#E8F4FF', borderRadius: 1 }}
         />
       ) : (
         <Grid container sx={{ textAlign: 'center' }} alignItems="center">

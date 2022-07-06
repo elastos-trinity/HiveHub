@@ -6,6 +6,7 @@ import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
 import { getHiveNodesList, getVaultInfo, getVaultInfos } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
+import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
 const NodeStatisticLabel = styled(Typography)({
   color: 'rgba(0,0,0, 0.3)',
@@ -73,8 +74,8 @@ const vaultItemList = [
 export default function HiveHome() {
   const {user} = useUser();
   const [loading, setLoading] = useState(false);
-  const [nodeItems, setNodeItems] = useState(Array(3).fill(0));
-  const [vaultItems, setVaultItems] = useState(Array(1).fill(0));
+  const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
+  const [vaultItems, setVaultItems] = useState(Array(1).fill(emptyVaultItem));
 
   useEffect(async () => {
     setLoading(true);

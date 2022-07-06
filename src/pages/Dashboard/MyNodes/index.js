@@ -6,6 +6,7 @@ import { PageTitleTypo } from '../style';
 import NodeItem from '../../../components/NodeItem';
 import { getDIDDocumentFromDID, getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
+import { emptyNodeItem } from '../../../utils/filler';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -45,11 +46,14 @@ const PlusTypo = styled(Typography)(({ theme }) => ({
 export default function HiveNodes() {
   const navigate = useNavigate();
   const { user } = useUser();
-  const [myNodeList, setMyNodeList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [myNodeList, setMyNodeList] = useState(Array(2).fill(emptyNodeItem));
 
   useEffect(async () => {
+    setLoading(true);
     const nodeList = await getHiveNodesList(undefined, `did:elastos:${user.did}`);
     setMyNodeList(nodeList);
+    setLoading(false);
   }, []);
 
   return (
@@ -69,6 +73,7 @@ export default function HiveNodes() {
             ip={node.ip}
             did={node.owner_did}
             isMyNode
+            isLoading={loading}
             sx={{ cursor: 'pointer' }}
           />
         ))}

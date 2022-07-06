@@ -1,9 +1,10 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PageTitleTypo } from '../style';
 import VaultItem from '../../../components/VaultItem';
+import { emptyVaultItem } from '../../../utils/filler';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -59,7 +60,14 @@ const VaultList = [
 
 export default function HiveVaults() {
   const navigate = useNavigate();
-  const [myVaultsList, setMyVaultsList] = React.useState(VaultList);
+  const [loading, setLoading] = useState(false);
+  const [myVaultsList, setMyVaultsList] = useState(Array(1).fill(emptyVaultItem));
+
+  useEffect(() => {
+    setLoading(true);
+    setMyVaultsList(VaultList);
+    setLoading(false);
+  }, []);
 
   return (
     <>
@@ -77,6 +85,7 @@ export default function HiveVaults() {
             time={item.time}
             did={item.did}
             isMyVault
+            isLoading={loading}
             sx={{ cursor: 'pointer' }}
           />
         ))}

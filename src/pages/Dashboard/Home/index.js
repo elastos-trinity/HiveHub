@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList } from '../../../service/fetch';
+import { getHiveNodesList, getVaultInfo, getVaultInfos } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
 
 const NodeStatisticLabel = styled(Typography)({
@@ -72,12 +72,18 @@ const vaultItemList = [
 
 export default function HiveHome() {
   const {user} = useUser();
-  const [nodeItems, setNodeItems] = useState([]);
-  const [vaultItems, setVaultItems] = useState(vaultItemList);
+  const [loading, setLoading] = useState(false);
+  const [nodeItems, setNodeItems] = useState(Array(3).fill(0));
+  const [vaultItems, setVaultItems] = useState(Array(1).fill(0));
 
   useEffect(async () => {
+    setLoading(true);
     const nodeList = await getHiveNodesList();
     setNodeItems(nodeList);
+    setVaultItems(vaultItemList);
+    // console.log("+++++++++++++++++++++++++", await getVaultInfo(user.did))
+    // console.log("------------------------", await getVaultInfos(user.did));
+    setLoading(false);
   }, []);
 
   return (
@@ -153,6 +159,7 @@ export default function HiveHome() {
                   nodeName={item.name}
                   nodeURL={item.url}
                   nodeStatus={item.status}
+                  isLoading={loading}
                 />
               ))}
             </Stack>
@@ -166,6 +173,7 @@ export default function HiveHome() {
                   vaultName={item.name}
                   vaultTotal={item.total}
                   vaultUsed={item.used}
+                  isLoading={loading}
                 />
               ))}
             </Stack>

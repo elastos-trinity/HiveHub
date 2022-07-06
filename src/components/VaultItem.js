@@ -1,4 +1,4 @@
-import { Stack, Typography, Button, LinearProgress } from '@mui/material';
+import { Stack, Typography, Button, LinearProgress, Skeleton } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import ItemBox from './ItemBox';
@@ -51,29 +51,41 @@ VaultItem.propTypes = {
   total: PropTypes.number.isRequired,
   used: PropTypes.number.isRequired,
   time: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   showButton: PropTypes.bool
 };
 
-export default function VaultItem({ id, name, total, used, time, showButton = false }) {
+export default function VaultItem({ id, name, total, used, time, showButton = false, isLoading }) {
   return (
-    <ItemBox time={time}>
-      <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>
-        <VaultTitle>{`${name}'s Vault`}</VaultTitle>
-        <VaultValue>{`${used} MB / ${total} MB`}</VaultValue>
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          alignItems={{ xs: 'end', sm: 'center' }}
-          spacing={{ xs: 2, sm: 5 }}
-        >
-          <LinearProgress
-            variant="determinate"
-            value={(used / total) * 100}
-            color="warning"
-            sx={{ height: '10px', borderRadius: '100px', width: '100%' }}
-          />
-          {showButton && <CustomButton>Access</CustomButton>}
-        </Stack>
-      </Stack>
-    </ItemBox>
+    <div>
+      {isLoading ? (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width="100%"
+          sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '150px', md: '200px' } }}
+        />
+      ) : (
+        <ItemBox time={time}>
+          <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>
+            <VaultTitle>{`${name}'s Vault`}</VaultTitle>
+            <VaultValue>{`${used} MB / ${total} MB`}</VaultValue>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              alignItems={{ xs: 'end', sm: 'center' }}
+              spacing={{ xs: 2, sm: 5 }}
+            >
+              <LinearProgress
+                variant="determinate"
+                value={(used / total) * 100}
+                color="warning"
+                sx={{ height: '10px', borderRadius: '100px', width: '100%' }}
+              />
+              {showButton && <CustomButton>Access</CustomButton>}
+            </Stack>
+          </Stack>
+        </ItemBox>
+      )}
+    </div>
   );
 }

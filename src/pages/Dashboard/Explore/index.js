@@ -5,6 +5,7 @@ import NodeItem from '../../../components/NodeItem';
 import VaultItem from '../../../components/VaultItem';
 import { PageTitleTypo } from '../style';
 import { getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
+import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
 const FilterByTypo = styled(Typography)(({ theme }) => ({
   color: '#000',
@@ -35,12 +36,16 @@ const vaultItemList = [
 ];
 
 export default function HiveExplore() {
-  const [nodeItems, setNodeItems] = useState([]);
-  const [vaultItems, setVaultItems] = useState(vaultItemList);
+  const [loading, setLoading] = useState(false);
+  const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
+  const [vaultItems, setVaultItems] = useState(Array(1).fill(emptyVaultItem));
 
   useEffect(async () => {
+    setLoading(true);
     const nodeList = await getHiveNodesList();
     setNodeItems(nodeList);
+    setVaultItems(vaultItemList);
+    setLoading(false);
   }, []);
 
   return (
@@ -62,6 +67,7 @@ export default function HiveExplore() {
               did={item.owner_did}
               status={item.status}
               time={item.created}
+              isLoading={loading}
             />
           ))}
         </Stack>
@@ -81,6 +87,7 @@ export default function HiveExplore() {
               used={item.used}
               time={item.time}
               showButton
+              isLoading={loading}
             />
           ))}
         </Stack>

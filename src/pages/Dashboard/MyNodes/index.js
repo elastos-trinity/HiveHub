@@ -4,7 +4,7 @@ import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PageTitleTypo } from '../style';
 import NodeItem from '../../../components/NodeItem';
-import { getDIDDocumentFromDID, getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
+import { getHiveNodesList } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
 import { emptyNodeItem } from '../../../utils/filler';
 
@@ -54,7 +54,7 @@ export default function HiveNodes() {
     const nodeList = await getHiveNodesList(undefined, `did:elastos:${user.did}`);
     setMyNodeList(nodeList);
     setLoading(false);
-  }, []);
+  }, [user.did]);
 
   return (
     <>

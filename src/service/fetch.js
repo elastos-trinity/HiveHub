@@ -5,11 +5,12 @@ import {
   HttpClient,
   AuthService,
   BackupSubscription,
-  Provider
+  Provider,
+  SubscriptionService
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
-import { creatAppContext, getAppInstanceDIDDoc } from './HiveService';
+// import { creatAppContext, getAppInstanceDIDDoc } from './HiveService';
 // import devConfig from './hivejs/config/developing.json';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import config from '../config';
@@ -40,6 +41,15 @@ export const getHiveNodesList = async (nid, did) => {
   );
   return nodeList;
 };
+export const getHiveVaultInfo = async (did) => {
+  const subscriptionService = await getSubscriptionService(did);
+  const vaultInfo = await subscriptionService.getVaultInfo();
+  if (!vaultInfo) return undefined;
+  const name = `Vault Service-0 (${vaultInfo.getPricePlan()})`;
+  const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
+  const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
+  return { name, total, used };
+};
 
 export const getDIDDocumentFromDID = (did) =>
   new Promise((resolve, reject) => {
@@ -63,24 +73,19 @@ export const getDIDDocumentFromDID = (did) =>
       });
   });
 
-export const createAppContext = async (did) => {
-  const appDIDDoc = await getAppInstanceDIDDoc();
-  const appContext = await creatAppContext(appDIDDoc, did);
-  return appContext;
-};
+// export const createAppContext = async (did) => {
+//   const appDIDDoc = await getAppInstanceDIDDoc();
+//   const appContext = await creatAppContext(appDIDDoc, did);
+//   return appContext;
+// };
 
 export const getHiveNodeInfo = async (did) => {
-  const appContext = await createAppContext(did);
-  const serviceEndpoint = new ServiceEndpoint(appContext, NodeProviderAddress);
-  const httpClient = new HttpClient(
-    serviceEndpoint,
-    HttpClient.WITH_AUTHORIZATION,
-    HttpClient.DEFAULT_OPTIONS
-  );
-  const aboutService = new AboutService(appContext, httpClient);
+  const restService = await getRestService(did);
+  const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
   const nodeInfo = await aboutService.getInfo();
   return nodeInfo;
 };
+
 
 // ******************************************************************** //
 
@@ -125,4 +130,9 @@ export const getVault = async (did) => {
   const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(DIDResolverUrl);
   const vault = await instBCSHAH.getVaultServices(did);
   return vault;
+};
+
+export const getSubscriptionService = async (did) => {
+  const restService = await getRestService(did);
+  return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
 };

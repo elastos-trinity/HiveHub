@@ -4,7 +4,13 @@ import { styled } from '@mui/material/styles';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList, getProvider, getVault } from '../../../service/fetch';
+import {
+  getHiveNodesList,
+  getHiveVaultInfo,
+  getProvider,
+  getSubscriptionService,
+  getVault
+} from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
@@ -58,42 +64,26 @@ const NodeSummaryBox = styled(Box)(({ theme }) => ({
   }
 }));
 
-const vaultItemList = [
-  {
-    name: 'Vault Service-0 (Free)',
-    total: 524,
-    used: 262
-  },
-  {
-    name: 'Vault Service-1 (Free)',
-    total: 524,
-    used: 112
-  }
-];
-
 export default function HiveHome() {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [created, setCreated] = useState(0);
   const [participated, setParticipated] = useState(0);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
-  const [vaultItems, setVaultItems] = useState(Array(1).fill(emptyVaultItem));
+  const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
 
   useEffect(async () => {
     setLoading(true);
-    const myNodeList = await getHiveNodesList(undefined, `did:elastos:${user.did}`);
+    const userDid = `did:elastos:${user.did}`;
+    const myNodeList = await getHiveNodesList(undefined, userDid);
     setCreated(myNodeList.length);
     const nodeList = await getHiveNodesList();
     setNodeItems(nodeList);
-    setVaultItems(vaultItemList);
-    const provider = await getProvider(user.did);
-    const vault = await provider.getVaults();
-    console.log('Test');
-    console.log('vault', await getVault());
-    console.log('max: ', vault.getMaxStorage());
-    console.log('file: ', vault.getFileUseStorage());
-    console.log('database: ', vault.getDatabaseUseStorage());
-    console.log('');
+    const vaultItem = await getHiveVaultInfo(userDid);
+    if (vaultItem) {
+      setVaultItems([vaultItem]);
+      setParticipated(1);
+    }
     setLoading(false);
   }, []);
 

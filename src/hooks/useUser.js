@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
@@ -10,6 +11,7 @@ import {
 } from '../service/connectivity';
 
 export default function useUser() {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     did: localStorage.getItem('did'),
     avatar: '/static/mock-images/avatars/avatar_default.jpg'
@@ -110,6 +112,7 @@ export default function useUser() {
         variant: 'success',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
+      navigate('/dashboard');
     }
   };
 

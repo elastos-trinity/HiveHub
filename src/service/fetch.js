@@ -9,20 +9,27 @@ import {
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
-import SdkContext from './hivejs/testdata';
 import { creatAppContext, getAppInstanceDIDDoc } from './HiveService';
-import devConfig from './hivejs/config/developing.json';
+// import devConfig from './hivejs/config/developing.json';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
+import config from '../config';
 
-const didResolverUrl = 'https://api-testnet.trinity-tech.cn/eid';
-const nodeProvider = 'https://hive-testnet1.trinity-tech.io';
+export const DIDResolverUrl =
+  config.network === 'mainnet'
+    ? 'https://api.trinity-tech.cn/eid'
+    : 'https://api-testnet.trinity-tech.cn/eid';
+export const NodeProviderAddress =
+  config.network === 'mainnet'
+    ? 'https://hive1.trinity-tech.io'
+    : 'https://hive-testnet1.trinity-tech.io';
 
 export const getHiveNodesList = async (nid, did) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };
-      node.url = devConfig.node.provider;
+      // node.url = devConfig.node.provider;
+      node.url = NodeProviderAddress;
       try {
         node.status = await HiveHubServer.isOnline(node.url);
       } catch (e) {
@@ -32,16 +39,6 @@ export const getHiveNodesList = async (nid, did) => {
     })
   );
   return nodeList;
-};
-
-export const getHiveVaultsList = async () => {
-  //   const nodes = await Vault.getLoginUserNodes();
-  const testData = await SdkContext.getInstance();
-  const vaultSubscription = new VaultSubscription(
-    testData.getAppContext(),
-    testData.getProviderAddress()
-  );
-  return vaultSubscription;
 };
 
 export const getDIDDocumentFromDID = (did) =>
@@ -74,7 +71,7 @@ export const createAppContext = async (did) => {
 
 export const getHiveNodeInfo = async (did) => {
   const appContext = await createAppContext(did);
-  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
+  const serviceEndpoint = new ServiceEndpoint(appContext, NodeProviderAddress);
   const httpClient = new HttpClient(
     serviceEndpoint,
     HttpClient.WITH_AUTHORIZATION,
@@ -88,14 +85,14 @@ export const getHiveNodeInfo = async (did) => {
 // ******************************************************************** //
 
 export const getAppContext = async (did) => {
-  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(didResolverUrl);
+  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(DIDResolverUrl);
   const appContext = await instBCSHAH.getAppContext(did);
   return appContext;
 };
 
 export const getRestService = async (did) => {
   const appContext = await getAppContext(did);
-  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
+  const serviceEndpoint = new ServiceEndpoint(appContext, NodeProviderAddress);
   const httpClient = new HttpClient(
     serviceEndpoint,
     HttpClient.WITH_AUTHORIZATION,
@@ -106,17 +103,17 @@ export const getRestService = async (did) => {
 
 export const getProvider = async (did) => {
   const appContext = await getAppContext(did);
-  return new Provider(appContext, nodeProvider);
+  return new Provider(appContext, NodeProviderAddress);
 };
 
 export const getVaultSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  return new VaultSubscription(appContext, nodeProvider);
+  return new VaultSubscription(appContext, NodeProviderAddress);
 };
 
 export const getBackupSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  return new BackupSubscription(appContext, nodeProvider);
+  return new BackupSubscription(appContext, NodeProviderAddress);
 };
 
 export const getAuthService = async (did) => {
@@ -125,7 +122,7 @@ export const getAuthService = async (did) => {
 };
 
 export const getVault = async (did) => {
-  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(didResolverUrl);
+  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(DIDResolverUrl);
   const vault = await instBCSHAH.getVaultServices(did);
   return vault;
 };

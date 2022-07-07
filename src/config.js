@@ -1,5 +1,5 @@
 export default {
   network: 'mainnet',
   serverUrl: 'https://service.hivehub.xyz',
-  ApplicationDID: 'did:elastos:iZvAak2SUHaKwBHmPFsgtVVMGtTpi4r2kY'
+  ApplicationDID: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML'
 };

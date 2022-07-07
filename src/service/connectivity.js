@@ -1,5 +1,6 @@
 import { connectivity } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import { EssentialsConnector } from '@elastosfoundation/essentials-connector-client-browser';
+import config from '../config';
 
 export const essentialsConnector = new EssentialsConnector();
 
@@ -24,6 +25,7 @@ export function initConnectivitySDK() {
   }
 
   connectivity.registerConnector(essentialsConnector).then(() => {
+    connectivity.setApplicationDID(config.ApplicationDID);
     connectivityInitialized = true;
     // const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
 

@@ -1,10 +1,12 @@
+import config from '../config';
+
 export const isInAppBrowser = () =>
   window.elastos !== undefined && window.elastos.name === 'essentialsiab';
 
-export const isProductEnv = () => true;
+export const isProductEnv = () => config.network === 'mainnet';
 
-export const isSupportedNetwork = (chainId) => chainId === 20 || chainId === 21;
-// (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
+export const isSupportedNetwork = (chainId) =>
+  (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
 
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp) => {

@@ -125,7 +125,7 @@ export class BrowserConnectivitySDKHiveAuthHelper {
    * That JWT contains a verifiable presentation that contains server challenge info, and the app id credential
    * issued by the end user earlier.
    */
-  async #generateAuthPresentationJWT(authChallengeJwttoken) {
+  async generateAuthPresentationJWT(authChallengeJwttoken) {
     console.log('hiveauthhelper', 'Starting process to generate hive auth presentation JWT');
     // Parse, but verify on chain that this JWT is valid first
     try {
@@ -231,7 +231,7 @@ export class BrowserConnectivitySDKHiveAuthHelper {
     }
   }
 
-  async #generateAppIdCredential() {
+  async generateAppIdCredential() {
     const storedAppInstanceDID = await this.didAccess.getOrCreateAppInstanceDID();
     if (!storedAppInstanceDID) {
       return null;

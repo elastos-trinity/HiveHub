@@ -1,10 +1,21 @@
-import { VaultSubscription, AboutService, ServiceEndpoint, HttpClient } from '@elastosfoundation/hive-js-sdk';
+import {
+  VaultSubscription,
+  AboutService,
+  ServiceEndpoint,
+  HttpClient,
+  AuthService,
+  BackupSubscription,
+  Provider
+} from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
 import SdkContext from './hivejs/testdata';
 import { creatAppContext, getAppInstanceDIDDoc } from './HiveService';
 import devConfig from './hivejs/config/developing.json';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
+
+const didResolverUrl = 'https://api-testnet.trinity-tech.cn/eid';
+const nodeProvider = 'https://hive-testnet1.trinity-tech.io';
 
 export const getHiveNodesList = async (nid, did) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
@@ -53,41 +64,68 @@ export const getDIDDocumentFromDID = (did) =>
       .catch((error) => {
         reject(error);
       });
-});
+  });
 
 export const createAppContext = async (did) => {
-  const appDIDDoc = await getAppInstanceDIDDoc();  
+  const appDIDDoc = await getAppInstanceDIDDoc();
   const appContext = await creatAppContext(appDIDDoc, did);
   return appContext;
 };
 
 export const getHiveNodeInfo = async (did) => {
-  const nodeProvider = "https://hive-testnet1.trinity-tech.io";
   const appContext = await createAppContext(did);
   const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
-  const httpClient = new HttpClient(serviceEndpoint, HttpClient.WITH_AUTHORIZATION, HttpClient.DEFAULT_OPTIONS);
+  const httpClient = new HttpClient(
+    serviceEndpoint,
+    HttpClient.WITH_AUTHORIZATION,
+    HttpClient.DEFAULT_OPTIONS
+  );
   const aboutService = new AboutService(appContext, httpClient);
   const nodeInfo = await aboutService.getInfo();
-  // const nodeInfo = await serviceEndpoint.getNodeInfo();
   return nodeInfo;
 };
 
-export const getVaultInfo = async (did) => {
-  const nodeProvider = "https://hive-testnet1.trinity-tech.io";
-  const appContext = await createAppContext(did);
-  const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
-  const vaultInfo = await vaultSubscription.getNodeVersion();
-  return vaultInfo;
-};
+// ******************************************************************** //
 
-export const getVaultInfos = async (did) => {
-  const didResolverUrl = 'https://api.trinity-tech.cn/eid';
-  const nodeProvider = "https://hive-testnet1.trinity-tech.io";
+export const getAppContext = async (did) => {
   const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(didResolverUrl);
   const appContext = await instBCSHAH.getAppContext(did);
-  const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
-  const vaultInfo = await vaultSubscription.getNodeVersion();
-  return vaultInfo;
+  return appContext;
 };
 
+export const getRestService = async (did) => {
+  const appContext = await getAppContext(did);
+  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
+  const httpClient = new HttpClient(
+    serviceEndpoint,
+    HttpClient.WITH_AUTHORIZATION,
+    HttpClient.DEFAULT_OPTIONS
+  );
+  return { serviceEndpoint, httpClient };
+};
 
+export const getProvider = async (did) => {
+  const appContext = await getAppContext(did);
+  return new Provider(appContext, nodeProvider);
+};
+
+export const getVaultSubscription = async (did) => {
+  const appContext = await getAppContext(did);
+  return new VaultSubscription(appContext, nodeProvider);
+};
+
+export const getBackupSubscription = async (did) => {
+  const appContext = await getAppContext(did);
+  return new BackupSubscription(appContext, nodeProvider);
+};
+
+export const getAuthService = async (did) => {
+  const restService = await getRestService(did);
+  return new AuthService(restService.serviceEndpoint, restService.httpClient);
+};
+
+export const getVault = async (did) => {
+  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(didResolverUrl);
+  const vault = await instBCSHAH.getVaultServices(did);
+  return vault;
+};

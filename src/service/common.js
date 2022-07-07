@@ -3,9 +3,8 @@ export const isInAppBrowser = () =>
 
 export const isProductEnv = () => true;
 
-export const isSupportedNetwork = (chainId) =>
-  chainId === 20 || chainId === 21;
-  // (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
+export const isSupportedNetwork = (chainId) => chainId === 20 || chainId === 21;
+// (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
 
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp) => {

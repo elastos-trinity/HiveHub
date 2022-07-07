@@ -43,11 +43,11 @@ BrowserFS.configure(
     fs: 'LocalStorage',
     options: {}
   },
-  function (e) {
+  (e) => {
     if (e) {
       throw e;
     } else {
-      //console.log("BrowserFS initialization complete");
+      // console.log("BrowserFS initialization complete");
     }
   }
 );

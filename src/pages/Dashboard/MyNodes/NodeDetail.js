@@ -168,7 +168,13 @@ export default function NodeDetail() {
           variant="rectangular"
           animation="wave"
           width="100%"
-          sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '40px', md: '70px' }, mt: { xs: 6.25, md: 3.15 }, mb: 2.5 }}
+          sx={{
+            bgcolor: '#E8F4FF',
+            borderRadius: 1,
+            height: { xs: '40px', md: '70px' },
+            mt: { xs: 6.25, md: 3.15 },
+            mb: 2.5
+          }}
         />
       ) : (
         <>

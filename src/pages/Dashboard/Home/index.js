@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList, getVaultInfo, getVaultInfos } from '../../../service/fetch';
+import { getHiveNodesList, getProvider, getVault } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
@@ -72,18 +72,28 @@ const vaultItemList = [
 ];
 
 export default function HiveHome() {
-  const {user} = useUser();
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const [created, setCreated] = useState(0);
+  const [participated, setParticipated] = useState(0);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState(Array(1).fill(emptyVaultItem));
 
   useEffect(async () => {
     setLoading(true);
+    const myNodeList = await getHiveNodesList(undefined, `did:elastos:${user.did}`);
+    setCreated(myNodeList.length);
     const nodeList = await getHiveNodesList();
     setNodeItems(nodeList);
     setVaultItems(vaultItemList);
-    // console.log("+++++++++++++++++++++++++", await getVaultInfo(user.did))
-    // console.log("------------------------", await getVaultInfos(user.did));
+    const provider = await getProvider(user.did);
+    const vault = await provider.getVaults();
+    console.log('Test');
+    console.log('vault', await getVault());
+    console.log('max: ', vault.getMaxStorage());
+    console.log('file: ', vault.getFileUseStorage());
+    console.log('database: ', vault.getDatabaseUseStorage());
+    console.log('');
     setLoading(false);
   }, []);
 
@@ -109,11 +119,11 @@ export default function HiveHome() {
         >
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Created by me</NodeStatisticLabel>
-            <NodeStatisticBody>2</NodeStatisticBody>
+            <NodeStatisticBody>{created}</NodeStatisticBody>
           </Stack>
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Participated by me</NodeStatisticLabel>
-            <NodeStatisticBody>1</NodeStatisticBody>
+            <NodeStatisticBody>{participated}</NodeStatisticBody>
           </Stack>
         </Stack>
         <Stack

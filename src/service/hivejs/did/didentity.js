@@ -145,7 +145,7 @@ export class DIDEntity {
   }
 
   async getDocument() {
-	const res = await this.store.loadDid(this.did);
+    const res = await this.store.loadDid(this.did);
     return res;
   }
 

@@ -69,7 +69,7 @@ export default function CustomTextField({
     if (error) setInvalid(true);
   }, [error]);
 
-  console.log(fontSize)
+  console.log(fontSize);
   return (
     <Stack spacing={0.5} sx={{ ...sx }}>
       {title && (

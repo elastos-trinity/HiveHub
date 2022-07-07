@@ -13,9 +13,9 @@ import { DIDEntity } from './didentity';
 export class UserDID extends DIDEntity {
   issuer;
 
-//   constructor(name, mnemonic, phrasepass, storepass, did) {
-//     super(name, mnemonic, phrasepass, storepass, did);
-//   }
+  //   constructor(name, mnemonic, phrasepass, storepass, did) {
+  //     super(name, mnemonic, phrasepass, storepass, did);
+  //   }
 
   static async create(name, mnemonic, phrasepass, storepass, did) {
     const newInstance = new UserDID(name, mnemonic, phrasepass, storepass, did);

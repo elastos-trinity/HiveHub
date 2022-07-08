@@ -52,6 +52,7 @@ export const getHiveVaultInfo = async (did) => {
   const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
   const time = `${created.date} ${created.time}`;
   const id = 0;
+  console.log("did Doc: ", await getDIDDocumentFromDID(vaultInfo.getServiceDid()));
   return { id, name, total, used, time };
 };
 

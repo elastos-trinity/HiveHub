@@ -100,7 +100,7 @@ export default function VaultItem({
                 color="warning"
                 sx={{ height: '10px', borderRadius: '100px', width: '100%' }}
               />
-              {isMyVault && <CustomButton>Access</CustomButton>}
+              {!isMyVault && <CustomButton>Access</CustomButton>}
             </Stack>
           </Stack>
         </ItemBox>

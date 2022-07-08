@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import NodeItem from '../../../components/NodeItem';
 import VaultItem from '../../../components/VaultItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList, getHiveVaultsList } from '../../../service/fetch';
+import { getHiveNodesList } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
 const FilterByTypo = styled(Typography)(({ theme }) => ({
@@ -86,7 +86,6 @@ export default function HiveExplore() {
               total={item.total}
               used={item.used}
               time={item.time}
-              showButton
               isLoading={loading}
             />
           ))}

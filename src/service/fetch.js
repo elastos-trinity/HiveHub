@@ -14,6 +14,7 @@ import HiveHubServer from './HiveHubServer';
 // import devConfig from './hivejs/config/developing.json';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import config from '../config';
+import { getTime } from './common';
 
 export const DIDResolverUrl =
   config.network === 'mainnet'
@@ -48,7 +49,10 @@ export const getHiveVaultInfo = async (did) => {
   const name = `Vault Service-0 (${vaultInfo.getPricePlan()})`;
   const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
   const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
-  return { name, total, used };
+  const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
+  const time = `${created.date} ${created.time}`;
+  const id = 0;
+  return { id, name, total, used, time };
 };
 
 export const getDIDDocumentFromDID = (did) =>

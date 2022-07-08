@@ -4,13 +4,7 @@ import { styled } from '@mui/material/styles';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import {
-  getHiveNodesList,
-  getHiveVaultInfo,
-  getProvider,
-  getSubscriptionService,
-  getVault
-} from '../../../service/fetch';
+import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 

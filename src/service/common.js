@@ -3,10 +3,8 @@ import config from '../config';
 export const isInAppBrowser = () =>
   window.elastos !== undefined && window.elastos.name === 'essentialsiab';
 
-export const isProductEnv = () => config.network === 'mainnet';
-
 export const isSupportedNetwork = (chainId) =>
-  (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
+  (config.IsProductEnv && chainId === 20) || (!config.IsProductEnv && chainId === 21);
 
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp) => {
@@ -29,6 +27,12 @@ export const getCredentialsFromDIDDoc = (didDoc) => {
     return props;
   }, {});
   return properties;
+};
+
+export const getServiceEndPointFromDIDDoc = (didDoc) => {
+  const services = didDoc.getServices();
+  if (!services.length) return '';
+  return services[0].serviceEndpoint;
 };
 
 export const reduceHexAddress = (strAddress, nDigits) =>

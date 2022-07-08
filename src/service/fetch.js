@@ -16,21 +16,12 @@ import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHi
 import config from '../config';
 import { getTime, reduceHexAddress } from './common';
 
-export const DIDResolverUrl =
-  config.network === 'mainnet'
-    ? 'https://api.trinity-tech.cn/eid'
-    : 'https://api-testnet.trinity-tech.cn/eid';
-export const NodeProviderAddress =
-  config.network === 'mainnet'
-    ? 'https://hive1.trinity-tech.io'
-    : 'https://hive-testnet1.trinity-tech.io';
-
 export const getHiveNodesList = async (nid, did, withName) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };
-      node.url = NodeProviderAddress;
+      // node.url = config.NodeProviderUrl;
       try {
         if (withName) {
           const credentials = await getCredentialsFromDID(node.owner_did);
@@ -69,8 +60,7 @@ export const getHiveVaultInfo = async (did) => {
 
 export const getDIDDocumentFromDID = (did) =>
   new Promise((resolve, reject) => {
-    if (!DIDBackend.isInitialized())
-      DIDBackend.initialize(new DefaultDIDAdapter('https://api.elastos.io/eid'));
+    DIDBackend.initialize(new DefaultDIDAdapter(config.DIDResolverUrl));
     const didObj = new DID(did);
     didObj
       .resolve(true)
@@ -85,7 +75,7 @@ export const getDIDDocumentFromDID = (did) =>
 
 export const getCredentialsFromDID = (did) =>
   new Promise((resolve, reject) => {
-    DIDBackend.initialize(new DefaultDIDAdapter('https://api.elastos.io/eid'));
+    DIDBackend.initialize(new DefaultDIDAdapter(config.DIDResolverUrl));
     const didObj = new DID(did);
     didObj
       .resolve(true)
@@ -113,14 +103,15 @@ export const getHiveNodeInfo = async (did) => {
 // ******************************************************************** //
 
 export const getAppContext = async (did) => {
-  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(DIDResolverUrl);
+  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
   const appContext = await instBCSHAH.getAppContext(did);
   return appContext;
 };
 
 export const getRestService = async (did) => {
   const appContext = await getAppContext(did);
-  const serviceEndpoint = new ServiceEndpoint(appContext, NodeProviderAddress);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
   const httpClient = new HttpClient(
     serviceEndpoint,
     HttpClient.WITH_AUTHORIZATION,
@@ -131,17 +122,20 @@ export const getRestService = async (did) => {
 
 export const getProvider = async (did) => {
   const appContext = await getAppContext(did);
-  return new Provider(appContext, NodeProviderAddress);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  return new Provider(appContext, nodeProvider);
 };
 
 export const getVaultSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  return new VaultSubscription(appContext, NodeProviderAddress);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  return new VaultSubscription(appContext, nodeProvider);
 };
 
 export const getBackupSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  return new BackupSubscription(appContext, NodeProviderAddress);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  return new BackupSubscription(appContext, nodeProvider);
 };
 
 export const getAuthService = async (did) => {
@@ -150,7 +144,7 @@ export const getAuthService = async (did) => {
 };
 
 export const getVault = async (did) => {
-  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(DIDResolverUrl);
+  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
   const vault = await instBCSHAH.getVaultServices(did);
   return vault;
 };

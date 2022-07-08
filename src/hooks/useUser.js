@@ -3,18 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-import { isInAppBrowser, isSupportedNetwork } from '../service/common';
+import {
+  getCredentialsFromDIDDoc,
+  getServiceEndPointFromDIDDoc,
+  isInAppBrowser,
+  isSupportedNetwork
+} from '../service/common';
 import {
   essentialsConnector,
   initConnectivitySDK,
   isUsingEssentialsConnector
 } from '../service/connectivity';
+import { getDIDDocumentFromDID } from '../service/fetch';
 
 export default function useUser() {
   const navigate = useNavigate();
   const [user, setUser] = useState({
     did: localStorage.getItem('did'),
-    avatar: '/static/mock-images/avatars/avatar_default.jpg'
+    didDoc: undefined,
+    credentials: {},
+    nodeProvider: ''
   });
   const [walletConnectProvider] = useState(essentialsConnector.getWalletConnectProvider());
   const { enqueueSnackbar } = useSnackbar();
@@ -65,6 +73,22 @@ export default function useUser() {
     };
   }, [walletConnectProvider]);
 
+  useEffect(async () => {
+    if (user.did) {
+      const didDoc = await getDIDDocumentFromDID(`did:elastos:${user.did}`);
+      const credentials = getCredentialsFromDIDDoc(didDoc);
+      const nodeProvider = getServiceEndPointFromDIDDoc(didDoc);
+      setUser((prevState) => {
+        const state = { ...prevState };
+        state.did = user.did;
+        state.credentials = credentials;
+        state.didDoc = didDoc;
+        state.nodeProvider = nodeProvider;
+        return state;
+      });
+    }
+  }, [user.did]);
+
   const showChainErrorSnackBar = async () => {
     // enqueueSnackbar('', {
     //   anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -107,7 +131,7 @@ export default function useUser() {
     if (presentation) {
       const did = presentation.getHolder().getMethodSpecificId();
       localStorage.setItem('did', did);
-      setUser({ did });
+      setUser({ did, ...user });
       enqueueSnackbar('success', {
         variant: 'success',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }

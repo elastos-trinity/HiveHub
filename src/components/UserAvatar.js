@@ -50,7 +50,7 @@ export default function UserAvatar() {
 
   return (
     <AccountStyle direction="row" spacing={1} justifyContent="center">
-      <Avatar src={user.avatar} alt="photoURL" />
+      <Avatar src={user.credentials.avatar} alt="photoURL" />
       <Button
         ref={anchorRef}
         id="composition-button"

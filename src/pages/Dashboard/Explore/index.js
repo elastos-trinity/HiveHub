@@ -36,6 +36,8 @@ export default function HiveExplore() {
     setLoading(false);
   }, []);
 
+  console.log(user)
+
   return (
     <>
       <PageTitleTypo mt={{ xs: 7, md: 15 }}>Explore</PageTitleTypo>

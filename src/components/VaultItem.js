@@ -52,6 +52,7 @@ VaultItem.propTypes = {
   total: PropTypes.number.isRequired,
   used: PropTypes.number.isRequired,
   time: PropTypes.string.isRequired,
+  ownerName: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isMyVault: PropTypes.bool,
   sx: PropTypes.any
@@ -63,6 +64,7 @@ export default function VaultItem({
   total,
   used,
   time,
+  ownerName,
   isMyVault = false,
   isLoading,
   sx
@@ -87,7 +89,7 @@ export default function VaultItem({
           }}
         >
           <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>
-            <VaultTitle>{isMyVault ? name : `${name}'s Vault`}</VaultTitle>
+            <VaultTitle>{`${ownerName}'s Vault`}</VaultTitle>
             <VaultValue>{`${used} MB / ${total} MB`}</VaultValue>
             <Stack
               direction={{ xs: 'column', sm: 'row' }}

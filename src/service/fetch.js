@@ -61,7 +61,13 @@ export const getHiveVaultInfo = async (did) => {
   const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
   const time = `${created.date} ${created.time}`;
   const id = 0;
-  return { id, name, total, used, time };
+  const serviceDid = vaultInfo.getServiceDid();
+  const credentials = await getCredentialsFromDID(serviceDid);
+  console.log(credentials)
+  const ownerName = credentials.name
+    ? credentials.name
+    : reduceHexAddress(serviceDid, 4);
+  return { id, name, total, used, time, ownerName };
 };
 
 export const getDIDDocumentFromDID = (did) =>

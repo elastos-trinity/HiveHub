@@ -4,8 +4,9 @@ import { styled } from '@mui/material/styles';
 import NodeItem from '../../../components/NodeItem';
 import VaultItem from '../../../components/VaultItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList } from '../../../service/fetch';
+import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
+import useUser from '../../../hooks/useUser';
 
 const FilterByTypo = styled(Typography)(({ theme }) => ({
   color: '#000',
@@ -18,24 +19,8 @@ const FilterByTypo = styled(Typography)(({ theme }) => ({
   }
 }));
 
-const vaultItemList = [
-  {
-    id: 1,
-    name: 'Sarah',
-    total: 524,
-    used: 112,
-    time: '05-04-2022 21:00:00'
-  },
-  {
-    id: 2,
-    name: 'Teru',
-    total: 524,
-    used: 352,
-    time: '05-04-2022 21:00:00'
-  }
-];
-
 export default function HiveExplore() {
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState(Array(1).fill(emptyVaultItem));
@@ -44,7 +29,10 @@ export default function HiveExplore() {
     setLoading(true);
     const nodeList = await getHiveNodesList(undefined, undefined, true);
     setNodeItems(nodeList);
-    setVaultItems(vaultItemList);
+    const vaultItem = await getHiveVaultInfo(`did:elastos:${user.did}`);
+    if (vaultItem) {
+      setVaultItems([vaultItem]);
+    }
     setLoading(false);
   }, []);
 
@@ -87,6 +75,7 @@ export default function HiveExplore() {
               total={item.total}
               used={item.used}
               time={item.time}
+              ownerName={item.ownerName}
               isLoading={loading}
             />
           ))}

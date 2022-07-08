@@ -17,5 +17,6 @@ export const emptyVaultItem = {
   name: '',
   total: 0,
   used: 0,
-  time: '0000-00-00 00:00:00'
+  time: '0000-00-00 00:00:00',
+  ownerName: ''
 };

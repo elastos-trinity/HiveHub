@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 import { PageTitleTypo } from '../style';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
+import useUser from '../../../hooks/useUser';
+import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -60,12 +62,16 @@ const VaultList = [
 
 export default function HiveVaults() {
   const navigate = useNavigate();
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [myVaultsList, setMyVaultsList] = useState(Array(1).fill(emptyVaultItem));
 
-  useEffect(() => {
+  useEffect(async () => {
     setLoading(true);
-    setMyVaultsList(VaultList);
+    const vaultItem = await getHiveVaultInfo(`did:elastos:${user.did}`);
+    if (vaultItem) {
+      setMyVaultsList([vaultItem]);
+    }
     setLoading(false);
   }, []);
 
@@ -78,12 +84,11 @@ export default function HiveVaults() {
         {myVaultsList.map((item, index) => (
           <VaultItem
             key={index}
-            id={item.id}
+            // id={item.id}
             name={item.name}
             total={item.total}
             used={item.used}
             time={item.time}
-            did={item.did}
             isMyVault
             isLoading={loading}
             sx={{ cursor: 'pointer' }}
@@ -96,7 +101,6 @@ export default function HiveVaults() {
           Create Hive Vault
         </CustomButton>
         <CustomButton onClick={() => {}}>
-          {/* <PlusTypo>+</PlusTypo> */}
           Access Hive Vaults
         </CustomButton>
       </Stack>

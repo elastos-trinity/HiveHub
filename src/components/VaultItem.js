@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Stack, Typography, Button, LinearProgress, Skeleton } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
@@ -46,16 +47,28 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 VaultItem.propTypes = {
-  id: PropTypes.number.isRequired,
+  // id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
   used: PropTypes.number.isRequired,
   time: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  showButton: PropTypes.bool
+  isMyVault: PropTypes.bool,
+  sx: PropTypes.any
 };
 
-export default function VaultItem({ id, name, total, used, time, showButton = false, isLoading }) {
+export default function VaultItem({
+  // id,
+  name,
+  total,
+  used,
+  time,
+  isMyVault = false,
+  isLoading,
+  sx
+}) {
+  const navigate = useNavigate();
+
   return (
     <div>
       {isLoading ? (
@@ -66,9 +79,15 @@ export default function VaultItem({ id, name, total, used, time, showButton = fa
           sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '150px', md: '200px' } }}
         />
       ) : (
-        <ItemBox time={time}>
+        <ItemBox
+          time={time}
+          sx={{ ...sx }}
+          onClick={() => {
+            // if (isMyVault) navigate(`/dashboard/nodes/detail/${id}`);
+          }}
+        >
           <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>
-            <VaultTitle>{`${name}'s Vault`}</VaultTitle>
+            <VaultTitle>{isMyVault ? name : `${name}'s Vault`}</VaultTitle>
             <VaultValue>{`${used} MB / ${total} MB`}</VaultValue>
             <Stack
               direction={{ xs: 'column', sm: 'row' }}
@@ -81,7 +100,7 @@ export default function VaultItem({ id, name, total, used, time, showButton = fa
                 color="warning"
                 sx={{ height: '10px', borderRadius: '100px', width: '100%' }}
               />
-              {showButton && <CustomButton>Access</CustomButton>}
+              {isMyVault && <CustomButton>Access</CustomButton>}
             </Stack>
           </Stack>
         </ItemBox>

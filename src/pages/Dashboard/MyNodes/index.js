@@ -51,7 +51,7 @@ export default function HiveNodes() {
 
   useEffect(async () => {
     setLoading(true);
-    const nodeList = await getHiveNodesList(undefined, `did:elastos:${user.did}`);
+    const nodeList = await getHiveNodesList(undefined, `did:elastos:${user.did}`, false);
     setMyNodeList(nodeList);
     setLoading(false);
   }, [user.did]);
@@ -72,6 +72,7 @@ export default function HiveNodes() {
             description={node.remark}
             ip={node.ip}
             did={node.owner_did}
+            ownerName={node.ownerName}
             isMyNode
             isLoading={loading}
             sx={{ cursor: 'pointer' }}

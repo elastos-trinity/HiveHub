@@ -156,7 +156,7 @@ export default function NodeDetail() {
 
   useEffect(async () => {
     setLoading(true);
-    const details = await getHiveNodesList(nodeId);
+    const details = await getHiveNodesList(nodeId, undefined, false);
     setNodeDetail(details.length ? details[0] : undefined);
     setLoading(false);
   }, []);

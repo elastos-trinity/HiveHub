@@ -65,6 +65,7 @@ NodeItem.propTypes = {
   description: PropTypes.string.isRequired,
   ip: PropTypes.string.isRequired,
   did: PropTypes.string.isRequired,
+  ownerName: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
   isMyNode: PropTypes.bool,
   isLoading: PropTypes.bool.isRequired,
@@ -78,6 +79,7 @@ export default function NodeItem({
   description,
   ip,
   did,
+  ownerName,
   time,
   isMyNode = false,
   isLoading,
@@ -105,7 +107,7 @@ export default function NodeItem({
           <Stack>
             <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
               <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
-                <NodeTitle>{isMyNode ? name : `${name}'s Node`}</NodeTitle>
+                <NodeTitle>{isMyNode ? name : `${ownerName}'s Node`}</NodeTitle>
                 {status ? (
                   <Chip
                     label="online"

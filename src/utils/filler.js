@@ -6,6 +6,7 @@ export const emptyNodeItem = {
   remark: '',
   ip: '',
   owner_did: '',
+  ownerName: '',
   area: '',
   email: '',
   url: ''

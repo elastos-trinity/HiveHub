@@ -42,7 +42,7 @@ export default function HiveExplore() {
 
   useEffect(async () => {
     setLoading(true);
-    const nodeList = await getHiveNodesList();
+    const nodeList = await getHiveNodesList(undefined, undefined, true);
     setNodeItems(nodeList);
     setVaultItems(vaultItemList);
     setLoading(false);
@@ -65,6 +65,7 @@ export default function HiveExplore() {
               description={item.remark}
               ip={item.ip}
               did={item.owner_did}
+              ownerName={item.ownerName}
               status={item.status}
               time={item.created}
               isLoading={loading}

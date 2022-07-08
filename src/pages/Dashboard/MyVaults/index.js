@@ -6,7 +6,7 @@ import { PageTitleTypo } from '../style';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
-import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
+import { getHiveVaultInfo } from '../../../service/fetch';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',

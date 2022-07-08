@@ -62,12 +62,9 @@ export const getHiveVaultInfo = async (did) => {
   const time = `${created.date} ${created.time}`;
   const id = 0;
   const serviceDid = vaultInfo.getServiceDid();
-  const credentials = await getCredentialsFromDID(serviceDid);
-  console.log(credentials)
-  const ownerName = credentials.name
-    ? credentials.name
-    : reduceHexAddress(serviceDid, 4);
-  return { id, name, total, used, time, ownerName };
+  const credentials = await getCredentialsFromDID(did);
+  const ownerName = credentials.name ? credentials.name : reduceHexAddress(did, 4);
+  return { id, name, total, used, time, ownerName, serviceDid };
 };
 
 export const getDIDDocumentFromDID = (did) =>
@@ -105,12 +102,6 @@ export const getCredentialsFromDID = (did) =>
         reject(error);
       });
   });
-
-// export const createAppContext = async (did) => {
-//   const appDIDDoc = await getAppInstanceDIDDoc();
-//   const appContext = await creatAppContext(appDIDDoc, did);
-//   return appContext;
-// };
 
 export const getHiveNodeInfo = async (did) => {
   const restService = await getRestService(did);

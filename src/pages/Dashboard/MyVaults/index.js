@@ -43,23 +43,6 @@ const PlusTypo = styled(Typography)(({ theme }) => ({
   }
 }));
 
-const VaultList = [
-  {
-    id: 1,
-    name: 'Sarah',
-    total: 524,
-    used: 112,
-    time: '05-04-2022 21:00:00'
-  },
-  {
-    id: 2,
-    name: 'Teru',
-    total: 524,
-    used: 352,
-    time: '05-04-2022 21:00:00'
-  }
-];
-
 export default function HiveVaults() {
   const navigate = useNavigate();
   const { user } = useUser();
@@ -68,7 +51,8 @@ export default function HiveVaults() {
 
   useEffect(async () => {
     setLoading(true);
-    const vaultItem = await getHiveVaultInfo(`did:elastos:${user.did}`);
+    const userDid = `did:elastos:${user.did}`;
+    const vaultItem = await getHiveVaultInfo(userDid);
     if (vaultItem) {
       setMyVaultsList([vaultItem]);
     }

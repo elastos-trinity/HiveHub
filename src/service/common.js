@@ -21,3 +21,20 @@ export const getTime = (timestamp) => {
   const timeStr = [hours, min, seconds].join(':');
   return { date: dateStr, time: timeStr };
 };
+
+export const getCredentialsFromDIDDoc = (didDoc) => {
+  const credentials = didDoc.getCredentials();
+  const properties = credentials.reduce((props, c) => {
+    props[c.id.fragment] = c.subject.properties[c.id.fragment];
+    return props;
+  }, {});
+  return properties;
+};
+
+export const reduceHexAddress = (strAddress, nDigits) =>
+  strAddress
+    ? `${strAddress.substring(0, 2 + nDigits)}...${strAddress.substring(
+        strAddress.length - nDigits,
+        strAddress.length
+      )}`
+    : '';

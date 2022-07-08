@@ -14,7 +14,7 @@ import HiveHubServer from './HiveHubServer';
 // import devConfig from './hivejs/config/developing.json';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import config from '../config';
-import { getTime } from './common';
+import { getTime, reduceHexAddress } from './common';
 
 export const DIDResolverUrl =
   config.network === 'mainnet'
@@ -25,23 +25,32 @@ export const NodeProviderAddress =
     ? 'https://hive1.trinity-tech.io'
     : 'https://hive-testnet1.trinity-tech.io';
 
-export const getHiveNodesList = async (nid, did) => {
+export const getHiveNodesList = async (nid, did, withName) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };
-      // node.url = devConfig.node.provider;
       node.url = NodeProviderAddress;
       try {
+        if (withName) {
+          const credentials = await getCredentialsFromDID(node.owner_did);
+          node.ownerName = credentials.name
+            ? credentials.name
+            : reduceHexAddress(node.owner_did, 4);
+        } else {
+          node.ownerName = reduceHexAddress(node.owner_did, 4);
+        }
         node.status = await HiveHubServer.isOnline(node.url);
       } catch (e) {
         node.status = false;
+        node.ownerName = reduceHexAddress(node.owner_did, 4);
       }
       return node;
     })
   );
   return nodeList;
 };
+
 export const getHiveVaultInfo = async (did) => {
   const subscriptionService = await getSubscriptionService(did);
   const vaultInfo = await subscriptionService.getVaultInfo();
@@ -52,7 +61,6 @@ export const getHiveVaultInfo = async (did) => {
   const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
   const time = `${created.date} ${created.time}`;
   const id = 0;
-  console.log("did Doc: ", await getDIDDocumentFromDID(vaultInfo.getServiceDid()));
   return { id, name, total, used, time };
 };
 
@@ -66,12 +74,26 @@ export const getDIDDocumentFromDID = (did) =>
       .then((didDoc) => {
         if (!didDoc) resolve({});
         resolve(didDoc);
-        // const credentials = didDoc.getCredentials();
-        // const properties = credentials.reduce((props, c) => {
-        //   props[c.id.fragment] = c.subject.properties[c.id.fragment];
-        //   return props;
-        // }, {});
-        // resolve(properties);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+
+export const getCredentialsFromDID = (did) =>
+  new Promise((resolve, reject) => {
+    DIDBackend.initialize(new DefaultDIDAdapter('https://api.elastos.io/eid'));
+    const didObj = new DID(did);
+    didObj
+      .resolve(true)
+      .then((didDoc) => {
+        if (!didDoc) resolve({});
+        const credentials = didDoc.getCredentials();
+        const properties = credentials.reduce((props, c) => {
+          props[c.id.fragment] = c.subject.properties[c.id.fragment];
+          return props;
+        }, {});
+        resolve(properties);
       })
       .catch((error) => {
         reject(error);
@@ -90,7 +112,6 @@ export const getHiveNodeInfo = async (did) => {
   const nodeInfo = await aboutService.getInfo();
   return nodeInfo;
 };
-
 
 // ******************************************************************** //
 

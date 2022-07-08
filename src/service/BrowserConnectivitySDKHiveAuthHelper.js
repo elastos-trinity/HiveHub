@@ -1,10 +1,12 @@
 import {
   Claims,
   DIDDocument,
+  DIDBackend,
+  DefaultDIDAdapter,
   JWTHeader,
   JWTParserBuilder,
   VerifiableCredential,
-  VerifiablePresentation
+  VerifiablePresentation,
 } from '@elastosfoundation/did-js-sdk';
 import { DID as ConnDID, DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import {
@@ -34,7 +36,7 @@ export class BrowserConnectivitySDKHiveAuthHelper {
         console.error('AppContext.setupResolver() exception:', e);
       }
     }
-    // DIDBackend.initialize(new DefaultDIDAdapter(didResolverUrl));
+    DIDBackend.initialize(new DefaultDIDAdapter(didResolverUrl));
     this.didAccess = new ConnDID.DIDAccess();
   }
 

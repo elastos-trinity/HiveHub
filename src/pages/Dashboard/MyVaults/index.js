@@ -69,6 +69,7 @@ export default function HiveVaults() {
   useEffect(async () => {
     setLoading(true);
     const vaultItem = await getHiveVaultInfo(`did:elastos:${user.did}`);
+    console.log('value:', vaultItem)
     if (vaultItem) {
       setMyVaultsList([vaultItem]);
     }

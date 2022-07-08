@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodeInfo, getHiveNodesList, getHiveVaultInfo, getDIDDocumentFromDID } from '../../../service/fetch';
+import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
@@ -78,16 +78,6 @@ export default function HiveHome() {
       setVaultItems([vaultItem]);
       setParticipated(1);
     }
-    // const nodeInfo = await getHiveNodeInfo(userDid);
-    // console.log(nodeInfo.getName());
-    // console.log(nodeInfo.getServiceDid());
-    // console.log(nodeInfo.getOwnerDid());
-    // console.log(nodeInfo.getOwnershipPresentation());
-    // console.log(nodeInfo.getName());
-    // console.log(nodeInfo.getEmail());
-    // console.log(nodeInfo.getDescription());
-    // console.log(nodeInfo.getVersion());
-    // console.log(nodeInfo.getLastCommitId());  
     setLoading(false);
   }, []);
 

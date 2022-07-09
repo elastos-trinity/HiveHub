@@ -55,9 +55,9 @@ export default function HiveVaults() {
     setLoading(true);
     const userDid = `did:elastos:${user.did}`;
     const vaultItem = await getHiveVaultInfo(userDid);
-    if (vaultItem) {
-      setMyVaultsList([vaultItem]);
-    }
+    if (vaultItem) setMyVaultsList([vaultItem]);
+    else setMyVaultsList([]);
+
     setLoading(false);
   }, []);
 

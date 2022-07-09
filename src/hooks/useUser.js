@@ -5,7 +5,6 @@ import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
 import {
   getCredentialsFromDIDDoc,
-  getServiceEndPointFromDIDDoc,
   isInAppBrowser,
   isSupportedNetwork
 } from '../service/common';
@@ -14,7 +13,7 @@ import {
   initConnectivitySDK,
   isUsingEssentialsConnector
 } from '../service/connectivity';
-import { getDIDDocumentFromDID } from '../service/fetch';
+import { getDIDDocumentFromDID, getNodeProviderUrl } from '../service/fetch';
 
 export default function useUser() {
   const navigate = useNavigate();
@@ -73,21 +72,22 @@ export default function useUser() {
     };
   }, [walletConnectProvider]);
 
-  // useEffect(async () => {
-  //   if (user.did) {
-  //     const didDoc = await getDIDDocumentFromDID(`did:elastos:${user.did}`);
-  //     const credentials = getCredentialsFromDIDDoc(didDoc);
-  //     const nodeProvider = getServiceEndPointFromDIDDoc(didDoc);
-  //     setUser((prevState) => {
-  //       const state = { ...prevState };
-  //       state.did = user.did;
-  //       state.credentials = credentials;
-  //       state.didDoc = didDoc;
-  //       state.nodeProvider = nodeProvider;
-  //       return state;
-  //     });
-  //   }
-  // }, [user.did]);
+  useEffect(async () => {
+    if (user.did) {
+      const userDid = `did:elastos:${user.did}`;
+      const didDoc = await getDIDDocumentFromDID(userDid);
+      const credentials = getCredentialsFromDIDDoc(didDoc);
+      const nodeProvider = await getNodeProviderUrl(userDid);
+      setUser((prevState) => {
+        const state = { ...prevState };
+        state.did = user.did;
+        state.credentials = credentials;
+        state.didDoc = didDoc;
+        state.nodeProvider = nodeProvider;
+        return state;
+      });
+    }
+  }, [user.did]);
 
   const showChainErrorSnackBar = async () => {
     // enqueueSnackbar('', {

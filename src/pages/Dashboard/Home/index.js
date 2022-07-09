@@ -77,7 +77,7 @@ export default function HiveHome() {
     if (vaultItem) {
       setVaultItems([vaultItem]);
       setParticipated(1);
-    }
+    } else setVaultItems([]);
     setLoading(false);
   }, []);
 

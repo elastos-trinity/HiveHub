@@ -44,19 +44,23 @@ export const getHiveNodesList = async (nid, did, withName) => {
 };
 
 export const getHiveVaultInfo = async (did) => {
-  const subscriptionService = await getSubscriptionService(did);
-  const vaultInfo = await subscriptionService.getVaultInfo();
-  if (!vaultInfo) return undefined;
-  const name = `Vault Service-0 (${vaultInfo.getPricePlan()})`;
-  const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
-  const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
-  const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
-  const time = `${created.date} ${created.time}`;
-  const id = 0;
-  const serviceDid = vaultInfo.getServiceDid();
-  const credentials = await getCredentialsFromDID(did);
-  const ownerName = credentials.name ? credentials.name : reduceHexAddress(did, 4);
-  return { id, name, total, used, time, ownerName, serviceDid };
+  try {
+    const subscriptionService = await getSubscriptionService(did);
+    const vaultInfo = await subscriptionService.getVaultInfo();
+    if (!vaultInfo) return undefined;
+    const name = `Vault Service-0 (${vaultInfo.getPricePlan()})`;
+    const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
+    const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
+    const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
+    const time = `${created.date} ${created.time}`;
+    const id = 0;
+    const serviceDid = vaultInfo.getServiceDid();
+    const credentials = await getCredentialsFromDID(did);
+    const ownerName = credentials.name ? credentials.name : reduceHexAddress(did, 4);
+    return { id, name, total, used, time, ownerName, serviceDid };
+  } catch (e) {
+    return undefined;
+  }
 };
 
 export const getDIDDocumentFromDID = (did) =>
@@ -144,6 +148,18 @@ export const createVault = (did) =>
         }
       });
   });
+
+export const isDIDPublished = async (did) => {
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  return nodeProvider !== undefined && nodeProvider !== null && nodeProvider !== '';
+};
+
+export const getNodeProviderUrl = async (did) => {
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  return nodeProvider;
+};
 
 // ******************************************************************** //
 

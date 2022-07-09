@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
+import { AlreadyExistsException } from '@elastosfoundation/hive-js-sdk';
 import { PageTitleTypo } from '../style';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
-import { getHiveVaultInfo } from '../../../service/fetch';
+import { getHiveVaultInfo, getVaultSubscription } from '../../../service/fetch';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -45,6 +47,7 @@ const PlusTypo = styled(Typography)(({ theme }) => ({
 
 export default function HiveVaults() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [myVaultsList, setMyVaultsList] = useState(Array(1).fill(emptyVaultItem));
@@ -58,6 +61,24 @@ export default function HiveVaults() {
     }
     setLoading(false);
   }, []);
+
+  const createVault = async () => {
+    const subscription = await getVaultSubscription(`did:elastos:${user.did}`);
+    try {
+      const vaultInfo = await subscription.subscribe();
+      console.log(vaultInfo);
+      console.log('subscribe done');
+    } catch (e) {
+      if (e instanceof AlreadyExistsException) {
+        enqueueSnackbar('Vault already exists', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      } else {
+        throw e;
+      }
+    }
+  };
 
   return (
     <>
@@ -81,13 +102,11 @@ export default function HiveVaults() {
         ))}
       </Stack>
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.125, md: 5 }}>
-        <CustomButton onClick={() => {}}>
+        <CustomButton onClick={createVault}>
           <PlusTypo>+</PlusTypo>
           Create Hive Vault
         </CustomButton>
-        <CustomButton onClick={() => {}}>
-          Access Hive Vaults
-        </CustomButton>
+        <CustomButton onClick={() => {}}>Access Hive Vaults</CustomButton>
       </Stack>
     </>
   );

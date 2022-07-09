@@ -6,7 +6,8 @@ import {
   AuthService,
   BackupSubscription,
   Provider,
-  SubscriptionService
+  SubscriptionService,
+  AlreadyExistsException
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
@@ -93,13 +94,6 @@ export const getCredentialsFromDID = (did) =>
       });
   });
 
-export const getHiveNodeInfo = async (did) => {
-  const restService = await getRestService(did);
-  const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
-  const nodeInfo = await aboutService.getInfo();
-  return nodeInfo;
-};
-
 // ******************************************************************** //
 
 export const getAppContext = async (did) => {
@@ -120,12 +114,6 @@ export const getRestService = async (did) => {
   return { serviceEndpoint, httpClient };
 };
 
-export const getProvider = async (did) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  return new Provider(appContext, nodeProvider);
-};
-
 export const getVaultSubscription = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
@@ -138,6 +126,40 @@ export const getBackupSubscription = async (did) => {
   return new BackupSubscription(appContext, nodeProvider);
 };
 
+export const getSubscriptionService = async (did) => {
+  const restService = await getRestService(did);
+  return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
+};
+
+export const createVault = (did) =>
+  new Promise((resolve, reject) => {
+    getVaultSubscription(did)
+      .then((subscription) => subscription.subscribe())
+      .then((res) => resolve(true))
+      .catch((e) => {
+        if (e instanceof AlreadyExistsException) {
+          resolve(false);
+        } else {
+          reject(e);
+        }
+      });
+  });
+
+// ******************************************************************** //
+
+export const getHiveNodeInfo = async (did) => {
+  const restService = await getRestService(did);
+  const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
+  const nodeInfo = await aboutService.getInfo();
+  return nodeInfo;
+};
+
+export const getProvider = async (did) => {
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  return new Provider(appContext, nodeProvider);
+};
+
 export const getAuthService = async (did) => {
   const restService = await getRestService(did);
   return new AuthService(restService.serviceEndpoint, restService.httpClient);
@@ -147,9 +169,4 @@ export const getVault = async (did) => {
   const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
   const vault = await instBCSHAH.getVaultServices(did);
   return vault;
-};
-
-export const getSubscriptionService = async (did) => {
-  const restService = await getRestService(did);
-  return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
 };

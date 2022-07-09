@@ -8,7 +8,7 @@ import { PageTitleTypo } from '../style';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
-import { getHiveVaultInfo, getVaultSubscription } from '../../../service/fetch';
+import { createVault, getHiveVaultInfo, getVaultSubscription } from '../../../service/fetch';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -62,22 +62,26 @@ export default function HiveVaults() {
     setLoading(false);
   }, []);
 
-  const createVault = async () => {
-    const subscription = await getVaultSubscription(`did:elastos:${user.did}`);
-    try {
-      const vaultInfo = await subscription.subscribe();
-      console.log(vaultInfo);
-      console.log('subscribe done');
-    } catch (e) {
-      if (e instanceof AlreadyExistsException) {
-        enqueueSnackbar('Vault already exists', {
+  const handleCreateVault = () => {
+    createVault(`did:elastos:${user.did}`)
+      .then((res) => {
+        if (res)
+          enqueueSnackbar('Create vault succeed', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+        else
+          enqueueSnackbar('Vault already exists', {
+            variant: 'error',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+      })
+      .catch((e) => {
+        enqueueSnackbar('Create vault error', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
-      } else {
-        throw e;
-      }
-    }
+      });
   };
 
   return (
@@ -85,7 +89,7 @@ export default function HiveVaults() {
       <PageTitleTypo mt={{ xs: 7, md: 15 }} mb={myVaultsList.length ? 0 : 1.25}>
         My Vaults
       </PageTitleTypo>
-      <Stack mt={{ xs: 1.75, md: 5 }} mb={10} spacing={{ xs: 3.75, md: 6.25 }}>
+      <Stack mt={{ xs: 1.75, md: 5 }} mb={6.25} spacing={{ xs: 3.75, md: 6.25 }}>
         {myVaultsList.map((item, index) => (
           <VaultItem
             key={index}
@@ -102,7 +106,7 @@ export default function HiveVaults() {
         ))}
       </Stack>
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.125, md: 5 }}>
-        <CustomButton onClick={createVault}>
+        <CustomButton onClick={handleCreateVault} disabled={myVaultsList.length}>
           <PlusTypo>+</PlusTypo>
           Create Hive Vault
         </CustomButton>

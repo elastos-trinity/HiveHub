@@ -57,7 +57,6 @@ export default function HiveVaults() {
     const vaultItem = await getHiveVaultInfo(userDid);
     if (vaultItem) setMyVaultsList([vaultItem]);
     else setMyVaultsList([]);
-
     setLoading(false);
   }, []);
 

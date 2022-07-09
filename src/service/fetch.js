@@ -98,6 +98,23 @@ export const getCredentialsFromDID = (did) =>
       });
   });
 
+export const getActiveHiveNodeUrl = async () => {
+  const nodes = await HiveHubServer.getHiveNodes();
+  const activeNodes = [];
+  await Promise.all(
+    nodes.map(async (item) => {
+      const node = { ...item };
+      try {
+        node.status = await HiveHubServer.isOnline(node.url);
+        if (node.status && !activeNodes.includes(node.url)) activeNodes.push(node.url);
+      } catch (e) {
+        node.status = false;
+      }
+      return node;
+    })
+  );
+  return activeNodes;
+};
 // ******************************************************************** //
 
 export const getAppContext = async (did) => {
@@ -108,7 +125,7 @@ export const getAppContext = async (did) => {
 
 export const getRestService = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
+  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
   const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
   const httpClient = new HttpClient(
     serviceEndpoint,
@@ -120,13 +137,13 @@ export const getRestService = async (did) => {
 
 export const getVaultSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
+  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
   return new VaultSubscription(appContext, nodeProvider);
 };
 
 export const getBackupSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
+  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
   return new BackupSubscription(appContext, nodeProvider);
 };
 
@@ -161,6 +178,14 @@ export const getNodeProviderUrl = async (did) => {
   return nodeProvider;
 };
 
+export const getValidNodeProviderUrl = async (appContext, did) => {
+  const nodeProvider = await appContext.getProviderAddress(did);
+  const activeNodes = await getActiveHiveNodeUrl();
+  if (!activeNodes.length) return '';
+  if (activeNodes.includes(nodeProvider)) return nodeProvider;
+  return activeNodes[activeNodes.length - 1];
+};
+
 // ******************************************************************** //
 
 export const getHiveNodeInfo = async (did) => {
@@ -172,7 +197,7 @@ export const getHiveNodeInfo = async (did) => {
 
 export const getProvider = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
+  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
   return new Provider(appContext, nodeProvider);
 };
 

@@ -17,6 +17,7 @@ import { getDIDDocumentFromDID, getNodeProviderUrl } from '../service/fetch';
 
 export default function useUser() {
   const navigate = useNavigate();
+  const [ownerDid] = useState(localStorage.getItem('did'));
   const [user, setUser] = useState({
     did: localStorage.getItem('did'),
     didDoc: undefined,
@@ -73,21 +74,21 @@ export default function useUser() {
   }, [walletConnectProvider]);
 
   useEffect(async () => {
-    if (user.did) {
-      const userDid = `did:elastos:${user.did}`;
+    if (ownerDid) {
+      const userDid = `did:elastos:${ownerDid}`;
       const didDoc = await getDIDDocumentFromDID(userDid);
       const credentials = getCredentialsFromDIDDoc(didDoc);
       const nodeProvider = await getNodeProviderUrl(userDid);
       setUser((prevState) => {
         const state = { ...prevState };
-        state.did = user.did;
+        state.did = ownerDid;
         state.credentials = credentials;
         state.didDoc = didDoc;
         state.nodeProvider = nodeProvider;
         return state;
       });
     }
-  }, [user.did]);
+  }, [ownerDid]);
 
   const showChainErrorSnackBar = async () => {
     // enqueueSnackbar('', {

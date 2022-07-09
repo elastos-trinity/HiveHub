@@ -73,21 +73,21 @@ export default function useUser() {
     };
   }, [walletConnectProvider]);
 
-  useEffect(async () => {
-    if (user.did) {
-      const didDoc = await getDIDDocumentFromDID(`did:elastos:${user.did}`);
-      const credentials = getCredentialsFromDIDDoc(didDoc);
-      const nodeProvider = getServiceEndPointFromDIDDoc(didDoc);
-      setUser((prevState) => {
-        const state = { ...prevState };
-        state.did = user.did;
-        state.credentials = credentials;
-        state.didDoc = didDoc;
-        state.nodeProvider = nodeProvider;
-        return state;
-      });
-    }
-  }, [user.did]);
+  // useEffect(async () => {
+  //   if (user.did) {
+  //     const didDoc = await getDIDDocumentFromDID(`did:elastos:${user.did}`);
+  //     const credentials = getCredentialsFromDIDDoc(didDoc);
+  //     const nodeProvider = getServiceEndPointFromDIDDoc(didDoc);
+  //     setUser((prevState) => {
+  //       const state = { ...prevState };
+  //       state.did = user.did;
+  //       state.credentials = credentials;
+  //       state.didDoc = didDoc;
+  //       state.nodeProvider = nodeProvider;
+  //       return state;
+  //     });
+  //   }
+  // }, [user.did]);
 
   const showChainErrorSnackBar = async () => {
     // enqueueSnackbar('', {

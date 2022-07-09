@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
-import { AlreadyExistsException } from '@elastosfoundation/hive-js-sdk';
 import { PageTitleTypo } from '../style';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
-import { createVault, getHiveVaultInfo, getVaultSubscription } from '../../../service/fetch';
+import { createVault, getHiveVaultInfo } from '../../../service/fetch';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -106,7 +105,7 @@ export default function HiveVaults() {
         ))}
       </Stack>
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.125, md: 5 }}>
-        <CustomButton onClick={handleCreateVault} disabled={myVaultsList.length}>
+        <CustomButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
           <PlusTypo>+</PlusTypo>
           Create Hive Vault
         </CustomButton>

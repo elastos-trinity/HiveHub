@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
-import { getHiveNodesList } from '../../../service/fetch';
-import { emptyNodeItem } from '../../../utils/filler';
+import { createVault, getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
+import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
+import useUser from '../../../hooks/useUser';
 
 const NodeTitle = styled(Typography)(({ theme }) => ({
   color: '#000',
@@ -137,15 +139,12 @@ function InfoItem({ label, value }) {
   );
 }
 
-const nodeInfo = {
-  vaultName: 'Vault Service-0 (Free)',
-  total: 524,
-  used: 262
-};
-
 export default function NodeDetail() {
+  const { user } = useUser();
+  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);
+  const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
   const [value, setValue] = useState('vault');
 
   const handleChange = (event, newValue) => {
@@ -158,8 +157,41 @@ export default function NodeDetail() {
     setLoading(true);
     const details = await getHiveNodesList(nodeId, undefined, false);
     setNodeDetail(details.length ? details[0] : undefined);
+    const vaultItem = await getHiveVaultInfo(user.did, details.length ? details[0].url : undefined);
+    if (vaultItem) {
+      setVaultItems([vaultItem]);
+    } else setVaultItems([]);
     setLoading(false);
   }, []);
+
+  const handleCreateVault = () => {
+    if (user.nodeProvider !== nodeDetail.url) {
+      enqueueSnackbar('You are connected to invalid Hive Node, Please Select another one.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      return;
+    }
+    createVault(user.did, nodeDetail.url)
+      .then((res) => {
+        if (res)
+          enqueueSnackbar('Create vault succeed', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+        else
+          enqueueSnackbar('Vault already exists', {
+            variant: 'error',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+      })
+      .catch((e) => {
+        enqueueSnackbar('Create vault error', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      });
+  };
 
   return (
     <>
@@ -261,9 +293,24 @@ export default function NodeDetail() {
           </Tabs>
           {value === 'vault' ? (
             <Box
-              sx={{ mt: { xs: 5, md: 12.5 }, height: '300px', width: '100%', textAlign: 'left' }}
+              sx={{ mt: { xs: 5, md: 12.5 }, width: '100%', height: '300px', textAlign: 'left' }}
             >
-              <CustomButton sx={{ height: { xs: '30px', md: '70px' } }} onClick={() => {}}>
+              <Stack mt={{ xs: 1.75, md: 5 }} mb={6.25} spacing={{ xs: 3.75, md: 6.25 }}>
+                {vaultItems.map((item, index) => (
+                  <VaultSummaryItem
+                    key={`node-detail-vault-summary-${index}`}
+                    vaultName={item.name}
+                    vaultTotal={item.total}
+                    vaultUsed={item.used}
+                    isLoading={loading}
+                  />
+                ))}
+              </Stack>
+              <CustomButton
+                sx={{ height: { xs: '30px', md: '70px' } }}
+                onClick={handleCreateVault}
+                disabled={vaultItems.length > 0}
+              >
                 <PlusTypo>+</PlusTypo>
                 Add Vault
               </CustomButton>

@@ -43,10 +43,10 @@ export const getHiveNodesList = async (nid, did, withName) => {
   return nodeList;
 };
 
-export const getHiveVaultInfo = async (did) => {
+export const getHiveVaultInfo = async (did, nodeProvider) => {
   try {
-    const subscriptionService = await getSubscriptionService(did);
-    const vaultInfo = await subscriptionService.getVaultInfo();
+    const vaultSubscription = await getVaultSubscription(did, nodeProvider);
+    const vaultInfo = await vaultSubscription.checkSubscription();
     if (!vaultInfo) return undefined;
     const name = `Vault Service-0 (${vaultInfo.getPricePlan()})`;
     const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
@@ -135,10 +135,10 @@ export const getRestService = async (did) => {
   return { serviceEndpoint, httpClient };
 };
 
-export const getVaultSubscription = async (did) => {
+export const getVaultSubscription = async (did, nodeProviderUrl) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
-  return new VaultSubscription(appContext, nodeProvider);
+  return new VaultSubscription(appContext, nodeProviderUrl || nodeProvider);
 };
 
 export const getBackupSubscription = async (did) => {
@@ -152,9 +152,9 @@ export const getSubscriptionService = async (did) => {
   return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
 };
 
-export const createVault = (did) =>
+export const createVault = (did, nodeProvider) =>
   new Promise((resolve, reject) => {
-    getVaultSubscription(did)
+    getVaultSubscription(did, nodeProvider)
       .then((subscription) => subscription.subscribe())
       .then((res) => resolve(true))
       .catch((e) => {

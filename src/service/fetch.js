@@ -125,7 +125,7 @@ export const getAppContext = async (did) => {
 
 export const getRestService = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
+  const nodeProvider = await appContext.getProviderAddress(did);
   const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
   const httpClient = new HttpClient(
     serviceEndpoint,
@@ -137,13 +137,13 @@ export const getRestService = async (did) => {
 
 export const getVaultSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
+  const nodeProvider = await appContext.getProviderAddress(did);
   return new VaultSubscription(appContext, nodeProvider);
 };
 
 export const getBackupSubscription = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
+  const nodeProvider = await appContext.getProviderAddress(did);
   return new BackupSubscription(appContext, nodeProvider);
 };
 
@@ -180,9 +180,12 @@ export const getNodeProviderUrl = async (did) => {
 
 export const getValidNodeProviderUrl = async (appContext, did) => {
   const nodeProvider = await appContext.getProviderAddress(did);
+  // console.log("original: ", nodeProvider)
   const activeNodes = await getActiveHiveNodeUrl();
+  // console.log(activeNodes)
   if (!activeNodes.length) return '';
   if (activeNodes.includes(nodeProvider)) return nodeProvider;
+  // console.log("updated: ", activeNodes[activeNodes.length - 1])
   return activeNodes[activeNodes.length - 1];
 };
 
@@ -197,7 +200,7 @@ export const getHiveNodeInfo = async (did) => {
 
 export const getProvider = async (did) => {
   const appContext = await getAppContext(did);
-  const nodeProvider = await getValidNodeProviderUrl(appContext, did);
+  const nodeProvider = await appContext.getProviderAddress(did);
   return new Provider(appContext, nodeProvider);
 };
 

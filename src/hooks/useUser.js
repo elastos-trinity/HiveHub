@@ -1,19 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-import {
-  getCredentialsFromDIDDoc,
-  isInAppBrowser,
-  isSupportedNetwork
-} from '../service/common';
+import { getCredentialsFromDIDDoc, isInAppBrowser, isSupportedNetwork } from '../service/common';
 import {
   essentialsConnector,
   initConnectivitySDK,
   isUsingEssentialsConnector
 } from '../service/connectivity';
-import { getDIDDocumentFromDID, getNodeProviderUrl } from '../service/fetch';
+import { getActiveHiveNodeUrl, getDIDDocumentFromDID, getNodeProviderUrl } from '../service/fetch';
 
 export default function useUser() {
   const navigate = useNavigate();
@@ -73,20 +69,35 @@ export default function useUser() {
     };
   }, [walletConnectProvider]);
 
+  const getUserInfo = useCallback(async (did) => {
+    const didDoc = await getDIDDocumentFromDID(did);
+    const credentials = getCredentialsFromDIDDoc(didDoc);
+    const nodeProvider = await getNodeProviderUrl(did);
+    const activeNodes = await getActiveHiveNodeUrl();
+    if (!nodeProvider) {
+      enqueueSnackbar('DID is not published. Please publish your DID.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    } else if (!activeNodes.includes(nodeProvider)) {
+      enqueueSnackbar('You are connected to invalid Hive Node, Please Select another one.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+    setUser((prevState) => {
+      const state = { ...prevState };
+      state.did = did;
+      state.credentials = credentials;
+      state.didDoc = didDoc;
+      state.nodeProvider = nodeProvider;
+      return state;
+    });
+  }, [ownerDid]);
+
   useEffect(async () => {
     if (ownerDid) {
-      const userDid = `did:elastos:${ownerDid}`;
-      const didDoc = await getDIDDocumentFromDID(userDid);
-      const credentials = getCredentialsFromDIDDoc(didDoc);
-      const nodeProvider = await getNodeProviderUrl(userDid);
-      setUser((prevState) => {
-        const state = { ...prevState };
-        state.did = ownerDid;
-        state.credentials = credentials;
-        state.didDoc = didDoc;
-        state.nodeProvider = nodeProvider;
-        return state;
-      });
+      await getUserInfo(ownerDid);
     }
   }, [ownerDid]);
 
@@ -131,7 +142,7 @@ export default function useUser() {
 
     if (presentation) {
       const did = presentation.getHolder().getMethodSpecificId();
-      localStorage.setItem('did', did);
+      localStorage.setItem('did', `did:elastos:${did}`);
       setUser({ did, ...user });
       enqueueSnackbar('success', {
         variant: 'success',

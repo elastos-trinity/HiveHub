@@ -68,12 +68,11 @@ export default function HiveHome() {
 
   useEffect(async () => {
     setLoading(true);
-    const userDid = `did:elastos:${user.did}`;
     const nodeList = await getHiveNodesList(undefined, undefined, false);
     setNodeItems(nodeList);
-    const myNodeList = await getHiveNodesList(undefined, userDid, false);
+    const myNodeList = await getHiveNodesList(undefined, user.did, false);
     setCreated(myNodeList.length);
-    const vaultItem = await getHiveVaultInfo(userDid);
+    const vaultItem = await getHiveVaultInfo(user.did);
     if (vaultItem) {
       setVaultItems([vaultItem]);
       setParticipated(1);

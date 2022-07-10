@@ -44,7 +44,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 export default function CreateNode() {
   const navigate = useNavigate();
   const { user } = useUser();
-  const [ownerDid, setOwnerDid] = useState(`did:elastos:${user.did}`);
+  const [ownerDid, setOwnerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [nodeName, setNodeName] = useState('');
   const [nodeNameErr, setNodeNameErr] = useState(false);

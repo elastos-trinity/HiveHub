@@ -29,7 +29,7 @@ export default function HiveExplore() {
     setLoading(true);
     const nodeList = await getHiveNodesList(undefined, undefined, true);
     setNodeItems(nodeList);
-    const vaultItem = await getHiveVaultInfo(`did:elastos:${user.did}`);
+    const vaultItem = await getHiveVaultInfo(user.did);
     if (vaultItem) {
       setVaultItems([vaultItem]);
     } else setVaultItems([]);

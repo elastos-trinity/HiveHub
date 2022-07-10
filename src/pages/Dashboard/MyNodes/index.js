@@ -51,7 +51,7 @@ export default function HiveNodes() {
 
   useEffect(async () => {
     setLoading(true);
-    const nodeList = await getHiveNodesList(undefined, `did:elastos:${user.did}`, false);
+    const nodeList = await getHiveNodesList(undefined, user.did, false);
     setMyNodeList(nodeList);
     setLoading(false);
   }, [user.did]);

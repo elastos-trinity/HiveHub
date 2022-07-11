@@ -43,9 +43,6 @@ export default function useUser() {
     if (isInAppBrowser()) {
       const inAppProvider = window.elastos.getWeb3Provider();
       const inAppWeb3 = new Web3(inAppProvider);
-      inAppWeb3.eth.getBalance(inAppProvider.address).then((balance) => {
-        console.log('Wallet balance: ', parseFloat((parseFloat(balance) / 1e18).toFixed(2)));
-      });
       inAppWeb3.eth.getChainId().then((chainId) => {
         if (chainId && !isSupportedNetwork(chainId)) showChainErrorSnackBar();
       });

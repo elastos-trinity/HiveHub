@@ -145,6 +145,7 @@ export default function NodeDetail() {
   const [loading, setLoading] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
+  const [backupItems, setBackupItems] = useState([emptyVaultItem]);
   const [value, setValue] = useState('vault');
 
   const handleChange = (event, newValue) => {
@@ -157,10 +158,22 @@ export default function NodeDetail() {
     setLoading(true);
     const details = await getHiveNodesList(nodeId, undefined, false);
     setNodeDetail(details.length ? details[0] : undefined);
-    const vaultItem = await getHiveVaultInfo(user.did, details.length ? details[0].url : undefined);
+    const vaultItem = await getHiveVaultInfo(
+      user.did,
+      details.length ? details[0].url : undefined,
+      1
+    );
     if (vaultItem) {
       setVaultItems([vaultItem]);
     } else setVaultItems([]);
+    const backupItem = await getHiveVaultInfo(
+      user.did,
+      details.length ? details[0].url : undefined,
+      2
+    );
+    if (backupItem) {
+      setBackupItems([backupItem]);
+    } else setBackupItems([]);
     setLoading(false);
   }, []);
 
@@ -319,11 +332,15 @@ export default function NodeDetail() {
             <Box
               sx={{ mt: { xs: 5, md: 9.375 }, width: '100%', height: '300px', textAlign: 'left' }}
             >
-              <VaultSummaryItem
-                vaultName={nodeDetail.vaultName}
-                vaultTotal={nodeDetail.total}
-                vaultUsed={nodeDetail.used}
-              />
+              {backupItems.map((item, index) => (
+                <VaultSummaryItem
+                  key={`node-detail-backup-summary-${index}`}
+                  vaultName={item.name}
+                  vaultTotal={item.total}
+                  vaultUsed={item.used}
+                  isLoading={loading}
+                />
+              ))}
             </Box>
           )}
         </ContainerBox>

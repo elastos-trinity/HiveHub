@@ -53,7 +53,7 @@ export default function HiveVaults() {
 
   useEffect(async () => {
     setLoading(true);
-    const vaultItem = await getHiveVaultInfo(user.did);
+    const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
     if (vaultItem) setMyVaultsList([vaultItem]);
     else setMyVaultsList([]);
     setLoading(false);

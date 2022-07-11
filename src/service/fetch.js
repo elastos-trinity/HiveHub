@@ -43,12 +43,15 @@ export const getHiveNodesList = async (nid, did, withName) => {
   return nodeList;
 };
 
-export const getHiveVaultInfo = async (did, nodeProvider) => {
+export const getHiveVaultInfo = async (did, nodeProvider, type) => {
   try {
-    const vaultSubscription = await getVaultSubscription(did, nodeProvider);
+    const vaultSubscription =
+      type === 1
+        ? await getVaultSubscription(did, nodeProvider)
+        : await getBackupSubscription(did, nodeProvider);
     const vaultInfo = await vaultSubscription.checkSubscription();
     if (!vaultInfo) return undefined;
-    const name = `Vault Service-0 (${vaultInfo.getPricePlan()})`;
+    const name = `${type === 1 ? 'Vault' : 'Backup'} Service-0 (${vaultInfo.getPricePlan()})`;
     const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
     const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
     const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
@@ -141,10 +144,10 @@ export const getVaultSubscription = async (did, nodeProviderUrl) => {
   return new VaultSubscription(appContext, nodeProviderUrl || nodeProvider);
 };
 
-export const getBackupSubscription = async (did) => {
+export const getBackupSubscription = async (did, nodeProviderUrl) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
-  return new BackupSubscription(appContext, nodeProvider);
+  return new BackupSubscription(appContext, nodeProviderUrl || nodeProvider);
 };
 
 export const getSubscriptionService = async (did) => {

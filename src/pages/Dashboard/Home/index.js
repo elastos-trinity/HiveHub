@@ -72,7 +72,7 @@ export default function HiveHome() {
     setNodeItems(nodeList);
     const myNodeList = await getHiveNodesList(undefined, user.did, false);
     setCreated(myNodeList.length);
-    const vaultItem = await getHiveVaultInfo(user.did);
+    const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
     if (vaultItem) {
       setVaultItems([vaultItem]);
       setParticipated(1);

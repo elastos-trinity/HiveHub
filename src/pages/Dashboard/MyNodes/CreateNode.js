@@ -74,7 +74,6 @@ export default function CreateNode() {
         url,
         remark: description
       };
-      console.log(newNode);
       const json = await HiveHubServer.addHiveNode(newNode);
       // acknowledged: true
       // inserted_id: "62c2e6560d6930f229239199"

@@ -4,11 +4,13 @@ import { Box, Button, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
+import dns from 'dns';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
 import HiveHubServer from '../../../service/HiveHubServer';
+import { getRestService } from '../../../service/fetch';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -76,12 +78,21 @@ export default function CreateNode() {
         url,
         remark: description
       };
+      // dns.lookup(url, (err, address, familly) => {
+      //   console.log(address);
+      //   console.log(familly)
+      //   console.log(err)
+      // });
+      const restService = await getRestService(user.did);
+      const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+      const nodeOwnerDid = nodeInfo.getOwnerDid();
       // check accessible and ownership
-      if (ownerDid !== user.did) {
+      if (!(ownerDid === user.did && nodeOwnerDid === user.did)) {
         enqueueSnackbar('Invalid owner', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        return;
       }
       const status = await HiveHubServer.isOnline(url);
       if (!status) {
@@ -89,6 +100,7 @@ export default function CreateNode() {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        return;
       }
       const json = await HiveHubServer.addHiveNode(newNode);
       // acknowledged: true

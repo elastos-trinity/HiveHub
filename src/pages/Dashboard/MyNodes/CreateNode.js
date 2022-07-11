@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
@@ -43,6 +44,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 export default function CreateNode() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
   const [ownerDid, setOwnerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
@@ -66,7 +68,7 @@ export default function CreateNode() {
       const curTime = getTime(new Date().getTime());
       const newNode = {
         name: nodeName,
-        created: `${curTime.date} ${curTime.time}`, // TODO:
+        created: `${curTime.date} ${curTime.time}`,
         ip: '192.115.24.2', // TODO:
         owner_did: ownerDid,
         area: `${country} ${province} ${district}`,
@@ -74,6 +76,20 @@ export default function CreateNode() {
         url,
         remark: description
       };
+      // check accessible and ownership
+      if (ownerDid !== user.did) {
+        enqueueSnackbar('Invalid owner', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      }
+      const status = await HiveHubServer.isOnline(url);
+      if (!status) {
+        enqueueSnackbar('Hive Node is not accessible.', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      }
       const json = await HiveHubServer.addHiveNode(newNode);
       // acknowledged: true
       // inserted_id: "62c2e6560d6930f229239199"

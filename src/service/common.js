@@ -42,3 +42,8 @@ export const reduceHexAddress = (strAddress, nDigits) =>
         strAddress.length
       )}`
     : '';
+
+export const sleep = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });

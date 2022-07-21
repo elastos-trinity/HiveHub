@@ -4,7 +4,7 @@ import { Box, Button, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
-import dns from 'dns';
+// import dns from 'dns';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
@@ -67,6 +67,11 @@ export default function CreateNode() {
 
   const handleCreateNode = async () => {
     if (ownerDid && nodeName && email && country && province && district && url && description) {
+      // dns.lookup(url, (err, address, familly) => {
+      //   console.log(address);
+      //   console.log(familly)
+      //   console.log(err)
+      // });
       const curTime = getTime(new Date().getTime());
       const newNode = {
         name: nodeName,
@@ -78,16 +83,25 @@ export default function CreateNode() {
         url,
         remark: description
       };
-      // dns.lookup(url, (err, address, familly) => {
-      //   console.log(address);
-      //   console.log(familly)
-      //   console.log(err)
-      // });
+
+      // check accessible and ownership
       const restService = await getRestService(user.did);
       const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+      const nodeServiceDid = nodeInfo.getServiceDid();
       const nodeOwnerDid = nodeInfo.getOwnerDid();
-      // check accessible and ownership
-      if (!(ownerDid === user.did && nodeOwnerDid === user.did)) {
+      const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
+      const vcs = nodeOwnershipPresentation.getCredentials();
+      const credentialIssuer = `did:elastos:${vcs[0].getIssuer().getMethodSpecificId()}`;
+      const holderDid = nodeOwnershipPresentation.getHolder().getMethodSpecificId();
+      const presentationHolder = `did:elastos:${holderDid}`;
+      if (
+        !(
+          ownerDid === user.did &&
+          nodeOwnerDid === user.did &&
+          nodeServiceDid === presentationHolder &&
+          user.did === credentialIssuer
+        )
+      ) {
         enqueueSnackbar('Invalid owner', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -102,7 +116,7 @@ export default function CreateNode() {
         });
         return;
       }
-      const json = await HiveHubServer.addHiveNode(newNode);
+      // const json = await HiveHubServer.addHiveNode(newNode);
       // acknowledged: true
       // inserted_id: "62c2e6560d6930f229239199"
       navigate('/dashboard/nodes');

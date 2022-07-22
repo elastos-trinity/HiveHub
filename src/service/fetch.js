@@ -345,3 +345,60 @@ export const getVault = async (did) => {
   const vault = await instBCSHAH.getVaultServices(did);
   return vault;
 };
+
+// ******************************************************************** //
+const AVATAR = 'avatar';
+const AVATAR_REMOTE_PATH = 'pasarAvatar';
+export const downloadAvatar = async (targetDid) => {
+  try {
+    const data = await downloadImageScripting(targetDid, AVATAR, '/anyfakedir/browserside/for/didstores');
+    return data;
+  } catch (error) {
+    console.log(`download avatar error: ${error}`);
+    return error;
+  }
+};
+
+export const downloadImageScripting = async (targetDid, scriptName, remotePath) => {
+  const transactionId = await downloadScriptingTransactionID(targetDid, scriptName, remotePath);
+  const data = await downloadScripting(targetDid, transactionId);
+  return data;
+};
+
+
+const downloadScriptingTransactionID = async (targetDid, scriptName, remotePath) => {
+  const result = await callScript(scriptName, { path: remotePath }, targetDid);
+  const transactionId = result[scriptName].transaction_id;
+  return transactionId;
+};
+
+export const downloadScripting = async (targetDid, transactionId) => {
+  try {
+    const scriptingService = await getScriptingService(targetDid);
+    return await scriptingService.downloadFile(transactionId);
+  } catch (error) {
+    console.log('downloadScripting error: ', error);
+    return error;
+  }
+};
+
+export const getScriptingService = async (targetDid) => {
+  const vault = await getVault(targetDid);
+  const scriptingService = vault.getScriptingService();
+
+  return scriptingService;
+};
+
+export const callScript = (scriptName, document, targetDid, appid = config.ApplicationDID) =>
+  new Promise((resolve, reject) => {
+    getScriptingService(targetDid)
+      .then((scriptingService) =>
+        scriptingService.callScript(scriptName, document, targetDid, appid)
+      )
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });

@@ -66,31 +66,34 @@ export default function useUser() {
     };
   }, [walletConnectProvider]);
 
-  const getUserInfo = useCallback(async (did) => {
-    const didDoc = await getDIDDocumentFromDID(did);
-    const credentials = getCredentialsFromDIDDoc(didDoc);
-    const nodeProvider = await getNodeProviderUrl(did);
-    const activeNodes = await getActiveHiveNodeUrl();
-    if (!nodeProvider) {
-      enqueueSnackbar('DID is not published. Please publish your DID.', {
-        variant: 'error',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+  const getUserInfo = useCallback(
+    async (did) => {
+      const didDoc = await getDIDDocumentFromDID(did);
+      const credentials = getCredentialsFromDIDDoc(didDoc);
+      const nodeProvider = await getNodeProviderUrl(did);
+      const activeNodes = await getActiveHiveNodeUrl();
+      if (!nodeProvider) {
+        enqueueSnackbar('DID is not published. Please publish your DID.', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      } else if (!activeNodes.includes(nodeProvider)) {
+        enqueueSnackbar('You are connected to invalid Hive Node, Please Select another one.', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      }
+      setUser((prevState) => {
+        const state = { ...prevState };
+        state.did = did;
+        state.credentials = credentials;
+        state.didDoc = didDoc;
+        state.nodeProvider = nodeProvider;
+        return state;
       });
-    } else if (!activeNodes.includes(nodeProvider)) {
-      enqueueSnackbar('You are connected to invalid Hive Node, Please Select another one.', {
-        variant: 'error',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
-      });
-    }
-    setUser((prevState) => {
-      const state = { ...prevState };
-      state.did = did;
-      state.credentials = credentials;
-      state.didDoc = didDoc;
-      state.nodeProvider = nodeProvider;
-      return state;
-    });
-  }, [ownerDid]);
+    },
+    [ownerDid]
+  );
 
   useEffect(async () => {
     if (ownerDid) {

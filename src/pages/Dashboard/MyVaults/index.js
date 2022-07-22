@@ -51,12 +51,15 @@ export default function HiveVaults() {
   const [loading, setLoading] = useState(false);
   const [myVaultsList, setMyVaultsList] = useState(Array(1).fill(emptyVaultItem));
 
-  useEffect(async () => {
-    setLoading(true);
-    const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
-    if (vaultItem) setMyVaultsList([vaultItem]);
-    else setMyVaultsList([]);
-    setLoading(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+      if (vaultItem) setMyVaultsList([vaultItem]);
+      else setMyVaultsList([]);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleCreateVault = () => {

@@ -66,18 +66,21 @@ export default function HiveHome() {
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
 
-  useEffect(async () => {
-    setLoading(true);
-    const nodeList = await getHiveNodesList(undefined, undefined, false);
-    setNodeItems(nodeList);
-    const myNodeList = await getHiveNodesList(undefined, user.did, false);
-    setCreated(myNodeList.length);
-    const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
-    if (vaultItem) {
-      setVaultItems([vaultItem]);
-      setParticipated(1);
-    } else setVaultItems([]);
-    setLoading(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const nodeList = await getHiveNodesList(undefined, undefined, false);
+      setNodeItems(nodeList);
+      const myNodeList = await getHiveNodesList(undefined, user.did, false);
+      setCreated(myNodeList.length);
+      const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+      if (vaultItem) {
+        setVaultItems([vaultItem]);
+        setParticipated(1);
+      } else setVaultItems([]);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   return (

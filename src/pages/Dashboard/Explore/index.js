@@ -25,15 +25,18 @@ export default function HiveExplore() {
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState(Array(1).fill(emptyVaultItem));
 
-  useEffect(async () => {
-    setLoading(true);
-    const nodeList = await getHiveNodesList(undefined, undefined, true);
-    setNodeItems(nodeList);
-    const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
-    if (vaultItem) {
-      setVaultItems([vaultItem]);
-    } else setVaultItems([]);
-    setLoading(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const nodeList = await getHiveNodesList(undefined, undefined, true);
+      setNodeItems(nodeList);
+      const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+      if (vaultItem) {
+        setVaultItems([vaultItem]);
+      } else setVaultItems([]);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   return (

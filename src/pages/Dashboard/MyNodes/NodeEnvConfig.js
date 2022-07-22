@@ -42,7 +42,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
   const { user } = useUser();
-  const [ownerDid, setOwnerDid] = useState(user.did);
+  const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [servicePK, setServicePK] = useState('');
   const [servicePKErr, setServicePKErr] = useState(false);

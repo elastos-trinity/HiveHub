@@ -10,7 +10,7 @@ import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
 import HiveHubServer from '../../../service/HiveHubServer';
-import { getRestService } from '../../../service/fetch';
+import { downloadAvatar, getRestService } from '../../../service/fetch';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -48,7 +48,7 @@ export default function CreateNode() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
-  const [ownerDid, setOwnerDid] = useState(user.did);
+  const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [nodeName, setNodeName] = useState('');
   const [nodeNameErr, setNodeNameErr] = useState(false);
@@ -66,6 +66,7 @@ export default function CreateNode() {
   const [descriptionErr, setDescriptionErr] = useState(false);
 
   const handleCreateNode = async () => {
+    console.log(await downloadAvatar(user.did))
     if (ownerDid && nodeName && email && country && province && district && url && description) {
       // dns.lookup(url, (err, address, familly) => {
       //   console.log(address);

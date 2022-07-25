@@ -5,7 +5,13 @@ import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
-import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
+import {
+  backup,
+  getHiveNodesList,
+  getHiveVaultInfo,
+  getStoredData,
+  insertData
+} from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
 const NodeStatisticLabel = styled(Typography)({
@@ -83,6 +89,26 @@ export default function HiveHome() {
     fetchData();
   }, []);
 
+  const handleBackup = async () => {
+    if (!user.did) return;
+    try {
+      await backup(user.did);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleMigrate = async () => {};
+  const handleUnbind = async () => {
+    if (!user.did) return;
+    // try {
+    //   await insertData(user.did);
+    //   console.log('added')
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    console.log(await getStoredData(user.did));
+  };
+
   return (
     <>
       <PageTitleTypo mt={{ xs: 7, md: 15 }}>Home</PageTitleTypo>
@@ -120,9 +146,9 @@ export default function HiveHome() {
           px={1}
           sx={{ width: '100%', margin: '40px auto' }}
         >
-          <CustomButton onClick={() => {}}>Backup</CustomButton>
-          <CustomButton onClick={() => {}}>Migrate</CustomButton>
-          <CustomButton onClick={() => {}}>Unbind</CustomButton>
+          <CustomButton onClick={handleBackup}>Backup</CustomButton>
+          <CustomButton onClick={handleMigrate}>Migrate</CustomButton>
+          <CustomButton onClick={handleUnbind}>Unbind</CustomButton>
         </Stack>
         <Stack
           direction={{ xs: 'column', md: 'row' }}

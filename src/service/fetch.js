@@ -218,6 +218,106 @@ export const insertData = async (did) => {
   console.log('a new document is been inserted.');
 };
 
+export const getStoredData = async (did) => {
+  const COLLECTION_NAME = 'test_collection';
+  const query = { author: 'john doe1' };
+  const vault = await getVault(did);
+  // insert document
+  const databaseService = vault.getDatabaseService();
+  try {
+    const result = await databaseService.findOne(COLLECTION_NAME, query);
+    return result;
+  } catch (e) {
+    console.log(e);
+    return '';
+  }
+};
+
+export const backup = async (did) => {
+  const COLLECTION_NAME = 'test_collection';
+  const FILE_NAME = 'test_file.txt';
+  const FILE_CONTENT = 'This is the file content: abcdefghijklmnopqrstuvwxyz';
+  const SCRIPT_NAME = 'test_script';
+  const EXECUTABLE_NAME = 'test_executable';
+
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  const vault = new Vault(appContext, nodeProvider);
+  const subscription = new VaultSubscription(appContext, nodeProvider);
+  const subscriptionBackup = new BackupSubscription(appContext, nodeProvider);
+
+  // try to remove the exist vault and backup service, clean start.
+  // try {
+  //   await subscription.unsubscribe();
+  // } catch (e) {
+  //   if (!(e instanceof NotFoundException)) {
+  //     throw e;
+  //   }
+  // }
+  // try {
+  //   await subscriptionBackup.unsubscribe();
+  // } catch (e) {
+  //   if (!(e instanceof NotFoundException)) {
+  //     throw e;
+  //   }
+  // }
+
+  // // 1. create a new vault as the source of the migration operation.
+  // await subscription.subscribe();
+  // console.log('a clean vault created.');
+
+  // insert document
+  // const databaseService = vault.getDatabaseService();
+  // try {
+  //   await databaseService.createCollection(COLLECTION_NAME);
+  // } catch (e) {
+  //   console.log(e);
+  // }
+  // const doc = { author: 'john doe1', title: 'Eve for Dummies1' };
+  // await databaseService.insertOne(COLLECTION_NAME, doc, new InsertOptions(false, false));
+  // console.log('a new document is been inserted.');
+
+  // // upload file
+  // const filesService = vault.getFilesService();
+  // const buffer = Buffer.from(FILE_CONTENT, 'utf8');
+  // await filesService.upload(FILE_NAME, buffer);
+  // console.log('a new file is been uploaded.');
+
+  // 2. subscribe the backup service
+  await subscriptionBackup.subscribe();
+  console.log('subscribe a backup service.');
+
+  // 3. deactivate the vault to a void data changes in the backup process.
+  await subscription.deactivate();
+  console.log('deactivate the source vault.');
+
+  // 4. backup the vault data.
+  const backupService = vault.getBackupService(vault);
+  await backupService.startBackup();
+
+  // wait backup end.
+  const timeLimit = Array(30).fill(0);
+  const result = await Promise.all(
+    // eslint-disable-next-line no-unused-vars
+    timeLimit.map(async (_) => {
+      const info = await backupService.checkResult();
+      if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
+        // go on.
+      } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
+        return 1;
+      } else {
+        throw new Error(`failed to backup: ${info.getMessage()}`);
+      }
+      console.log('backup in process, try to wait.');
+      sleep(1000);
+      return 0;
+    })
+  );
+  console.log('backup done.');
+  if (result.length && result[result.length - 1] === 1) return true;
+  return false;
+};
+
 export const migrate = async (did) => {
   const COLLECTION_NAME = 'test_collection';
   const FILE_NAME = 'test_file.txt';

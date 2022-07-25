@@ -10,7 +10,7 @@ import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
 import HiveHubServer from '../../../service/HiveHubServer';
-import { downloadAvatar, getRestService } from '../../../service/fetch';
+import { getRestService } from '../../../service/fetch';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -66,7 +66,6 @@ export default function CreateNode() {
   const [descriptionErr, setDescriptionErr] = useState(false);
 
   const handleCreateNode = async () => {
-    console.log(await downloadAvatar(user.did))
     if (ownerDid && nodeName && email && country && province && district && url && description) {
       // dns.lookup(url, (err, address, familly) => {
       //   console.log(address);

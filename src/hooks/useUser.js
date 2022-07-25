@@ -9,13 +9,20 @@ import {
   initConnectivitySDK,
   isUsingEssentialsConnector
 } from '../service/connectivity';
-import { getActiveHiveNodeUrl, getDIDDocumentFromDID, getNodeProviderUrl } from '../service/fetch';
+import {
+  getActiveHiveNodeUrl,
+  getDIDDocumentFromDID,
+  getNodeProviderUrl,
+  fetchHiveScriptPictureToDataUrl,
+  getHiveAvatarUrlFromDIDAvatarCredential
+} from '../service/fetch';
 
 export default function useUser() {
   const navigate = useNavigate();
   const [ownerDid] = useState(localStorage.getItem('did'));
   const [user, setUser] = useState({
     did: localStorage.getItem('did'),
+    avatar: null,
     didDoc: undefined,
     credentials: {},
     nodeProvider: ''
@@ -72,6 +79,10 @@ export default function useUser() {
       const credentials = getCredentialsFromDIDDoc(didDoc);
       const nodeProvider = await getNodeProviderUrl(did);
       const activeNodes = await getActiveHiveNodeUrl();
+      const hiveAvatarUrl = getHiveAvatarUrlFromDIDAvatarCredential(credentials.avatar);
+      let avatarUrl = null;
+      if (did && credentials.avatar)
+        avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, did);
       if (!nodeProvider) {
         enqueueSnackbar('DID is not published. Please publish your DID.', {
           variant: 'error',
@@ -86,6 +97,7 @@ export default function useUser() {
       setUser((prevState) => {
         const state = { ...prevState };
         state.did = did;
+        state.avatar = avatarUrl;
         state.credentials = credentials;
         state.didDoc = didDoc;
         state.nodeProvider = nodeProvider;

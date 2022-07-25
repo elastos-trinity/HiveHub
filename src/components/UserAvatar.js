@@ -13,10 +13,6 @@ import {
   Popper
 } from '@mui/material';
 import useUser from '../hooks/useUser';
-import {
-  fetchHiveScriptPictureToDataUrl,
-  getHiveAvatarUrlFromDIDAvatarCredential
-} from '../service/fetch';
 
 export const AccountStyle = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
@@ -29,7 +25,6 @@ export const AccountStyle = styled(Stack)(({ theme }) => ({
 export default function UserAvatar() {
   const { user, signOutWithEssentials } = useUser();
   const [open, setOpen] = useState(false);
-  const [avatar, setAvatar] = useState(null);
   const anchorRef = useRef(null);
 
   const handleToggle = () => {
@@ -52,18 +47,9 @@ export default function UserAvatar() {
     prevOpen.current = open;
   }, [open]);
 
-  useEffect(() => {
-    const getAvatarUrl = async () => {
-      const hiveAvatarUrl = getHiveAvatarUrlFromDIDAvatarCredential(user.credentials.avatar);
-      const avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, user.did);
-      setAvatar(avatarUrl);
-    };
-    if (user.did && user.credentials.avatar) getAvatarUrl();
-  }, [user.did, user.credentials]);
-  
   return (
     <AccountStyle direction="row" spacing={1} justifyContent="center">
-      <Avatar src={avatar} alt="photoURL" />
+      <Avatar src={user.avatar} alt="photoURL" />
       <Button
         ref={anchorRef}
         id="composition-button"

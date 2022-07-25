@@ -11,7 +11,8 @@ import {
   Vault,
   NotFoundException,
   InsertOptions,
-  BackupResultResult
+  BackupResultResult,
+  ScriptRunner
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
@@ -54,7 +55,7 @@ export const getHiveVaultInfo = async (did, nodeProvider, type) => {
         ? await getVaultSubscription(did, nodeProvider)
         : await getBackupSubscription(did, nodeProvider);
     const vaultInfo = await vaultSubscription.checkSubscription();
-    console.log(vaultInfo);
+    // console.log(vaultInfo);
     if (!vaultInfo) return undefined;
     const name = `${type === 1 ? 'Vault' : 'Backup'} Service-0 (${vaultInfo.getPricePlan()})`;
     const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
@@ -281,7 +282,7 @@ export const migrate = async (did) => {
   //     return node;
   //   })
   // );
-  
+
   // let count = 0;
   // while (count < 30) {
   //   const info = await backupService.checkResult();
@@ -347,11 +348,14 @@ export const getVault = async (did) => {
 };
 
 // ******************************************************************** //
+let scriptRunners = {};
+
 const AVATAR = 'avatar';
-const AVATAR_REMOTE_PATH = 'pasarAvatar';
-export const downloadAvatar = async (targetDid) => {
+const AVATAR_REMOTE_PATH = '/anyfakedir/browserside/for/didstores';
+
+export const downloadAvatar = async (did) => {
   try {
-    const data = await downloadImageScripting(targetDid, AVATAR, '/anyfakedir/browserside/for/didstores');
+    const data = await downloadImageScripting(did, AVATAR, AVATAR_REMOTE_PATH);
     return data;
   } catch (error) {
     console.log(`download avatar error: ${error}`);
@@ -359,46 +363,53 @@ export const downloadAvatar = async (targetDid) => {
   }
 };
 
-export const downloadImageScripting = async (targetDid, scriptName, remotePath) => {
-  const transactionId = await downloadScriptingTransactionID(targetDid, scriptName, remotePath);
-  const data = await downloadScripting(targetDid, transactionId);
+export const downloadImageScripting = async (did, scriptName, remotePath) => {
+  const transactionId = await downloadScriptingTransactionID(did, scriptName, remotePath);
+  const data = await downloadScripting(did, transactionId);
   return data;
 };
 
-
-const downloadScriptingTransactionID = async (targetDid, scriptName, remotePath) => {
-  const result = await callScript(scriptName, { path: remotePath }, targetDid);
+const downloadScriptingTransactionID = async (did, scriptName, remotePath) => {
+  const result = await callScript(scriptName, { path: remotePath }, did);
   const transactionId = result[scriptName].transaction_id;
   return transactionId;
 };
 
-export const downloadScripting = async (targetDid, transactionId) => {
+export const callScript = (scriptName, document, did, appDid = config.ApplicationDID) =>
+  new Promise((resolve, reject) => {
+    getScriptRunner(did)
+      .then((scriptRunner) => scriptRunner.callScript(scriptName, document, did, appDid))
+      .then((res) => resolve(res))
+      .catch((error) => reject(error));
+  });
+
+export const getScriptRunner = async (did) => {
+  let scriptRunner = scriptRunners[did];
+  if (scriptRunner === undefined || scriptRunner === null) {
+    scriptRunner = await creatScriptRunner(did);
+  }
+  return scriptRunner;
+};
+
+const creatScriptRunner = async (did) => {
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  const scriptRunner = new ScriptRunner(appContext, nodeProvider);
+  if (scriptRunners === undefined) {
+    scriptRunners = {};
+  }
+  scriptRunners[did] = scriptRunner;
+  return scriptRunner;
+};
+
+export const downloadScripting = async (did, transactionId) => {
   try {
-    const scriptingService = await getScriptingService(targetDid);
-    return await scriptingService.downloadFile(transactionId);
+    const scriptRunner = await getScriptRunner(did);
+    return await scriptRunner.downloadFile(transactionId);
   } catch (error) {
     console.log('downloadScripting error: ', error);
     return error;
   }
 };
 
-export const getScriptingService = async (targetDid) => {
-  const vault = await getVault(targetDid);
-  const scriptingService = vault.getScriptingService();
 
-  return scriptingService;
-};
-
-export const callScript = (scriptName, document, targetDid, appid = config.ApplicationDID) =>
-  new Promise((resolve, reject) => {
-    getScriptingService(targetDid)
-      .then((scriptingService) =>
-        scriptingService.callScript(scriptName, document, targetDid, appid)
-      )
-      .then((res) => {
-        resolve(res);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });

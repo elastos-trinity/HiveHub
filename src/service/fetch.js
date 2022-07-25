@@ -55,10 +55,11 @@ export const getHiveVaultInfo = async (did, nodeProvider, type) => {
         ? await getVaultSubscription(did, nodeProvider)
         : await getBackupSubscription(did, nodeProvider);
     const vaultInfo = await vaultSubscription.checkSubscription();
-    // console.log(vaultInfo);
+    // console.log(vaultInfo); // 293450 318026 342602
     if (!vaultInfo) return undefined;
     const name = `${type === 1 ? 'Vault' : 'Backup'} Service-0 (${vaultInfo.getPricePlan()})`;
     const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
+    // alert(vaultInfo.getStorageUsed());
     const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
     const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
     const time = `${created.date} ${created.time}`;
@@ -261,30 +262,24 @@ export const migrate = async (did) => {
   await backupService.startBackup();
 
   // wait backup end.
-  // const nodeList = await Promise.all(
-  //   nodes.map(async (item) => {
-  //     const node = { ...item };
-  //     // node.url = config.NodeProviderUrl;
-  //     try {
-  //       if (withName) {
-  //         const credentials = await getCredentialsFromDID(node.owner_did);
-  //         node.ownerName = credentials.name
-  //           ? credentials.name
-  //           : reduceHexAddress(node.owner_did, 4);
-  //       } else {
-  //         node.ownerName = reduceHexAddress(node.owner_did, 4);
-  //       }
-  //       node.status = await HiveHubServer.isOnline(node.url);
-  //     } catch (e) {
-  //       node.status = false;
-  //       node.ownerName = reduceHexAddress(node.owner_did, 4);
-  //     }
-  //     return node;
-  //   })
-  // );
+  const timeLimit = Array(30).fill(0);
+  const timeList = await Promise.all(
+    timeLimit.map(async (time) => {
+      const info = await backupService.checkResult();
+      if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
+        // go on.
+      } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
+        return time;
+      } else {
+        throw new Error(`failed to backup: ${info.getMessage()}`);
+      }
+      console.log('backup in process, try to wait.');
+      sleep(1000);
+      return time;
+    })
+  );
 
-  // let count = 0;
-  // while (count < 30) {
+  // for (let i = 0; i < 30; i += 1) {
   //   const info = await backupService.checkResult();
   //   if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
   //     // go on.
@@ -293,7 +288,6 @@ export const migrate = async (did) => {
   //   } else {
   //     throw new Error(`failed to backup: ${info.getMessage()}`);
   //   }
-  //   count++;
   //   console.log('backup in process, try to wait.');
   //   sleep(1000);
   // }

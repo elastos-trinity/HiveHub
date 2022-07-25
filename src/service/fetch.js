@@ -199,6 +199,25 @@ export const getValidNodeProviderUrl = async (appContext, did) => {
   return activeNodes[activeNodes.length - 1];
 };
 
+export const insertData = async (did) => {
+  const COLLECTION_NAME = 'test_collection';
+  const FILE_NAME = 'test_file.txt';
+  const FILE_CONTENT = 'This is the file content: abcdefghijklmnopqrstuvwxyz';
+  const SCRIPT_NAME = 'test_script';
+  const EXECUTABLE_NAME = 'test_executable';
+  const vault = await getVault(did);
+  // insert document
+  const databaseService = vault.getDatabaseService();
+  try {
+    await databaseService.createCollection(COLLECTION_NAME);
+  } catch (e) {
+    console.log(e);
+  }
+  const doc = { author: 'john doe1', title: 'Eve for Dummies1' };
+  await databaseService.insertOne(COLLECTION_NAME, doc, new InsertOptions(false, false));
+  console.log('a new document is been inserted.');
+};
+
 export const migrate = async (did) => {
   const COLLECTION_NAME = 'test_collection';
   const FILE_NAME = 'test_file.txt';

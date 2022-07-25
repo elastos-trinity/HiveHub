@@ -95,10 +95,8 @@ export default function useUser() {
     [ownerDid]
   );
 
-  useEffect(async () => {
-    if (ownerDid) {
-      await getUserInfo(ownerDid);
-    }
+  useEffect(() => {
+    if (ownerDid) getUserInfo(ownerDid);
   }, [ownerDid]);
 
   const showChainErrorSnackBar = async () => {

@@ -4,8 +4,8 @@ import { styled } from '@mui/material/styles';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
-import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
+import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
 const NodeStatisticLabel = styled(Typography)({

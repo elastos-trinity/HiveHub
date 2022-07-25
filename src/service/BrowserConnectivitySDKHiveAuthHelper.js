@@ -6,7 +6,7 @@ import {
   JWTHeader,
   JWTParserBuilder,
   VerifiableCredential,
-  VerifiablePresentation,
+  VerifiablePresentation
 } from '@elastosfoundation/did-js-sdk';
 import { DID as ConnDID, DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import {
@@ -88,7 +88,8 @@ export class BrowserConnectivitySDKHiveAuthHelper {
     return new VaultSubscriptionService(appContext, providerAddress);
   } */
 
-  async getVaultServices(userDid, onAuthError, providerAddress = null) {
+  // eslint-disable-next-line default-param-last
+  async getVaultServices(userDid, providerAddress = null, onAuthError) {
     const appContext = await this.getAppContext(userDid, onAuthError);
     if (!providerAddress) providerAddress = await AppContext.getProviderAddress(userDid); // TODO: cache, don't resolve every time
     return new Vault(appContext, providerAddress);

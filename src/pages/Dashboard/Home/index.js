@@ -10,7 +10,8 @@ import {
   getHiveNodesList,
   getHiveVaultInfo,
   getStoredData,
-  insertData
+  insertData,
+  migrate
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
@@ -97,7 +98,16 @@ export default function HiveHome() {
       console.log(err);
     }
   };
-  const handleMigrate = async () => {};
+
+  const handleMigrate = async () => {
+    if (!user.did) return;
+    try {
+      await migrate(user.did);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleUnbind = async () => {
     if (!user.did) return;
     // try {

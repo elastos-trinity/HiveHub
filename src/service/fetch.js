@@ -373,19 +373,21 @@ export const migrate = async (did) => {
 
   // wait backup end.
   const timeLimit = Array(30).fill(0);
-  const timeList = await Promise.all(
-    timeLimit.map(async (time) => {
+  const result = await Promise.all(
+    // eslint-disable-next-line no-unused-vars
+    timeLimit.map(async (_) => {
       const info = await backupService.checkResult();
+      console.log(info.getResult());
       if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
         // go on.
       } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
-        return time;
+        return 1;
       } else {
         throw new Error(`failed to backup: ${info.getMessage()}`);
       }
       console.log('backup in process, try to wait.');
       sleep(1000);
-      return time;
+      return 0;
     })
   );
 

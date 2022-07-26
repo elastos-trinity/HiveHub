@@ -201,10 +201,6 @@ export const getValidNodeProviderUrl = async (appContext, did) => {
 
 export const insertData = async (did) => {
   const COLLECTION_NAME = 'test_collection';
-  const FILE_NAME = 'test_file.txt';
-  const FILE_CONTENT = 'This is the file content: abcdefghijklmnopqrstuvwxyz';
-  const SCRIPT_NAME = 'test_script';
-  const EXECUTABLE_NAME = 'test_executable';
   const vault = await getVault(did);
   // insert document
   const databaseService = vault.getDatabaseService();
@@ -222,7 +218,7 @@ export const getStoredData = async (did) => {
   const COLLECTION_NAME = 'test_collection';
   const query = { author: 'john doe1' };
   const vault = await getVault(did);
-  // insert document
+  // get inserted document
   const databaseService = vault.getDatabaseService();
   try {
     const result = await databaseService.findOne(COLLECTION_NAME, query);
@@ -234,12 +230,6 @@ export const getStoredData = async (did) => {
 };
 
 export const backup = async (did) => {
-  const COLLECTION_NAME = 'test_collection';
-  const FILE_NAME = 'test_file.txt';
-  const FILE_CONTENT = 'This is the file content: abcdefghijklmnopqrstuvwxyz';
-  const SCRIPT_NAME = 'test_script';
-  const EXECUTABLE_NAME = 'test_executable';
-
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   const vault = new Vault(appContext, nodeProvider);
@@ -287,9 +277,9 @@ export const backup = async (did) => {
   await subscriptionBackup.subscribe();
   console.log('subscribe a backup service.');
 
-  // 3. deactivate the vault to a void data changes in the backup process.
-  await subscription.deactivate();
-  console.log('deactivate the source vault.');
+  // // 3. deactivate the vault to a void data changes in the backup process.
+  // await subscription.deactivate();
+  // console.log('deactivate the source vault.');
 
   // 4. backup the vault data.
   const backupService = vault.getBackupService(vault);
@@ -301,6 +291,7 @@ export const backup = async (did) => {
     // eslint-disable-next-line no-unused-vars
     timeLimit.map(async (_) => {
       const info = await backupService.checkResult();
+      console.log(info.getResult());
       if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
         // go on.
       } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
@@ -477,6 +468,7 @@ export const fetchHiveScriptPictureToDataUrl = async (hiveScriptUrl, did) => {
 };
 
 export const rawImageToBase64DataUrl = (rawImg) => {
+  if (!rawImg) return '';
   const base64Data = Buffer.from(rawImg).toString('base64');
   return `data:image/png;base64,${base64Data}`;
 };

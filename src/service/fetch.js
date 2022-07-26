@@ -364,8 +364,8 @@ export const migrate = async (did) => {
   console.log('subscribe a backup service.');
 
   // 3. deactivate the vault to a void data changes in the backup process.
-  await subscription.deactivate();
-  console.log('deactivate the source vault.');
+  // await subscription.deactivate();
+  // console.log('deactivate the source vault.');
 
   // 4. backup the vault data.
   const backupService = vault.getBackupService(vault);

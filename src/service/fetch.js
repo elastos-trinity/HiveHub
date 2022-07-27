@@ -11,13 +11,10 @@ import {
   Vault,
   NotFoundException,
   InsertOptions,
-  BackupResultResult,
-  ScriptRunner
+  BackupResultResult
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
-// import { creatAppContext, getAppInstanceDIDDoc } from './HiveService';
-// import devConfig from './hivejs/config/developing.json';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import config from '../config';
 import { getTime, reduceHexAddress, sleep } from './common';
@@ -27,7 +24,6 @@ export const getHiveNodesList = async (nid, did, withName) => {
   const nodeList = await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };
-      // node.url = config.NodeProviderUrl;
       try {
         if (withName) {
           const credentials = await getCredentialsFromDID(node.owner_did);

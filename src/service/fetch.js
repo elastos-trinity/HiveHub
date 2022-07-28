@@ -249,36 +249,11 @@ export const backupVault = async (did) => {
   //   }
   // }
 
-  // // 1. create a new vault as the source of the migration operation.
-  // await subscription.subscribe();
-  // console.log('a clean vault created.');
-
-  // insert document
-  // const databaseService = vault.getDatabaseService();
-  // try {
-  //   await databaseService.createCollection(COLLECTION_NAME);
-  // } catch (e) {
-  //   console.log(e);
-  // }
-  // const doc = { author: 'john doe1', title: 'Eve for Dummies1' };
-  // await databaseService.insertOne(COLLECTION_NAME, doc, new InsertOptions(false, false));
-  // console.log('a new document is been inserted.');
-
-  // // upload file
-  // const filesService = vault.getFilesService();
-  // const buffer = Buffer.from(FILE_CONTENT, 'utf8');
-  // await filesService.upload(FILE_NAME, buffer);
-  // console.log('a new file is been uploaded.');
-
-  // 2. subscribe the backup service
   try {
+    // subscribe the backup service
     await subscriptionBackup.subscribe();
     console.log('subscribe a backup service.');
-    // // 3. deactivate the vault to a void data changes in the backup process.
-    // await subscription.deactivate();
-    // console.log('deactivate the source vault.');
-
-    // 4. backup the vault data.
+    // backup the vault data.
     const backupService = vault.getBackupService(vault);
     await backupService.startBackup();
 
@@ -402,18 +377,6 @@ export const migrate = async (did) => {
     })
   );
 
-  // for (let i = 0; i < 30; i += 1) {
-  //   const info = await backupService.checkResult();
-  //   if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
-  //     // go on.
-  //   } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
-  //     break;
-  //   } else {
-  //     throw new Error(`failed to backup: ${info.getMessage()}`);
-  //   }
-  //   console.log('backup in process, try to wait.');
-  //   sleep(1000);
-  // }
   console.log('backup done.');
 
   // 5. promotion, same vault, so need remove vault first.

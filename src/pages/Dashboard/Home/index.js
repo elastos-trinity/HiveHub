@@ -80,20 +80,24 @@ export default function HiveHome() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      const nodeList = await getHiveNodesList(undefined, undefined, false);
-      setNodeItems(nodeList);
-      const myNodeList = await getHiveNodesList(undefined, user.did, false);
-      setCreated(myNodeList.length);
-      const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
-      if (vaultItem) {
-        setVaultItems([vaultItem]);
-        setParticipated(1);
-      } else setVaultItems([]);
-      setHasBackup(await checkBackupStatus(user.did));
-      setLoading(false);
+      try {
+        setLoading(true);
+        const nodeList = await getHiveNodesList(undefined, undefined, false);
+        setNodeItems(nodeList);
+        const myNodeList = await getHiveNodesList(undefined, user.did, false);
+        setCreated(myNodeList.length);
+        const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+        if (vaultItem) {
+          setVaultItems([vaultItem]);
+          setParticipated(1);
+        } else setVaultItems([]);
+        setHasBackup(await checkBackupStatus(user.did));
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+      }
     };
-    fetchData();
+    if (user.did) fetchData();
   }, [user.did]);
 
   const handleBackup = async () => {

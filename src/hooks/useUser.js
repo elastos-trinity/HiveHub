@@ -139,6 +139,7 @@ export default function useUser() {
     try {
       presentation = await didAccess.requestCredentials({
         claims: [
+          DID.simpleIdClaim('Your avatar', 'avatar', false),
           DID.simpleIdClaim('Your name', 'name', false),
           DID.simpleIdClaim('Your description', 'description', false)
         ]

@@ -226,7 +226,7 @@ export const getStoredData = async (did) => {
   }
 };
 
-export const backup = async (did) => {
+export const backupVault = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   const vault = new Vault(appContext, nodeProvider);
@@ -309,6 +309,15 @@ export const backup = async (did) => {
     console.error(e);
     return 0;
   }
+};
+
+export const checkBackupStatus = async (did) => {
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  const vault = new Vault(appContext, nodeProvider);
+  const backupService = vault.getBackupService(vault);
+  const info = await backupService.checkResult();
+  return info.getResult() === BackupResultResult.RESULT_SUCCESS;
 };
 
 export const migrate = async (did) => {

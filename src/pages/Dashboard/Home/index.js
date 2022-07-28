@@ -7,7 +7,8 @@ import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import {
-  backup,
+  backupVault,
+  checkBackupStatus,
   getHiveNodesList,
   getHiveVaultInfo,
   getStoredData,
@@ -75,6 +76,7 @@ export default function HiveHome() {
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
   const [onProgress, setOnProgress] = useState(false);
+  const [hasBackup, setHasBackup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,6 +90,7 @@ export default function HiveHome() {
         setVaultItems([vaultItem]);
         setParticipated(1);
       } else setVaultItems([]);
+      setHasBackup(await checkBackupStatus(user.did));
       setLoading(false);
     };
     fetchData();
@@ -97,7 +100,7 @@ export default function HiveHome() {
     if (!user.did) return;
     setOnProgress(true);
     try {
-      const result = await backup(user.did);
+      const result = await backupVault(user.did);
       if (result === 1) {
         enqueueSnackbar('Backup vault succeed', {
           variant: 'success',
@@ -181,7 +184,7 @@ export default function HiveHome() {
           px={1}
           sx={{ width: '100%', margin: '40px auto' }}
         >
-          <CustomButton onClick={handleBackup} disabled={onProgress}>
+          <CustomButton onClick={handleBackup} disabled={hasBackup || onProgress}>
             Backup
           </CustomButton>
           <CustomButton onClick={handleMigrate} disabled={onProgress}>

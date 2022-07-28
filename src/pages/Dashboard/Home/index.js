@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PageTitleTypo } from '../style';
@@ -67,11 +68,13 @@ const NodeSummaryBox = styled(Box)(({ theme }) => ({
 
 export default function HiveHome() {
   const { user } = useUser();
+  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [created, setCreated] = useState(0);
   const [participated, setParticipated] = useState(0);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
+  const [onProgress, setOnProgress] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,11 +95,33 @@ export default function HiveHome() {
 
   const handleBackup = async () => {
     if (!user.did) return;
+    setOnProgress(true);
     try {
-      await backup(user.did);
+      const result = await backup(user.did);
+      if (result === 1) {
+        enqueueSnackbar('Backup vault succeed', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      } else if (result === 2) {
+        enqueueSnackbar('Already backup', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      } else {
+        enqueueSnackbar('Backup vault error', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      }
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      enqueueSnackbar('Backup vault error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
     }
+    setOnProgress(false);
   };
 
   const handleMigrate = async () => {
@@ -156,9 +181,15 @@ export default function HiveHome() {
           px={1}
           sx={{ width: '100%', margin: '40px auto' }}
         >
-          <CustomButton onClick={handleBackup}>Backup</CustomButton>
-          <CustomButton onClick={handleMigrate}>Migrate</CustomButton>
-          <CustomButton onClick={handleUnbind}>Unbind</CustomButton>
+          <CustomButton onClick={handleBackup} disabled={onProgress}>
+            Backup
+          </CustomButton>
+          <CustomButton onClick={handleMigrate} disabled={onProgress}>
+            Migrate
+          </CustomButton>
+          <CustomButton onClick={handleUnbind} disabled={onProgress}>
+            Unbind
+          </CustomButton>
         </Stack>
         <Stack
           direction={{ xs: 'column', md: 'row' }}

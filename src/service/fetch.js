@@ -271,39 +271,44 @@ export const backup = async (did) => {
   // console.log('a new file is been uploaded.');
 
   // 2. subscribe the backup service
-  await subscriptionBackup.subscribe();
-  console.log('subscribe a backup service.');
+  try {
+    await subscriptionBackup.subscribe();
+    console.log('subscribe a backup service.');
+    // // 3. deactivate the vault to a void data changes in the backup process.
+    // await subscription.deactivate();
+    // console.log('deactivate the source vault.');
 
-  // // 3. deactivate the vault to a void data changes in the backup process.
-  // await subscription.deactivate();
-  // console.log('deactivate the source vault.');
+    // 4. backup the vault data.
+    const backupService = vault.getBackupService(vault);
+    await backupService.startBackup();
 
-  // 4. backup the vault data.
-  const backupService = vault.getBackupService(vault);
-  await backupService.startBackup();
-
-  // wait backup end.
-  const timeLimit = Array(30).fill(0);
-  const result = await Promise.all(
-    // eslint-disable-next-line no-unused-vars
-    timeLimit.map(async (_) => {
-      const info = await backupService.checkResult();
-      console.log(info.getResult());
-      if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
-        // go on.
-      } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
-        return 1;
-      } else {
-        throw new Error(`failed to backup: ${info.getMessage()}`);
-      }
-      console.log('backup in process, try to wait.');
-      sleep(1000);
-      return 0;
-    })
-  );
-  console.log('backup done.');
-  if (result.length && result[result.length - 1] === 1) return true;
-  return false;
+    // wait backup end.
+    const timeLimit = Array(30).fill(0);
+    const result = await Promise.all(
+      // eslint-disable-next-line no-unused-vars
+      timeLimit.map(async (_) => {
+        const info = await backupService.checkResult();
+        console.log(info.getResult());
+        if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
+          // go on.
+        } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
+          return 1;
+        } else {
+          throw new Error(`failed to backup: ${info.getMessage()}`);
+        }
+        console.log('backup in process, try to wait.');
+        sleep(1000);
+        return 0;
+      })
+    );
+    console.log('backup done.');
+    if (result.length && result[result.length - 1] === 1) return 1;
+    return 0;
+  } catch (e) {
+    if (e instanceof AlreadyExistsException) return 2;
+    console.error(e);
+    return 0;
+  }
 };
 
 export const migrate = async (did) => {

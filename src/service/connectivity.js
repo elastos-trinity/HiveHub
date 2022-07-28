@@ -7,7 +7,6 @@ let connectivityInitialized = false;
 
 export function initConnectivitySDK() {
   if (connectivityInitialized) return;
-  
   // unregistear if already registerd
   const arrIConnectors = connectivity.getAvailableConnectors();
   if (arrIConnectors.findIndex((option) => option.name === essentialsConnector.name) !== -1) {

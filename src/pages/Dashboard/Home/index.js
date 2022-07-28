@@ -88,7 +88,7 @@ export default function HiveHome() {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [user.did]);
 
   const handleBackup = async () => {
     if (!user.did) return;
@@ -110,12 +110,12 @@ export default function HiveHome() {
 
   const handleUnbind = async () => {
     if (!user.did) return;
-    // try {
-    //   await insertData(user.did);
-    //   console.log('added')
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      await insertData(user.did);
+      console.log('added');
+    } catch (err) {
+      console.log(err);
+    }
     console.log(await getStoredData(user.did));
   };
 

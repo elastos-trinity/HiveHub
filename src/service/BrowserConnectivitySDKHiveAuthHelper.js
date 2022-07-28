@@ -1,17 +1,17 @@
 import {
-  Claims,
-  DIDDocument,
+  // Claims,
+  // DIDDocument,
   DIDBackend,
   DefaultDIDAdapter,
   JWTHeader,
   JWTParserBuilder,
-  VerifiableCredential,
+  // VerifiableCredential,
   VerifiablePresentation
 } from '@elastosfoundation/did-js-sdk';
 import { DID as ConnDID, DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import {
   AppContext,
-  AppContextProvider,
+  // AppContextProvider,
   DIDResolverAlreadySetupException,
   Vault
 } from '@elastosfoundation/hive-js-sdk';
@@ -197,7 +197,7 @@ export class BrowserConnectivitySDKHiveAuthHelper {
         console.log('hiveauthhelper', 'Loading DID document');
         try {
           const didDocument = await didStore.loadDid(appInstanceDIDInfo.didString);
-          const validityDays = 2;
+          // const validityDays = 2;
           console.log('hiveauthhelper', 'App instance DID document', didDocument.toJSON());
           console.log('hiveauthhelper', 'Creating JWT');
 

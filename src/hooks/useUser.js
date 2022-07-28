@@ -71,6 +71,7 @@ export default function useUser() {
         walletConnectProvider.removeListener('error', handleEEError);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConnectProvider]);
 
   const getUserInfo = useCallback(
@@ -104,11 +105,13 @@ export default function useUser() {
         return state;
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [ownerDid]
   );
 
   useEffect(() => {
     if (ownerDid) getUserInfo(ownerDid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownerDid]);
 
   const showChainErrorSnackBar = async () => {

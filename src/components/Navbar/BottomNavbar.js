@@ -27,6 +27,7 @@ export default function BottomNavbar() {
   useEffect(() => {
     if (pathname.includes('dashboard') && !user.did) navigate('/');
     setActiveSection(pathname.split('/')[2]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, user]);
 
   const menuItemsList = [

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { Stack, Typography, Button, LinearProgress, Skeleton } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
@@ -48,7 +48,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 VaultItem.propTypes = {
   // id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
+  // name: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
   used: PropTypes.number.isRequired,
   time: PropTypes.string.isRequired,
@@ -60,7 +60,7 @@ VaultItem.propTypes = {
 
 export default function VaultItem({
   // id,
-  name,
+  // name,
   total,
   used,
   time,
@@ -69,7 +69,7 @@ export default function VaultItem({
   isLoading,
   sx
 }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div>

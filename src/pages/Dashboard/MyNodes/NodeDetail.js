@@ -177,8 +177,8 @@ export default function NodeDetail() {
       } else setBackupItems([]);
       setLoading(false);
     };
-    fetchData();
-  }, []);
+    if (user.did) fetchData();
+  }, [user.did, nodeId]);
 
   const handleCreateVault = () => {
     if (user.nodeProvider !== nodeDetail.url) {
@@ -202,6 +202,7 @@ export default function NodeDetail() {
           });
       })
       .catch((e) => {
+        console.error(e);
         enqueueSnackbar('Create vault error', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }

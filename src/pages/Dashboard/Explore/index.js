@@ -37,7 +37,7 @@ export default function HiveExplore() {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [user.did]);
 
   return (
     <>

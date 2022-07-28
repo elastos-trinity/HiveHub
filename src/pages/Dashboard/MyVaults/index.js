@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -45,7 +45,7 @@ const PlusTypo = styled(Typography)(({ theme }) => ({
 }));
 
 export default function HiveVaults() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
@@ -60,7 +60,7 @@ export default function HiveVaults() {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [user.did]);
 
   const handleCreateVault = () => {
     createVault(user.did)
@@ -77,6 +77,7 @@ export default function HiveVaults() {
           });
       })
       .catch((e) => {
+        console.error(e);
         enqueueSnackbar('Create vault error', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }

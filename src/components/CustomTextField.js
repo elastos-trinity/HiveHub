@@ -59,10 +59,12 @@ export default function CustomTextField({
 
   useEffect(() => {
     setInvalid(number ? text === '' || Number.isNaN(Number(text)) : !text);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
   useEffect(() => {
     setText(inputValue === undefined || (number && inputValue === 'NaN') ? '' : inputValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
 
   useEffect(() => {

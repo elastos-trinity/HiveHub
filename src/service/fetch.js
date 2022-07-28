@@ -162,7 +162,8 @@ export const createVault = (did, nodeProvider) =>
   new Promise((resolve, reject) => {
     getVaultSubscription(did, nodeProvider)
       .then((subscription) => subscription.subscribe())
-      .then((res) => resolve(true))
+      // eslint-disable-next-line no-unused-vars
+      .then((_) => resolve(true))
       .catch((e) => {
         if (e instanceof AlreadyExistsException) {
           resolve(false);
@@ -229,7 +230,7 @@ export const backup = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   const vault = new Vault(appContext, nodeProvider);
-  const subscription = new VaultSubscription(appContext, nodeProvider);
+  // const subscription = new VaultSubscription(appContext, nodeProvider);
   const subscriptionBackup = new BackupSubscription(appContext, nodeProvider);
 
   // try to remove the exist vault and backup service, clean start.
@@ -309,8 +310,8 @@ export const migrate = async (did) => {
   const COLLECTION_NAME = 'test_collection';
   const FILE_NAME = 'test_file.txt';
   const FILE_CONTENT = 'This is the file content: abcdefghijklmnopqrstuvwxyz';
-  const SCRIPT_NAME = 'test_script';
-  const EXECUTABLE_NAME = 'test_executable';
+  // const SCRIPT_NAME = 'test_script';
+  // const EXECUTABLE_NAME = 'test_executable';
 
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
@@ -369,7 +370,7 @@ export const migrate = async (did) => {
 
   // wait backup end.
   const timeLimit = Array(30).fill(0);
-  const result = await Promise.all(
+  await Promise.all(
     // eslint-disable-next-line no-unused-vars
     timeLimit.map(async (_) => {
       const info = await backupService.checkResult();

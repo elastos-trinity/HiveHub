@@ -22,7 +22,8 @@ export default function TopNavbar({ onOpenSidebar }) {
 
   useEffect(() => {
     if (pathname.includes('dashboard') && !user.did) navigate('/');
-  }, [pathname, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, user.did]);
 
   return (
     <Box>

@@ -230,17 +230,8 @@ export const backupVault = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   const vault = new Vault(appContext, nodeProvider);
-  // const subscription = new VaultSubscription(appContext, nodeProvider);
   const subscriptionBackup = new BackupSubscription(appContext, nodeProvider);
 
-  // try to remove the exist vault and backup service, clean start.
-  // try {
-  //   await subscription.unsubscribe();
-  // } catch (e) {
-  //   if (!(e instanceof NotFoundException)) {
-  //     throw e;
-  //   }
-  // }
   // try {
   //   await subscriptionBackup.unsubscribe();
   // } catch (e) {
@@ -253,6 +244,11 @@ export const backupVault = async (did) => {
     // subscribe the backup service
     await subscriptionBackup.subscribe();
     console.log('subscribe a backup service.');
+
+    // deactivate the vault to a void data changes in the backup process.
+    // await subscription.deactivate();
+    // console.log('deactivate the source vault.');
+
     // backup the vault data.
     const backupService = vault.getBackupService(vault);
     await backupService.startBackup();
@@ -455,6 +451,7 @@ export const rawImageToBase64DataUrl = (rawImg) => {
  * Returns this url if possible, or null otherwise.
  */
 export const getHiveAvatarUrlFromDIDAvatarCredential = (avatarCredentialSubject) => {
+  console.log(avatarCredentialSubject)
   if (!avatarCredentialSubject) return null;
   if (avatarCredentialSubject.type && avatarCredentialSubject.type === 'elastoshive') {
     if (avatarCredentialSubject.data && avatarCredentialSubject['content-type']) {

@@ -35,8 +35,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
-  onCloseSidebar: PropTypes.func,
-  handleLanguageChange: PropTypes.func
+  onCloseSidebar: PropTypes.func
 };
 
 const activeLink = {

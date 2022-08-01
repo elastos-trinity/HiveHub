@@ -11,7 +11,8 @@ import {
   Vault,
   NotFoundException,
   InsertOptions,
-  BackupResultResult
+  BackupResultResult,
+  HiveException
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
@@ -226,11 +227,43 @@ export const getStoredData = async (did) => {
   }
 };
 
-export const backupVault = async (did) => {
+export const backupVault = async (did, backupNodeProvider) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   const vault = new Vault(appContext, nodeProvider);
-  const subscriptionBackup = new BackupSubscription(appContext, nodeProvider);
+  const subscription = new VaultSubscription(appContext, nodeProvider);
+  const subscriptionBackup = new BackupSubscription(appContext, backupNodeProvider);
+  const backupService = vault.getBackupService();
+  const vaultInfo = await subscription.checkSubscription();
+  const serviceDid = vaultInfo.getServiceDid();
+  backupService.setBackupContext({
+    getParameter(parameter) {
+      switch (parameter) {
+        case 'targetAddress':
+          return nodeProvider;
+        case 'targetServiceDid':
+          return serviceDid;
+        default:
+          break;
+      }
+      return null;
+    },
+
+    getType() {
+      return null;
+    },
+
+    async getAuthorization(srcDid, targetDid, targetHost) {
+      try {
+        const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+        // TODO: EE return wrong format credential, just place a correct one to make demo work.
+        await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
+        return '{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR#hive-backup-credential","type":["HiveBackupCredential","VerifiableCredential"],"issuer":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq","issuanceDate":"2022-06-30T02:58:05Z","expirationDate":"2027-06-30T02:58:05Z","credentialSubject":{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","sourceHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetNodeURL":"http://localhost:5005"},"proof":{"type":"ECDSAsecp256r1","created":"2022-06-30T02:58:06Z","verificationMethod":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq#primary","signature":"4IFGnkBb9drcsD4V0GHlHZ5bSaO1CO0c69-k9d5yhTZvbEqnyXncNKhNLvKs2yaNk1ARgj6o1gUIDc74moNxWA"}}';
+      } catch (e) {
+        throw new HiveException(e.toString());
+      }
+    }
+  });
 
   // try {
   //   await subscriptionBackup.unsubscribe();
@@ -451,7 +484,7 @@ export const rawImageToBase64DataUrl = (rawImg) => {
  * Returns this url if possible, or null otherwise.
  */
 export const getHiveAvatarUrlFromDIDAvatarCredential = (avatarCredentialSubject) => {
-  console.log(avatarCredentialSubject)
+  console.log(avatarCredentialSubject);
   if (!avatarCredentialSubject) return null;
   if (avatarCredentialSubject.type && avatarCredentialSubject.type === 'elastoshive') {
     if (avatarCredentialSubject.data && avatarCredentialSubject['content-type']) {

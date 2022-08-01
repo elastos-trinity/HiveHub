@@ -10,16 +10,16 @@ import {
   Paper,
   Popper
 } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { useLanguageContext } from '../contexts/LanguageContext';
 
 LanguageBar.propTypes = {
   sx: PropTypes.object
 };
 
 export default function LanguageBar({ sx }) {
-  const { i18n } = useTranslation();
+  const { language, setLanguage, changeLanguage } = useLanguageContext();
+  const [active, setActive] = useState(language === 'en' ? 'English' : '中文');
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState('English');
   const anchorRef = useRef(null);
 
   const handleToggle = () => {
@@ -30,8 +30,9 @@ export default function LanguageBar({ sx }) {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    i18n.changeLanguage(active === 'English' ? 'zh' : 'en');
-    setActive((prevActive) => (prevActive === 'English' ? '中文' : 'English'));
+    changeLanguage();
+    setLanguage((prevState) => (prevState === 'en' ? 'zh' : 'en'));
+    setActive((prevState) => (prevState === 'English' ? '中文' : 'English'));
     setOpen(false);
   };
 

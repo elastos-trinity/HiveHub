@@ -17,7 +17,7 @@ import {
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
-import config from '../config';
+import { config } from '../config';
 import { getTime, reduceHexAddress, sleep } from './common';
 
 export const getHiveNodesList = async (nid, did, withName) => {

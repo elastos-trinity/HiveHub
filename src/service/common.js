@@ -1,4 +1,4 @@
-import config from '../config';
+import { config } from '../config';
 
 export const isInAppBrowser = () =>
   window.elastos !== undefined && window.elastos.name === 'essentialsiab';

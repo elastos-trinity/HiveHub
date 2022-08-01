@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
+import firebase from 'firebase/compat/app';
+import { getAnalytics } from 'firebase/analytics';
 import { getCredentialsFromDIDDoc, isInAppBrowser, isSupportedNetwork } from '../service/common';
 import {
   essentialsConnector,
@@ -16,6 +18,10 @@ import {
   fetchHiveScriptPictureToDataUrl,
   getHiveAvatarUrlFromDIDAvatarCredential
 } from '../service/fetch';
+import { firebaseConfig } from '../config';
+
+const app = firebase.initializeApp(firebaseConfig);
+getAnalytics(app);
 
 export default function useUser() {
   const navigate = useNavigate();

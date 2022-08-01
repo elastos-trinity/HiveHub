@@ -1,6 +1,6 @@
 import { connectivity } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import { EssentialsConnector } from '@elastosfoundation/essentials-connector-client-browser';
-import config from '../config';
+import { config } from '../config';
 
 export const essentialsConnector = new EssentialsConnector();
 let connectivityInitialized = false;

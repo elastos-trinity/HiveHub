@@ -14,7 +14,7 @@ import {
   Vault
 } from '@elastosfoundation/hive-js-sdk';
 import dayjs from 'dayjs';
-import config from '../config';
+import { config } from '../config';
 
 /**
  * This is a sample hive auth helper that makes everything automatic for apps using hive to

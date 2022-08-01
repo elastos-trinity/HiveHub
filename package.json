@@ -59,6 +59,7 @@
     "date-fns": "^2.24.0",
     "dns": "^0.2.2",
     "faker": "^5.5.3",
+    "firebase": "^9.9.1",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "history": "^5.0.1",

@@ -59,7 +59,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             height: '120px',
             backgroundColor: palette.common.white,
             zIndex: 111,
-            borderBottom: '1px solid red'
+            // borderBottom: '1px solid red'
           }}
         >
           <Stack

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -10,15 +10,17 @@ import {
   Paper,
   Popper
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 LanguageBar.propTypes = {
   sx: PropTypes.object
 };
 
 export default function LanguageBar({ sx }) {
-  const [open, setOpen] = React.useState(false);
-  const [active, setActive] = React.useState('English');
-  const anchorRef = React.useRef(null);
+  const { i18n } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState('English');
+  const anchorRef = useRef(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -28,6 +30,7 @@ export default function LanguageBar({ sx }) {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
+    i18n.changeLanguage(active === 'English' ? 'zh' : 'en');
     setActive((prevActive) => (prevActive === 'English' ? '中文' : 'English'));
     setOpen(false);
   };
@@ -49,8 +52,8 @@ export default function LanguageBar({ sx }) {
   // }
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
+  const prevOpen = useRef(open);
+  useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }

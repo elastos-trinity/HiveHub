@@ -3,35 +3,65 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, Grid, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import useUser from '../../hooks/useUser';
 import SmallHexagon from '../../components/SmallHexagon';
 import generatedGitInfo from '../../generatedGitInfo.json';
 
-const ConnectButton = styled(Button)({
+const LandingTitleTypo = styled(Typography)(({ theme, sub }) => ({
+  color: '#000000',
+  font: 'Montserrat',
+  fontWeight: sub ? 500 : 700,
+  fontSize: sub ? '35px' : '90px',
+  lineHeight: sub ? '43px' : '110px',
+  textAlign: 'center',
+  [theme.breakpoints.down('md')]: {
+    fontSize: sub ? '15px' : '28px',
+    lineHeight: sub ? '18px' : '36px'
+  }
+}));
+
+const ConnectButton = styled(Button)(({ theme }) => ({
   color: '#FF931E',
-  borderColor: '#FF931E',
-  height: '46px',
-  borderRadius: '23px',
-  display: 'inline-box',
-  marginRight: '20px',
+  font: 'Montserrat',
+  border: '3px solid #FF931E',
+  fontWeight: 600,
+  borderRadius: '200px',
+  fontSize: '25px',
+  lineHeight: '30px',
+  padding: '20px 30px',
   '&:hover': {
     borderColor: '#FF931E',
     backgroundColor: 'white'
+  },
+  [theme.breakpoints.down('md')]: {
+    fontSize: '12px',
+    lineHeight: '15px',
+    padding: '10px 15px',
+    border: '2px solid #FF931E'
   }
-});
+}));
 
-const GitHubButton = styled(Button)({
-  color: 'black',
-  borderColor: 'black',
-  height: '46px',
-  borderRadius: '23px',
-  display: 'inline-box',
-  marginRight: '20px',
+const GitHubButton = styled(Button)(({ theme }) => ({
+  color: '#000000',
+  font: 'Montserrat',
+  border: '3px solid #000000',
+  fontWeight: 600,
+  borderRadius: '200px',
+  fontSize: '25px',
+  lineHeight: '30px',
+  padding: '20px 30px',
   '&:hover': {
-    borderColor: 'black',
+    borderColor: '#000000',
     backgroundColor: 'white'
+  },
+  [theme.breakpoints.down('md')]: {
+    fontSize: '12px',
+    lineHeight: '15px',
+    padding: '10px 15px',
+    border: '2px solid #000000'
   }
-});
+}));
 
 const MyGrid = styled(Grid)({
   textAlign: 'center',
@@ -71,6 +101,7 @@ function CustomBox({ children }) {
 export default function LandingPage() {
   const { user, isConnetedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
     useUser();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -87,76 +118,63 @@ export default function LandingPage() {
 
   return (
     <Container maxWidth="1000" sx={{ pt: 15, pb: 2.5 }}>
-      <Box>
-        <Box
-          sx={{ maxWidth: '800px', height: '160px', lineHeight: '80px', margin: '140px auto 0' }}
-        >
-          <Typography variant="h1" sx={{ font: 'Montserrat', textAlign: 'center' }}>
-            Manage{' '}
-            <Box component="span" sx={{ color: '#FF931E' }}>
-              your
-            </Box>{' '}
-            Decentralized Storage
-          </Typography>
-        </Box>
-        <Box sx={{ height: '40px', lineHeight: '40px' }}>
-          <Typography
-            sx={{
-              font: 'Montserrat',
-              textAlign: 'center',
-              height: '40px',
-              lineHeight: '40px',
-              fontSize: '20px'
-            }}
-          >
-            with Elastos
-          </Typography>
-        </Box>
-        <Box sx={{ margin: '40px auto', textAlign: 'center' }}>
-          {!user.did ? (
-            <ConnectButton variant="outlined" onClick={login} disabled={loading}>
-              Connect Wallet
-            </ConnectButton>
-          ) : (
-            <ConnectButton variant="outlined" onClick={() => navigate('/dashboard/home')}>
-              Dashboard
-            </ConnectButton>
-          )}
-          <GitHubButton
-            variant="outlined"
-            target="_blank"
-            href="https://github.com/elastos/Elastos.Hive.Node"
-          >
-            GitHub
-          </GitHubButton>
-        </Box>
-
-        <Box
-          sx={{
-            width: '25px',
-            height: '40px',
-            borderRadius: '25px',
-            border: '1px solid black',
-            margin: '140px auto 0',
-            textAlign: 'center'
-          }}
-        >
-          {' '}
-        </Box>
-        <Box
-          sx={{
-            width: '2px',
-            height: '12px',
-            border: '1px solid black',
-            margin: '0 auto',
-            position: 'relative',
-            top: '-17px'
-          }}
-        >
-          {' '}
-        </Box>
+      <Box pt={{ xs: '140px', md: '270px' }}>
+        <LandingTitleTypo>
+          {`${t('landing-title-1')} `}
+          <span style={{ color: '#FF931E' }}>{t('landing-title-2')}</span>
+        </LandingTitleTypo>
+        <LandingTitleTypo>{t('landing-title-3')}</LandingTitleTypo>
+        <LandingTitleTypo sub sx={{ pt: '10px' }}>
+          {t('landing-title-sub')}
+        </LandingTitleTypo>
       </Box>
-
+      <Stack
+        direction="row"
+        spacing={{ xs: 2.5, md: 5 }}
+        mt={{ xs: '50px', md: '40px' }}
+        justifyContent="center"
+      >
+        {!user.did ? (
+          <ConnectButton variant="outlined" onClick={login} disabled={loading}>
+            {t('landing-connect-wallet')}
+          </ConnectButton>
+        ) : (
+          <ConnectButton variant="outlined" onClick={() => navigate('/dashboard/home')}>
+            Dashboard
+          </ConnectButton>
+        )}
+        <GitHubButton
+          variant="outlined"
+          target="_blank"
+          href="https://github.com/elastos/Elastos.Hive.Node"
+        >
+          GitHub
+        </GitHubButton>
+      </Stack>
+      <Box
+        sx={{
+          width: '25px',
+          height: '40px',
+          borderRadius: '25px',
+          border: '1px solid black',
+          margin: '140px auto 0',
+          textAlign: 'center'
+        }}
+      >
+        {' '}
+      </Box>
+      <Box
+        sx={{
+          width: '2px',
+          height: '12px',
+          border: '1px solid black',
+          margin: '0 auto',
+          position: 'relative',
+          top: '-17px'
+        }}
+      >
+        {' '}
+      </Box>
       <Box
         sx={{
           backgroundColor: 'white',
@@ -173,7 +191,7 @@ export default function LandingPage() {
           variant="h3"
           sx={{ textAlign: 'center', font: 'Montserrat', margin: '10px 0 50px' }}
         >
-          Features
+          {t('landing-features')}
         </Typography>
         <Grid container direction="row" alignItems="center" justifyContent="space-around">
           <MyGrid item xs={12} sm={6} md={3} sx={{ position: 'relative', top: '2px' }}>
@@ -365,7 +383,6 @@ export default function LandingPage() {
           </MyGrid>
         </Grid>
       </Box>
-
       <Box sx={{ padding: '200px 0 0' }}>
         <Stack
           direction="row"

@@ -32,7 +32,7 @@ export default function LanguageBar({ sx }) {
     }
     changeLanguage();
     setLanguage((prevState) => (prevState === 'en' ? 'zh' : 'en'));
-    setActive((prevState) => (prevState === 'English' ? '中文' : 'English'));
+    setActive(language === 'en' ? '中文' : 'English');
     setOpen(false);
   };
 

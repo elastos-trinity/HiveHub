@@ -124,7 +124,7 @@ export default function LandingPage() {
           <span style={{ color: '#FF931E' }}>{t('landing-title-2')}</span>
         </LandingTitleTypo>
         <LandingTitleTypo>{t('landing-title-3')}</LandingTitleTypo>
-        <LandingTitleTypo sub sx={{ pt: '10px' }}>
+        <LandingTitleTypo sub="true" sx={{ pt: '10px' }}>
           {t('landing-title-sub')}
         </LandingTitleTypo>
       </Box>

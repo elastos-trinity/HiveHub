@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-import firebase from 'firebase/compat/app';
+import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getCredentialsFromDIDDoc, isInAppBrowser, isSupportedNetwork } from '../service/common';
 import {
@@ -21,8 +21,8 @@ import {
 import { firebaseConfig } from '../config';
 
 if (firebaseConfig.apiKey) {
-  const app = firebase.initializeApp(firebaseConfig);
-  firebase.analytics(app);
+  const app = initializeApp(firebaseConfig);
+  getAnalytics(app);
 }
 
 export default function useUser() {

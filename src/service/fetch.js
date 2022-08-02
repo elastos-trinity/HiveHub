@@ -52,11 +52,9 @@ export const getHiveVaultInfo = async (did, nodeProvider, type) => {
         ? await getVaultSubscription(did, nodeProvider)
         : await getBackupSubscription(did, nodeProvider);
     const vaultInfo = await vaultSubscription.checkSubscription();
-    // console.log(vaultInfo); // 293450 318026 342602
     if (!vaultInfo) return undefined;
     const name = `${type === 1 ? 'Vault' : 'Backup'} Service-0 (${vaultInfo.getPricePlan()})`;
     const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
-    // alert(vaultInfo.getStorageUsed());
     const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
     const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
     const time = `${created.date} ${created.time}`;
@@ -197,10 +195,10 @@ export const getValidNodeProviderUrl = async (appContext, did) => {
   return activeNodes[activeNodes.length - 1];
 };
 
+// For Test
 export const insertData = async (did) => {
   const COLLECTION_NAME = 'test_collection';
   const vault = await getVault(did);
-  // insert document
   const databaseService = vault.getDatabaseService();
   try {
     await databaseService.createCollection(COLLECTION_NAME);
@@ -216,7 +214,6 @@ export const getStoredData = async (did) => {
   const COLLECTION_NAME = 'test_collection';
   const query = { author: 'john doe1' };
   const vault = await getVault(did);
-  // get inserted document
   const databaseService = vault.getDatabaseService();
   try {
     const result = await databaseService.findOne(COLLECTION_NAME, query);
@@ -234,25 +231,23 @@ export const backupVault = async (did, backupNodeProvider) => {
   const subscription = new VaultSubscription(appContext, nodeProvider);
   const subscriptionBackup = new BackupSubscription(appContext, backupNodeProvider);
   const backupService = vault.getBackupService();
-  const vaultInfo = await subscription.checkSubscription();
-  const serviceDid = vaultInfo.getServiceDid();
+  const backupVaultInfo = await subscriptionBackup.checkSubscription();
+  const backupVaultServiceDid = backupVaultInfo.getServiceDid();
   backupService.setBackupContext({
     getParameter(parameter) {
       switch (parameter) {
         case 'targetAddress':
-          return nodeProvider;
+          return backupNodeProvider;
         case 'targetServiceDid':
-          return serviceDid;
+          return backupVaultServiceDid;
         default:
           break;
       }
       return null;
     },
-
     getType() {
       return null;
     },
-
     async getAuthorization(srcDid, targetDid, targetHost) {
       try {
         const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
@@ -279,8 +274,8 @@ export const backupVault = async (did, backupNodeProvider) => {
     console.log('subscribe a backup service.');
 
     // deactivate the vault to a void data changes in the backup process.
-    // await subscription.deactivate();
-    // console.log('deactivate the source vault.');
+    await subscription.deactivate();
+    console.log('deactivate the source vault.');
 
     // backup the vault data.
     const backupService = vault.getBackupService(vault);

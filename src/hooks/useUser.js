@@ -22,7 +22,7 @@ import { firebaseConfig } from '../config';
 
 if (firebaseConfig.apiKey) {
   const app = firebase.initializeApp(firebaseConfig);
-  getAnalytics(app);
+  firebase.analytics(app);
 }
 
 export default function useUser() {

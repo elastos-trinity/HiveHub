@@ -20,8 +20,10 @@ import {
 } from '../service/fetch';
 import { firebaseConfig } from '../config';
 
-const app = firebase.initializeApp(firebaseConfig);
-getAnalytics(app);
+if (firebaseConfig.apiKey) {
+  const app = firebase.initializeApp(firebaseConfig);
+  getAnalytics(app);
+}
 
 export default function useUser() {
   const navigate = useNavigate();

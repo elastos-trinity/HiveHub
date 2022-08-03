@@ -9,6 +9,7 @@ import useUser from '../../../hooks/useUser';
 import {
   backupVault,
   checkBackupStatus,
+  findBackupNodeProvider,
   getHiveNodesList,
   getHiveVaultInfo,
   getStoredData,
@@ -104,7 +105,9 @@ export default function HiveHome() {
     if (!user.did) return;
     setOnProgress(true);
     try {
-      const result = await backupVault(user.did);
+      const backupNodeProvider = await findBackupNodeProvider(user.did);
+      console.log('Backup vault to: ', backupNodeProvider);
+      const result = await backupVault(user.did, backupNodeProvider);
       if (result === 1) {
         enqueueSnackbar('Backup vault succeed', {
           variant: 'success',

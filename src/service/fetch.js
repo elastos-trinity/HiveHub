@@ -224,6 +224,14 @@ export const getStoredData = async (did) => {
   }
 };
 
+// TODO: Find available backup node
+export const findBackupNodeProvider = async (did) => {
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  if (nodeProvider.includes('1')) return nodeProvider.replace('1', '2');
+  return nodeProvider.replace('2', '1');
+};
+
 export const backupVault = async (did, backupNodeProvider) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);

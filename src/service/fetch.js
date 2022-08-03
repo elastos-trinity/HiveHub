@@ -12,7 +12,8 @@ import {
   NotFoundException,
   InsertOptions,
   BackupResultResult,
-  HiveException
+  HiveException,
+  Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import HiveHubServer from './HiveHubServer';
@@ -286,7 +287,6 @@ export const backupVault = async (did, backupNodeProvider) => {
     console.log('deactivate the source vault.');
 
     // backup the vault data.
-    const backupService = vault.getBackupService(vault);
     await backupService.startBackup();
 
     // wait backup end.
@@ -327,66 +327,74 @@ export const checkBackupStatus = async (did) => {
   return info.getResult() === BackupResultResult.RESULT_SUCCESS;
 };
 
-export const migrate = async (did) => {
-  const COLLECTION_NAME = 'test_collection';
-  const FILE_NAME = 'test_file.txt';
-  const FILE_CONTENT = 'This is the file content: abcdefghijklmnopqrstuvwxyz';
-  // const SCRIPT_NAME = 'test_script';
-  // const EXECUTABLE_NAME = 'test_executable';
-
+/**
+ * This example shows how to migrate the vault to another node,
+ * here two nodes are same.
+ *
+ * The process of migration:
+ *
+ *      1. create a vault (migration source) and input some data and files on node A.
+ *      2. subscribe a backup service on node B.
+ *      3. deactivate the vault, then execute backup on node A to node B.
+ *      4. make sure no vault on node B and promote the backup data to a new vault.
+ *      5. update the user DID info. on chain with node B url.
+ *      6. unsubscribe the vault on node A.
+ *      7. all done. the vault can be used on node B.
+ *
+ */
+export const migrate = async (did, backupNodeProvider) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   const vault = new Vault(appContext, nodeProvider);
   const subscription = new VaultSubscription(appContext, nodeProvider);
-  const subscriptionBackup = new BackupSubscription(appContext, nodeProvider);
-
-  // try to remove the exist vault and backup service, clean start.
-  try {
-    await subscription.unsubscribe();
-  } catch (e) {
-    if (!(e instanceof NotFoundException)) {
-      throw e;
+  const subscriptionBackup = new BackupSubscription(appContext, backupNodeProvider);
+  const backupService = vault.getBackupService();
+  const backupVaultInfo = await subscriptionBackup.checkSubscription();
+  const backupVaultServiceDid = backupVaultInfo.getServiceDid();
+  backupService.setBackupContext({
+    getParameter(parameter) {
+      switch (parameter) {
+        case 'targetAddress':
+          return backupNodeProvider;
+        case 'targetServiceDid':
+          return backupVaultServiceDid;
+        default:
+          break;
+      }
+      return null;
+    },
+    getType() {
+      return null;
+    },
+    async getAuthorization(srcDid, targetDid, targetHost) {
+      try {
+        const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+        // TODO: EE return wrong format credential, just place a correct one to make demo work.
+        await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
+        return '{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR#hive-backup-credential","type":["HiveBackupCredential","VerifiableCredential"],"issuer":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq","issuanceDate":"2022-06-30T02:58:05Z","expirationDate":"2027-06-30T02:58:05Z","credentialSubject":{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","sourceHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetNodeURL":"http://localhost:5005"},"proof":{"type":"ECDSAsecp256r1","created":"2022-06-30T02:58:06Z","verificationMethod":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq#primary","signature":"4IFGnkBb9drcsD4V0GHlHZ5bSaO1CO0c69-k9d5yhTZvbEqnyXncNKhNLvKs2yaNk1ARgj6o1gUIDc74moNxWA"}}';
+      } catch (e) {
+        throw new HiveException(e.toString());
+      }
     }
-  }
-  try {
-    await subscriptionBackup.unsubscribe();
-  } catch (e) {
-    if (!(e instanceof NotFoundException)) {
-      throw e;
-    }
-  }
+  });
 
-  // 1. create a new vault as the source of the migration operation.
-  await subscription.subscribe();
-  console.log('a clean vault created.');
+  // try {
+  //   await subscriptionBackup.unsubscribe();
+  // } catch (e) {
+  //   if (!(e instanceof NotFoundException)) {
+  //     throw e;
+  //   }
+  // }
 
-  // insert document
-  const databaseService = vault.getDatabaseService();
-  try {
-    await databaseService.createCollection(COLLECTION_NAME);
-  } catch (e) {
-    console.log(e);
-  }
-  const doc = { author: 'john doe1', title: 'Eve for Dummies1' };
-  await databaseService.insertOne(COLLECTION_NAME, doc, new InsertOptions(false, false));
-  console.log('a new document is been inserted.');
-
-  // upload file
-  const filesService = vault.getFilesService();
-  const buffer = Buffer.from(FILE_CONTENT, 'utf8');
-  await filesService.upload(FILE_NAME, buffer);
-  console.log('a new file is been uploaded.');
-
-  // 2. subscribe the backup service
+  // subscribe the backup service
   await subscriptionBackup.subscribe();
   console.log('subscribe a backup service.');
 
-  // 3. deactivate the vault to a void data changes in the backup process.
-  // await subscription.deactivate();
-  // console.log('deactivate the source vault.');
+  // deactivate the vault to a void data changes in the backup process.
+  await subscription.deactivate();
+  console.log('deactivate the source vault.');
 
-  // 4. backup the vault data.
-  const backupService = vault.getBackupService(vault);
+  // backup the vault data.
   await backupService.startBackup();
 
   // wait backup end.
@@ -408,28 +416,18 @@ export const migrate = async (did) => {
       return 0;
     })
   );
-
   console.log('backup done.');
 
-  // 5. promotion, same vault, so need remove vault first.
+  // promotion, same vault, so need remove vault first.
   await subscription.unsubscribe();
 
   // promote
-  const backup = await vault.createBackup();
+  const backup = new Backup(appContext, backupNodeProvider);
   await backup.getPromotionService().promote();
   console.log('promotion over from backup data to a new vault.');
 
   console.log('TODO: public user DID with backup node url here');
   console.log('remove the vault on vault node here, same node, skip');
-
-  // check the data of the new vault.
-  const obj = await databaseService.findOne(COLLECTION_NAME, doc);
-  console.log(`find doc: ${JSON.stringify(obj)}`);
-
-  // check the file
-  const content = await filesService.download(FILE_NAME);
-  console.log(`Get the content of the file '${FILE_NAME}': ${content.toString()}`);
-
   console.log('migration is done !!!');
 };
 

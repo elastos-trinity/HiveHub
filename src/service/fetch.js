@@ -386,49 +386,53 @@ export const migrate = async (did, backupNodeProvider) => {
   //   }
   // }
 
-  // subscribe the backup service
-  await subscriptionBackup.subscribe();
-  console.log('subscribe a backup service.');
+  try {
+    // subscribe the backup service
+    await subscriptionBackup.subscribe();
+    console.log('subscribe a backup service.');
 
-  // deactivate the vault to a void data changes in the backup process.
-  await subscription.deactivate();
-  console.log('deactivate the source vault.');
+    // deactivate the vault to a void data changes in the backup process.
+    await subscription.deactivate();
+    console.log('deactivate the source vault.');
 
-  // backup the vault data.
-  await backupService.startBackup();
+    // backup the vault data.
+    await backupService.startBackup();
 
-  // wait backup end.
-  const timeLimit = Array(30).fill(0);
-  await Promise.all(
-    // eslint-disable-next-line no-unused-vars
-    timeLimit.map(async (_) => {
-      const info = await backupService.checkResult();
-      console.log(info.getResult());
-      if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
-        // go on.
-      } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
-        return 1;
-      } else {
-        throw new Error(`failed to backup: ${info.getMessage()}`);
-      }
-      console.log('backup in process, try to wait.');
-      sleep(1000);
-      return 0;
-    })
-  );
-  console.log('backup done.');
+    // wait backup end.
+    const timeLimit = Array(30).fill(0);
+    await Promise.all(
+      // eslint-disable-next-line no-unused-vars
+      timeLimit.map(async (_) => {
+        const info = await backupService.checkResult();
+        console.log(info.getResult());
+        if (info.getResult() === BackupResultResult.RESULT_PROCESS) {
+          // go on.
+        } else if (info.getResult() === BackupResultResult.RESULT_SUCCESS) {
+          return 1;
+        } else {
+          throw new Error(`failed to backup: ${info.getMessage()}`);
+        }
+        console.log('backup in process, try to wait.');
+        sleep(1000);
+        return 0;
+      })
+    );
+    console.log('backup done.');
 
-  // promotion, same vault, so need remove vault first.
-  await subscription.unsubscribe();
+    // promotion, same vault, so need remove vault first.
+    await subscription.unsubscribe();
 
-  // promote
-  const backup = new Backup(appContext, backupNodeProvider);
-  await backup.getPromotionService().promote();
-  console.log('promotion over from backup data to a new vault.');
+    // promote
+    const backup = new Backup(appContext, backupNodeProvider);
+    await backup.getPromotionService().promote();
+    console.log('promotion over from backup data to a new vault.');
 
-  console.log('TODO: public user DID with backup node url here');
-  console.log('remove the vault on vault node here, same node, skip');
-  console.log('migration is done !!!');
+    console.log('TODO: public user DID with backup node url here');
+    console.log('remove the vault on vault node here, same node, skip');
+    console.log('migration is done !!!');
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 // ******************************************************************** //

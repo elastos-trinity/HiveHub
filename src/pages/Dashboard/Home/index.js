@@ -137,9 +137,19 @@ export default function HiveHome() {
   const handleMigrate = async () => {
     if (!user.did) return;
     try {
-      await migrate(user.did);
+      const backupNodeProvider = await findBackupNodeProvider(user.did);
+      console.log('Migrate vault to: ', backupNodeProvider);
+      await migrate(user.did, backupNodeProvider);
+      enqueueSnackbar('Migrate vault succeed', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
     } catch (err) {
       console.log(err);
+      enqueueSnackbar('Migrate vault error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
     }
   };
 

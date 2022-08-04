@@ -92,7 +92,15 @@ export default function useUser() {
       let avatarUrl = null;
       if (did && credentials.avatar)
         avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, did);
-      if (!nodeProvider) {
+
+      const didObj = new DID(did);
+      const isPublished = await didObj.resolve(true);
+      if (!isPublished) {
+        enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      } else if (!nodeProvider) {
         enqueueSnackbar('Your DID is not bind to any Hive Node, Please bind your DID.', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }

@@ -93,12 +93,12 @@ export default function useUser() {
       if (did && credentials.avatar)
         avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, did);
       if (!nodeProvider) {
-        enqueueSnackbar('DID is not published. Please publish your DID.', {
+        enqueueSnackbar('Your DID is not bind to any Hive Node, Please bind your DID.', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
       } else if (!activeNodes.includes(nodeProvider)) {
-        enqueueSnackbar('You are connected to invalid Hive Node, Please Select another one.', {
+        enqueueSnackbar('You are connected to invalid Hive Node, Please select another one.', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });

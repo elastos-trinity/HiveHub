@@ -6,6 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
+import { createHiveNodeEnvConfig } from '../../../service/fetch';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -53,9 +54,10 @@ export default function NodeEnvConfig() {
   const [nodeDescription, setNodeDescription] = useState('');
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
-  const handleSaveEnvConfig = () => {
+  const handleSaveEnvConfig = async () => {
     if (ownerDid && servicePK && nodeName && email && nodeDescription) {
-      navigate('/dashboard/nodes');
+      await createHiveNodeEnvConfig();
+      // navigate('/dashboard/nodes');
     } else {
       setOwnerDidErr(!ownerDid);
       setServicePKErr(!servicePK);

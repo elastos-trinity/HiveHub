@@ -9,13 +9,14 @@ import {
   SubscriptionService,
   AlreadyExistsException,
   Vault,
-  NotFoundException,
+  // NotFoundException,
   InsertOptions,
   BackupResultResult,
   HiveException,
   Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
+import * as fs from 'fs';
 import HiveHubServer from './HiveHubServer';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
@@ -173,10 +174,10 @@ export const createVault = (did, nodeProvider) =>
       });
   });
 
-export const isDIDPublished = async (did) => {
+export const isDIDUnbinded = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
-  return nodeProvider !== undefined && nodeProvider !== null && nodeProvider !== '';
+  return nodeProvider !== undefined || nodeProvider !== null || nodeProvider !== '';
 };
 
 export const getNodeProviderUrl = async (did) => {
@@ -433,6 +434,16 @@ export const migrate = async (did, backupNodeProvider) => {
   } catch (err) {
     console.error(err);
   }
+};
+
+export const createHiveNodeEnvConfig = async () => {
+  const content = 'this is what i want to write to file';
+  fs.writeFile('/hive.env', content, (err) => {
+    if (err) {
+      console.error(err);
+    }
+    // file written successfully
+  });
 };
 
 // ******************************************************************** //

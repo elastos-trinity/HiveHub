@@ -94,7 +94,9 @@ export default function useUser() {
         avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, did);
 
       const didObj = new DID(did);
+      console.log('=============', didObj);
       const isPublished = await didObj.resolve(true);
+      console.log('=============', isPublished);
       if (!isPublished) {
         enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
           variant: 'error',

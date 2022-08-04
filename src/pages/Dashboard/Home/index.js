@@ -153,6 +153,7 @@ export default function HiveHome() {
     }
   };
 
+  // For test
   const handleUnbind = async () => {
     if (!user.did) return;
     try {

@@ -500,7 +500,6 @@ export const rawImageToBase64DataUrl = (rawImg) => {
  * Returns this url if possible, or null otherwise.
  */
 export const getHiveAvatarUrlFromDIDAvatarCredential = (avatarCredentialSubject) => {
-  console.log(avatarCredentialSubject);
   if (!avatarCredentialSubject) return null;
   if (avatarCredentialSubject.type && avatarCredentialSubject.type === 'elastoshive') {
     if (avatarCredentialSubject.data && avatarCredentialSubject['content-type']) {

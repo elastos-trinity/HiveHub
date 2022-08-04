@@ -88,16 +88,7 @@ export default function useUser() {
       const credentials = getCredentialsFromDIDDoc(didDoc);
       const nodeProvider = await getNodeProviderUrl(did);
       const activeNodes = await getActiveHiveNodeUrl();
-      const hiveAvatarUrl = getHiveAvatarUrlFromDIDAvatarCredential(credentials.avatar);
-      let avatarUrl = null;
-      if (did && credentials.avatar)
-        avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, did);
-
-      const didObj = new DID(did);
-      console.log('=============', didObj);
-      const isPublished = await didObj.resolve(true);
-      console.log('=============', isPublished);
-      if (!isPublished) {
+      if (!didDoc) {
         enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -113,13 +104,19 @@ export default function useUser() {
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
       }
+
+      let avatarUrl = null;
+      if (did && credentials && credentials.avatar) {
+        const hiveAvatarUrl = getHiveAvatarUrlFromDIDAvatarCredential(credentials.avatar);
+        avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, did);
+      }
       setUser((prevState) => {
         const state = { ...prevState };
         state.did = did;
-        state.avatar = avatarUrl;
-        state.credentials = credentials;
         state.didDoc = didDoc;
         state.nodeProvider = nodeProvider;
+        state.credentials = credentials;
+        state.avatar = avatarUrl;
         return state;
       });
     },

@@ -58,11 +58,15 @@ export default function NodeEnvConfig() {
 
   const handleSaveEnvConfig = () => {
     if (ownerDid && servicePK && nodeName && email && nodeDescription) {
+      const passpharse = '12345';
+      const password = 'password';
       const nodeCredential = 'aaaaaaaaaaa';
       try {
         createHiveNodeEnvConfig(
           ownerDid,
           servicePK,
+          passpharse,
+          password,
           nodeName,
           email,
           nodeDescription,

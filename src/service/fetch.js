@@ -438,11 +438,13 @@ export const migrate = async (did, backupNodeProvider) => {
 export const createHiveNodeEnvConfig = (
   serviceDid,
   serviceDidPK,
+  passpharse,
+  password,
   nodeName,
   email,
   nodeDescription,
   nodeCredential,
-  rpcEID = 'https://api.elastos.id/eid',
+  rpcEID = 'https://api.elastos.io/eid',
   rpcESC = 'https://api.elastos.io/esc',
   dataStorePath = './data',
   sentryEnable = true,
@@ -455,47 +457,53 @@ export const createHiveNodeEnvConfig = (
   mongoDBUri = 'https://localhost:27018',
   ipfsNode = 'http://localhost:5020',
   ipfsGateway = 'http://ipfs-gateway.trinity-tech.io:8080',
-  corsEnable = true
+  corsEnable = true,
+  version = 'v2.3.6',
+  lastCommit = 'cec7d255'
 ) => {
   let content = '## rpc API urls.\n';
-  content += `EID_RESOLVER_URL = "${rpcEID}"\n`;
-  content += `ESC_RESOLVER_URL = "${rpcESC}"\n`;
+  content += `EID_RESOLVER_URL = ${rpcEID}\n`;
+  content += `ESC_RESOLVER_URL = ${rpcESC}\n`;
   content += '\n';
   content += '## private key to Hive node service DID\n';
-  content += `SERVICE_DID_PRIVATE_KEY = "${serviceDidPK}"\n`;
-  content += '\n';
-  content += '### PASSWRD = "your-password-to-didstore"\n';
+  content += `SERVICE_DID_PRIVATE_KEY = ${serviceDidPK}\n`;
+  content += `PASSPHRASE = ${passpharse}\n`;
+  content += `PASSWORD = ${password}\n`;
   content += '\n';
   content += '## Credential issued by User DID to service DID\n';
-  content += `NODE_CREDENTIAL = "${nodeCredential}"\n`;
+  content += `NODE_CREDENTIAL = ${nodeCredential}\n`;
   content += '\n';
   content += '## local data store path\n';
   content += `DATA_STORE_PATH = ${dataStorePath}\n`;
   content += '\n';
   content += '## enable to report issue via sentry\n';
-  content += `SENTRY_ENABLED = ${sentryEnable.toString().toUpperCase()}\n`;
-  content += `SENTRY_DSN = "${sentryDSN}"\n`;
+  content += `SENTRY_ENABLED = ${sentryEnable.toString().toLocaleUpperCase()}\n`;
+  content += `SENTRY_DSN = ${sentryDSN}\n`;
   content += '\n';
   content += '## payment configuration\n';
   content += `PAYMENT_ENABLED = ${paymentEnable.toString().toUpperCase()}\n`;
-  content += `PAYMENT_CONFIG_PATH = "${paymentConfigPath}"\n`;
-  content += `PAYMENT_CONTRACT_ADDRESS = "${paymentContractAddr}"\n`;
-  content += `PAYMENT_RECEIVING_ADDRESS = "${paymentReceivingAddr}"\n`;
+  content += `PAYMENT_CONFIG_PATH = ${paymentConfigPath}\n`;
+  content += `PAYMENT_CONTRACT_ADDRESS = ${paymentContractAddr}\n`;
+  content += `PAYMENT_RECEIVING_ADDRESS = ${paymentReceivingAddr}\n`;
   content += '\n';
   content += '## using atlas service or not (mongodb service)\n';
   content += `ATLAS_ENABLED = ${atlasEnable.toString().toUpperCase()}\n`;
   content += '# MONGODB_URL = "mongodb+srv://Fred:<password>@cluster0.tt3yh.mongodb.net"\n';
-  content += `MONGODB_URL = "${mongoDBUri}"\n`;
+  content += `MONGODB_URL = ${mongoDBUri}\n`;
   content += '\n';
   content += '## IPFS node service\n';
-  content += `IPFS_NODE_URL = "${ipfsNode}"\n`;
-  content += `IPFS_GATEWAY_URL = "${ipfsGateway}"\n`;
+  content += `IPFS_NODE_URL = ${ipfsNode}\n`;
+  content += `IPFS_GATEWAY_URL = ${ipfsGateway}\n`;
   content += '\n';
   content += `ENABLE_CORS = ${corsEnable.toString().toUpperCase()}\n`;
   content += '\n';
+  content += '## Hive node version/commit ID.\n';
+  content += `VERSION = ${version}\n`;
+  content += `LAST_COMMIT = ${lastCommit}\n`;
+  content += '\n';
   content += '## basic information about this node.\n';
-  content += `NODE_NAME = "${nodeName}"\n`;
-  content += `NODE_EMAIL = "${email}"\n`;
+  content += `NODE_NAME = ${nodeName}\n`;
+  content += `NODE_EMAIL = ${email}\n`;
   content += `NODE_DESCRIPTION = "${nodeDescription}"`;
   //
   const element = document.createElement('a');

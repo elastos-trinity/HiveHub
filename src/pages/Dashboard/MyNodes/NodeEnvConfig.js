@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
@@ -42,6 +43,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
@@ -56,8 +58,28 @@ export default function NodeEnvConfig() {
 
   const handleSaveEnvConfig = () => {
     if (ownerDid && servicePK && nodeName && email && nodeDescription) {
-      createHiveNodeEnvConfig();
-      // navigate('/dashboard/nodes');
+      const nodeCredential = 'aaaaaaaaaaa';
+      try {
+        createHiveNodeEnvConfig(
+          ownerDid,
+          servicePK,
+          nodeName,
+          email,
+          nodeDescription,
+          nodeCredential
+        );
+        enqueueSnackbar('Create Hive Node ENV success.', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        navigate('/dashboard/nodes');
+      } catch (err) {
+        console.error(err);
+        enqueueSnackbar('Creating Hive Node ENV failed.', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      }
     } else {
       setOwnerDidErr(!ownerDid);
       setServicePKErr(!servicePK);

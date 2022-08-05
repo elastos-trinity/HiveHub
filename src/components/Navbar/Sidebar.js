@@ -154,7 +154,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         <Box sx={{ px: 0, pb: 2, mt: showMenu ? 5 : 25 }}>
           <Stack alignItems="center" spacing={2.5} sx={{ py: 2.5, position: 'relative' }}>
             <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
-              <Box component="img" src="/static/illustrations/github.png" sx={{ width: 40 }} />
+              <Box component="img" src="/static/github.svg" sx={{ width: 40 }} />
             </Link>
             <Stack
               // direction={{ xs: 'column', md: 'row' }}

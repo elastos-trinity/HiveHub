@@ -54,9 +54,9 @@ export default function NodeEnvConfig() {
   const [nodeDescription, setNodeDescription] = useState('');
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
-  const handleSaveEnvConfig = async () => {
+  const handleSaveEnvConfig = () => {
     if (ownerDid && servicePK && nodeName && email && nodeDescription) {
-      await createHiveNodeEnvConfig();
+      createHiveNodeEnvConfig();
       // navigate('/dashboard/nodes');
     } else {
       setOwnerDidErr(!ownerDid);

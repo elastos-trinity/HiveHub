@@ -435,8 +435,49 @@ export const migrate = async (did, backupNodeProvider) => {
   }
 };
 
-export const createHiveNodeEnvConfig = async () => {
-  const content = 'this is what i want to write to file';
+export const createHiveNodeEnvConfig = () => {
+  let content = '## rpc API urls.\n';
+  content += 'EID_RESOLVER_URL = "https://api.elastos.id/eid"\n';
+  content += 'ESC_RESOLVER_URL = "https://api.elastos.io/esc"\n';
+  content += '\n';
+  content += '## private key to Hive node service DID\n';
+  content += 'SERVICE_DID_PRIVATE_KEY = "private-key-to-your-service-did"\n';
+  content += '\n';
+  content += '### PASSWRD = "your-password-to-didstore"\n';
+  content += '\n';
+  content += '## Credential issued by User DID to service DID\n';
+  content += 'NODE_CREDENTIAL = "your-base64-string-of-issued-credential-from-your-did"\n';
+  content += '\n';
+  content += '## local data store path\n';
+  content += 'DATA_STORE_PATH = ./data\n';
+  content += '\n';
+  content += '## enable to report issue via sentry\n';
+  content += 'SENTRY_ENABLED = TRUE\n';
+  content +=
+    'SENTRY_DSN = "https://1dafd5d11608420aacbbf76f4288960f@o339076.ingest.sentry.io/5524839"\n';
+  content += '\n';
+  content += '## payment configuration\n';
+  content += 'PAYMENT_ENABLED = True\n';
+  content += 'PAYMENT_CONFIG_PATH = "./payment_config.json"\n';
+  content += 'PAYMENT_CONTRACT_ADDRESS = "0x5fbdb2315678afecb367f032d93f642f64180aa3"\n';
+  content += 'PAYMENT_RECEIVING_ADDRESS = "0x93b76C16e8A2c61a3149dF3AdCbE604be1F4137b"\n';
+  content += '\n';
+  content += '## using atlast service or not (mongodb service)\n';
+  content += 'ATLAS_ENABLED = True\n';
+  content += '# MONGODB_URL = "mongodb+srv://Fred:<password>@cluster0.tt3yh.mongodb.net"\n';
+  content += 'MONGODB_URL = "https://localhost:27018"\n';
+  content += '\n';
+  content += '## IPFS node service\n';
+  content += 'IPFS_NODE_URL = "http://localhost:5020"\n';
+  content += 'IPFS_GATEWAY_URL = "http://ipfs-gateway.trinity-tech.io:8080"\n';
+  content += '\n';
+  content += 'ENABLE_CORS = True\n';
+  content += '\n';
+  content += '## basic information about this node.\n';
+  content += 'NODE_NAME = "your-hive-node-name",\n';
+  content += 'NODE_EMAIL = "conatact@example.com",\n';
+  content += 'NODE_DESCRIPTION = "your description about hive node and yourself here"';
+  //
   const element = document.createElement('a');
   const file = new Blob([content], {
     type: 'text/plain'

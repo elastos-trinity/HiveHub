@@ -16,7 +16,6 @@ import {
   Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
-import * as fs from 'fs';
 import HiveHubServer from './HiveHubServer';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
@@ -438,12 +437,14 @@ export const migrate = async (did, backupNodeProvider) => {
 
 export const createHiveNodeEnvConfig = async () => {
   const content = 'this is what i want to write to file';
-  fs.writeFile('/hive.env', content, (err) => {
-    if (err) {
-      console.error(err);
-    }
-    // file written successfully
+  const element = document.createElement('a');
+  const file = new Blob([content], {
+    type: 'text/plain'
   });
+  element.href = URL.createObjectURL(file);
+  element.download = 'hive.env';
+  document.body.appendChild(element);
+  element.click();
 };
 
 // ******************************************************************** //

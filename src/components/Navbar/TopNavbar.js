@@ -76,7 +76,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             >
               <Icon icon={menu2Fill} />
             </IconButton>
-            <HiveLogo small={Boolean(true)} />
+            <HiveLogo mobile={Boolean(true)} />
           </Stack>
         </Box>
       </MHidden>

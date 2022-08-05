@@ -115,7 +115,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           alignItems: 'center'
         }}
       >
-        <HiveLogo small={Boolean(true)} />
+        <HiveLogo mobile={Boolean(true)} />
       </Box>
       <Stack justifyContent="space-between">
         {showAvatar && (

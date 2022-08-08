@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, Grid, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import useUser from '../../hooks/useUser';
 import SmallHexagon from '../../components/SmallHexagon';
+import HexagonShape from '../../components/HexagonShape';
 import generatedGitInfo from '../../generatedGitInfo.json';
 
 const LandingTitleTypo = styled(Typography)(({ theme, sub }) => ({
@@ -30,15 +31,20 @@ const ConnectButton = styled(Button)(({ theme }) => ({
   fontSize: '25px',
   lineHeight: '30px',
   padding: '20px 30px',
+  zIndex: 10,
   '&:hover': {
-    borderColor: '#FF931E',
+    border: '3px solid #FF931E',
     backgroundColor: 'white'
   },
   [theme.breakpoints.down('md')]: {
     fontSize: '12px',
     lineHeight: '15px',
     padding: '10px 15px',
-    border: '2px solid #FF931E'
+    border: '2px solid #FF931E',
+    '&:hover': {
+      border: '2px solid #FF931E',
+      backgroundColor: 'white'
+    }
   }
 }));
 
@@ -51,15 +57,20 @@ const GitHubButton = styled(Button)(({ theme }) => ({
   fontSize: '25px',
   lineHeight: '30px',
   padding: '20px 30px',
+  zIndex: 10,
   '&:hover': {
-    borderColor: '#000000',
+    border: '3px solid #000000',
     backgroundColor: 'white'
   },
   [theme.breakpoints.down('md')]: {
     fontSize: '12px',
     lineHeight: '15px',
     padding: '10px 15px',
-    border: '2px solid #000000'
+    border: '2px solid #000000',
+    '&:hover': {
+      border: '2px solid #000000',
+      backgroundColor: 'white'
+    }
   }
 }));
 
@@ -74,35 +85,35 @@ const MyGrid = styled(Grid)(({ theme }) => ({
   }
 }));
 
-CustomBox.propTypes = {
-  children: PropTypes.node
-};
+// CustomBox.propTypes = {
+//   children: PropTypes.node
+// };
 
-function CustomBox({ children }) {
-  return (
-    <Box
-      sx={{
-        margin: '20px auto',
-        width: '25px',
-        height: '25px',
-        borderRadius: '50%',
-        boxShadow: '0px 0px 20px 4px rgba(255, 147, 30, 0.3)'
-      }}
-    >
-      <SmallHexagon
-        borderColor="#FF931E"
-        rootHexagon
-        sideLength={15}
-        borderWidth={0}
-        backColor="white"
-      >
-        <Typography variant="body2" sx={{ color: '#FF931E', height: '15px', lineHeight: '15px' }}>
-          {children}
-        </Typography>
-      </SmallHexagon>
-    </Box>
-  );
-}
+// function CustomBox({ children }) {
+//   return (
+//     <Box
+//       sx={{
+//         margin: '20px auto',
+//         width: '25px',
+//         height: '25px',
+//         borderRadius: '50%',
+//         boxShadow: '0px 0px 20px 4px rgba(255, 147, 30, 0.3)'
+//       }}
+//     >
+//       <SmallHexagon
+//         borderColor="#FF931E"
+//         rootHexagon
+//         sideLength={15}
+//         borderWidth={0}
+//         backColor="white"
+//       >
+//         <Typography variant="body2" sx={{ color: '#FF931E', height: '15px', lineHeight: '15px' }}>
+//           {children}
+//         </Typography>
+//       </SmallHexagon>
+//     </Box>
+//   );
+// }
 
 export default function LandingPage() {
   const { user, isConnetedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
@@ -123,8 +134,11 @@ export default function LandingPage() {
   };
 
   return (
-    <Container maxWidth="1000" sx={{ pt: 15, pb: 2.5 }}>
-      <Box pt={{ xs: '140px', md: '270px' }}>
+    <Container
+      maxWidth="1000"
+      sx={{ pt: 15, pb: 2.5, overflow: 'hidden', position: 'relative', zIndex: 10 }}
+    >
+      <Box mt={{ xs: '140px', md: '270px' }} sx={{ position: 'relative' }}>
         <LandingTitleTypo>
           {`${t('landing-title-1')} `}
           <span style={{ color: '#FF931E' }}>{t('landing-title-2')}</span>
@@ -133,12 +147,19 @@ export default function LandingPage() {
         <LandingTitleTypo sub="true" sx={{ pt: '10px' }}>
           {t('landing-title-sub')}
         </LandingTitleTypo>
+        <Box sx={{ position: 'absolute', top: '-10vw', right: '12vw', zIndex: 1 }}>
+          <HexagonShape />
+        </Box>
+        <Box sx={{ position: 'absolute', top: '-3vw', left: '10vw', zIndex: 1 }}>
+          <HexagonShape size={2} blurVal={20} opacityVal={0.4} />
+        </Box>
       </Box>
       <Stack
         direction="row"
         spacing={{ xs: 2.5, md: 5 }}
         mt={{ xs: '50px', md: '40px' }}
         justifyContent="center"
+        sx={{ position: 'relative' }}
       >
         {!user.did ? (
           <ConnectButton variant="outlined" onClick={login} disabled={loading}>
@@ -156,30 +177,35 @@ export default function LandingPage() {
         >
           GitHub
         </GitHubButton>
+        <Box sx={{ position: 'absolute', top: '5vw', right: '-10vw', zIndex: 1 }}>
+          <HexagonShape size={3} blurVal={40} opacityVal={0.7} />
+        </Box>
       </Stack>
-      <Box
-        sx={{
-          width: '25px',
-          height: '40px',
-          borderRadius: '25px',
-          border: '1px solid black',
-          margin: '140px auto 0',
-          textAlign: 'center'
-        }}
-      >
-        {' '}
-      </Box>
-      <Box
-        sx={{
-          width: '2px',
-          height: '12px',
-          border: '1px solid black',
-          margin: '0 auto',
-          position: 'relative',
-          top: '-17px'
-        }}
-      >
-        {' '}
+      <Box sx={{ position: 'relative', zIndex: 10 }}>
+        <Box
+          sx={{
+            width: '25px',
+            height: '40px',
+            borderRadius: '25px',
+            border: '1px solid black',
+            margin: '140px auto 0',
+            textAlign: 'center'
+          }}
+        >
+          {' '}
+        </Box>
+        <Box
+          sx={{
+            width: '2px',
+            height: '12px',
+            border: '1px solid black',
+            margin: '0 auto',
+            position: 'relative',
+            top: '-17px'
+          }}
+        >
+          {' '}
+        </Box>
       </Box>
       <Box
         sx={{
@@ -190,11 +216,12 @@ export default function LandingPage() {
           margin: '60px auto',
           borderRadius: '20px',
           padding: '20px',
-          boxShadow: 'rgba(0, 0, 0, 0.05) 0px 0px 20px'
+          boxShadow: 'rgba(0, 0, 0, 0.05) 0px 0px 20px',
+          position: 'relative',
+          zIndex: 10
         }}
       >
         <Typography
-          variant="h3"
           sx={{
             textAlign: 'center',
             font: 'Montserrat',

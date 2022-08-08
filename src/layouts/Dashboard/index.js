@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
 import TopNavbar from '../../components/Navbar/TopNavbar';
 import Sidebar from '../../components/Navbar/Sidebar';
 import BottomNavbar from '../../components/Navbar/BottomNavbar';
@@ -12,7 +12,9 @@ const APP_BAR_DESKTOP = 92;
 const RootStyle = styled('div')({
   display: 'flex',
   minHeight: '100%',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  position: 'relative',
+  background: 'rgba(255, 147, 30, 0.3)'
 });
 
 const MainStyle = styled('div')(({ theme }) => ({
@@ -46,6 +48,11 @@ export default function HiveDashboard() {
 
   return (
     <RootStyle>
+      <Box
+        component="img"
+        src="/static/bg_hexagon.svg"
+        sx={{ position: 'absolute', top: 0, bottom: 0, margin: 'auto', zIndex: 0 }}
+      />
       <TopNavbar onOpenSidebar={() => setOpen(true)} />
       <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>

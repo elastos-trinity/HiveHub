@@ -209,7 +209,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
                 width: { md: DRAWER_WIDTH_MD, lg: DRAWER_WIDTH_LG },
                 backgroundColor: 'background.default',
                 borderRight: 'none',
-                zIndex: 1
+                zIndex: 50
               }
             }}
           >

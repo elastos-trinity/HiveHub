@@ -7,7 +7,6 @@ import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 import HiveLogo from '../Logo';
 import LanguageBar from '../LanguageBar';
 import UserAvatar from '../UserAvatar';
-import palette from '../../theme/palette';
 import { MHidden } from '../@material-extend';
 import useUser from '../../hooks/useUser';
 
@@ -33,8 +32,8 @@ export default function TopNavbar({ onOpenSidebar }) {
             position: 'fixed',
             width: '100%',
             height: '120px',
-            backgroundColor: palette.common.white,
-            zIndex: 111
+            background: 'rgb(255 252 248)',
+            zIndex: 100
           }}
         >
           <Stack
@@ -42,8 +41,6 @@ export default function TopNavbar({ onOpenSidebar }) {
             alignItems="center"
             justifyContent="space-between"
             height="100%"
-            // width="90%"
-            // sx={{ margin: '0 auto' }}
             mx={{ md: 5, lg: 7.5 }}
           >
             <HiveLogo />
@@ -57,9 +54,8 @@ export default function TopNavbar({ onOpenSidebar }) {
             position: 'fixed',
             width: '100%',
             height: '120px',
-            backgroundColor: palette.common.white,
-            zIndex: 111
-            // borderBottom: '1px solid red'
+            background: 'rgb(255 252 248)',
+            zIndex: 100
           }}
         >
           <Stack

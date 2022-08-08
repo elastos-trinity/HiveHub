@@ -75,7 +75,7 @@ export default function BottomNavbar() {
               paddingX: '20px',
               paddingBottom: '8px',
               backgroundColor: palette.common.white,
-              zIndex: 111
+              zIndex: 100
               // borderTop: '1px solid red'
             }}
             spacing={1}

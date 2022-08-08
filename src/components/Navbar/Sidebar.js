@@ -157,13 +157,20 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
               <Box component="img" src="/static/github.svg" sx={{ width: 40 }} />
             </Link>
             <Stack
-              // direction={{ xs: 'column', md: 'row' }}
               spacing={1}
               sx={{ textAlign: 'center' }}
               alignItems="center"
               justifyContent="center"
             >
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography
+                sx={{
+                  fontSize: '15px',
+                  lineHeight: '50px',
+                  fontWeight: 400,
+                  fontFamily: 'Red Hat Display',
+                  color: '#000'
+                }}
+              >
                 @ 2022 Trinity Tech Ltd.
               </Typography>
               <Typography

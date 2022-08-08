@@ -63,10 +63,16 @@ const GitHubButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-const MyGrid = styled(Grid)({
+const MyGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',
-  padding: '20px 0 30px'
-});
+  padding: '20px 0 30px',
+  fontSize: '30px',
+  lineHeight: '37px',
+  [theme.breakpoints.down('md')]: {
+    fontSize: '15px',
+    lineHeight: '18px'
+  }
+}));
 
 CustomBox.propTypes = {
   children: PropTypes.node
@@ -189,7 +195,13 @@ export default function LandingPage() {
       >
         <Typography
           variant="h3"
-          sx={{ textAlign: 'center', font: 'Montserrat', margin: '10px 0 50px' }}
+          sx={{
+            textAlign: 'center',
+            font: 'Montserrat',
+            margin: '10px 0 50px',
+            fontSize: { xs: '20px', md: '60px' },
+            lineHeight: { xs: '24px', md: '73px' }
+          }}
         >
           {t('landing-features')}
         </Typography>
@@ -263,7 +275,7 @@ export default function LandingPage() {
                 </Box>
               </SmallHexagon>
             </Box>
-            <CustomBox>1</CustomBox>
+            {/* <CustomBox>1</CustomBox> */}
             Register Hive Node
           </MyGrid>
           <MyGrid item xs={12} sm={6} md={3}>
@@ -286,7 +298,7 @@ export default function LandingPage() {
                 </Typography>
               </Box>
             </Box>
-            <CustomBox>2</CustomBox>
+            {/* <CustomBox>2</CustomBox> */}
             Create Vault
           </MyGrid>
           <MyGrid item xs={12} sm={6} md={3}>
@@ -318,7 +330,7 @@ export default function LandingPage() {
                 />
               </Box>
             </Box>
-            <CustomBox>3</CustomBox>
+            {/* <CustomBox>3</CustomBox> */}
             Backup Vault
           </MyGrid>
           <MyGrid item xs={12} sm={6} md={3}>
@@ -378,7 +390,7 @@ export default function LandingPage() {
                 </Box>
               </Grid>
             </Grid>
-            <CustomBox>4</CustomBox>
+            {/* <CustomBox>4</CustomBox> */}
             Migrate Vault
           </MyGrid>
         </Grid>
@@ -391,7 +403,15 @@ export default function LandingPage() {
           alignItems="center"
           justifyContent="center"
         >
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography
+            sx={{
+              fontSize: { xs: '15px', md: '20px' },
+              lineHeight: '50px',
+              fontWeight: 400,
+              fontFamily: 'Red Hat Display',
+              color: '#000'
+            }}
+          >
             @ 2022 Trinity Tech Ltd.
           </Typography>
           <Typography

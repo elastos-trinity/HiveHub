@@ -141,7 +141,7 @@ export default function LandingPage() {
       maxWidth="1000"
       sx={{ pt: 15, pb: 2.5, overflow: 'hidden', position: 'relative', zIndex: 10 }}
     >
-      <Box mt={{ xs: '140px', md: '270px' }} sx={{ position: 'relative' }}>
+      <Box mt={{ xs: '70px', md: '135px' }} sx={{ position: 'relative' }}>
         <LandingTitleTypo>
           {`${t('landing-title-1')} `}
           <span style={{ color: '#FF931E' }}>{t('landing-title-2')}</span>
@@ -471,7 +471,7 @@ export default function LandingPage() {
           </MyGrid>
         </Grid>
       </Box>
-      <Box sx={{ padding: '200px 0 0' }}>
+      <Box sx={{ pt: { xs: '100px', md: '200px' } }}>
         <Stack
           direction="row"
           spacing={1}

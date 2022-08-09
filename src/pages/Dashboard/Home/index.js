@@ -13,7 +13,7 @@ import {
   getHiveNodesList,
   getHiveVaultInfo,
   migrateVault,
-  unbindDID
+  // unbindDID
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 

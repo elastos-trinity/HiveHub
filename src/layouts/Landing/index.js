@@ -8,7 +8,7 @@ export default function HiveMainPage() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Box sx={{ position: 'relative', background: 'rgba(255, 147, 30, 0.07)' }}>
+    <Box sx={{ position: 'relative', background: 'rgba(255, 147, 30, 0.07)', overflow: 'hidden' }}>
       <Box
         component="img"
         src="/static/bg_hexagon.svg"

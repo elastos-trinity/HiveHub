@@ -14,7 +14,7 @@ const RootStyle = styled('div')({
   minHeight: '100%',
   overflow: 'hidden',
   position: 'relative',
-  background: 'rgba(255, 147, 30, 0.03)'
+  background: 'rgba(255, 147, 30, 0.07)'
 });
 
 const MainStyle = styled('div')(({ theme }) => ({

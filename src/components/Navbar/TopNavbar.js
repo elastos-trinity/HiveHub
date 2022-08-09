@@ -32,7 +32,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             position: 'fixed',
             width: '100%',
             height: '120px',
-            background: 'rgb(255 252 248)',
+            background: '#fff7ef',
             zIndex: 100
           }}
         >
@@ -54,7 +54,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             position: 'fixed',
             width: '100%',
             height: '120px',
-            background: 'rgb(255 252 248)',
+            background: '#fff7ef',
             zIndex: 100
           }}
         >

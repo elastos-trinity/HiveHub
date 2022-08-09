@@ -223,7 +223,14 @@ export default function LandingPage() {
           />
         </Box>
       </Stack>
-      <Box sx={{ position: 'relative', zIndex: 10 }}>
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 10,
+          display: 'block',
+          visibility: matchMdUp ? 'visible' : 'hidden'
+        }}
+      >
         <Box
           sx={{
             width: '25px',

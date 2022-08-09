@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../style';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
-import { createHiveNodeEnvConfig } from '../../../service/fetch';
+import { createHiveNodeEnvConfig, getRestService } from '../../../service/fetch';
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -56,11 +56,20 @@ export default function NodeEnvConfig() {
   const [nodeDescription, setNodeDescription] = useState('');
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
-  const handleSaveEnvConfig = () => {
+  const handleSaveEnvConfig = async () => {
     if (ownerDid && servicePK && nodeName && email && nodeDescription) {
       const passpharse = '12345';
       const password = 'password';
-      const nodeCredential = 'aaaaaaaaaaa';
+      let nodeCredential = '';
+      try {
+        const restService = await getRestService(user.did);
+        const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+        const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
+        const vcs = nodeOwnershipPresentation.getCredentials();
+        if (vcs && vcs.length) nodeCredential = vcs[0].getSubject();
+      } catch (err) {
+        console.error(err);
+      }
       try {
         createHiveNodeEnvConfig(
           ownerDid,

@@ -342,7 +342,7 @@ export const checkBackupStatus = async (did) => {
  *      7. all done. the vault can be used on node B.
  *
  */
-export const migrate = async (did, backupNodeProvider) => {
+export const migrateVault = async (did, backupNodeProvider) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   const vault = new Vault(appContext, nodeProvider);
@@ -430,6 +430,18 @@ export const migrate = async (did, backupNodeProvider) => {
     console.log('TODO: public user DID with backup node url here');
     console.log('remove the vault on vault node here, same node, skip');
     console.log('migration is done !!!');
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// TODO: unsubscribe + unbind from DID Doc
+export const unbindDID = async (did) => {
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    const subscription = new VaultSubscription(appContext, nodeProvider);
+    await subscription.unsubscribe();
   } catch (err) {
     console.error(err);
   }

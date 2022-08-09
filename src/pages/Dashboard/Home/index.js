@@ -12,9 +12,8 @@ import {
   findBackupNodeProvider,
   getHiveNodesList,
   getHiveVaultInfo,
-  getStoredData,
-  insertData,
-  migrate
+  migrateVault,
+  unbindDID
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
@@ -136,10 +135,11 @@ export default function HiveHome() {
 
   const handleMigrate = async () => {
     if (!user.did) return;
+    setOnProgress(true);
     try {
       const backupNodeProvider = await findBackupNodeProvider(user.did);
       console.log('Migrate vault to: ', backupNodeProvider);
-      await migrate(user.did, backupNodeProvider);
+      await migrateVault(user.did, backupNodeProvider);
       enqueueSnackbar('Migrate vault succeed', {
         variant: 'success',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -155,14 +155,22 @@ export default function HiveHome() {
 
   // For test
   const handleUnbind = async () => {
-    if (!user.did) return;
+    if (!user.nodeProvider || user.did) return;
     try {
-      await insertData(user.did);
-      console.log('added');
+      console.log('Unbind DID from ', user.nodeProvider);
+      // await unbindDID(user.did);
+      enqueueSnackbar('Unbind DID succeed', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
     } catch (err) {
       console.log(err);
+      enqueueSnackbar('Unbind DID error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
     }
-    console.log(await getStoredData(user.did));
+    setOnProgress(false);
   };
 
   return (
@@ -208,7 +216,7 @@ export default function HiveHome() {
           <CustomButton onClick={handleMigrate} disabled={onProgress}>
             Migrate
           </CustomButton>
-          <CustomButton onClick={handleUnbind} disabled={onProgress}>
+          <CustomButton onClick={handleUnbind} disabled={!user.nodeProvider || onProgress}>
             Unbind
           </CustomButton>
         </Stack>

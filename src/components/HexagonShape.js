@@ -10,6 +10,7 @@ export default function HexagonShape(props) {
       width={svgWidth * size}
       height={svgHeight * size}
       viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+      // viewBox="0 0 256 295"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >

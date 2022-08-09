@@ -153,8 +153,8 @@ export default function LandingPage() {
         <Box
           sx={{
             position: 'absolute',
-            top: { sm: '0vw', md: '-10vw' },
-            right: { sm: '12vw', md: '12vw' },
+            top: { xs: '-30vw', md: '-10vw' },
+            right: { xs: '15vw', md: '12vw' },
             zIndex: 1
           }}
         >
@@ -166,7 +166,14 @@ export default function LandingPage() {
             mobile={!matchMdUp}
           />
         </Box>
-        <Box sx={{ position: 'absolute', top: '-3vw', left: '10vw', zIndex: 1 }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: { xs: '-35vw', md: '-3vw' },
+            left: { xs: '-20vw', md: '10vw' },
+            zIndex: 1
+          }}
+        >
           <HexagonShape
             size={2}
             blurVal={matchMdUp ? 20 : 7.5}
@@ -199,7 +206,14 @@ export default function LandingPage() {
         >
           GitHub
         </GitHubButton>
-        <Box sx={{ position: 'absolute', top: '5vw', right: '-10vw', zIndex: 1 }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: { xs: '-10vw', md: '5vw' },
+            right: { xs: '0vw', md: '-10vw' },
+            zIndex: 1
+          }}
+        >
           <HexagonShape
             size={3}
             blurVal={matchMdUp ? 40 : 17.5}

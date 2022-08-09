@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 export default function HexagonShape(props) {
-  const { blurVal = 10, width = 15, size = 1, opacityVal = 0.3, mobile = false } = props;
+  const { blurVal, width, size, opacityVal, mobile } = props;
   const svgWidth = mobile ? 76 : 256;
   const svgHeight = mobile ? 89 : 295;
 

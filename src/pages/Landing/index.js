@@ -162,7 +162,7 @@ export default function LandingPage() {
             size={1}
             blurVal={matchMdUp ? 10 : 5}
             opacityVal={matchMdUp ? 0.3 : 0.2}
-            width={matchMdUp ? 15 : 7}
+            width={matchMdUp ? 7 : 3}
             mobile={!matchMdUp}
           />
         </Box>
@@ -178,7 +178,7 @@ export default function LandingPage() {
             size={2}
             blurVal={matchMdUp ? 20 : 7.5}
             opacityVal={matchMdUp ? 0.4 : 0.3}
-            width={matchMdUp ? 30 : 15}
+            width={matchMdUp ? 15 : 7.5}
             mobile={!matchMdUp}
           />
         </Box>
@@ -218,7 +218,7 @@ export default function LandingPage() {
             size={3}
             blurVal={matchMdUp ? 40 : 17.5}
             opacityVal={matchMdUp ? 0.7 : 0.6}
-            width={matchMdUp ? 60 : 30}
+            width={matchMdUp ? 30 : 15}
             mobile={!matchMdUp}
           />
         </Box>

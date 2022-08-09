@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 
 export default function HexagonShape(props) {
-  const { blurVal, width, size, opacityVal, mobile } = props;
-  const svgWidth = mobile ? 76 : 256;
-  const svgHeight = mobile ? 89 : 295;
+  const { blurVal, width, size, opacityVal } = props;
+  const svgWidth = 256;
+  const svgHeight = 295;
 
   return (
     <svg
       width={svgWidth * size}
       height={svgHeight * size}
-      viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-      // viewBox="0 0 256 295"
+      viewBox="0 0 256 295"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -27,8 +26,8 @@ export default function HexagonShape(props) {
           id="filter0_f_466_139"
           x="0"
           y="0"
-          width={svgWidth * size}
-          height={svgHeight * size}
+          width={svgWidth * Math.max(1, size)}
+          height={svgHeight * Math.max(1, size)}
           filterUnits="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >

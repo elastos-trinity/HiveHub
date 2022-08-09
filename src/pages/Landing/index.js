@@ -153,33 +153,26 @@ export default function LandingPage() {
         <Box
           sx={{
             position: 'absolute',
-            top: { xs: '-30vw', md: '-10vw' },
-            right: { xs: '15vw', md: '12vw' },
+            top: '-10vw',
+            right: '12vw',
             zIndex: 1
           }}
         >
-          <HexagonShape
-            size={1}
-            blurVal={matchMdUp ? 10 : 5}
-            opacityVal={matchMdUp ? 0.3 : 0.2}
-            width={matchMdUp ? 7 : 3}
-            mobile={!matchMdUp}
-          />
+          <HexagonShape size={matchMdUp ? 1 : 0.3} blurVal={10} opacityVal={0.3} width={7} />
         </Box>
         <Box
           sx={{
             position: 'absolute',
-            top: { xs: '-35vw', md: '-3vw' },
-            left: { xs: '-20vw', md: '10vw' },
+            top: '-3vw',
+            left: { xs: '-15vw', md: '10vw' },
             zIndex: 1
           }}
         >
           <HexagonShape
-            size={2}
+            size={matchMdUp ? 2 : 0.6}
             blurVal={matchMdUp ? 20 : 7.5}
             opacityVal={matchMdUp ? 0.4 : 0.3}
             width={matchMdUp ? 15 : 7.5}
-            mobile={!matchMdUp}
           />
         </Box>
       </Box>
@@ -209,17 +202,17 @@ export default function LandingPage() {
         <Box
           sx={{
             position: 'absolute',
-            top: { xs: '-10vw', md: '5vw' },
-            right: { xs: '0vw', md: '-10vw' },
+            top: { xs: '20vw', md: '5vw' },
+            right: { xs: '-15vw', md: '-10vw' },
             zIndex: 1
           }}
         >
           <HexagonShape
-            size={3}
+            size={matchMdUp ? 3 : 0.9}
             blurVal={matchMdUp ? 40 : 17.5}
             opacityVal={matchMdUp ? 0.7 : 0.6}
             width={matchMdUp ? 30 : 15}
-            mobile={!matchMdUp}
+            // mobile={!matchMdUp}
           />
         </Box>
       </Stack>

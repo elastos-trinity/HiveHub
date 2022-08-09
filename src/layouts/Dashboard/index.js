@@ -53,7 +53,13 @@ export default function HiveDashboard() {
       <Box
         component="img"
         src="/static/bg_hexagon.svg"
-        sx={{ position: 'absolute', top: 0, bottom: 0, margin: 'auto', zIndex: 0 }}
+        sx={{
+          position: 'absolute',
+          top: { xs: '-250vw', sm: '-80vw', md: '-25vw' },
+          bottom: 0,
+          margin: 'auto',
+          zIndex: 0
+        }}
       />
       <TopNavbar onOpenSidebar={() => setOpen(true)} />
       <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />

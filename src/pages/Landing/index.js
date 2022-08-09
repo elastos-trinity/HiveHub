@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, Grid, Typography, Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 // import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import useUser from '../../hooks/useUser';
@@ -121,6 +122,8 @@ export default function LandingPage() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const theme = useTheme();
+  const matchMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const login = async () => {
     setLoading(true);
@@ -147,11 +150,30 @@ export default function LandingPage() {
         <LandingTitleTypo sub="true" sx={{ pt: '10px' }}>
           {t('landing-title-sub')}
         </LandingTitleTypo>
-        <Box sx={{ position: 'absolute', top: '-10vw', right: '12vw', zIndex: 1 }}>
-          <HexagonShape />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: { sm: '0vw', md: '-10vw' },
+            right: { sm: '12vw', md: '12vw' },
+            zIndex: 1
+          }}
+        >
+          <HexagonShape
+            size={1}
+            blurVal={matchMdUp ? 10 : 5}
+            opacityVal={matchMdUp ? 0.3 : 0.2}
+            width={matchMdUp ? 15 : 7}
+            mobile={!matchMdUp}
+          />
         </Box>
         <Box sx={{ position: 'absolute', top: '-3vw', left: '10vw', zIndex: 1 }}>
-          <HexagonShape size={2} blurVal={20} opacityVal={0.4} />
+          <HexagonShape
+            size={2}
+            blurVal={matchMdUp ? 20 : 7.5}
+            opacityVal={matchMdUp ? 0.4 : 0.3}
+            width={matchMdUp ? 30 : 15}
+            mobile={!matchMdUp}
+          />
         </Box>
       </Box>
       <Stack
@@ -178,7 +200,13 @@ export default function LandingPage() {
           GitHub
         </GitHubButton>
         <Box sx={{ position: 'absolute', top: '5vw', right: '-10vw', zIndex: 1 }}>
-          <HexagonShape size={3} blurVal={40} opacityVal={0.7} />
+          <HexagonShape
+            size={3}
+            blurVal={matchMdUp ? 40 : 17.5}
+            opacityVal={matchMdUp ? 0.7 : 0.6}
+            width={matchMdUp ? 60 : 30}
+            mobile={!matchMdUp}
+          />
         </Box>
       </Stack>
       <Box sx={{ position: 'relative', zIndex: 10 }}>

@@ -87,10 +87,10 @@ export default function HiveVaults() {
 
   return (
     <>
-      <PageTitleTypo mt={{ xs: 7, md: 15 }} mb={myVaultsList.length ? 0 : 1.25}>
+      <PageTitleTypo mt={{ xs: 5, md: 6 }} mb={myVaultsList.length ? 0 : 1.25}>
         My Vaults
       </PageTitleTypo>
-      <Stack mt={{ xs: 1.75, md: 5 }} mb={6.25} spacing={{ xs: 3.75, md: 6.25 }}>
+      <Stack mt={{ xs: 4, md: 8 }} mb={10} spacing={{ xs: 3.75, md: 6.25 }}>
         {myVaultsList.map((item, index) => (
           <VaultItem
             key={index}
@@ -106,7 +106,7 @@ export default function HiveVaults() {
           />
         ))}
       </Stack>
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.125, md: 5 }}>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
         <CustomButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
           <PlusTypo>+</PlusTypo>
           Create Hive Vault

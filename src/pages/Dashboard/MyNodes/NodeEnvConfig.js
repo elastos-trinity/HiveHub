@@ -98,7 +98,7 @@ export default function NodeEnvConfig() {
 
   return (
     <>
-      <PageTitleTypo mt={{ xs: 6.25, md: 3.15 }}>Env Configuration</PageTitleTypo>
+      <PageTitleTypo mt={{ xs: 5, md: 6 }}>Env Configuration</PageTitleTypo>
       <ContainerBox mt={{ xs: 2.5, md: 5 }}>
         <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 3.75, md: 5 }}>
           <CustomTextField

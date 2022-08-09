@@ -41,7 +41,7 @@ export default function HiveExplore() {
 
   return (
     <>
-      <PageTitleTypo mt={{ xs: 7, md: 15 }}>Explore</PageTitleTypo>
+      <PageTitleTypo mt={{ xs: 5, md: 6 }}>Explore</PageTitleTypo>
       <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 8 }}>
         <Stack direction="row" spacing={{ xs: '25px', md: '50px' }} alignItems="baseline">
           <PageTitleTypo sub="true">Nodes</PageTitleTypo>

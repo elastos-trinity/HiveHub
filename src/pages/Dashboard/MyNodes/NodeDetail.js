@@ -221,7 +221,7 @@ export default function NodeDetail() {
             bgcolor: '#E8F4FF',
             borderRadius: 1,
             height: { xs: '40px', md: '70px' },
-            mt: { xs: 6.25, md: 3.15 },
+            mt: { xs: 5, md: 6 },
             mb: 2.5
           }}
         />
@@ -231,7 +231,7 @@ export default function NodeDetail() {
             direction="row"
             alignItems="center"
             spacing={{ xs: '10px', sm: '20px' }}
-            mt={{ xs: 6.25, md: 3.15 }}
+            mt={{ xs: 5, md: 6 }}
           >
             <NodeTitle>{nodeDetail.name}</NodeTitle>
             {nodeDetail.status ? (

@@ -12,7 +12,7 @@ import {
   findBackupNodeProvider,
   getHiveNodesList,
   getHiveVaultInfo,
-  migrateVault,
+  migrateVault
   // unbindDID
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
@@ -175,7 +175,7 @@ export default function HiveHome() {
 
   return (
     <>
-      <PageTitleTypo mt={{ xs: 7, md: 15 }}>Home</PageTitleTypo>
+      <PageTitleTypo mt={{ xs: 5, md: 6 }}>Home</PageTitleTypo>
       <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 8 }}>
         <PageTitleTypo sub="true">Hive Node Statistics</PageTitleTypo>
         <Stack

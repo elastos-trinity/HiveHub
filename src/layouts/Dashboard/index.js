@@ -14,7 +14,7 @@ const RootStyle = styled('div')({
   minHeight: '100%',
   overflow: 'hidden',
   position: 'relative',
-  background: 'rgba(255, 147, 30, 0.3)'
+  background: 'rgba(255, 147, 30, 0.03)'
 });
 
 const MainStyle = styled('div')(({ theme }) => ({
@@ -25,6 +25,8 @@ const MainStyle = styled('div')(({ theme }) => ({
   paddingBottom: theme.spacing(12),
   paddingLeft: theme.spacing(4),
   paddingRight: theme.spacing(4),
+  position: 'relative',
+  zIndex: 10,
   [theme.breakpoints.up('md')]: {
     paddingRight: theme.spacing(6),
     paddingBottom: theme.spacing(8)

@@ -1,48 +1,13 @@
 import { useState, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
-import { Button, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../style';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
 import { createVault, getHiveVaultInfo } from '../../../service/fetch';
-
-const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#fff',
-  height: '50px',
-  width: 'fit-content',
-  color: '#FF931E',
-  border: '1px solid #FF931E',
-  borderRadius: '200px',
-  fontWeight: 600,
-  lineHeight: '18px',
-  fontSize: '15px',
-  padding: '15px 11px',
-  [theme.breakpoints.up('md')]: {
-    height: '70px',
-    lineHeight: '24px',
-    fontSize: '20px',
-    padding: '23px 17px',
-    border: '2px solid #FF931E'
-  },
-  '&:hover': {
-    backgroundColor: 'rgba(255, 147, 30, 0.3)',
-    color: '#fff'
-  }
-}));
-
-const PlusTypo = styled(Typography)(({ theme }) => ({
-  fontWeight: 400,
-  lineHeight: '37px',
-  fontSize: '30px',
-  marginRight: '5px',
-  [theme.breakpoints.up('md')]: {
-    lineHeight: '43px',
-    fontSize: '35px'
-  }
-}));
+import PlusButton from '../../../components/Buttons/PlusButton';
 
 export default function HiveVaults() {
   // const navigate = useNavigate();
@@ -106,11 +71,12 @@ export default function HiveVaults() {
           />
         ))}
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
-          <CustomButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
-            <PlusTypo>+</PlusTypo>
+          <PlusButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
             Create Hive Vault
-          </CustomButton>
-          <CustomButton onClick={() => {}}>Access Hive Vaults</CustomButton>
+          </PlusButton>
+          <PlusButton onClick={() => {}} hasPlus={false}>
+            Access Hive Vaults
+          </PlusButton>
         </Stack>
       </Stack>
     </>

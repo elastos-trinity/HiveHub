@@ -1,6 +1,19 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+export const LandingTitleTypo = styled(Typography)(({ theme, sub }) => ({
+  font: 'Montserrat',
+  color: '#000',
+  fontWeight: sub ? 500 : 700,
+  fontSize: sub ? '35px' : '90px',
+  lineHeight: sub ? '43px' : '110px',
+  textAlign: 'center',
+  [theme.breakpoints.down('md')]: {
+    fontSize: sub ? '15px' : '28px',
+    lineHeight: sub ? '18px' : '36px'
+  }
+}));
+
 export const PageTitleTypo = styled(Typography)(({ theme, sub = false }) => ({
   //   fontFamily: 'Montserrat',
   //   fontStyle: 'normal',
@@ -89,5 +102,16 @@ export const NodeValue = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     fontSize: '20px',
     lineHeight: '24px'
+  }
+}));
+
+export const PlusTypography = styled(Typography)(({ theme }) => ({
+  fontWeight: 400,
+  lineHeight: '37px',
+  fontSize: '30px',
+  marginRight: '5px',
+  [theme.breakpoints.up('md')]: {
+    lineHeight: '43px',
+    fontSize: '35px'
   }
 }));

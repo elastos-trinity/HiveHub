@@ -50,10 +50,6 @@ export default function CreateNode() {
   const { user } = useUser();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
-  const [nodeName, setNodeName] = useState('');
-  const [nodeNameErr, setNodeNameErr] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailErr, setEmailErr] = useState(false);
   const [country, setCountry] = useState('');
   const [countryErr, setCountryErr] = useState(false);
   const [province, setProvince] = useState('');
@@ -62,16 +58,33 @@ export default function CreateNode() {
   const [districtErr, setDistrictErr] = useState(false);
   const [url, setUrl] = useState('');
   const [urlErr, setUrlErr] = useState(false);
-  const [description, setDescription] = useState('');
-  const [descriptionErr, setDescriptionErr] = useState(false);
 
   const handleCreateNode = async () => {
-    if (ownerDid && nodeName && email && country && province && district && url && description) {
+    if (ownerDid && country && province && district && url) {
       // dns.lookup(url, (err, address, familly) => {
       //   console.log(address);
       //   console.log(familly)
       //   console.log(err)
       // });
+      const restService = await getRestService(user.did);
+      const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+      if (!nodeInfo) {
+        enqueueSnackbar('Invalid node url', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        return;
+      }
+      const nodeName = nodeInfo.getName();
+      const email = nodeInfo.getEmail();
+      const description = nodeInfo.getDescription();
+      if (!nodeName || !email || !description) {
+        enqueueSnackbar("Hive node's information is insufficient.", {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        return;
+      }
       const curTime = getTime(new Date().getTime());
       const newNode = {
         name: nodeName,
@@ -85,8 +98,6 @@ export default function CreateNode() {
       };
 
       // check accessible and ownership
-      const restService = await getRestService(user.did);
-      const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
       const nodeServiceDid = nodeInfo.getServiceDid();
       const nodeOwnerDid = nodeInfo.getOwnerDid();
       const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
@@ -116,20 +127,21 @@ export default function CreateNode() {
         });
         return;
       }
-      await HiveHubServer.addHiveNode(newNode);
+      try {
+        await HiveHubServer.addHiveNode(newNode);
+      } catch (err) {
+        console.error(err);
+      }
       // const json = await HiveHubServer.addHiveNode(newNode);
       // acknowledged: true
       // inserted_id: "62c2e6560d6930f229239199"
       navigate('/dashboard/nodes');
     } else {
       setOwnerDidErr(!ownerDid);
-      setNodeNameErr(!nodeName);
-      setEmailErr(!email);
       setCountryErr(!country);
       setProvinceErr(!province);
       setDistrictErr(!district);
       setUrlErr(!url);
-      setDescriptionErr(!description);
     }
   };
 
@@ -150,30 +162,6 @@ export default function CreateNode() {
             error={ownerDidErr}
             errorText="Owner DID can not be empty"
             disabled
-          />
-          <CustomTextField
-            placeholder="Node Name"
-            variant="standard"
-            fontSize={matchDownMd ? 10 : 20}
-            height={matchDownMd ? 12 : 24}
-            error={nodeNameErr}
-            errorText="Node Name can not be empty"
-            changeHandler={(value) => {
-              setNodeName(value);
-              setNodeNameErr(false);
-            }}
-          />
-          <CustomTextField
-            placeholder="Email"
-            variant="standard"
-            fontSize={matchDownMd ? 10 : 20}
-            height={matchDownMd ? 12 : 24}
-            error={emailErr}
-            errorText="Email can not be empty"
-            changeHandler={(value) => {
-              setEmail(value);
-              setEmailErr(false);
-            }}
           />
           <Stack
             direction={{ xs: 'column', md: 'row' }}
@@ -229,20 +217,8 @@ export default function CreateNode() {
               setUrlErr(false);
             }}
           />
-          <CustomTextField
-            placeholder="Description"
-            variant="standard"
-            fontSize={matchDownMd ? 10 : 20}
-            height={matchDownMd ? 12 : 24}
-            error={descriptionErr}
-            errorText="Description can not be empty"
-            changeHandler={(value) => {
-              setDescription(value);
-              setDescriptionErr(false);
-            }}
-          />
         </Stack>
-        <Stack direction="row" mt={{ xs: 10, md: 17.5 }} spacing={{ xs: 2.5, md: 5 }}>
+        <Stack direction="row" mt={{ xs: 5, md: 10 }} spacing={{ xs: 2.5, md: 5 }}>
           <CustomButton
             sx={{
               background: '#B3B3B3',

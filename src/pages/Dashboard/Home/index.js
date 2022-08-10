@@ -82,9 +82,9 @@ export default function HiveHome() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const nodeList = await getHiveNodesList(undefined, undefined, false);
+        const nodeList = await getHiveNodesList(undefined, undefined, false, false);
         setNodeItems(nodeList);
-        const myNodeList = await getHiveNodesList(undefined, user.did, false);
+        const myNodeList = await getHiveNodesList(undefined, user.did, false, false);
         setCreated(myNodeList.length);
         const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
         if (vaultItem) {

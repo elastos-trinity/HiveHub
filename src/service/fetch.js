@@ -21,9 +21,10 @@ import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHi
 import { config } from '../config';
 import { getTime, reduceHexAddress, sleep } from './common';
 
-export const getHiveNodesList = async (nid, did, withName) => {
+export const getHiveNodesList = async (nid, did, withName, onlyActive) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
-  const nodeList = await Promise.all(
+  const nodeList = [];
+  await Promise.all(
     nodes.map(async (item) => {
       const node = { ...item };
       try {
@@ -40,6 +41,9 @@ export const getHiveNodesList = async (nid, did, withName) => {
         node.status = false;
         node.ownerName = reduceHexAddress(node.owner_did, 4);
       }
+      if (onlyActive) {
+        if (node.status) nodeList.push(node);
+      } else nodeList.push(node);
       return node;
     })
   );

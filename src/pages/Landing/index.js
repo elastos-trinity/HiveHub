@@ -143,12 +143,12 @@ export default function LandingPage() {
     >
       <Box mt={{ xs: '70px', md: '135px' }} sx={{ position: 'relative' }}>
         <LandingTitleTypo>
-          {`${t('landing-title-1')} `}
-          <span style={{ color: '#FF931E' }}>{t('landing-title-2')}</span>
+          {`${t('landing-title-manage')} `}
+          <span style={{ color: '#FF931E' }}>{t('landing-title-your')}</span>
         </LandingTitleTypo>
-        <LandingTitleTypo>{t('landing-title-3')}</LandingTitleTypo>
+        <LandingTitleTypo>{t('landing-title-decentralized-storage')}</LandingTitleTypo>
         <LandingTitleTypo sub="true" sx={{ pt: '10px' }}>
-          {t('landing-title-sub')}
+          {t('landing-title-with-elastos')}
         </LandingTitleTypo>
         <Box
           sx={{
@@ -212,7 +212,6 @@ export default function LandingPage() {
             blurVal={matchMdUp ? 40 : 17.5}
             opacityVal={matchMdUp ? 0.7 : 0.6}
             width={matchMdUp ? 30 : 15}
-            // mobile={!matchMdUp}
           />
         </Box>
       </Stack>
@@ -345,7 +344,7 @@ export default function LandingPage() {
               </SmallHexagon>
             </Box>
             {/* <CustomBox>1</CustomBox> */}
-            Register Hive Node
+            {t('landing-feature-register-hive-node')}
           </MyGrid>
           <MyGrid item xs={12} sm={6} md={3}>
             <Box sx={{ margin: '30px 0 40px' }}>
@@ -368,7 +367,7 @@ export default function LandingPage() {
               </Box>
             </Box>
             {/* <CustomBox>2</CustomBox> */}
-            Create Vault
+            {t('landing-feature-create-vault')}
           </MyGrid>
           <MyGrid item xs={12} sm={6} md={3}>
             <Box sx={{ margin: '30px 0 40px' }}>
@@ -400,7 +399,7 @@ export default function LandingPage() {
               </Box>
             </Box>
             {/* <CustomBox>3</CustomBox> */}
-            Backup Vault
+            {t('landing-feature-backup-vault')}
           </MyGrid>
           <MyGrid item xs={12} sm={6} md={3}>
             <Grid
@@ -460,7 +459,7 @@ export default function LandingPage() {
               </Grid>
             </Grid>
             {/* <CustomBox>4</CustomBox> */}
-            Migrate Vault
+            {t('landing-feature-migrate-vault')}
           </MyGrid>
         </Grid>
       </Box>

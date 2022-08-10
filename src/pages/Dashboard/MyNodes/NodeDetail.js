@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import {
   NodeTitle,
@@ -10,43 +9,12 @@ import {
   NodeValue,
   NodeDescription
 } from '../../../components/CustomTypos';
+import { NodeDetailBox } from '../../../components/CustomContainer';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { createVault, getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
-import PlusButton from '../../../components/Buttons/PlusButton';
-
-const ContainerBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
-  textAlign: 'center',
-  borderRadius: '20px',
-  width: '100%',
-  padding: '15px 25px 20px 20px',
-  [theme.breakpoints.up('md')]: {
-    padding: '30px 72px 40px 40px'
-  }
-}));
-
-const DestroyVaultButton = styled(Button)(({ theme }) => ({
-  borderRadius: '200px',
-  backgroundColor: '#B3B3B3',
-  color: 'white',
-  fontWeight: 600,
-  lineHeight: '12px',
-  fontSize: '7px',
-  // height: '9px',
-  padding: '7px 15px',
-  [theme.breakpoints.up('sm')]: {
-    lineHeight: '18px',
-    fontSize: '15px',
-    // height: '44px',
-    padding: '13px 25px'
-  },
-  '&:hover': {
-    backgroundColor: 'rgba(179, 179, 179, 0.7)'
-  }
-}));
+import { PlusButton, DestroyVaultButton } from '../../../components/CustomButtons';
 
 InfoItem.propTypes = {
   label: PropTypes.string.isRequired,
@@ -201,7 +169,7 @@ export default function NodeDetail() {
           sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '500px', md: '800px' } }}
         />
       ) : (
-        <ContainerBox>
+        <NodeDetailBox>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <NodeDescription>{nodeDetail.remark}</NodeDescription>
             <DestroyVaultButton>Destroy Vault</DestroyVaultButton>
@@ -267,7 +235,7 @@ export default function NodeDetail() {
               ))}
             </Box>
           )}
-        </ContainerBox>
+        </NodeDetailBox>
       )}
     </>
   );

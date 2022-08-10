@@ -1,90 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Grid, Typography, Stack } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { Box, Container, Grid, Typography, Stack } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { LandingTitleTypo } from '../../components/CustomTypos';
+import { ConnectWalletButton, GitHubButton } from '../../components/CustomButtons';
+import { FeatureGrid } from '../../components/CustomContainer';
 import useUser from '../../hooks/useUser';
 import SmallHexagon from '../../components/SmallHexagon';
 import HexagonShape from '../../components/HexagonShape';
 import generatedGitInfo from '../../generatedGitInfo.json';
-
-const LandingTitleTypo = styled(Typography)(({ theme, sub }) => ({
-  color: '#000000',
-  font: 'Montserrat',
-  fontWeight: sub ? 500 : 700,
-  fontSize: sub ? '35px' : '90px',
-  lineHeight: sub ? '43px' : '110px',
-  textAlign: 'center',
-  [theme.breakpoints.down('md')]: {
-    fontSize: sub ? '15px' : '28px',
-    lineHeight: sub ? '18px' : '36px'
-  }
-}));
-
-const ConnectButton = styled(Button)(({ theme }) => ({
-  color: '#FF931E',
-  font: 'Montserrat',
-  border: '3px solid #FF931E',
-  fontWeight: 600,
-  borderRadius: '200px',
-  fontSize: '25px',
-  lineHeight: '30px',
-  padding: '20px 30px',
-  zIndex: 10,
-  '&:hover': {
-    border: '3px solid #FF931E',
-    backgroundColor: 'white'
-  },
-  [theme.breakpoints.down('md')]: {
-    fontSize: '12px',
-    lineHeight: '15px',
-    padding: '10px 15px',
-    border: '2px solid #FF931E',
-    '&:hover': {
-      border: '2px solid #FF931E',
-      backgroundColor: 'white'
-    }
-  }
-}));
-
-const GitHubButton = styled(Button)(({ theme }) => ({
-  color: '#000000',
-  font: 'Montserrat',
-  border: '3px solid #000000',
-  fontWeight: 600,
-  borderRadius: '200px',
-  fontSize: '25px',
-  lineHeight: '30px',
-  padding: '20px 30px',
-  zIndex: 10,
-  '&:hover': {
-    border: '3px solid #000000',
-    backgroundColor: 'white'
-  },
-  [theme.breakpoints.down('md')]: {
-    fontSize: '12px',
-    lineHeight: '15px',
-    padding: '10px 15px',
-    border: '2px solid #000000',
-    '&:hover': {
-      border: '2px solid #000000',
-      backgroundColor: 'white'
-    }
-  }
-}));
-
-const MyGrid = styled(Grid)(({ theme }) => ({
-  textAlign: 'center',
-  padding: '20px 0 30px',
-  fontSize: '30px',
-  lineHeight: '37px',
-  [theme.breakpoints.down('md')]: {
-    fontSize: '15px',
-    lineHeight: '18px'
-  }
-}));
 
 // CustomBox.propTypes = {
 //   children: PropTypes.node
@@ -184,13 +111,13 @@ export default function LandingPage() {
         sx={{ position: 'relative' }}
       >
         {!user.did ? (
-          <ConnectButton variant="outlined" onClick={login} disabled={loading}>
+          <ConnectWalletButton variant="outlined" onClick={login} disabled={loading}>
             {t('landing-connect-wallet')}
-          </ConnectButton>
+          </ConnectWalletButton>
         ) : (
-          <ConnectButton variant="outlined" onClick={() => navigate('/dashboard/home')}>
+          <ConnectWalletButton variant="outlined" onClick={() => navigate('/dashboard/home')}>
             Dashboard
-          </ConnectButton>
+          </ConnectWalletButton>
         )}
         <GitHubButton
           variant="outlined"
@@ -274,7 +201,7 @@ export default function LandingPage() {
           {t('landing-features')}
         </Typography>
         <Grid container direction="row" alignItems="center" justifyContent="space-around">
-          <MyGrid item xs={12} sm={6} md={3} sx={{ position: 'relative', top: '2px' }}>
+          <FeatureGrid item xs={12} sm={6} md={3} sx={{ position: 'relative', top: '2px' }}>
             <Box sx={{ margin: '40px 0 40px' }}>
               <SmallHexagon
                 borderColor="#FF931E"
@@ -345,8 +272,8 @@ export default function LandingPage() {
             </Box>
             {/* <CustomBox>1</CustomBox> */}
             {t('landing-feature-register-hive-node')}
-          </MyGrid>
-          <MyGrid item xs={12} sm={6} md={3}>
+          </FeatureGrid>
+          <FeatureGrid item xs={12} sm={6} md={3}>
             <Box sx={{ margin: '30px 0 40px' }}>
               <Box
                 sx={{
@@ -368,8 +295,8 @@ export default function LandingPage() {
             </Box>
             {/* <CustomBox>2</CustomBox> */}
             {t('landing-feature-create-vault')}
-          </MyGrid>
-          <MyGrid item xs={12} sm={6} md={3}>
+          </FeatureGrid>
+          <FeatureGrid item xs={12} sm={6} md={3}>
             <Box sx={{ margin: '30px 0 40px' }}>
               <Box
                 sx={{
@@ -400,8 +327,8 @@ export default function LandingPage() {
             </Box>
             {/* <CustomBox>3</CustomBox> */}
             {t('landing-feature-backup-vault')}
-          </MyGrid>
-          <MyGrid item xs={12} sm={6} md={3}>
+          </FeatureGrid>
+          <FeatureGrid item xs={12} sm={6} md={3}>
             <Grid
               container
               alignItems="center"
@@ -460,7 +387,7 @@ export default function LandingPage() {
             </Grid>
             {/* <CustomBox>4</CustomBox> */}
             {t('landing-feature-migrate-vault')}
-          </MyGrid>
+          </FeatureGrid>
         </Grid>
       </Box>
       <Box sx={{ pt: { xs: '100px', md: '200px' } }}>

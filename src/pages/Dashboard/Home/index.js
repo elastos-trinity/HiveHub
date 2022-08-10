@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Grid, Stack, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
@@ -9,6 +8,8 @@ import {
   NodeStatisticLabel,
   NodeStatisticBody
 } from '../../../components/CustomTypos';
+import { CustomButton } from '../../../components/CustomButtons';
+import { NodeSummaryBox } from '../../../components/CustomContainer';
 import useUser from '../../../hooks/useUser';
 import {
   backupVault,
@@ -20,36 +21,6 @@ import {
   // unbindDID
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
-
-const CustomButton = styled(Button)({
-  backgroundColor: '#fff',
-  // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-  width: '160px',
-  height: '40px',
-  padding: '10px',
-  border: '2px solid #E5E5E5',
-  borderRadius: '100px',
-  boxSizing: 'border-box',
-  color: '#000',
-  fontSize: '15px',
-  fontWeight: 600,
-  '&:hover': {
-    backgroundColor: 'rgba(255, 147, 30, 0.3)',
-    color: '#fff'
-  }
-});
-
-const NodeSummaryBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
-  // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-  borderRadius: '18px',
-  width: '100%',
-  padding: '15px 20px',
-  [theme.breakpoints.up('md')]: {
-    padding: '20px 30px'
-  }
-}));
 
 export default function HiveHome() {
   const { user } = useUser();

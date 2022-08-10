@@ -7,7 +7,7 @@ import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
 import { createVault, getHiveVaultInfo } from '../../../service/fetch';
-import PlusButton from '../../../components/Buttons/PlusButton';
+import { PlusButton } from '../../../components/CustomButtons';
 
 export default function HiveVaults() {
   // const navigate = useNavigate();

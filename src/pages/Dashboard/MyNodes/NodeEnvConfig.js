@@ -1,47 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Box, Stack } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { Stack } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../../../components/CustomTypos';
+import { ConfirmButton } from '../../../components/CustomButtons';
+import { ContainerBox } from '../../../components/CustomContainer';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { createHiveNodeEnvConfig, getRestService } from '../../../service/fetch';
-
-const ContainerBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
-  textAlign: 'center',
-  borderRadius: '20px',
-  width: '100%',
-  padding: '20px 50px 20px 20px',
-  [theme.breakpoints.up('md')]: {
-    padding: '30px 70px'
-  }
-}));
-
-const CustomButton = styled(Button)(({ theme }) => ({
-  borderRadius: '200px',
-  backgroundColor: '#FF931E',
-  color: 'white',
-  fontWeight: 600,
-  lineHeight: '12px',
-  fontSize: '10px',
-  height: '30px',
-  padding: '9px 38px',
-  width: '120px',
-  [theme.breakpoints.up('md')]: {
-    lineHeight: '24px',
-    fontSize: '20px',
-    height: '60px',
-    padding: '17px 68px',
-    width: '200px'
-  },
-  '&:hover': {
-    backgroundColor: 'rgba(255, 147, 30, 0.7)'
-  }
-}));
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
@@ -176,7 +144,7 @@ export default function NodeEnvConfig() {
           />
         </Stack>
         <Stack direction="row" mt={{ xs: 8, md: 10 }} spacing={{ xs: 2.5, md: 5 }}>
-          <CustomButton
+          <ConfirmButton
             sx={{
               background: '#B3B3B3',
               '&:hover': {
@@ -186,8 +154,8 @@ export default function NodeEnvConfig() {
             onClick={() => navigate('/dashboard/nodes')}
           >
             Cancel
-          </CustomButton>
-          <CustomButton onClick={handleSaveEnvConfig}>Confirm</CustomButton>
+          </ConfirmButton>
+          <ConfirmButton onClick={handleSaveEnvConfig}>Confirm</ConfirmButton>
         </Stack>
       </ContainerBox>
     </>

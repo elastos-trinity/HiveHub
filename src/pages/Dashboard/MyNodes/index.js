@@ -6,7 +6,7 @@ import NodeItem from '../../../components/NodeItem';
 import useUser from '../../../hooks/useUser';
 import { getHiveNodesList } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
-import PlusButton from '../../../components/Buttons/PlusButton';
+import { PlusButton } from '../../../components/CustomButtons';
 
 export default function HiveNodes() {
   const navigate = useNavigate();

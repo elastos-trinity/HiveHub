@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Stack } from '@mui/material';
+import { Button, Box, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
-import { PageTitleTypo } from '../style';
+import { PageTitleTypo } from '../../../components/CustomTypos';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { createHiveNodeEnvConfig, getRestService } from '../../../service/fetch';

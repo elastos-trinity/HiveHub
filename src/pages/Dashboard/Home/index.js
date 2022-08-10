@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import NodeSummaryItem from '../../../components/NodeSummaryItem';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
-import { PageTitleTypo } from '../style';
+import { PageTitleTypo } from '../../../components/CustomTypos';
 import useUser from '../../../hooks/useUser';
 import {
   backupVault,
@@ -18,7 +18,7 @@ import {
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
 const NodeStatisticLabel = styled(Typography)({
-  color: 'rgba(0,0,0, 0.3)',
+  color: 'rgba(0, 0, 0, 0.3)',
   fontWeight: 400,
   fontSize: '25px',
   textAlign: 'center',

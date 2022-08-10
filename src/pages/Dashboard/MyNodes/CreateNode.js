@@ -5,7 +5,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 // import dns from 'dns';
-import { PageTitleTypo } from '../style';
+import { PageTitleTypo } from '../../../components/CustomTypos';
 import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';

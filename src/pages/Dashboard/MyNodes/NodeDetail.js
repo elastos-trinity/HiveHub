@@ -8,6 +8,7 @@ import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { createVault, getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
+import PlusButton from '../../../components/Buttons/PlusButton';
 
 const NodeTitle = styled(Typography)(({ theme }) => ({
   color: '#000',
@@ -83,41 +84,6 @@ const DestroyVaultButton = styled(Button)(({ theme }) => ({
   },
   '&:hover': {
     backgroundColor: 'rgba(179, 179, 179, 0.7)'
-  }
-}));
-
-const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#fff',
-  height: '50px',
-  width: 'fit-content',
-  color: '#FF931E',
-  border: '1px solid #FF931E',
-  borderRadius: '200px',
-  fontWeight: 600,
-  lineHeight: '18px',
-  fontSize: '15px',
-  padding: '15px 11px',
-  [theme.breakpoints.up('sm')]: {
-    height: '70px',
-    lineHeight: '24px',
-    fontSize: '20px',
-    padding: '23px 17px',
-    border: '2px solid #FF931E'
-  },
-  '&:hover': {
-    backgroundColor: 'rgba(255, 147, 30, 0.3)',
-    color: '#fff'
-  }
-}));
-
-const PlusTypo = styled(Typography)(({ theme }) => ({
-  fontWeight: 400,
-  lineHeight: '37px',
-  fontSize: '30px',
-  marginRight: '5px',
-  [theme.breakpoints.up('md')]: {
-    lineHeight: '43px',
-    fontSize: '35px'
   }
 }));
 
@@ -279,7 +245,7 @@ export default function NodeDetail() {
             <NodeDescription>{nodeDetail.remark}</NodeDescription>
             <DestroyVaultButton>Destroy Vault</DestroyVaultButton>
           </Stack>
-          <Grid container sx={{ mt: { xs: '43px', md: '77px' } }}>
+          <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
             <InfoItem label="IP" value={nodeDetail.ip} />
             <InfoItem label="Owner DID" value={nodeDetail.owner_did} />
             <InfoItem label="Country/Region" value={nodeDetail.area} />
@@ -299,7 +265,7 @@ export default function NodeDetail() {
               }
             }}
             sx={{
-              marginTop: { xs: '57px', md: '96px' },
+              mt: { xs: 3, md: 6 },
               fontSize: { xs: '12px', md: '25px' },
               lineHeight: { xs: '15px', md: '30px' },
               fontWeight: 700
@@ -309,9 +275,7 @@ export default function NodeDetail() {
             <Tab value="backup" label="Backup Service" />
           </Tabs>
           {value === 'vault' ? (
-            <Box
-              sx={{ mt: { xs: 5, md: 12.5 }, width: '100%', height: '300px', textAlign: 'left' }}
-            >
+            <Box sx={{ mt: { xs: 2.5, md: 5 }, width: '100%', height: '300px', textAlign: 'left' }}>
               <Stack mt={{ xs: 1.75, md: 5 }} mb={6.25} spacing={{ xs: 3.75, md: 6.25 }}>
                 {vaultItems.map((item, index) => (
                   <VaultSummaryItem
@@ -323,14 +287,9 @@ export default function NodeDetail() {
                   />
                 ))}
               </Stack>
-              <CustomButton
-                sx={{ height: { xs: '30px', md: '70px' } }}
-                onClick={handleCreateVault}
-                disabled={vaultItems.length > 0}
-              >
-                <PlusTypo>+</PlusTypo>
+              <PlusButton onClick={handleCreateVault} disabled={vaultItems.length > 0}>
                 Add Vault
-              </CustomButton>
+              </PlusButton>
             </Box>
           ) : (
             <Box

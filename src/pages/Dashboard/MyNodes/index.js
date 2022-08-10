@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
-import { PageTitleTypo } from '../style';
+import { PageTitleTypo } from '../../../components/CustomTypos';
 import NodeItem from '../../../components/NodeItem';
 import useUser from '../../../hooks/useUser';
 import { getHiveNodesList } from '../../../service/fetch';

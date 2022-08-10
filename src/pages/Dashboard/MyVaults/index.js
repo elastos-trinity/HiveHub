@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { PageTitleTypo } from '../style';
+import { PageTitleTypo } from '../../../components/CustomTypos';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';

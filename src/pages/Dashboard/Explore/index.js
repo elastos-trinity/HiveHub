@@ -1,23 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Stack, Typography, Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Stack, Button } from '@mui/material';
 import NodeItem from '../../../components/NodeItem';
 import VaultItem from '../../../components/VaultItem';
-import { PageTitleTypo } from '../style';
+import { PageTitleTypo, FilterByTypo } from '../../../components/CustomTypos';
+import useUser from '../../../hooks/useUser';
 import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
-import useUser from '../../../hooks/useUser';
-
-const FilterByTypo = styled(Typography)(({ theme }) => ({
-  color: '#000',
-  fontWeight: 400,
-  fontSize: '10px',
-  lineHeight: '12px',
-  [theme.breakpoints.up('md')]: {
-    fontSize: '20px',
-    lineHeight: '24px'
-  }
-}));
 
 export default function HiveExplore() {
   const { user } = useUser();

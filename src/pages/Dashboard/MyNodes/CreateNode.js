@@ -33,11 +33,13 @@ const CustomButton = styled(Button)(({ theme }) => ({
   fontSize: '10px',
   height: '30px',
   padding: '9px 38px',
+  width: '120px',
   [theme.breakpoints.up('md')]: {
     lineHeight: '24px',
     fontSize: '20px',
     height: '60px',
-    padding: '17px 68px'
+    padding: '17px 68px',
+    width: '200px'
   },
   '&:hover': {
     backgroundColor: 'rgba(255, 147, 30, 0.7)'
@@ -218,7 +220,7 @@ export default function CreateNode() {
             }}
           />
         </Stack>
-        <Stack direction="row" mt={{ xs: 5, md: 10 }} spacing={{ xs: 2.5, md: 5 }}>
+        <Stack direction="row" mt={{ xs: 8, md: 10 }} spacing={{ xs: 2.5, md: 5 }}>
           <CustomButton
             sx={{
               background: '#B3B3B3',

@@ -1,7 +1,14 @@
 import PropTypes from 'prop-types';
 
+HexagonShape.propTypes = {
+  blurVal: PropTypes.number,
+  opacityVal: PropTypes.number,
+  width: PropTypes.number,
+  size: PropTypes.number
+};
+
 export default function HexagonShape(props) {
-  const { blurVal, width, size, opacityVal } = props;
+  const { blurVal, opacityVal, width, size } = props;
   const svgWidth = 256;
   const svgHeight = 295;
 

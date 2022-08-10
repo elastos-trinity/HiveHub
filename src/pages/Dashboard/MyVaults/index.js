@@ -90,7 +90,7 @@ export default function HiveVaults() {
       <PageTitleTypo mt={{ xs: 5, md: 6 }} mb={myVaultsList.length ? 0 : 1.25}>
         My Vaults
       </PageTitleTypo>
-      <Stack mt={{ xs: 4, md: 8 }} mb={10} spacing={{ xs: 3.75, md: 6.25 }}>
+      <Stack mt={{ xs: 4, md: 8 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
         {myVaultsList.map((item, index) => (
           <VaultItem
             key={index}
@@ -105,13 +105,13 @@ export default function HiveVaults() {
             sx={{ cursor: 'pointer' }}
           />
         ))}
-      </Stack>
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
-        <CustomButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
-          <PlusTypo>+</PlusTypo>
-          Create Hive Vault
-        </CustomButton>
-        <CustomButton onClick={() => {}}>Access Hive Vaults</CustomButton>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
+          <CustomButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
+            <PlusTypo>+</PlusTypo>
+            Create Hive Vault
+          </CustomButton>
+          <CustomButton onClick={() => {}}>Access Hive Vaults</CustomButton>
+        </Stack>
       </Stack>
     </>
   );

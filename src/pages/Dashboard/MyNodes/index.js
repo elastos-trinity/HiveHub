@@ -64,7 +64,7 @@ export default function HiveNodes() {
       <PageTitleTypo mt={{ xs: 5, md: 6 }} mb={myNodeList.length ? 0 : 1.25}>
         My Nodes
       </PageTitleTypo>
-      <Stack mt={{ xs: 4, md: 8 }} mb={10} spacing={{ xs: 3.75, md: 6.25 }}>
+      <Stack mt={{ xs: 4, md: 8 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
         {myNodeList.map((node, index) => (
           <NodeItem
             key={index}

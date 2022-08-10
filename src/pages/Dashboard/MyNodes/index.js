@@ -1,47 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Stack } from '@mui/material';
 import { PageTitleTypo } from '../style';
 import NodeItem from '../../../components/NodeItem';
-import { getHiveNodesList } from '../../../service/fetch';
 import useUser from '../../../hooks/useUser';
+import { getHiveNodesList } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
-
-const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#fff',
-  height: '50px',
-  width: 'fit-content',
-  color: '#FF931E',
-  border: '1px solid #FF931E',
-  borderRadius: '200px',
-  fontWeight: 600,
-  lineHeight: '18px',
-  fontSize: '15px',
-  padding: '15px 11px',
-  [theme.breakpoints.up('md')]: {
-    height: '70px',
-    lineHeight: '24px',
-    fontSize: '20px',
-    padding: '23px 17px',
-    border: '2px solid #FF931E'
-  },
-  '&:hover': {
-    backgroundColor: 'rgba(255, 147, 30, 0.3)',
-    color: '#fff'
-  }
-}));
-
-const PlusTypo = styled(Typography)(({ theme }) => ({
-  fontWeight: 400,
-  lineHeight: '37px',
-  fontSize: '30px',
-  marginRight: '5px',
-  [theme.breakpoints.up('md')]: {
-    lineHeight: '43px',
-    fontSize: '35px'
-  }
-}));
+import PlusButton from '../../../components/Buttons/PlusButton';
 
 export default function HiveNodes() {
   const navigate = useNavigate();
@@ -82,14 +47,12 @@ export default function HiveNodes() {
           />
         ))}
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
-          <CustomButton onClick={() => navigate('/dashboard/nodes/create')}>
-            <PlusTypo>+</PlusTypo>
+          <PlusButton onClick={() => navigate('/dashboard/nodes/create')}>
             Create Hive Node
-          </CustomButton>
-          <CustomButton onClick={() => navigate('/dashboard/nodes/envconfig')}>
-            <PlusTypo>+</PlusTypo>
+          </PlusButton>
+          <PlusButton onClick={() => navigate('/dashboard/nodes/envconfig')}>
             Create Hive Node Config
-          </CustomButton>
+          </PlusButton>
         </Stack>
       </Stack>
     </>

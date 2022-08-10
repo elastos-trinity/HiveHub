@@ -4,34 +4,17 @@ import { useParams } from 'react-router-dom';
 import { Box, Button, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
+import {
+  NodeTitle,
+  NodeTimeLable,
+  NodeValue,
+  NodeDescription
+} from '../../../components/CustomTypos';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { createVault, getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
 import PlusButton from '../../../components/Buttons/PlusButton';
-
-const NodeTitle = styled(Typography)(({ theme }) => ({
-  color: '#000',
-  fontWeight: 700,
-  fontSize: '20px',
-  lineHeight: '24px',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '30px',
-    lineHeight: '36px'
-  }
-}));
-
-const NodeTimeLable = styled(Typography)(({ theme }) => ({
-  color: 'rgba(0,0,0, 0.3)',
-  fontWeight: 400,
-  fontSize: '10px',
-  lineHeight: '12px',
-  textAlign: 'right',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '15px',
-    lineHeight: '18px'
-  }
-}));
 
 const ContainerBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -42,28 +25,6 @@ const ContainerBox = styled(Box)(({ theme }) => ({
   padding: '15px 25px 20px 20px',
   [theme.breakpoints.up('md')]: {
     padding: '30px 72px 40px 40px'
-  }
-}));
-
-const NodeDescription = styled(Typography)(({ theme }) => ({
-  color: 'rgba(0,0,0, 0.3)',
-  fontWeight: 400,
-  fontSize: '10px',
-  lineHeight: '12px',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '20px',
-    lineHeight: '24px'
-  }
-}));
-
-const NodeValue = styled(Typography)(({ theme }) => ({
-  color: '#000',
-  fontWeight: 600,
-  fontSize: '10px',
-  lineHeight: '12px',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '20px',
-    lineHeight: '24px'
   }
 }));
 

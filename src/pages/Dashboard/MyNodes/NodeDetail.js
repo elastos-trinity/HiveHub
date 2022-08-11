@@ -49,31 +49,31 @@ export default function NodeDetail() {
 
   const { nodeId } = useParams();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const details = await getHiveNodesList(nodeId, undefined, false, false);
-      setNodeDetail(details.length ? details[0] : undefined);
-      const vaultItem = await getHiveVaultInfo(
-        user.did,
-        details.length ? details[0].url : undefined,
-        1
-      );
-      if (vaultItem) {
-        setVaultItems([vaultItem]);
-      } else setVaultItems([]);
-      const backupItem = await getHiveVaultInfo(
-        user.did,
-        details.length ? details[0].url : undefined,
-        2
-      );
-      if (backupItem) {
-        setBackupItems([backupItem]);
-      } else setBackupItems([]);
-      setLoading(false);
-    };
-    if (user.did) fetchData();
-  }, [user.did, nodeId]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     const details = await getHiveNodesList(nodeId, undefined, false, false);
+  //     setNodeDetail(details.length ? details[0] : undefined);
+  //     const vaultItem = await getHiveVaultInfo(
+  //       user.did,
+  //       details.length ? details[0].url : undefined,
+  //       1
+  //     );
+  //     if (vaultItem) {
+  //       setVaultItems([vaultItem]);
+  //     } else setVaultItems([]);
+  //     const backupItem = await getHiveVaultInfo(
+  //       user.did,
+  //       details.length ? details[0].url : undefined,
+  //       2
+  //     );
+  //     if (backupItem) {
+  //       setBackupItems([backupItem]);
+  //     } else setBackupItems([]);
+  //     setLoading(false);
+  //   };
+  //   if (user.did) fetchData();
+  // }, [user.did, nodeId]);
 
   const handleCreateVault = () => {
     if (user.nodeProvider !== nodeDetail.url) {
@@ -204,8 +204,16 @@ export default function NodeDetail() {
             <Tab value="backup" label="Backup Service" />
           </Tabs>
           {value === 'vault' ? (
-            <Box sx={{ mt: { xs: 2.5, md: 5 }, width: '100%', height: '300px', textAlign: 'left' }}>
-              <Stack mt={{ xs: 1.75, md: 5 }} mb={6.25} spacing={{ xs: 3.75, md: 6.25 }}>
+            <Box
+              sx={{
+                mt: { xs: 2.5, md: 5 },
+                mb: { xs: 1, md: 2 },
+                width: '100%',
+                height: 'fit-content',
+                textAlign: 'left'
+              }}
+            >
+              <Stack mt={{ xs: 1.75, md: 5 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
                 {vaultItems.map((item, index) => (
                   <VaultSummaryItem
                     key={`node-detail-vault-summary-${index}`}
@@ -222,7 +230,13 @@ export default function NodeDetail() {
             </Box>
           ) : (
             <Box
-              sx={{ mt: { xs: 5, md: 9.375 }, width: '100%', height: '300px', textAlign: 'left' }}
+              sx={{
+                mt: { xs: 2.5, md: 5 },
+                mb: { xs: 1, md: 2 },
+                width: '100%',
+                height: 'fit-content',
+                textAlign: 'left'
+              }}
             >
               {backupItems.map((item, index) => (
                 <VaultSummaryItem

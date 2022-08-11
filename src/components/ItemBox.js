@@ -1,30 +1,6 @@
-import { Box, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-
-const ContainerBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
-  borderRadius: '18px',
-  width: '100%',
-  padding: '10px 10px 10px 20px',
-  position: 'relative',
-  [theme.breakpoints.up('sm')]: {
-    padding: '20px 20px 20px 40px'
-  }
-}));
-
-const NodeTimeLable = styled(Typography)(({ theme }) => ({
-  color: 'rgba(0,0,0, 0.3)',
-  fontWeight: 400,
-  fontSize: '10px',
-  lineHeight: '12px',
-  textAlign: 'right',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '15px',
-    lineHeight: '18px'
-  }
-}));
+import { NodeTimeLable } from './CustomTypos';
+import { ContainerBox } from './CustomContainer';
 
 ItemBox.propTypes = {
   time: PropTypes.string.isRequired,
@@ -35,7 +11,14 @@ ItemBox.propTypes = {
 
 export default function ItemBox({ time, children, onClick, sx }) {
   return (
-    <ContainerBox onClick={onClick} sx={{ ...sx }}>
+    <ContainerBox
+      onClick={onClick}
+      sx={{
+        padding: { xs: '10px 10px 10px 20px', sm: '20px 20px 20px 40px' },
+        position: 'relative',
+        ...sx
+      }}
+    >
       <NodeTimeLable
         sx={{
           whiteSpace: 'nowrap',

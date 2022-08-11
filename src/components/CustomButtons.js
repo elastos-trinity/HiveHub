@@ -139,6 +139,26 @@ export const ConfirmButton = styled(Button)(({ theme }) => ({
   }
 }));
 
+export const AccessButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#FF931E',
+  height: '25px',
+  padding: '6px 14px',
+  borderRadius: '200px',
+  boxSizing: 'border-box',
+  color: '#FFF',
+  fontSize: '10px',
+  fontWeight: 600,
+  '&:hover': {
+    backgroundColor: 'rgba(255, 147, 30, 0.3)',
+    color: '#fff'
+  },
+  [theme.breakpoints.up('sm')]: {
+    height: '45px',
+    fontSize: '15px',
+    padding: '13px 29px'
+  }
+}));
+
 export const DestroyVaultButton = styled(Button)(({ theme }) => ({
   borderRadius: '200px',
   backgroundColor: '#B3B3B3',

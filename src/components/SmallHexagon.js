@@ -1,14 +1,5 @@
 import PropTypes from 'prop-types';
-// material
 import { Box } from '@mui/material';
-
-SmallHexagon.propTypes = {
-  sideLength: PropTypes.number,
-  borderColor: PropTypes.string,
-  children: PropTypes.node,
-  backColor: PropTypes.string,
-  borderWidth: PropTypes.number
-};
 
 Rectangle.propTypes = {
   rotation: PropTypes.number,
@@ -36,6 +27,14 @@ function Rectangle({ rotation, sideLength, borderColor, backColor, borderWidth }
     />
   );
 }
+
+SmallHexagon.propTypes = {
+  sideLength: PropTypes.number,
+  borderColor: PropTypes.string,
+  children: PropTypes.node,
+  backColor: PropTypes.string,
+  borderWidth: PropTypes.number
+};
 
 export default function SmallHexagon({
   sideLength,

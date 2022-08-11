@@ -12,36 +12,31 @@ export const FeatureGrid = styled(Grid)(({ theme }) => ({
   }
 }));
 
-export const NodeSummaryBox = styled(Box)(({ theme }) => ({
+export const CustomBox = styled(Box)({
   backgroundColor: '#fff',
   border: '2px solid #E5E5E5',
+  borderRadius: '20px',
+  width: '100%'
+});
+
+export const NodeSummaryBox = styled(CustomBox)(({ theme }) => ({
   // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
-  borderRadius: '18px',
-  width: '100%',
   padding: '15px 20px',
   [theme.breakpoints.up('md')]: {
     padding: '20px 30px'
   }
 }));
 
-export const ContainerBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
+export const ContainerBox = styled(CustomBox)(({ theme }) => ({
   textAlign: 'center',
-  borderRadius: '20px',
-  width: '100%',
   padding: '20px 50px 20px 20px',
   [theme.breakpoints.up('md')]: {
     padding: '30px 70px'
   }
 }));
 
-export const NodeDetailBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
+export const NodeDetailBox = styled(CustomBox)(({ theme }) => ({
   textAlign: 'center',
-  borderRadius: '20px',
-  width: '100%',
   padding: '15px 25px 20px 20px',
   [theme.breakpoints.up('md')]: {
     padding: '30px 72px 40px 40px'

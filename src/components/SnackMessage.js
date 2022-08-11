@@ -1,11 +1,10 @@
-import { forwardRef, useCallback } from 'react';
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useSnackbar, SnackbarContent } from 'notistack';
 import { Stack, Typography, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@material-ui/core/styles';
-// import { Markup } from 'interweave';
 
 const variantStyles = {
   success: {

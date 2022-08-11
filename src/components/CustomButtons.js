@@ -3,53 +3,27 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PlusTypography } from './CustomTypos';
 
-export const ConnectWalletButton = styled(Button)(({ theme }) => ({
-  color: '#FF931E',
-  font: 'Montserrat',
-  border: '3px solid #FF931E',
-  fontWeight: 600,
+export const LinkButton = styled(Button)(({ theme, btnColor }) => ({
+  color: btnColor,
+  border: `3px solid ${btnColor}`,
   borderRadius: '200px',
+  font: 'Montserrat',
+  fontWeight: 600,
   fontSize: '25px',
   lineHeight: '30px',
   padding: '20px 30px',
   zIndex: 10,
   '&:hover': {
-    border: '3px solid #FF931E',
+    border: `3px solid ${btnColor}`,
     backgroundColor: 'white'
   },
   [theme.breakpoints.down('md')]: {
     fontSize: '12px',
     lineHeight: '15px',
     padding: '10px 15px',
-    border: '2px solid #FF931E',
+    border: `2px solid ${btnColor}`,
     '&:hover': {
-      border: '2px solid #FF931E',
-      backgroundColor: 'white'
-    }
-  }
-}));
-
-export const GitHubButton = styled(Button)(({ theme }) => ({
-  color: '#000000',
-  font: 'Montserrat',
-  border: '3px solid #000000',
-  fontWeight: 600,
-  borderRadius: '200px',
-  fontSize: '25px',
-  lineHeight: '30px',
-  padding: '20px 30px',
-  zIndex: 10,
-  '&:hover': {
-    border: '3px solid #000000',
-    backgroundColor: 'white'
-  },
-  [theme.breakpoints.down('md')]: {
-    fontSize: '12px',
-    lineHeight: '15px',
-    padding: '10px 15px',
-    border: '2px solid #000000',
-    '&:hover': {
-      border: '2px solid #000000',
+      border: `2px solid ${btnColor}`,
       backgroundColor: 'white'
     }
   }
@@ -64,8 +38,8 @@ const OutlinedButton = styled(Button)(({ theme }) => ({
   padding: '15px 11px',
   color: '#FF931E',
   fontWeight: 600,
-  lineHeight: '18px',
   fontSize: '15px',
+  lineHeight: '18px',
   [theme.breakpoints.up('sm')]: {
     height: '70px',
     lineHeight: '24px',

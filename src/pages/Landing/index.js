@@ -6,7 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 // import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { LandingTitleTypo } from '../../components/CustomTypos';
-import { ConnectWalletButton, GitHubButton } from '../../components/CustomButtons';
+import { LinkButton } from '../../components/CustomButtons';
 import { FeatureGrid } from '../../components/CustomContainer';
 import useUser from '../../hooks/useUser';
 import SmallHexagon from '../../components/SmallHexagon';
@@ -111,21 +111,26 @@ export default function LandingPage() {
         sx={{ position: 'relative' }}
       >
         {!user.did ? (
-          <ConnectWalletButton variant="outlined" onClick={login} disabled={loading}>
+          <LinkButton btnColor="#FF931E" variant="outlined" onClick={login} disabled={loading}>
             {t('landing-connect-wallet')}
-          </ConnectWalletButton>
+          </LinkButton>
         ) : (
-          <ConnectWalletButton variant="outlined" onClick={() => navigate('/dashboard/home')}>
+          <LinkButton
+            btnColor="#FF931E"
+            variant="outlined"
+            onClick={() => navigate('/dashboard/home')}
+          >
             Dashboard
-          </ConnectWalletButton>
+          </LinkButton>
         )}
-        <GitHubButton
+        <LinkButton
+          btnColor="#000"
           variant="outlined"
           target="_blank"
           href="https://github.com/elastos/Elastos.Hive.Node"
         >
           GitHub
-        </GitHubButton>
+        </LinkButton>
         <Box
           sx={{
             position: 'absolute',

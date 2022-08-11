@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { NodeTimeLable } from './CustomTypos';
-import { ContainerBox } from './CustomContainer';
+import { CustomBox } from './CustomContainer';
 
 ItemBox.propTypes = {
   time: PropTypes.string.isRequired,
@@ -11,7 +11,7 @@ ItemBox.propTypes = {
 
 export default function ItemBox({ time, children, onClick, sx }) {
   return (
-    <ContainerBox
+    <CustomBox
       onClick={onClick}
       sx={{
         padding: { xs: '10px 10px 10px 20px', sm: '20px 20px 20px 40px' },
@@ -30,6 +30,6 @@ export default function ItemBox({ time, children, onClick, sx }) {
         {time}
       </NodeTimeLable>
       {children}
-    </ContainerBox>
+    </CustomBox>
   );
 }

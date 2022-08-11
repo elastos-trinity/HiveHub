@@ -41,16 +41,23 @@ export default function HiveExplore() {
     <>
       <PageTitleTypo mt={{ xs: 5, md: 6 }}>Explore</PageTitleTypo>
       <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 8 }} sx={{ position: 'relative' }}>
-        <Stack direction="row" spacing={{ xs: '25px', md: '50px' }} alignItems="baseline">
-          <PageTitleTypo sub="true">Nodes</PageTitleTypo>
-          <FilterByTypo>Filter by</FilterByTypo>
+        <Stack
+          direction="row"
+          spacing={{ xs: '25px', md: '50px' }}
+          alignItems="baseline"
+          justifyContent="space-between"
+        >
+          <Stack direction="row" spacing={{ xs: '25px', md: '50px' }} alignItems="baseline">
+            <PageTitleTypo sub="true">Nodes</PageTitleTypo>
+            <FilterByTypo>Filter by</FilterByTypo>
+          </Stack>
           <Button
             onClick={() => setOnlyActive(!onlyActive)}
-            style={{
-              position: 'absolute',
-              right: 0,
+            sx={{
               height: { xs: '12px', md: '24px' },
-              color: onlyActive ? '#FF931E' : '#00AB55'
+              color: onlyActive ? '#FF931E' : '#00AB55',
+              fontSize: { xs: '10px', md: '20px' },
+              lineHeight: { xs: '12px', md: '24px' }
             }}
           >
             {onlyActive ? 'all' : 'online'}

@@ -49,31 +49,31 @@ export default function NodeDetail() {
 
   const { nodeId } = useParams();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     const details = await getHiveNodesList(nodeId, undefined, false, false);
-  //     setNodeDetail(details.length ? details[0] : undefined);
-  //     const vaultItem = await getHiveVaultInfo(
-  //       user.did,
-  //       details.length ? details[0].url : undefined,
-  //       1
-  //     );
-  //     if (vaultItem) {
-  //       setVaultItems([vaultItem]);
-  //     } else setVaultItems([]);
-  //     const backupItem = await getHiveVaultInfo(
-  //       user.did,
-  //       details.length ? details[0].url : undefined,
-  //       2
-  //     );
-  //     if (backupItem) {
-  //       setBackupItems([backupItem]);
-  //     } else setBackupItems([]);
-  //     setLoading(false);
-  //   };
-  //   if (user.did) fetchData();
-  // }, [user.did, nodeId]);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const details = await getHiveNodesList(nodeId, undefined, false, false);
+      setNodeDetail(details.length ? details[0] : undefined);
+      const vaultItem = await getHiveVaultInfo(
+        user.did,
+        details.length ? details[0].url : undefined,
+        1
+      );
+      if (vaultItem) {
+        setVaultItems([vaultItem]);
+      } else setVaultItems([]);
+      const backupItem = await getHiveVaultInfo(
+        user.did,
+        details.length ? details[0].url : undefined,
+        2
+      );
+      if (backupItem) {
+        setBackupItems([backupItem]);
+      } else setBackupItems([]);
+      setLoading(false);
+    };
+    if (user.did) fetchData();
+  }, [user.did, nodeId]);
 
   const handleCreateVault = () => {
     if (user.nodeProvider !== nodeDetail.url) {

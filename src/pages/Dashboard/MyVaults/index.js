@@ -30,12 +30,13 @@ export default function HiveVaults() {
   const handleCreateVault = () => {
     createVault(user.did)
       .then((res) => {
-        if (res)
+        if (res) {
           enqueueSnackbar('Create vault succeed', {
             variant: 'success',
             anchorOrigin: { horizontal: 'right', vertical: 'top' }
           });
-        else
+          window.location.reload();
+        } else
           enqueueSnackbar('Vault already exists', {
             variant: 'error',
             anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -74,7 +75,7 @@ export default function HiveVaults() {
           <PlusButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
             Create Hive Vault
           </PlusButton>
-          <PlusButton onClick={() => {}} hasPlus={false}>
+          <PlusButton onClick={() => {}} hasPlus={false} disabled>
             Access Hive Vaults
           </PlusButton>
         </Stack>

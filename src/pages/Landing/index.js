@@ -111,12 +111,12 @@ export default function LandingPage() {
         sx={{ position: 'relative' }}
       >
         {!user.did ? (
-          <LinkButton btnColor="#FF931E" variant="outlined" onClick={login} disabled={loading}>
+          <LinkButton btncolor="#FF931E" variant="outlined" onClick={login} disabled={loading}>
             {t('landing-connect-wallet')}
           </LinkButton>
         ) : (
           <LinkButton
-            btnColor="#FF931E"
+            btncolor="#FF931E"
             variant="outlined"
             onClick={() => navigate('/dashboard/home')}
           >
@@ -124,7 +124,7 @@ export default function LandingPage() {
           </LinkButton>
         )}
         <LinkButton
-          btnColor="#000"
+          btncolor="#000"
           variant="outlined"
           target="_blank"
           href="https://github.com/elastos/Elastos.Hive.Node"

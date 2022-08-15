@@ -3,9 +3,9 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PlusTypography } from './CustomTypos';
 
-export const LinkButton = styled(Button)(({ theme, btnColor }) => ({
-  color: btnColor,
-  border: `3px solid ${btnColor}`,
+export const LinkButton = styled(Button)(({ theme, btncolor }) => ({
+  color: btncolor,
+  border: `3px solid ${btncolor}`,
   borderRadius: '200px',
   font: 'Montserrat',
   fontWeight: 600,
@@ -14,16 +14,16 @@ export const LinkButton = styled(Button)(({ theme, btnColor }) => ({
   padding: '20px 30px',
   zIndex: 10,
   '&:hover': {
-    border: `3px solid ${btnColor}`,
+    border: `3px solid ${btncolor}`,
     backgroundColor: 'white'
   },
   [theme.breakpoints.down('md')]: {
     fontSize: '12px',
     lineHeight: '15px',
     padding: '10px 15px',
-    border: `2px solid ${btnColor}`,
+    border: `2px solid ${btncolor}`,
     '&:hover': {
-      border: `2px solid ${btnColor}`,
+      border: `2px solid ${btncolor}`,
       backgroundColor: 'white'
     }
   }

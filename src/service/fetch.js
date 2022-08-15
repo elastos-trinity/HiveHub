@@ -532,7 +532,7 @@ export const createHiveNodeEnvConfig = (
   content += `LAST_COMMIT = ${lastCommit}\n`;
   content += '\n';
   content += '## basic information about this node.\n';
-  content += `NODE_NAME = ${nodeName}\n`;
+  content += `NODE_NAME = "${nodeName}"\n`;
   content += `NODE_EMAIL = ${email}\n`;
   content += `NODE_DESCRIPTION = "${nodeDescription}"`;
   //

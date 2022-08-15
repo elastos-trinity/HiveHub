@@ -12,7 +12,7 @@ import useUser from '../../../hooks/useUser';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
 import HiveHubServer from '../../../service/HiveHubServer';
-import { getRestService } from '../../../service/fetch';
+import { getHiveNodesList, getRestService } from '../../../service/fetch';
 
 export default function CreateNode() {
   const navigate = useNavigate();
@@ -31,6 +31,22 @@ export default function CreateNode() {
 
   const handleCreateNode = async () => {
     if (ownerDid && country && province && district && url) {
+      const registeredNodes = await getHiveNodesList(undefined, undefined, false, false);
+      const duplicatedNodes = [];
+      await Promise.all(
+        registeredNodes.map((item) => {
+          const node = { ...item };
+          if (node.url === url) duplicatedNodes.push(node.url);
+          return node;
+        })
+      );
+      if (duplicatedNodes.length > 0) {
+        enqueueSnackbar('Already registered node', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        return;
+      }
       // dns.lookup(url, (err, address, familly) => {
       //   console.log(address);
       //   console.log(familly)
@@ -99,6 +115,10 @@ export default function CreateNode() {
       }
       try {
         await HiveHubServer.addHiveNode(newNode);
+        enqueueSnackbar('Create Hive Node success.', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
       } catch (err) {
         console.error(err);
       }

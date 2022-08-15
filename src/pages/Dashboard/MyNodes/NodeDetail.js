@@ -113,6 +113,7 @@ export default function NodeDetail() {
 
   const handleDestroyVault = async () => {
     if (!user.did) return;
+    if (!vaultItems.length) return;
     setOnProgress(true);
     try {
       await destroyVault(user.did);
@@ -197,7 +198,12 @@ export default function NodeDetail() {
         <NodeDetailBox>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <NodeDescription>{nodeDetail.remark}</NodeDescription>
-            <DestroyVaultButton onClick={handleDestroyVault} disabled={onProgress}>Destroy Vault</DestroyVaultButton>
+            <DestroyVaultButton
+              onClick={handleDestroyVault}
+              disabled={onProgress || !vaultItems.length}
+            >
+              Destroy Vault
+            </DestroyVaultButton>
           </Stack>
           <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
             <InfoItem label="IP" value={nodeDetail.ip} />

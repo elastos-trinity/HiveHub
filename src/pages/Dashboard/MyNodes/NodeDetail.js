@@ -91,12 +91,13 @@ export default function NodeDetail() {
     }
     createVault(user.did, nodeDetail.url)
       .then((res) => {
-        if (res)
+        if (res) {
           enqueueSnackbar('Create vault succeed', {
             variant: 'success',
             anchorOrigin: { horizontal: 'right', vertical: 'top' }
           });
-        else
+          window.location.reload();
+        } else
           enqueueSnackbar('Vault already exists', {
             variant: 'error',
             anchorOrigin: { horizontal: 'right', vertical: 'top' }

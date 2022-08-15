@@ -57,6 +57,7 @@ export default function HiveHome() {
 
   const handleBackup = async () => {
     if (!user.did) return;
+    if (!vaultItems.length) return;
     setOnProgress(true);
     try {
       const backupNodeProvider = await findBackupNodeProvider(user.did);
@@ -90,6 +91,7 @@ export default function HiveHome() {
 
   const handleMigrate = async () => {
     if (!user.did) return;
+    if (!vaultItems.length) return;
     setOnProgress(true);
     try {
       const backupNodeProvider = await findBackupNodeProvider(user.did);
@@ -165,13 +167,16 @@ export default function HiveHome() {
           px={1}
           sx={{ width: '100%', margin: '40px auto' }}
         >
-          <CustomButton onClick={handleBackup} disabled={hasBackup || onProgress}>
+          <CustomButton
+            onClick={handleBackup}
+            disabled={!vaultItems.length || hasBackup || onProgress}
+          >
             Backup
           </CustomButton>
-          <CustomButton onClick={handleMigrate} disabled={onProgress}>
+          <CustomButton onClick={handleMigrate} disabled={!vaultItems.length || onProgress}>
             Migrate
           </CustomButton>
-          <CustomButton onClick={handleUnbind} disabled={!user.nodeProvider || onProgress}>
+          <CustomButton onClick={handleUnbind} disabled={!user.nodeProvider || onProgress || true}>
             Unbind
           </CustomButton>
         </Stack>

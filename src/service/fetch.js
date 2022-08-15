@@ -323,12 +323,21 @@ export const backupVault = async (did, backupNodeProvider) => {
 };
 
 export const checkBackupStatus = async (did) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  const vault = new Vault(appContext, nodeProvider);
-  const backupService = vault.getBackupService(vault);
-  const info = await backupService.checkResult();
-  return info.getResult() === BackupResultResult.RESULT_SUCCESS;
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    const vaultInfo = await getHiveVaultInfo(did, undefined, undefined);
+    if (vaultInfo) {
+      const vault = new Vault(appContext, nodeProvider);
+      const backupService = vault.getBackupService(vault);
+      const info = await backupService.checkResult();
+      return info.getResult() === BackupResultResult.RESULT_SUCCESS;
+    }
+    return false;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 };
 
 /**

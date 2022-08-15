@@ -177,6 +177,11 @@ export const createVault = (did, nodeProvider) =>
       });
   });
 
+export const destroyVault = async (did) => {
+  const vaultSubscription = await getVaultSubscription(did, undefined);
+  await vaultSubscription.unsubscribe();
+};
+
 export const isDIDUnbinded = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);

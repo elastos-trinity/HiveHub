@@ -11,7 +11,12 @@ import {
 } from '../../../components/CustomTypos';
 import { NodeDetailBox } from '../../../components/CustomContainer';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
-import { createVault, getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
+import {
+  createVault,
+  destroyVault,
+  getHiveNodesList,
+  getHiveVaultInfo
+} from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import useUser from '../../../hooks/useUser';
 import { PlusButton, DestroyVaultButton } from '../../../components/CustomButtons';
@@ -42,6 +47,7 @@ export default function NodeDetail() {
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
   const [backupItems, setBackupItems] = useState([emptyVaultItem]);
   const [value, setValue] = useState('vault');
+  const [onProgress, setOnProgress] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -103,6 +109,25 @@ export default function NodeDetail() {
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
       });
+  };
+
+  const handleDestroyVault = async () => {
+    if (!user.did) return;
+    setOnProgress(true);
+    try {
+      await destroyVault(user.did);
+      enqueueSnackbar('Destroy vault succeed', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar('Destroy vault error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+    setOnProgress(false);
   };
 
   return (
@@ -172,7 +197,7 @@ export default function NodeDetail() {
         <NodeDetailBox>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <NodeDescription>{nodeDetail.remark}</NodeDescription>
-            <DestroyVaultButton>Destroy Vault</DestroyVaultButton>
+            <DestroyVaultButton onClick={handleDestroyVault} disabled={onProgress}>Destroy Vault</DestroyVaultButton>
           </Stack>
           <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
             <InfoItem label="IP" value={nodeDetail.ip} />

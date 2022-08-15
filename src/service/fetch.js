@@ -116,7 +116,14 @@ export const getActiveHiveNodeUrl = async () => {
       const node = { ...item };
       try {
         node.status = await HiveHubServer.isOnline(node.url);
-        if (node.status && !activeNodes.includes(node.url)) activeNodes.push(node.url);
+        if (
+          node.status &&
+          !activeNodes.includes(node.url) &&
+          ((activeNodes.includes('testnet') && !config.IsProductEnv) ||
+            !activeNodes.includes('testnet')) &&
+          config.IsProductEnv
+        )
+          activeNodes.push(node.url);
       } catch (e) {
         node.status = false;
       }

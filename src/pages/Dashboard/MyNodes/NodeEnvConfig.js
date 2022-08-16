@@ -21,6 +21,10 @@ export default function NodeEnvConfig() {
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [servicePK, setServicePK] = useState('');
   const [servicePKErr, setServicePKErr] = useState(false);
+  const [passphrase, setPassphrase] = useState('');
+  const [passphraseErr, setPassphraseErr] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordErr, setPasswordErr] = useState(false);
   const [nodeName, setNodeName] = useState('');
   const [nodeNameErr, setNodeNameErr] = useState(false);
   const [email, setEmail] = useState('');
@@ -29,12 +33,10 @@ export default function NodeEnvConfig() {
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
   const handleSaveEnvConfig = async () => {
-    if (ownerDid && servicePK && nodeName && email && nodeDescription) {
-      const passpharse = '12345';
-      const password = 'password';
+    if (ownerDid && servicePK && passphrase && password && nodeName && email && nodeDescription) {
       let nodeCredential = '';
       try {
-        const restService = await getRestService(user.did);
+        const restService = await getRestService(ownerDid);
         const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
         const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
         const vcs = nodeOwnershipPresentation.getCredentials();
@@ -44,9 +46,8 @@ export default function NodeEnvConfig() {
       }
       try {
         createHiveNodeEnvConfig(
-          ownerDid,
           servicePK,
-          passpharse,
+          passphrase,
           password,
           nodeName,
           email,
@@ -68,6 +69,8 @@ export default function NodeEnvConfig() {
     } else {
       setOwnerDidErr(!ownerDid);
       setServicePKErr(!servicePK);
+      setPassphraseErr(!passphrase);
+      setPasswordErr(!password);
       setNodeNameErr(!nodeName);
       setEmailErr(!email);
       setNodeDescriptionErr(!nodeDescription);
@@ -103,6 +106,32 @@ export default function NodeEnvConfig() {
             changeHandler={(value) => {
               setServicePK(value);
               setServicePKErr(false);
+            }}
+          />
+          <CustomTextField
+            placeholder="Passphrase"
+            variant="standard"
+            inputValue={passphrase}
+            fontSize={matchDownMd ? 10 : 20}
+            height={matchDownMd ? 12 : 24}
+            error={passphraseErr}
+            errorText="Passphrase can not be empty"
+            changeHandler={(value) => {
+              setPassphrase(value);
+              setPassphraseErr(false);
+            }}
+          />
+          <CustomTextField
+            placeholder="Password"
+            variant="standard"
+            inputValue={password}
+            fontSize={matchDownMd ? 10 : 20}
+            height={matchDownMd ? 12 : 24}
+            error={passwordErr}
+            errorText="Password can not be empty"
+            changeHandler={(value) => {
+              setPassword(value);
+              setPasswordErr(false);
             }}
           />
           <CustomTextField

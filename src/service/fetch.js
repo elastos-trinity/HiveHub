@@ -473,7 +473,6 @@ export const unbindDID = async (did) => {
 };
 
 export const createHiveNodeEnvConfig = (
-  serviceDid,
   serviceDidPK,
   passpharse,
   password,

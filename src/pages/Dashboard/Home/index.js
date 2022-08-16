@@ -155,7 +155,7 @@ export default function HiveHome() {
         >
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Created by me</NodeStatisticLabel>
-            <NodeStatisticBody>{myNodeItems.length}</NodeStatisticBody>
+            <NodeStatisticBody>{myNodeItems.length - participated}</NodeStatisticBody>
           </Stack>
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Participated by me</NodeStatisticLabel>

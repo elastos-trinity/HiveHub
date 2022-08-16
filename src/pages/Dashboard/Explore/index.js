@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Stack, Button } from '@mui/material';
 import NodeItem from '../../../components/NodeItem';
-import VaultItem from '../../../components/VaultItem';
 import { PageTitleTypo, FilterByTypo } from '../../../components/CustomTypos';
 import useUser from '../../../hooks/useUser';
-import { getHiveNodesList, getHiveVaultInfo } from '../../../service/fetch';
-import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
+import { getHiveNodesList } from '../../../service/fetch';
+import { emptyNodeItem } from '../../../utils/filler';
 
 export default function HiveExplore() {
   const { user } = useUser();
   const [loadingNode, setLoadingNode] = useState(false);
-  const [loadingVault, setLoadingVault] = useState(false);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
-  const [vaultItems, setVaultItems] = useState(Array(1).fill(emptyVaultItem));
   const [onlyActive, setOnlyActive] = useState(false);
 
   useEffect(() => {
@@ -24,18 +21,6 @@ export default function HiveExplore() {
     };
     fetchData();
   }, [user.did, onlyActive]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoadingVault(true);
-      const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
-      if (vaultItem) {
-        setVaultItems([vaultItem]);
-      } else setVaultItems([]);
-      setLoadingVault(false);
-    };
-    fetchData();
-  }, [user.did]);
 
   return (
     <>
@@ -76,27 +61,6 @@ export default function HiveExplore() {
               status={item.status}
               time={item.created}
               isLoading={loadingNode}
-            />
-          ))}
-        </Stack>
-      </Stack>
-      <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 6.25, md: 12.5 }}>
-        <Stack direction="row" spacing={{ xs: '25px', md: '50px' }} alignItems="baseline">
-          <PageTitleTypo sub="true">Vaults</PageTitleTypo>
-          <FilterByTypo>Filter by</FilterByTypo>
-        </Stack>
-        <Stack spacing={3.75}>
-          {vaultItems.map((item, index) => (
-            <VaultItem
-              key={`vault-item-${index}`}
-              id={item.id}
-              name={item.name}
-              total={item.total}
-              used={item.used}
-              time={item.time}
-              ownerName={item.ownerName}
-              isLoading={loadingVault}
-              disabled
             />
           ))}
         </Stack>

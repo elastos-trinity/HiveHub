@@ -17,7 +17,8 @@ import {
   findBackupNodeProvider,
   getHiveNodesList,
   getHiveVaultInfo,
-  migrateVault
+  migrateVault,
+  getAppContext
   // unbindDID
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
@@ -36,13 +37,18 @@ export default function HiveHome() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const allNodeList = await getHiveNodesList(undefined, undefined, false, false);
         const myNodeList = await getHiveNodesList(undefined, user.did, false, false);
-        setMyNodeItems(myNodeList);
         const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
         if (vaultItem) {
           setVaultItems([vaultItem]);
           setParticipated(1);
+          const appContext = await getAppContext(user.did);
+          const participatedNodeUrl = await appContext.getProviderAddress(user.did);
+          const participatedNode = allNodeList.find((item) => item.url === participatedNodeUrl);
+          myNodeList.push(participatedNode);
         } else setVaultItems([]);
+        setMyNodeItems(myNodeList);
         setHasBackup(await checkBackupStatus(user.did));
         setLoading(false);
       } catch (err) {

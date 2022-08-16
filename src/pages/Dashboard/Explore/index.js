@@ -96,6 +96,7 @@ export default function HiveExplore() {
               time={item.time}
               ownerName={item.ownerName}
               isLoading={loadingVault}
+              disabled
             />
           ))}
         </Stack>

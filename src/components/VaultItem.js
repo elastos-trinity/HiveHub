@@ -14,6 +14,7 @@ VaultItem.propTypes = {
   ownerName: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isMyVault: PropTypes.bool,
+  disabled: PropTypes.bool,
   sx: PropTypes.any
 };
 
@@ -26,6 +27,7 @@ export default function VaultItem({
   ownerName,
   isMyVault = false,
   isLoading,
+  disabled = false,
   sx
 }) {
   // const navigate = useNavigate();
@@ -61,7 +63,7 @@ export default function VaultItem({
                 color="warning"
                 sx={{ height: '10px', borderRadius: '100px', width: '100%' }}
               />
-              {!isMyVault && <AccessButton>Access</AccessButton>}
+              {!isMyVault && <AccessButton disabled={disabled}>Access</AccessButton>}
             </Stack>
           </Stack>
         </ItemBox>

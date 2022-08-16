@@ -4,6 +4,8 @@ import { Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
+// eslint-disable-next-line camelcase
+import { binary_to_base58 } from 'base58-js';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
@@ -36,7 +38,7 @@ export default function NodeEnvConfig() {
         const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
         const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
         const vcs = nodeOwnershipPresentation.getCredentials();
-        if (vcs && vcs.length) nodeCredential = vcs[0].getSubject();
+        if (vcs && vcs.length) nodeCredential = binary_to_base58(vcs[0].toString());
       } catch (err) {
         console.error(err);
       }

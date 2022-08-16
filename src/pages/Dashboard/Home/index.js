@@ -26,9 +26,8 @@ export default function HiveHome() {
   const { user } = useUser();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
-  const [created, setCreated] = useState(0);
   const [participated, setParticipated] = useState(0);
-  const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
+  const [myNodeItems, setMyNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
   const [onProgress, setOnProgress] = useState(false);
   const [hasBackup, setHasBackup] = useState(false);
@@ -37,10 +36,8 @@ export default function HiveHome() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const nodeList = await getHiveNodesList(undefined, undefined, false, false);
-        setNodeItems(nodeList);
         const myNodeList = await getHiveNodesList(undefined, user.did, false, false);
-        setCreated(myNodeList.length);
+        setMyNodeItems(myNodeList);
         const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
         if (vaultItem) {
           setVaultItems([vaultItem]);
@@ -152,7 +149,7 @@ export default function HiveHome() {
         >
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Created by me</NodeStatisticLabel>
-            <NodeStatisticBody>{created}</NodeStatisticBody>
+            <NodeStatisticBody>{myNodeItems.length}</NodeStatisticBody>
           </Stack>
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Participated by me</NodeStatisticLabel>
@@ -206,7 +203,7 @@ export default function HiveHome() {
                   Status
                 </Grid>
               </Grid>
-              {nodeItems.map((item, index) => (
+              {myNodeItems.map((item, index) => (
                 <NodeSummaryItem
                   key={`node-summary-${index}`}
                   nodeName={item.name}

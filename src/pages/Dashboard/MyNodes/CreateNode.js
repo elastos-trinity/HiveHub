@@ -20,17 +20,14 @@ export default function CreateNode() {
   const { user } = useUser();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
-  const [country, setCountry] = useState('');
-  const [countryErr, setCountryErr] = useState(false);
-  const [province, setProvince] = useState('');
-  const [provinceErr, setProvinceErr] = useState(false);
-  const [district, setDistrict] = useState('');
-  const [districtErr, setDistrictErr] = useState(false);
   const [url, setUrl] = useState('');
   const [urlErr, setUrlErr] = useState(false);
 
   const handleCreateNode = async () => {
-    if (ownerDid && country && province && district && url) {
+    if (ownerDid && url) {
+      const country = 'China';
+      const province = 'Shanghai';
+      const district = 'Putuo';
       const registeredNodes = await getHiveNodesList(undefined, undefined, false, false);
       const duplicatedNodes = [];
       await Promise.all(
@@ -128,9 +125,6 @@ export default function CreateNode() {
       navigate('/dashboard/nodes');
     } else {
       setOwnerDidErr(!ownerDid);
-      setCountryErr(!country);
-      setProvinceErr(!province);
-      setDistrictErr(!district);
       setUrlErr(!url);
     }
   };
@@ -153,48 +147,6 @@ export default function CreateNode() {
             errorText="Owner DID can not be empty"
             disabled
           />
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            alignItems={{ xs: 'left', md: 'center' }}
-            spacing={{ xs: 5, md: 12.5 }}
-          >
-            <CustomTextField
-              placeholder="Country"
-              variant="standard"
-              fontSize={matchDownMd ? 10 : 20}
-              height={matchDownMd ? 12 : 24}
-              error={countryErr}
-              errorText="Country can not be empty"
-              changeHandler={(value) => {
-                setCountry(value);
-                setCountryErr(false);
-              }}
-            />
-            <CustomTextField
-              placeholder="Province"
-              variant="standard"
-              fontSize={matchDownMd ? 10 : 20}
-              height={matchDownMd ? 12 : 24}
-              error={provinceErr}
-              errorText="Province can not be empty"
-              changeHandler={(value) => {
-                setProvince(value);
-                setProvinceErr(false);
-              }}
-            />
-            <CustomTextField
-              placeholder="District"
-              variant="standard"
-              fontSize={matchDownMd ? 10 : 20}
-              height={matchDownMd ? 12 : 24}
-              error={districtErr}
-              errorText="District can not be empty"
-              changeHandler={(value) => {
-                setDistrict(value);
-                setDistrictErr(false);
-              }}
-            />
-          </Stack>
           <CustomTextField
             placeholder="URL"
             variant="standard"

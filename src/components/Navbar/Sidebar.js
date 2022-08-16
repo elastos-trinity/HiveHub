@@ -124,7 +124,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           </Box>
         )}
         {showMenu && (
-          <Stack sx={{ padding: 2.5, mt: 8.5 }} spacing={1}>
+          <Stack sx={{ padding: 2.5, mt: 3 }} spacing={1}>
             {menuItemsList.map((item, index) => (
               <NavBox key={`sidebar-menu-${index}`} onClick={() => navigate(item.path)}>
                 <Stack
@@ -149,9 +149,9 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
             ))}
           </Stack>
         )}
-        <LanguageBar sx={{ padding: 5, mt: showMenu ? 16 : 15 }} />
+        <LanguageBar sx={{ padding: 5, mt: showMenu ? 3 : 15 }} />
         <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ px: 0, pb: 2, mt: showMenu ? 5 : 25 }}>
+        <Box sx={{ px: 0, pb: 2, mt: showMenu ? 3 : 15 }}>
           <Stack alignItems="center" spacing={2.5} sx={{ py: 2.5, position: 'relative' }}>
             <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
               <Box component="img" src="/static/github.svg" sx={{ width: 40 }} />

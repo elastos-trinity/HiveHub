@@ -216,7 +216,7 @@ export default function HiveHome() {
           </NodeSummaryBox>
           <NodeSummaryBox>
             <Typography variant="h5">Vault Summary</Typography>
-            <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 12 }}>
+            <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 5 }}>
               {vaultItems.map((item, index) => (
                 <VaultSummaryItem
                   key={`vault-summary-${index}`}

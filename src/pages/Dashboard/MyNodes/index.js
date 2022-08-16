@@ -47,11 +47,11 @@ export default function HiveNodes() {
           />
         ))}
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
-          <PlusButton onClick={() => navigate('/dashboard/nodes/create')}>
-            Create Hive Node
-          </PlusButton>
           <PlusButton onClick={() => navigate('/dashboard/nodes/envconfig')}>
             Create Hive Node Config
+          </PlusButton>
+          <PlusButton onClick={() => navigate('/dashboard/nodes/create')}>
+            Create Hive Node
           </PlusButton>
         </Stack>
       </Stack>

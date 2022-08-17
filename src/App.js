@@ -10,6 +10,7 @@ import GlobalStyles from './theme/globalStyles';
 import ScrollToTop from './components/ScrollToTop';
 import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 import { LanguageContextProvider } from './contexts/LanguageContext';
+import { UserContextProvider } from './contexts/UserContext';
 
 // ----------------------------------------------------------------------
 
@@ -17,16 +18,18 @@ export default function App() {
   return (
     <HelmetProvider>
       <SnackbarProvider maxSnack={1}>
-        <LanguageContextProvider>
-          <BrowserRouter>
-            <ThemeConfig>
-              <ScrollToTop />
-              <GlobalStyles />
-              <BaseOptionChartStyle />
-              <Router />
-            </ThemeConfig>
-          </BrowserRouter>
-        </LanguageContextProvider>
+        <UserContextProvider>
+          <LanguageContextProvider>
+            <BrowserRouter>
+              <ThemeConfig>
+                <ScrollToTop />
+                <GlobalStyles />
+                <BaseOptionChartStyle />
+                <Router />
+              </ThemeConfig>
+            </BrowserRouter>
+          </LanguageContextProvider>
+        </UserContextProvider>
       </SnackbarProvider>
     </HelmetProvider>
   );

@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { Stack, Button } from '@mui/material';
 import NodeItem from '../../../components/NodeItem';
 import { PageTitleTypo, FilterByTypo } from '../../../components/CustomTypos';
-import useConnectEE from '../../../hooks/useConnectEE';
+import { useUserContext } from '../../../contexts/UserContext';
 import { getHiveNodesList } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
 
 export default function HiveExplore() {
-  const { user } = useConnectEE();
+  const { user } = useUserContext();
   const [loadingNode, setLoadingNode] = useState(false);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [onlyActive, setOnlyActive] = useState(false);

@@ -9,6 +9,7 @@ import { LandingTitleTypo } from '../../components/CustomTypos';
 import { LinkButton } from '../../components/CustomButtons';
 import { FeatureGrid } from '../../components/CustomContainer';
 import useConnectEE from '../../hooks/useConnectEE';
+import { useUserContext } from '../../contexts/UserContext';
 import SmallHexagon from '../../components/SmallHexagon';
 import HexagonShape from '../../components/HexagonShape';
 import generatedGitInfo from '../../generatedGitInfo.json';
@@ -45,8 +46,9 @@ import { config } from '../../config';
 // }
 
 export default function LandingPage() {
-  const { user, isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
+  const { isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
     useConnectEE();
+  const { user } = useUserContext();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

@@ -10,7 +10,7 @@ import {
 } from '../../../components/CustomTypos';
 import { CustomButton } from '../../../components/CustomButtons';
 import { NodeSummaryBox } from '../../../components/CustomContainer';
-import useConnectEE from '../../../hooks/useConnectEE';
+import { useUserContext } from '../../../contexts/UserContext';
 import {
   backupVault,
   checkBackupStatus,
@@ -24,7 +24,7 @@ import {
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 
 export default function HiveHome() {
-  const { user } = useConnectEE();
+  const { user } = useUserContext();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [participated, setParticipated] = useState(0);

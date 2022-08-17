@@ -10,7 +10,7 @@ import { Icon } from '@iconify/react';
 import HiveLogo from '../Logo';
 import Scrollbar from '../Scrollbar';
 import { MHidden } from '../@material-extend';
-import useConnectEE from '../../hooks/useConnectEE';
+import { useUserContext } from '../../contexts/UserContext';
 import UserAvatar from '../UserAvatar';
 import LanguageBar from '../LanguageBar';
 import generatedGitInfo from '../../generatedGitInfo.json';
@@ -50,7 +50,7 @@ const NavBox = styled(Box)({
 });
 
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
-  const { user } = useConnectEE();
+  const { user } = useUserContext();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'

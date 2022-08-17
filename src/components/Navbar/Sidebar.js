@@ -14,6 +14,7 @@ import useUser from '../../hooks/useUser';
 import UserAvatar from '../UserAvatar';
 import LanguageBar from '../LanguageBar';
 import generatedGitInfo from '../../generatedGitInfo.json';
+import { config } from '../../config';
 
 // ----------------------------------------------------------------------
 
@@ -153,7 +154,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ px: 0, pb: 2, mt: showMenu ? 3 : 15 }}>
           <Stack alignItems="center" spacing={2.5} sx={{ py: 2.5, position: 'relative' }}>
-            <Link href="https://github.com/elastos/Elastos.Hive.Node" target="_blank">
+            <Link href={config.GitHubRepo} target="_blank">
               <Box component="img" src="/static/github.svg" sx={{ width: 40 }} />
             </Link>
             <Stack

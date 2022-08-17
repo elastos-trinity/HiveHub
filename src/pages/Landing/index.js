@@ -12,6 +12,7 @@ import useUser from '../../hooks/useUser';
 import SmallHexagon from '../../components/SmallHexagon';
 import HexagonShape from '../../components/HexagonShape';
 import generatedGitInfo from '../../generatedGitInfo.json';
+import { config } from '../../config';
 
 // CustomBox.propTypes = {
 //   children: PropTypes.node
@@ -123,12 +124,7 @@ export default function LandingPage() {
             Dashboard
           </LinkButton>
         )}
-        <LinkButton
-          btncolor="#000"
-          variant="outlined"
-          target="_blank"
-          href="https://github.com/elastos/Elastos.Hive.Node"
-        >
+        <LinkButton btncolor="#000" variant="outlined" target="_blank" href={config.GitHubRepo}>
           GitHub
         </LinkButton>
         <Box

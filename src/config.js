@@ -2,7 +2,8 @@ export const config = {
   IsProductEnv: process.env.REACT_APP_PUBLIC_ENV === 'production',
   DIDResolverUrl: 'mainnet',
   serverUrl: 'https://service.hivehub.xyz',
-  ApplicationDID: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML'
+  ApplicationDID: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML',
+  GitHubRepo: 'https://github.com/elastos-trinity/HiveHub'
 };
 
 export const firebaseConfig = {

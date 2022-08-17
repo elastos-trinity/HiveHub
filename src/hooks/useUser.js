@@ -62,13 +62,9 @@ export default function useUser() {
         if (chainId && !isSupportedNetwork(chainId)) showChainErrorSnackBar();
       });
     } else {
-      // Subscribe to accounts change
       walletConnectProvider.on('accountsChanged', handleEEAccountsChanged);
-      // Subscribe to chainId change
       walletConnectProvider.on('chainChanged', handleEEChainChanged);
-      // Subscribe to session disconnection
       walletConnectProvider.on('disconnect', handleEEDisconnect);
-      // Subscribe to session disconnection
       walletConnectProvider.on('error', handleEEError);
     }
     return () => {

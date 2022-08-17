@@ -44,7 +44,7 @@ import generatedGitInfo from '../../generatedGitInfo.json';
 // }
 
 export default function LandingPage() {
-  const { user, isConnetedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
+  const { user, isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
     useUser();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
@@ -54,7 +54,7 @@ export default function LandingPage() {
 
   const login = async () => {
     setLoading(true);
-    if (isConnetedEE) {
+    if (isConnectedEE) {
       await signOutWithEssentialsWithoutRefresh();
       await signInWithEssentials();
     } else {

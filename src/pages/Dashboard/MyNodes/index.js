@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import NodeItem from '../../../components/NodeItem';
-import useUser from '../../../hooks/useUser';
+import useConnectEE from '../../../hooks/useConnectEE';
 import { getHiveNodesList } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
 import { PlusButton } from '../../../components/CustomButtons';
 
 export default function HiveNodes() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user } = useConnectEE();
   const [loading, setLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(emptyNodeItem));
 

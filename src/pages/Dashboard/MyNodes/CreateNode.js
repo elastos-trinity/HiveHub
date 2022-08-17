@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
-import useUser from '../../../hooks/useUser';
+import useConnectEE from '../../../hooks/useConnectEE';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
 import HiveHubServer from '../../../service/HiveHubServer';
@@ -17,7 +17,7 @@ import { getHiveNodesList, getRestService } from '../../../service/fetch';
 export default function CreateNode() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useUser();
+  const { user } = useConnectEE();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [url, setUrl] = useState('');

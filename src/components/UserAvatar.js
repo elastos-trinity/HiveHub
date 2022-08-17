@@ -12,7 +12,8 @@ import {
   Paper,
   Popper
 } from '@mui/material';
-import useUser from '../hooks/useUser';
+import useConnectEE from '../hooks/useConnectEE';
+import { useUserContext } from '../contexts/UserContext';
 
 export const AccountStyle = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
@@ -23,7 +24,8 @@ export const AccountStyle = styled(Stack)(({ theme }) => ({
 }));
 
 export default function UserAvatar() {
-  const { user, signOutWithEssentials } = useUser();
+  const { signOutWithEssentials } = useConnectEE();
+  const { user } = useUserContext();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 

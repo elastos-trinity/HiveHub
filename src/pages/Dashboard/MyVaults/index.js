@@ -5,14 +5,14 @@ import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
-import useUser from '../../../hooks/useUser';
+import useConnectEE from '../../../hooks/useConnectEE';
 import { createVault, getHiveVaultInfo } from '../../../service/fetch';
 import { PlusButton } from '../../../components/CustomButtons';
 
 export default function HiveVaults() {
   // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useUser();
+  const { user } = useConnectEE();
   const [loading, setLoading] = useState(false);
   const [myVaultsList, setMyVaultsList] = useState(Array(1).fill(emptyVaultItem));
 

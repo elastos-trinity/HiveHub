@@ -6,7 +6,7 @@ import { Stack, Typography, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
 import palette from '../../theme/palette';
 import { MHidden } from '../@material-extend';
-import useUser from '../../hooks/useUser';
+import useConnectEE from '../../hooks/useConnectEE';
 
 const activeLink = {
   color: 'black'
@@ -20,7 +20,7 @@ const NavButton = styled(Button)({
 export default function BottomNavbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user } = useConnectEE();
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
   const matchXsDown = useMediaQuery('(max-width:450px)');
 

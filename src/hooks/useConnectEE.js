@@ -1,23 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getCredentialsFromDIDDoc, isInAppBrowser, isSupportedNetwork } from '../service/common';
+import { isInAppBrowser, isSupportedNetwork } from '../service/common';
 import {
   essentialsConnector,
   initConnectivitySDK,
   isUsingEssentialsConnector
 } from '../service/connectivity';
-import {
-  getActiveHiveNodeUrl,
-  getDIDDocumentFromDID,
-  getNodeProviderUrl,
-  fetchHiveScriptPictureToDataUrl,
-  getHiveAvatarUrlFromDIDAvatarCredential
-} from '../service/fetch';
 import { firebaseConfig } from '../config';
 
 if (firebaseConfig.apiKey) {
@@ -25,16 +18,8 @@ if (firebaseConfig.apiKey) {
   getAnalytics(app);
 }
 
-export default function useUser() {
+export default function useConnectEE() {
   const navigate = useNavigate();
-  const [ownerDid] = useState(localStorage.getItem('did'));
-  const [user, setUser] = useState({
-    did: localStorage.getItem('did'),
-    avatar: null,
-    didDoc: undefined,
-    credentials: {},
-    nodeProvider: ''
-  });
   const [walletConnectProvider] = useState(essentialsConnector.getWalletConnectProvider());
   const { enqueueSnackbar } = useSnackbar();
   initConnectivitySDK();
@@ -77,58 +62,6 @@ export default function useUser() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConnectProvider]);
-
-  const getUserInfo = useCallback(
-    async (did) => {
-      const didDoc = await getDIDDocumentFromDID(did);
-      const credentials = getCredentialsFromDIDDoc(didDoc);
-      const nodeProvider = await getNodeProviderUrl(did);
-      const activeNodes = await getActiveHiveNodeUrl();
-      console.log('DID ===========', did);
-      console.log('DID Doc ===========', didDoc);
-      console.log('Credentials ===========', credentials);
-      console.log('Node Provider ===========', nodeProvider);
-      console.log('Active Nodes ===========', activeNodes);
-      if (!didDoc) {
-        enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-      } else if (!nodeProvider) {
-        enqueueSnackbar('Your DID is not bind to any Hive Node, Please bind your DID.', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-      } else if (!activeNodes.includes(nodeProvider)) {
-        enqueueSnackbar('You are connected to invalid Hive Node, Please select another one.', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-      }
-
-      let avatarUrl = null;
-      if (did && credentials && credentials.avatar) {
-        const hiveAvatarUrl = getHiveAvatarUrlFromDIDAvatarCredential(credentials.avatar);
-        avatarUrl = await fetchHiveScriptPictureToDataUrl(hiveAvatarUrl, did);
-      }
-      setUser((prevState) => {
-        const state = { ...prevState };
-        state.did = did;
-        state.didDoc = didDoc;
-        state.nodeProvider = nodeProvider;
-        state.credentials = credentials;
-        state.avatar = avatarUrl;
-        return state;
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ownerDid]
-  );
-
-  useEffect(() => {
-    if (ownerDid) getUserInfo(ownerDid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ownerDid]);
 
   const showChainErrorSnackBar = async () => {
     // enqueueSnackbar('', {
@@ -173,7 +106,6 @@ export default function useUser() {
     if (presentation) {
       const did = presentation.getHolder().getMethodSpecificId();
       localStorage.setItem('did', `did:elastos:${did}`);
-      setUser({ did, ...user });
       enqueueSnackbar('success', {
         variant: 'success',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -213,8 +145,6 @@ export default function useUser() {
     isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession();
 
   return {
-    user,
-    setUser,
     isConnectedEE,
     signInWithEssentials,
     signOutWithEssentialsWithoutRefresh,

@@ -8,7 +8,7 @@ import HiveLogo from '../Logo';
 import LanguageBar from '../LanguageBar';
 import UserAvatar from '../UserAvatar';
 import { MHidden } from '../@material-extend';
-import useUser from '../../hooks/useUser';
+import useConnectEE from '../../hooks/useConnectEE';
 
 TopNavbar.propTypes = {
   onOpenSidebar: PropTypes.func
@@ -17,7 +17,7 @@ TopNavbar.propTypes = {
 export default function TopNavbar({ onOpenSidebar }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user } = useConnectEE();
 
   useEffect(() => {
     if (pathname.includes('dashboard') && !user.did) navigate('/');

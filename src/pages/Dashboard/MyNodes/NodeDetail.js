@@ -18,7 +18,7 @@ import {
   getHiveVaultInfo
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
-import useUser from '../../../hooks/useUser';
+import useConnectEE from '../../../hooks/useConnectEE';
 import { PlusButton, DestroyVaultButton } from '../../../components/CustomButtons';
 
 InfoItem.propTypes = {
@@ -40,7 +40,7 @@ function InfoItem({ label, value }) {
 }
 
 export default function NodeDetail() {
-  const { user } = useUser();
+  const { user } = useConnectEE();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);

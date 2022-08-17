@@ -9,14 +9,14 @@ import { binary_to_base58 } from 'base58-js';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
-import useUser from '../../../hooks/useUser';
+import useConnectEE from '../../../hooks/useConnectEE';
 import CustomTextField from '../../../components/CustomTextField';
 import { createHiveNodeEnvConfig, getRestService } from '../../../service/fetch';
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useUser();
+  const { user } = useConnectEE();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [servicePK, setServicePK] = useState('');

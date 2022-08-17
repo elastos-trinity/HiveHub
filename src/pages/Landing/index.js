@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { LandingTitleTypo } from '../../components/CustomTypos';
 import { LinkButton } from '../../components/CustomButtons';
 import { FeatureGrid } from '../../components/CustomContainer';
-import useUser from '../../hooks/useUser';
+import useConnectEE from '../../hooks/useConnectEE';
 import SmallHexagon from '../../components/SmallHexagon';
 import HexagonShape from '../../components/HexagonShape';
 import generatedGitInfo from '../../generatedGitInfo.json';
@@ -46,7 +46,7 @@ import { config } from '../../config';
 
 export default function LandingPage() {
   const { user, isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
-    useUser();
+    useConnectEE();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

@@ -84,6 +84,11 @@ export default function useUser() {
       const credentials = getCredentialsFromDIDDoc(didDoc);
       const nodeProvider = await getNodeProviderUrl(did);
       const activeNodes = await getActiveHiveNodeUrl();
+      console.log('DID ===========', did);
+      console.log('DID Doc ===========', didDoc);
+      console.log('Credentials ===========', credentials);
+      console.log('Node Provider ===========', nodeProvider);
+      console.log('Active Nodes ===========', activeNodes);
       if (!didDoc) {
         enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
           variant: 'error',

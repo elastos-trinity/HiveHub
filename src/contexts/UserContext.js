@@ -49,10 +49,13 @@ function UserContextProvider({ children }) {
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
       } else if (!activeNodes.includes(nodeProvider)) {
-        enqueueSnackbar('You are connected to invalid Hive Node, Please select another one.', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
+        enqueueSnackbar(
+          `You are connected to invalid Hive Node(${nodeProvider}), Please select another one.`,
+          {
+            variant: 'error',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          }
+        );
       }
 
       let avatarUrl = null;

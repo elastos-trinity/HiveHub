@@ -656,3 +656,16 @@ export const fetchHiveScriptPicture = async (hiveScriptUrl, did) => {
     return null;
   }
 };
+
+export const getLocationFromIP = async (ipAddress, format) => {
+  if (!ipAddress || !format) return { country: '', region: '', city: '' };
+  const url = `https://ipapi.co/${ipAddress}/${format}/`;
+  try {
+    const response = await fetch(url);
+    const json = await response.json();
+    return { country: json.country_name, region: json.region, city: json.city };
+  } catch (err) {
+    console.error(err);
+    return { country: '', region: '', city: '' };
+  }
+};

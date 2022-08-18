@@ -4,7 +4,6 @@ import { Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
-// import dns from 'dns';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
@@ -44,11 +43,6 @@ export default function CreateNode() {
         });
         return;
       }
-      // dns.lookup(url, (err, address, familly) => {
-      //   console.log(address);
-      //   console.log(familly)
-      //   console.log(err)
-      // });
       const restService = await getRestService(user.did);
       const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
       if (!nodeInfo) {

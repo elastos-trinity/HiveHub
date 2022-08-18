@@ -12,6 +12,7 @@ import {
   isUsingEssentialsConnector
 } from '../service/connectivity';
 import { firebaseConfig } from '../config';
+import { useUserContext } from '../contexts/UserContext';
 
 if (firebaseConfig.apiKey) {
   const app = initializeApp(firebaseConfig);
@@ -22,6 +23,7 @@ export default function useConnectEE() {
   const navigate = useNavigate();
   const [walletConnectProvider] = useState(essentialsConnector.getWalletConnectProvider());
   const { enqueueSnackbar } = useSnackbar();
+  const { user, setUser } = useUserContext();
   initConnectivitySDK();
 
   useEffect(() => {
@@ -105,7 +107,9 @@ export default function useConnectEE() {
 
     if (presentation) {
       const did = presentation.getHolder().getMethodSpecificId();
-      localStorage.setItem('did', `did:elastos:${did}`);
+      const elastosDID = `did:elastos:${did}`;
+      localStorage.setItem('did', elastosDID);
+      setUser({ ...user, did: elastosDID });
       enqueueSnackbar('success', {
         variant: 'success',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }

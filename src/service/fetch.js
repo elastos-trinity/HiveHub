@@ -691,8 +691,11 @@ export const getIPFromDomain = async (url) => {
           if (checkIfValidIP(ip)) return ip;
         }
       } else if (response.Authority && response.Authority.length) {
-        const res = await getResponseFromDNS(response.Authority[0].data);
-        return res.Answer.length ? res.Answer[0].data : '';
+        const authorityData = response.Authority[0].data.split(' ');
+        const res = await getResponseFromDNS(
+          authorityData.length ? authorityData[0].slice(0, -1) : ''
+        );
+        return res && res.Answer && res.Answer.length ? res.Answer[0].data : '';
       }
     }
     return '';

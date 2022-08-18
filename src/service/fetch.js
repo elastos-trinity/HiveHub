@@ -19,7 +19,7 @@ import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sd
 import HiveHubServer from './HiveHubServer';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
-import { getTime, reduceHexAddress, sleep } from './common';
+import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
 export const getHiveNodesList = async (nid, did, withName, onlyActive) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
@@ -670,11 +670,32 @@ export const getLocationFromIP = async (ipAddress, format) => {
   }
 };
 
-export const getIPFromDomain = async (url) => {
+export const getResponseFromDNS = async (url) => {
   try {
     const response = await fetch(`https://dns.google/resolve?name=${url}`);
     const json = await response.json();
-    return json.Answer.length ? json.Answer[0].data : '';
+    return json;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
+};
+
+export const getIPFromDomain = async (url) => {
+  try {
+    const response = await getResponseFromDNS(url);
+    if (response) {
+      if (response.Answer && response.Answer.length) {
+        for (let i = 0; i < response.Answer.length; i += 1) {
+          const ip = response.Answer[i].data;
+          if (checkIfValidIP(ip)) return ip;
+        }
+      } else if (response.Authority && response.Authority.length) {
+        const res = await getResponseFromDNS(response.Authority[0].data);
+        return res.Answer.length ? res.Answer[0].data : '';
+      }
+    }
+    return '';
   } catch (err) {
     console.error(err);
     return '';

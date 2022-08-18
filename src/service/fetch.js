@@ -669,3 +669,14 @@ export const getLocationFromIP = async (ipAddress, format) => {
     return { country: '', region: '', city: '' };
   }
 };
+
+export const getIPFromDomain = async (url) => {
+  try {
+    const response = await fetch(`https://dns.google/resolve?name=${url}`);
+    const json = await response.json();
+    return json.Answer.length ? json.Answer[0].data : '';
+  } catch (err) {
+    console.error(err);
+    return '';
+  }
+};

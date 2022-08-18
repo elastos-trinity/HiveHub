@@ -11,7 +11,12 @@ import { useUserContext } from '../../../contexts/UserContext';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
 import HiveHubServer from '../../../service/HiveHubServer';
-import { getHiveNodesList, getRestService } from '../../../service/fetch';
+import {
+  getHiveNodesList,
+  getIPFromDomain,
+  getLocationFromIP,
+  getRestService
+} from '../../../service/fetch';
 
 export default function CreateNode() {
   const navigate = useNavigate();
@@ -24,9 +29,15 @@ export default function CreateNode() {
 
   const handleCreateNode = async () => {
     if (ownerDid && url) {
-      const country = 'China';
-      const province = 'Shanghai';
-      const district = 'Putuo';
+      // check url format
+      if (!(url.startsWith('https://') || url.startsWith('http://'))) {
+        enqueueSnackbar('Invalid url format', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        return;
+      }
+      // check duplicacy
       const registeredNodes = await getHiveNodesList(undefined, undefined, false, false);
       const duplicatedNodes = [];
       await Promise.all(
@@ -43,6 +54,7 @@ export default function CreateNode() {
         });
         return;
       }
+      // get node info
       const restService = await getRestService(user.did);
       const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
       if (!nodeInfo) {
@@ -62,13 +74,20 @@ export default function CreateNode() {
         });
         return;
       }
+      // get ip and location
+      const hostName = url.includes('https://')
+        ? url.replace('https://', '')
+        : url.replace('http://', '');
+      const ipAddress = await getIPFromDomain(hostName);
+      const location = await getLocationFromIP(ipAddress, 'json');
       const curTime = getTime(new Date().getTime());
+      // form a new node info
       const newNode = {
         name: nodeName,
         created: `${curTime.date} ${curTime.time}`,
-        ip: '192.115.24.2', // TODO:
+        ip: ipAddress,
         owner_did: ownerDid,
-        area: `${country} ${province} ${district}`,
+        area: `${location.country} ${location.region} ${location.city}`,
         email,
         url,
         remark: description
@@ -96,6 +115,7 @@ export default function CreateNode() {
         });
         return;
       }
+      // check node status
       const status = await HiveHubServer.isOnline(url);
       if (!status) {
         enqueueSnackbar('Hive Node is not accessible.', {
@@ -142,7 +162,7 @@ export default function CreateNode() {
             disabled
           />
           <CustomTextField
-            placeholder="URL"
+            placeholder="URL (e.g.  https://example.com)"
             variant="standard"
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}

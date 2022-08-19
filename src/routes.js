@@ -1,7 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // import NotFound from './pages/Page404';
 import LandingPage from './pages/Landing';
-import HiveHubLayout from './layouts/layout';
+import HiveHubLayout from './layouts';
 import HiveHome from './pages/Dashboard/Home';
 import HiveExplore from './pages/Dashboard/Explore';
 import HiveNodes from './pages/Dashboard/MyNodes';

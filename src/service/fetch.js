@@ -120,9 +120,8 @@ export const getActiveHiveNodeUrl = async () => {
         if (
           node.status &&
           !activeNodes.includes(node.url) &&
-          ((activeNodes.includes('testnet') && !config.IsProductEnv) ||
-            !activeNodes.includes('testnet')) &&
-          config.IsProductEnv
+          ((node.url.includes('testnet') && !config.IsProductEnv) ||
+            (!node.url.includes('testnet') && config.IsProductEnv))
         )
           activeNodes.push(node.url);
       } catch (e) {

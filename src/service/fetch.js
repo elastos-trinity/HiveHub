@@ -21,7 +21,7 @@ import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHi
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
-export const getHiveNodesList = async (nid, did, withName, onlyActive) => {
+export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = [];
   await Promise.all(
@@ -36,7 +36,8 @@ export const getHiveNodesList = async (nid, did, withName, onlyActive) => {
         } else {
           node.ownerName = reduceHexAddress(node.owner_did, 4);
         }
-        node.status = await HiveHubServer.isOnline(node.url);
+        if (withStatus) node.status = await HiveHubServer.isOnline(node.url);
+        else node.status = false;
       } catch (e) {
         node.status = false;
         node.ownerName = reduceHexAddress(node.owner_did, 4);

@@ -38,7 +38,7 @@ export default function CreateNode() {
         return;
       }
       // check duplicacy
-      const registeredNodes = await getHiveNodesList(undefined, undefined, false, false);
+      const registeredNodes = await getHiveNodesList(undefined, undefined, false, false, false);
       const duplicatedNodes = [];
       await Promise.all(
         registeredNodes.map((item) => {

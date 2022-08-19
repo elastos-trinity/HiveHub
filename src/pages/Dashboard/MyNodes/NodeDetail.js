@@ -58,7 +58,7 @@ export default function NodeDetail() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const details = await getHiveNodesList(nodeId, undefined, false, false);
+      const details = await getHiveNodesList(nodeId, undefined, false, true, false);
       setNodeDetail(details.length ? details[0] : undefined);
       const vaultItem = await getHiveVaultInfo(
         user.did,

@@ -55,7 +55,7 @@ export default function CreateNode() {
         return;
       }
       // get node info
-      const restService = await getRestService(user.did);
+      const restService = await getRestService(user.did, url);
       const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
       if (!nodeInfo) {
         enqueueSnackbar('Invalid node url', {

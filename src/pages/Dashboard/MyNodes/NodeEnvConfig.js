@@ -36,7 +36,7 @@ export default function NodeEnvConfig() {
     if (ownerDid && servicePK && passphrase && password && nodeName && email && nodeDescription) {
       let nodeCredential = '';
       try {
-        const restService = await getRestService(ownerDid);
+        const restService = await getRestService(ownerDid, undefined);
         const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
         const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
         const vcs = nodeOwnershipPresentation.getCredentials();

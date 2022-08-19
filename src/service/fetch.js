@@ -140,10 +140,10 @@ export const getAppContext = async (did) => {
   return appContext;
 };
 
-export const getRestService = async (did) => {
+export const getRestService = async (did, nodeProviderUrl) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
-  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProvider);
+  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProviderUrl || nodeProvider);
   const httpClient = new HttpClient(
     serviceEndpoint,
     HttpClient.WITH_AUTHORIZATION,
@@ -165,7 +165,7 @@ export const getBackupSubscription = async (did, nodeProviderUrl) => {
 };
 
 export const getSubscriptionService = async (did) => {
-  const restService = await getRestService(did);
+  const restService = await getRestService(did, undefined);
   return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
 };
 
@@ -555,7 +555,7 @@ export const createHiveNodeEnvConfig = (
 // ******************************************************************** //
 
 export const getHiveNodeInfo = async (did) => {
-  const restService = await getRestService(did);
+  const restService = await getRestService(did, undefined);
   const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
   const nodeInfo = await aboutService.getInfo();
   return nodeInfo;
@@ -568,7 +568,7 @@ export const getProvider = async (did) => {
 };
 
 export const getAuthService = async (did) => {
-  const restService = await getRestService(did);
+  const restService = await getRestService(did, undefined);
   return new AuthService(restService.serviceEndpoint, restService.httpClient);
 };
 

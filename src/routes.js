@@ -1,8 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // import NotFound from './pages/Page404';
 import LandingPage from './pages/Landing';
-import HiveMainPage from './layouts/Landing';
-import HiveDashboard from './layouts/Dashboard';
+import HiveHubLayout from './layouts/layout';
 import HiveHome from './pages/Dashboard/Home';
 import HiveExplore from './pages/Dashboard/Explore';
 import HiveNodes from './pages/Dashboard/MyNodes';
@@ -17,24 +16,23 @@ export default function Router() {
   return useRoutes([
     {
       path: '/',
-      element: <HiveMainPage />,
+      element: <HiveHubLayout />,
       children: [
         { path: '', element: <Navigate to="/landing" replace /> },
-        { path: 'landing', element: <LandingPage /> }
-      ]
-    },
-    {
-      path: '/dashboard',
-      element: <HiveDashboard />,
-      children: [
-        { path: '', element: <Navigate to="/dashboard/home" replace /> },
-        { path: 'home', element: <HiveHome /> },
-        { path: 'explore', element: <HiveExplore /> },
-        { path: 'nodes', element: <HiveNodes /> },
-        { path: 'nodes/create', element: <CreateNode /> },
-        { path: 'nodes/detail/:nodeId', element: <NodeDetail /> },
-        { path: 'nodes/envconfig', element: <NodeEnvConfig /> },
-        { path: 'vaults', element: <HiveVaults /> }
+        { path: 'landing', element: <LandingPage /> },
+        {
+          path: 'dashboard',
+          children: [
+            { path: '', element: <Navigate to="/dashboard/home" replace /> },
+            { path: 'home', element: <HiveHome /> },
+            { path: 'explore', element: <HiveExplore /> },
+            { path: 'nodes', element: <HiveNodes /> },
+            { path: 'nodes/create', element: <CreateNode /> },
+            { path: 'nodes/detail/:nodeId', element: <NodeDetail /> },
+            { path: 'nodes/envconfig', element: <NodeEnvConfig /> },
+            { path: 'vaults', element: <HiveVaults /> }
+          ]
+        }
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }

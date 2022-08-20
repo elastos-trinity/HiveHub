@@ -135,6 +135,7 @@ export default function HiveHome() {
 
   return (
     <>
+      {/* <PageTitleTypo mt={{ xs: 5, md: 6 }}>Home</PageTitleTypo> */}
       <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 8 }}>
         <PageTitleTypo sub="true">Hive Node Statistics</PageTitleTypo>
         <Stack

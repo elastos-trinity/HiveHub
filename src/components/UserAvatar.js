@@ -10,8 +10,10 @@ import {
   MenuItem,
   MenuList,
   Paper,
-  Popper
+  Popper,
+  Tooltip
 } from '@mui/material';
+import { tooltipClasses } from '@mui/material/Tooltip';
 import useConnectEE from '../hooks/useConnectEE';
 import { useUserContext } from '../contexts/UserContext';
 
@@ -21,6 +23,16 @@ export const AccountStyle = styled(Stack)(({ theme }) => ({
   height: '62px',
   borderRadius: '31px',
   backgroundColor: theme.palette.grey[200]
+}));
+
+const UsernameTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(() => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    marginTop: '0 !important',
+    fontSize: 13,
+    borderRadius: 4
+  }
 }));
 
 export default function UserAvatar() {
@@ -61,12 +73,14 @@ export default function UserAvatar() {
         onClick={handleToggle}
         sx={{ color: 'black' }}
       >
-        <Typography
-          variant="subtitle1"
-          sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
-        >
-          {user.did}
-        </Typography>
+        <UsernameTooltip title={user.did} placement="bottom-end">
+          <Typography
+            variant="subtitle1"
+            sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            {user.did}
+          </Typography>
+        </UsernameTooltip>
       </Button>
       <Popper
         open={open}

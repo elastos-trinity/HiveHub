@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { MHidden } from './@material-extend';
 import ItemBox from './ItemBox';
 import { NodeTitle, NodeValue, NodeDescription } from './CustomTypos';
-import { AccessButton } from './CustomButtons';
+import { AccessButton, DestroyVaultButton } from './CustomButtons';
 
 NodeItem.propTypes = {
   id: PropTypes.string.isRequired,
@@ -17,6 +17,7 @@ NodeItem.propTypes = {
   time: PropTypes.string.isRequired,
   isMyNode: PropTypes.bool,
   isLoading: PropTypes.bool.isRequired,
+  onClick: PropTypes.func,
   sx: PropTypes.any
 };
 
@@ -31,6 +32,7 @@ export default function NodeItem({
   time,
   isMyNode = false,
   isLoading,
+  onClick,
   sx
 }) {
   const navigate = useNavigate();
@@ -113,7 +115,9 @@ export default function NodeItem({
                   </Stack>
                 </Typography>
               </MHidden>
-              {!isMyNode && (
+              {isMyNode ? (
+                <DestroyVaultButton onClick={onClick}>Remove</DestroyVaultButton>
+              ) : (
                 <AccessButton
                   disabled={!status}
                   onClick={() => navigate(`/dashboard/nodes/detail/${id}`)}

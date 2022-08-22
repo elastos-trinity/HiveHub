@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import NodeItem from '../../../components/NodeItem';
 import { useUserContext } from '../../../contexts/UserContext';
-import { getHiveNodesList } from '../../../service/fetch';
+import { getHiveNodesList, removeHiveNode } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
 import { PlusButton } from '../../../components/CustomButtons';
 
 export default function HiveNodes() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const { user } = useUserContext();
   const [loading, setLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(emptyNodeItem));
@@ -23,6 +25,22 @@ export default function HiveNodes() {
     };
     fetchData();
   }, [user.did]);
+
+  const handleRemoveNode = async (nid) => {
+    const result = await removeHiveNode(nid);
+    if (result) {
+      enqueueSnackbar('Remove Hive Node success.', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      window.location.reload();
+    } else {
+      enqueueSnackbar('Remove Hive Node failed.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+  };
 
   return (
     <>
@@ -43,6 +61,7 @@ export default function HiveNodes() {
             ownerName={node.ownerName}
             isMyNode
             isLoading={loading}
+            onClick={() => handleRemoveNode(node.nid)}
             sx={{ cursor: 'pointer' }}
           />
         ))}

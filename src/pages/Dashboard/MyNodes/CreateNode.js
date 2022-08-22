@@ -10,8 +10,9 @@ import { ContainerBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
-import HiveHubServer from '../../../service/HiveHubServer';
 import {
+  checkHiveNodeStatus,
+  createHiveNode,
   getHiveNodesList,
   getIPFromDomain,
   getLocationFromIP,
@@ -116,7 +117,7 @@ export default function CreateNode() {
         return;
       }
       // check node status
-      const status = await HiveHubServer.isOnline(url);
+      const status = await checkHiveNodeStatus(url);
       if (!status) {
         enqueueSnackbar('Hive Node is not accessible.', {
           variant: 'error',
@@ -124,19 +125,19 @@ export default function CreateNode() {
         });
         return;
       }
-      try {
-        await HiveHubServer.addHiveNode(newNode);
+      const result = await createHiveNode(newNode);
+      if (result) {
         enqueueSnackbar('Create Hive Node success.', {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
-      } catch (err) {
-        console.error(err);
+        navigate('/dashboard/nodes');
+      } else {
+        enqueueSnackbar('Create Hive Node failed.', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
       }
-      // const json = await HiveHubServer.addHiveNode(newNode);
-      // acknowledged: true
-      // inserted_id: "62c2e6560d6930f229239199"
-      navigate('/dashboard/nodes');
     } else {
       setOwnerDidErr(!ownerDid);
       setUrlErr(!url);

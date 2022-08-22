@@ -1,5 +1,5 @@
 export const emptyNodeItem = {
-  _id: '',
+  nid: '',
   name: '',
   status: false,
   created: '0000-00-00 00:00:00',

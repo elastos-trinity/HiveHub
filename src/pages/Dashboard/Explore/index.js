@@ -52,7 +52,7 @@ export default function HiveExplore() {
           {nodeItems.map((item, index) => (
             <NodeItem
               key={`node-item-${index}`}
-              id={item._id}
+              id={item.nid}
               name={item.name}
               description={item.remark}
               ip={item.ip}

@@ -33,7 +33,7 @@ export default function HiveNodes() {
         {myNodeList.map((node, index) => (
           <NodeItem
             key={index}
-            id={node._id}
+            id={node.nid}
             name={node.name}
             status={node.status}
             time={node.created}

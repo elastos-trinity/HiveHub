@@ -26,7 +26,16 @@ export default function HiveNodes() {
     fetchData();
   }, [user.did]);
 
-  const handleRemoveNode = async (nid) => {
+  const handleRemoveNode = async (event, nid, ownerDid) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (ownerDid !== user.did) {
+      enqueueSnackbar('Only owner can remove its node.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      return;
+    }
     const result = await removeHiveNode(nid);
     if (result) {
       enqueueSnackbar('Remove Hive Node success.', {
@@ -61,7 +70,7 @@ export default function HiveNodes() {
             ownerName={node.ownerName}
             isMyNode
             isLoading={loading}
-            onClick={() => handleRemoveNode(node.nid)}
+            onClick={(event) => handleRemoveNode(event, node.nid, node.owner_did)}
             sx={{ cursor: 'pointer' }}
           />
         ))}

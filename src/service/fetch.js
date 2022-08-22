@@ -21,6 +21,29 @@ import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHi
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
+export const createHiveNode = async (node) => {
+  try {
+    await HiveHubServer.addHiveNode(node);
+    // acknowledged: true
+    // inserted_id: "62c2e6560d6930f229239199"
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
+export const removeHiveNode = async (nid) => {
+  if (!nid) return false;
+  const ret = await HiveHubServer.removeHiveNode(nid);
+  return ret === true;
+};
+
+export const checkHiveNodeStatus = async (url) => {
+  const status = await HiveHubServer.isOnline(url);
+  return status;
+};
+
 export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = [];

@@ -3,11 +3,12 @@ import LandingPage from '../pages/Landing';
 import HiveHubLayout from '../layouts';
 import HiveHome from '../pages/Dashboard/Home';
 import HiveExplore from '../pages/Dashboard/Explore';
+import NodeDetail from '../pages/Dashboard/Explore/NodeDetail';
 import HiveNodes from '../pages/Dashboard/MyNodes';
-import HiveVaults from '../pages/Dashboard/MyVaults';
-import CreateNode from '../pages/Dashboard/MyNodes/CreateNode';
-import NodeDetail from '../pages/Dashboard/MyNodes/NodeDetail';
+import MyNodeDetail from '../pages/Dashboard/MyNodes/MyNodeDetail';
 import NodeEnvConfig from '../pages/Dashboard/MyNodes/NodeEnvConfig';
+import CreateNode from '../pages/Dashboard/MyNodes/CreateNode';
+import HiveVaults from '../pages/Dashboard/MyVaults';
 
 // ----------------------------------------------------------------------
 
@@ -27,9 +28,9 @@ export default function Router() {
             { path: 'explore', element: <HiveExplore /> },
             { path: 'explore/detail/:nodeId', element: <NodeDetail /> },
             { path: 'nodes', element: <HiveNodes /> },
-            { path: 'nodes/create', element: <CreateNode /> },
-            { path: 'nodes/detail/:nodeId', element: <NodeDetail /> },
+            { path: 'nodes/detail/:nodeId', element: <MyNodeDetail /> },
             { path: 'nodes/envconfig', element: <NodeEnvConfig /> },
+            { path: 'nodes/create', element: <CreateNode /> },
             { path: 'vaults', element: <HiveVaults /> }
           ]
         }

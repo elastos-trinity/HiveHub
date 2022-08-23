@@ -11,6 +11,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 import { LanguageContextProvider } from './contexts/LanguageContext';
 import { UserContextProvider } from './contexts/UserContext';
+import { DialogContextProvider } from './contexts/DialogContext';
 
 // ----------------------------------------------------------------------
 
@@ -19,16 +20,18 @@ export default function App() {
     <HelmetProvider>
       <SnackbarProvider maxSnack={1}>
         <UserContextProvider>
-          <LanguageContextProvider>
-            <BrowserRouter>
-              <ThemeConfig>
-                <ScrollToTop />
-                <GlobalStyles />
-                <BaseOptionChartStyle />
-                <Router />
-              </ThemeConfig>
-            </BrowserRouter>
-          </LanguageContextProvider>
+          <DialogContextProvider>
+            <LanguageContextProvider>
+              <BrowserRouter>
+                <ThemeConfig>
+                  <ScrollToTop />
+                  <GlobalStyles />
+                  <BaseOptionChartStyle />
+                  <Router />
+                </ThemeConfig>
+              </BrowserRouter>
+            </LanguageContextProvider>
+          </DialogContextProvider>
         </UserContextProvider>
       </SnackbarProvider>
     </HelmetProvider>

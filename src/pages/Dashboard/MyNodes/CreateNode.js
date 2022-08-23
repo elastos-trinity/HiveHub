@@ -27,8 +27,10 @@ export default function CreateNode() {
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [url, setUrl] = useState('');
   const [urlErr, setUrlErr] = useState(false);
+  const [onProgress, setOnProgress] = useState(false);
 
   const handleCreateNode = async () => {
+    setOnProgress(true);
     if (ownerDid && url) {
       // check url format
       if (!(url.startsWith('https://') || url.startsWith('http://'))) {
@@ -36,6 +38,7 @@ export default function CreateNode() {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        setOnProgress(false);
         return;
       }
       // check duplicacy
@@ -53,6 +56,7 @@ export default function CreateNode() {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        setOnProgress(false);
         return;
       }
       // get node info
@@ -63,6 +67,7 @@ export default function CreateNode() {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        setOnProgress(false);
         return;
       }
       const nodeName = nodeInfo.getName();
@@ -73,6 +78,7 @@ export default function CreateNode() {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        setOnProgress(false);
         return;
       }
       // get ip and location
@@ -114,6 +120,7 @@ export default function CreateNode() {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        setOnProgress(false);
         return;
       }
       // check node status
@@ -123,6 +130,7 @@ export default function CreateNode() {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
+        setOnProgress(false);
         return;
       }
       const result = await createHiveNode(newNode);
@@ -138,9 +146,11 @@ export default function CreateNode() {
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
       }
+      setOnProgress(false);
     } else {
       setOwnerDidErr(!ownerDid);
       setUrlErr(!url);
+      setOnProgress(false);
     }
   };
 
@@ -187,7 +197,9 @@ export default function CreateNode() {
           >
             Cancel
           </ConfirmButton>
-          <ConfirmButton onClick={handleCreateNode}>Confirm</ConfirmButton>
+          <ConfirmButton disabled={onProgress} onClick={handleCreateNode}>
+            Confirm
+          </ConfirmButton>
         </Stack>
       </ContainerBox>
     </>

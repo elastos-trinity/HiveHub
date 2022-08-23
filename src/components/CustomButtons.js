@@ -152,3 +152,46 @@ export const DestroyVaultButton = styled(Button)(({ theme }) => ({
     backgroundColor: 'rgba(179, 179, 179, 0.7)'
   }
 }));
+
+const buttonStyles = {
+  primary: {
+    bgColor: '#1890ff',
+    hoverBgColor: '#28a0ff',
+    color: 'white'
+  },
+  secondary: {
+    bgColor: '#e8f4ff',
+    hoverBgColor: '#d8e4ef',
+    color: '#1890ff'
+  },
+  pink: {
+    bgColor: '#fdeeee',
+    hoverBgColor: '#fddede',
+    color: '#eb5757'
+  },
+  green: {
+    bgColor: '#C9F5DC',
+    hoverBgColor: '#B9FFCC',
+    color: '#1EA557'
+  },
+  none: {
+    bgColor: 'transparent',
+    hoverBgColor: 'transparent',
+    color: '#1890FF'
+  }
+};
+
+export const BaseButton = styled(Button)(({ size }) => ({
+  height: size === 'small' ? '40px' : '56px',
+  borderRadius: size === 'small' ? '12px' : '16px',
+  fontSize: size === 'small' ? '16px' : '18px',
+  fontWeight: 700
+}));
+
+export const PrimaryButton = styled(BaseButton)(({ btnColor }) => ({
+  background: buttonStyles[btnColor].bgColor,
+  color: buttonStyles[btnColor].color,
+  '&:hover': {
+    background: buttonStyles[btnColor].hoverBgColor
+  }
+}));

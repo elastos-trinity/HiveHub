@@ -25,6 +25,7 @@ export default function Router() {
             { path: '', element: <Navigate to="/dashboard/home" replace /> },
             { path: 'home', element: <HiveHome /> },
             { path: 'explore', element: <HiveExplore /> },
+            { path: 'explore/detail/:nodeId', element: <NodeDetail /> },
             { path: 'nodes', element: <HiveNodes /> },
             { path: 'nodes/create', element: <CreateNode /> },
             { path: 'nodes/detail/:nodeId', element: <NodeDetail /> },

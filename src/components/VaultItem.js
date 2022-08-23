@@ -42,13 +42,7 @@ export default function VaultItem({
           sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '150px', md: '200px' } }}
         />
       ) : (
-        <ItemBox
-          time={time}
-          sx={{ ...sx }}
-          onClick={() => {
-            // if (isMyVault) navigate(`/dashboard/nodes/detail/${id}`);
-          }}
-        >
+        <ItemBox time={time} sx={{ ...sx }} onClick={() => {}}>
           <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>
             <NodeTitle>{`${ownerName}'s Vault`}</NodeTitle>
             <VaultValue>{`${used} MB / ${total} MB`}</VaultValue>

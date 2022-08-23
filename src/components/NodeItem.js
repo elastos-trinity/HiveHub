@@ -120,7 +120,7 @@ export default function NodeItem({
               ) : (
                 <AccessButton
                   disabled={!status}
-                  onClick={() => navigate(`/dashboard/nodes/detail/${id}`)}
+                  onClick={() => navigate(`/dashboard/explore/detail/${id}`)}
                 >
                   Access
                 </AccessButton>

@@ -23,13 +23,11 @@ import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
 export const createHiveNode = async (node) => {
   try {
-    await HiveHubServer.addHiveNode(node);
-    // acknowledged: true
-    // inserted_id: "62c2e6560d6930f229239199"
-    return true;
+    const response = await HiveHubServer.addHiveNode(node);
+    return response ? response.inserted_id : '';
   } catch (err) {
     console.error(err);
-    return false;
+    return '';
   }
 };
 

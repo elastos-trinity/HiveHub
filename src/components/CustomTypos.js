@@ -129,10 +129,10 @@ export const PlusTypography = styled(Typography)(({ theme }) => ({
   }
 }));
 
-export const DialogTitleTypo = styled(Typography)`
-  font-size: 42px;
-  font-weight: 700;
-  line-height: 44px;
-  text-align: center;
-  text-transform: capitalize;
-`;
+export const DialogTitleTypo = styled(Typography)({
+  fontSize: '42px',
+  fontWeight: 700,
+  lineHeight: '44px',
+  textAlign: 'center',
+  textTransform: 'capitalize'
+});

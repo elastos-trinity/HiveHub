@@ -5,14 +5,18 @@ import { useSnackbar } from 'notistack';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import NodeItem from '../../../components/NodeItem';
 import { useUserContext } from '../../../contexts/UserContext';
+import { useDialogContext } from '../../../contexts/DialogContext';
 import { getHiveNodesList, removeHiveNode } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
 import { PlusButton } from '../../../components/CustomButtons';
+import ModalDialog from '../../../components/ModalDialog';
+import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
 
 export default function HiveNodes() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUserContext();
+  const { dlgState, setDlgState } = useDialogContext();
   const [loading, setLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(emptyNodeItem));
 
@@ -26,9 +30,7 @@ export default function HiveNodes() {
     fetchData();
   }, [user.did]);
 
-  const handleRemoveNode = async (event, nid, ownerDid) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleRemoveNode = async (nid, ownerDid) => {
     if (ownerDid !== user.did) {
       enqueueSnackbar('Only owner can remove its node.', {
         variant: 'error',
@@ -70,7 +72,16 @@ export default function HiveNodes() {
             ownerName={node.ownerName}
             isMyNode
             isLoading={loading}
-            onClick={(event) => handleRemoveNode(event, node.nid, node.owner_did)}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setDlgState({
+                ...dlgState,
+                confirmDlgOpened: true,
+                removeNodeNid: node.nid,
+                removeNodeOwnerDid: node.owner_did
+              });
+            }}
             sx={{ cursor: 'pointer' }}
           />
         ))}
@@ -83,6 +94,30 @@ export default function HiveNodes() {
           </PlusButton>
         </Stack>
       </Stack>
+      <ModalDialog
+        open={dlgState.confirmDlgOpened}
+        onClose={() => {
+          setDlgState({
+            ...dlgState,
+            confirmDlgOpened: false,
+            removeNodeNid: 0,
+            removeNodeOwnerDid: ''
+          });
+        }}
+      >
+        <ConfirmDlg
+          message="Do you really want to remove this node?"
+          onClose={() => {
+            setDlgState({
+              ...dlgState,
+              confirmDlgOpened: false,
+              removeNodeNid: 0,
+              removeNodeOwnerDid: ''
+            });
+          }}
+          onClick={() => handleRemoveNode(dlgState.removeNodeNid, dlgState.removeNodeOwnerDid)}
+        />
+      </ModalDialog>
     </>
   );
 }

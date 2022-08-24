@@ -288,20 +288,23 @@ export const findBackupNodeProvider = async (did) => {
   return nodeProvider.replace('2', '1');
 };
 
-export const backupVault = async (did, backupNodeProvider) => {
+export const backupVault = async (did, targetNodeUrl) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
+  // Vault to back up
   const vault = new Vault(appContext, nodeProvider);
-  const subscription = new VaultSubscription(appContext, nodeProvider);
-  const subscriptionBackup = new BackupSubscription(appContext, backupNodeProvider);
-  const backupService = vault.getBackupService();
-  const backupVaultInfo = await subscriptionBackup.checkSubscription();
+  const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
+  const backupSubscription = new BackupSubscription(appContext, nodeProvider);
+  const backupVaultInfo = await backupSubscription.checkSubscription();
   const backupVaultServiceDid = backupVaultInfo.getServiceDid();
+  // Backup Service on target Node
+  const targetVault = new Vault(appContext, targetNodeUrl);
+  const backupService = targetVault.getBackupService();
   backupService.setBackupContext({
     getParameter(parameter) {
       switch (parameter) {
         case 'targetAddress':
-          return backupNodeProvider;
+          return targetNodeUrl;
         case 'targetServiceDid':
           return backupVaultServiceDid;
         default:
@@ -334,11 +337,11 @@ export const backupVault = async (did, backupNodeProvider) => {
 
   try {
     // subscribe the backup service
-    await subscriptionBackup.subscribe();
+    await backupSubscription.subscribe();
     console.log('subscribe a backup service.');
 
     // deactivate the vault to a void data changes in the backup process.
-    await subscription.deactivate();
+    await vaultSubscription.deactivate();
     console.log('deactivate the source vault.');
 
     // backup the vault data.
@@ -593,8 +596,8 @@ export const createHiveNodeEnvConfig = (
 
 // ******************************************************************** //
 
-export const getHiveNodeInfo = async (did) => {
-  const restService = await getRestService(did, undefined);
+export const getHiveNodeInfo = async (did, nodeProvider) => {
+  const restService = await getRestService(did, nodeProvider);
   const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
   const nodeInfo = await aboutService.getInfo();
   return nodeInfo;

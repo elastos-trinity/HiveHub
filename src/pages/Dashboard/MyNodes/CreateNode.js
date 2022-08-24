@@ -13,10 +13,10 @@ import { getTime } from '../../../service/common';
 import {
   checkHiveNodeStatus,
   createHiveNode,
+  getHiveNodeInfo,
   getHiveNodesList,
   getIPFromDomain,
-  getLocationFromIP,
-  getRestService
+  getLocationFromIP
 } from '../../../service/fetch';
 
 export default function CreateNode() {
@@ -60,8 +60,7 @@ export default function CreateNode() {
         return;
       }
       // get node info
-      const restService = await getRestService(user.did, url);
-      const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+      const nodeInfo = await getHiveNodeInfo(user.did, url);
       if (!nodeInfo) {
         enqueueSnackbar('Invalid node url', {
           variant: 'error',

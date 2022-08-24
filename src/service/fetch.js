@@ -377,7 +377,7 @@ export const checkBackupStatus = async (did) => {
   try {
     const appContext = await getAppContext(did);
     const nodeProvider = await appContext.getProviderAddress(did);
-    const vaultInfo = await getHiveVaultInfo(did, undefined, undefined);
+    const vaultInfo = await getHiveVaultInfo(did, undefined, 1);
     if (vaultInfo) {
       const vault = new Vault(appContext, nodeProvider);
       const backupService = vault.getBackupService(vault);

@@ -11,7 +11,7 @@ import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import CustomTextField from '../../../components/CustomTextField';
-import { createHiveNodeEnvConfig, getRestService } from '../../../service/fetch';
+import { createHiveNodeEnvConfig, getHiveNodeInfo } from '../../../service/fetch';
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
@@ -36,8 +36,7 @@ export default function NodeEnvConfig() {
     if (ownerDid && servicePK && passphrase && password && nodeName && email && nodeDescription) {
       let nodeCredential = '';
       try {
-        const restService = await getRestService(ownerDid, undefined);
-        const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+        const nodeInfo = await getHiveNodeInfo(ownerDid, undefined);
         const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
         const vcs = nodeOwnershipPresentation.getCredentials();
         if (vcs && vcs.length) nodeCredential = binary_to_base58(vcs[0].toString());

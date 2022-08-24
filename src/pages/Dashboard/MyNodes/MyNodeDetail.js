@@ -14,9 +14,9 @@ import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import {
   createVault,
   destroyVault,
+  getHiveNodeInfo,
   getHiveNodesList,
-  getMyHiveNodeDetails,
-  getRestService
+  getMyHiveNodeDetails
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
@@ -43,6 +43,7 @@ function InfoItem({ label, value }) {
 export default function MyNodeDetail() {
   const navigate = useNavigate();
   const { user } = useUserContext();
+  const { nodeId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);
@@ -51,21 +52,14 @@ export default function MyNodeDetail() {
   const [value, setValue] = useState('vault');
   const [onProgress, setOnProgress] = useState(false);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const { nodeId } = useParams();
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const details = await getHiveNodesList(nodeId, undefined, false, true, false);
-      const detailedNodeInfo = details.length ? details[0] : undefined;
-      setNodeDetail(detailedNodeInfo);
-      if (detailedNodeInfo) {
-        const restService = await getRestService(user.did, detailedNodeInfo.url);
-        const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+      const myNodeInfo = details.length ? details[0] : undefined;
+      setNodeDetail(myNodeInfo);
+      if (myNodeInfo) {
+        const nodeInfo = await getHiveNodeInfo(user.did, myNodeInfo.url);
         const nodeOwnerDid = nodeInfo.getOwnerDid();
         if (nodeOwnerDid !== user.did) {
           enqueueSnackbar('You are not the owner of this node.', {
@@ -75,7 +69,7 @@ export default function MyNodeDetail() {
           navigate('/dashboard/nodes');
           return;
         }
-        const myNodeDetails = await getMyHiveNodeDetails(user.did, detailedNodeInfo.url);
+        const myNodeDetails = await getMyHiveNodeDetails(user.did, myNodeInfo.url);
         if (myNodeDetails) {
           setVaultItems(myNodeDetails.vaults);
           setBackupItems(myNodeDetails.backups);
@@ -92,6 +86,10 @@ export default function MyNodeDetail() {
     if (user.did) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did, nodeId]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const handleCreateVault = () => {
     if (user.nodeProvider !== nodeDetail.url) {

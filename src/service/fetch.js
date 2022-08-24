@@ -72,6 +72,42 @@ export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActiv
   return nodeList;
 };
 
+export const getActiveHiveNodeUrl = async () => {
+  const nodes = await HiveHubServer.getHiveNodes();
+  const activeNodes = [];
+  await Promise.all(
+    nodes.map(async (item) => {
+      const node = { ...item };
+      try {
+        node.status = await HiveHubServer.isOnline(node.url);
+        if (
+          node.status &&
+          !activeNodes.includes(node.url) &&
+          ((node.url.includes('testnet') && !config.IsProductEnv) ||
+            (!node.url.includes('testnet') && config.IsProductEnv))
+        )
+          activeNodes.push(node.url);
+      } catch (e) {
+        node.status = false;
+      }
+      return node;
+    })
+  );
+  return activeNodes;
+};
+
+export const getMyHiveNodeDetails = async (did, nodeProviderUrl) => {
+  try {
+    const provider = await getProvider(did, nodeProviderUrl);
+    const vaults = await provider.getVaults();
+    const backups = await provider.getBackups();
+    return { vaults, backups };
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
+};
+
 export const getHiveVaultInfo = async (did, nodeProvider, type) => {
   try {
     const vaultSubscription =
@@ -129,30 +165,6 @@ export const getCredentialsFromDID = (did) =>
         reject(error);
       });
   });
-
-export const getActiveHiveNodeUrl = async () => {
-  const nodes = await HiveHubServer.getHiveNodes();
-  const activeNodes = [];
-  await Promise.all(
-    nodes.map(async (item) => {
-      const node = { ...item };
-      try {
-        node.status = await HiveHubServer.isOnline(node.url);
-        if (
-          node.status &&
-          !activeNodes.includes(node.url) &&
-          ((node.url.includes('testnet') && !config.IsProductEnv) ||
-            (!node.url.includes('testnet') && config.IsProductEnv))
-        )
-          activeNodes.push(node.url);
-      } catch (e) {
-        node.status = false;
-      }
-      return node;
-    })
-  );
-  return activeNodes;
-};
 // ******************************************************************** //
 
 export const getAppContext = async (did) => {
@@ -171,6 +183,12 @@ export const getRestService = async (did, nodeProviderUrl) => {
     HttpClient.DEFAULT_OPTIONS
   );
   return { serviceEndpoint, httpClient };
+};
+
+export const getProvider = async (did, nodeProviderUrl) => {
+  const appContext = await getAppContext(did);
+  const nodeProvider = await appContext.getProviderAddress(did);
+  return new Provider(appContext, nodeProviderUrl || nodeProvider);
 };
 
 export const getVaultSubscription = async (did, nodeProviderUrl) => {
@@ -580,12 +598,6 @@ export const getHiveNodeInfo = async (did) => {
   const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
   const nodeInfo = await aboutService.getInfo();
   return nodeInfo;
-};
-
-export const getProvider = async (did) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  return new Provider(appContext, nodeProvider);
 };
 
 export const getAuthService = async (did) => {

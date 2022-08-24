@@ -21,6 +21,8 @@ import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHi
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
+// ******************************* Hive Node (HiveHub Server) ************************************* //
+
 export const createHiveNode = async (node) => {
   try {
     const response = await HiveHubServer.addHiveNode(node);
@@ -96,6 +98,13 @@ export const getActiveHiveNodeUrl = async () => {
   return activeNodes;
 };
 
+export const getHiveNodeInfo = async (did, nodeProvider) => {
+  const restService = await getRestService(did, nodeProvider);
+  const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
+  const nodeInfo = await aboutService.getInfo();
+  return nodeInfo;
+};
+
 export const getMyHiveNodeDetails = async (did, nodeProviderUrl) => {
   try {
     const provider = await getProvider(did, nodeProviderUrl);
@@ -131,41 +140,7 @@ export const getHiveVaultInfo = async (did, nodeProvider, type) => {
   }
 };
 
-export const getDIDDocumentFromDID = (did) =>
-  new Promise((resolve, reject) => {
-    DIDBackend.initialize(new DefaultDIDAdapter(config.DIDResolverUrl));
-    const didObj = new DID(did);
-    didObj
-      .resolve(true)
-      .then((didDoc) => {
-        if (!didDoc) resolve({});
-        resolve(didDoc);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-
-export const getCredentialsFromDID = (did) =>
-  new Promise((resolve, reject) => {
-    DIDBackend.initialize(new DefaultDIDAdapter(config.DIDResolverUrl));
-    const didObj = new DID(did);
-    didObj
-      .resolve(true)
-      .then((didDoc) => {
-        if (!didDoc) resolve({});
-        const credentials = didDoc.getCredentials();
-        const properties = credentials.reduce((props, c) => {
-          props[c.id.fragment] = c.subject.properties[c.id.fragment];
-          return props;
-        }, {});
-        resolve(properties);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-// ******************************************************************** //
+// ******************************* HIVE-JS-SDK ************************************* //
 
 export const getAppContext = async (did) => {
   const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
@@ -251,7 +226,19 @@ export const getValidNodeProviderUrl = async (appContext, did) => {
   return activeNodes[activeNodes.length - 1];
 };
 
-// For Test
+export const getAuthService = async (did) => {
+  const restService = await getRestService(did, undefined);
+  return new AuthService(restService.serviceEndpoint, restService.httpClient);
+};
+
+export const getVault = async (did) => {
+  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+  const vault = await instBCSHAH.getVaultServices(did);
+  return vault;
+};
+
+// ******************************* Test ************************************* //
+
 export const insertData = async (did) => {
   const COLLECTION_NAME = 'test_collection';
   const vault = await getVault(did);
@@ -280,12 +267,32 @@ export const getStoredData = async (did) => {
   }
 };
 
+// ******************************* Basic Feature (backup, migrate, unbind) ************************************* //
+
 // TODO: Find available backup node
 export const findBackupNodeProvider = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   if (nodeProvider.includes('1')) return nodeProvider.replace('1', '2');
   return nodeProvider.replace('2', '1');
+};
+
+export const checkBackupStatus = async (did) => {
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    const vaultInfo = await getHiveVaultInfo(did, undefined, 1);
+    if (vaultInfo) {
+      const vault = new Vault(appContext, nodeProvider);
+      const backupService = vault.getBackupService(vault);
+      const info = await backupService.checkResult();
+      return info.getResult() === BackupResultResult.RESULT_SUCCESS;
+    }
+    return false;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 };
 
 export const backupVault = async (did, targetNodeUrl) => {
@@ -376,24 +383,6 @@ export const backupVault = async (did, targetNodeUrl) => {
   }
 };
 
-export const checkBackupStatus = async (did) => {
-  try {
-    const appContext = await getAppContext(did);
-    const nodeProvider = await appContext.getProviderAddress(did);
-    const vaultInfo = await getHiveVaultInfo(did, undefined, 1);
-    if (vaultInfo) {
-      const vault = new Vault(appContext, nodeProvider);
-      const backupService = vault.getBackupService(vault);
-      const info = await backupService.checkResult();
-      return info.getResult() === BackupResultResult.RESULT_SUCCESS;
-    }
-    return false;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-};
-
 /**
  * This example shows how to migrate the vault to another node,
  * here two nodes are same.
@@ -409,6 +398,7 @@ export const checkBackupStatus = async (did) => {
  *      7. all done. the vault can be used on node B.
  *
  */
+
 export const migrateVault = async (did, backupNodeProvider) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
@@ -594,27 +584,43 @@ export const createHiveNodeEnvConfig = (
   element.click();
 };
 
-// ******************************************************************** //
+// ******************************* DID Credentials ************************************* //
 
-export const getHiveNodeInfo = async (did, nodeProvider) => {
-  const restService = await getRestService(did, nodeProvider);
-  const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
-  const nodeInfo = await aboutService.getInfo();
-  return nodeInfo;
-};
+export const getDIDDocumentFromDID = (did) =>
+  new Promise((resolve, reject) => {
+    DIDBackend.initialize(new DefaultDIDAdapter(config.DIDResolverUrl));
+    const didObj = new DID(did);
+    didObj
+      .resolve(true)
+      .then((didDoc) => {
+        if (!didDoc) resolve({});
+        resolve(didDoc);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 
-export const getAuthService = async (did) => {
-  const restService = await getRestService(did, undefined);
-  return new AuthService(restService.serviceEndpoint, restService.httpClient);
-};
+export const getCredentialsFromDID = (did) =>
+  new Promise((resolve, reject) => {
+    DIDBackend.initialize(new DefaultDIDAdapter(config.DIDResolverUrl));
+    const didObj = new DID(did);
+    didObj
+      .resolve(true)
+      .then((didDoc) => {
+        if (!didDoc) resolve({});
+        const credentials = didDoc.getCredentials();
+        const properties = credentials.reduce((props, c) => {
+          props[c.id.fragment] = c.subject.properties[c.id.fragment];
+          return props;
+        }, {});
+        resolve(properties);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 
-export const getVault = async (did) => {
-  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
-  const vault = await instBCSHAH.getVaultServices(did);
-  return vault;
-};
-
-// ******************************************************************** //
 /**
  * Calls a hive script that contains a downloadable picture file, for instance a identity avatar.
  * The fetched picture is returned as a data URL "data:xxx" directly usable with Img HTML elements.
@@ -692,6 +698,8 @@ export const fetchHiveScriptPicture = async (hiveScriptUrl, did) => {
     return null;
   }
 };
+
+// ******************************* IP, Geolocation ************************************* //
 
 export const getLocationFromIP = async (ipAddress, format) => {
   if (!ipAddress || !format) return { country: '', region: '', city: '' };

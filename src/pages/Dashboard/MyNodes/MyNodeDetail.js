@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import {
@@ -15,7 +15,8 @@ import {
   createVault,
   destroyVault,
   getHiveNodesList,
-  getHiveVaultInfo
+  getMyHiveNodeDetails,
+  getRestService
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
@@ -40,6 +41,7 @@ function InfoItem({ label, value }) {
 }
 
 export default function MyNodeDetail() {
+  const navigate = useNavigate();
   const { user } = useUserContext();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
@@ -59,26 +61,36 @@ export default function MyNodeDetail() {
     const fetchData = async () => {
       setLoading(true);
       const details = await getHiveNodesList(nodeId, undefined, false, true, false);
-      setNodeDetail(details.length ? details[0] : undefined);
-      const vaultItem = await getHiveVaultInfo(
-        user.did,
-        details.length ? details[0].url : undefined,
-        1
-      );
-      if (vaultItem) {
-        setVaultItems([vaultItem]);
-      } else setVaultItems([]);
-      const backupItem = await getHiveVaultInfo(
-        user.did,
-        details.length ? details[0].url : undefined,
-        2
-      );
-      if (backupItem) {
-        setBackupItems([backupItem]);
-      } else setBackupItems([]);
+      const detailedNodeInfo = details.length ? details[0] : undefined;
+      setNodeDetail(detailedNodeInfo);
+      if (detailedNodeInfo) {
+        const restService = await getRestService(user.did, detailedNodeInfo.url);
+        const nodeInfo = await restService.serviceEndpoint.getNodeInfo();
+        const nodeOwnerDid = nodeInfo.getOwnerDid();
+        if (nodeOwnerDid !== user.did) {
+          enqueueSnackbar('You are not the owner of this node.', {
+            variant: 'error',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+          navigate('/dashboard/nodes');
+          return;
+        }
+        const myNodeDetails = await getMyHiveNodeDetails(user.did, detailedNodeInfo.url);
+        if (myNodeDetails) {
+          setVaultItems(myNodeDetails.vaults);
+          setBackupItems(myNodeDetails.backups);
+        } else {
+          setVaultItems([]);
+          setBackupItems([]);
+        }
+      } else {
+        navigate('/dashboard/nodes');
+        return;
+      }
       setLoading(false);
     };
     if (user.did) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did, nodeId]);
 
   const handleCreateVault = () => {

@@ -54,6 +54,7 @@ export default function HiveExplore() {
               key={`node-item-${index}`}
               id={item.nid}
               name={item.name}
+              url={item.url}
               description={item.remark}
               ip={item.ip}
               did={item.owner_did}

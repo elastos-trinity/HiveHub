@@ -10,6 +10,7 @@ NodeItem.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   status: PropTypes.bool.isRequired,
+  url: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   ip: PropTypes.string.isRequired,
   did: PropTypes.string.isRequired,
@@ -25,6 +26,7 @@ export default function NodeItem({
   id,
   name,
   status,
+  url,
   description,
   ip,
   did,
@@ -83,6 +85,7 @@ export default function NodeItem({
                   />
                 )}
               </Stack>
+              <NodeDescription>{url}</NodeDescription>
               <NodeDescription>{description}</NodeDescription>
             </Stack>
 

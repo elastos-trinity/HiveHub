@@ -66,6 +66,7 @@ export default function HiveNodes() {
             name={node.name}
             status={node.status}
             time={node.created}
+            url={node.url}
             description={node.remark}
             ip={node.ip}
             did={node.owner_did}

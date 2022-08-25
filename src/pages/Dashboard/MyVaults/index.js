@@ -144,6 +144,7 @@ export default function HiveVaults() {
           <VaultItem
             key={index}
             // id={item.id}
+            url={user.nodeProvider}
             name={item.name}
             total={item.total}
             used={item.used}

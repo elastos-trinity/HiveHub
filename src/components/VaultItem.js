@@ -2,12 +2,13 @@
 import { Stack, LinearProgress, Skeleton } from '@mui/material';
 import PropTypes from 'prop-types';
 import ItemBox from './ItemBox';
-import { NodeTitle, VaultValue } from './CustomTypos';
+import { NodeDescription, NodeTitle, VaultValue } from './CustomTypos';
 import { AccessButton } from './CustomButtons';
 
 VaultItem.propTypes = {
   // id: PropTypes.number.isRequired,
   // name: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
   used: PropTypes.number.isRequired,
   time: PropTypes.string.isRequired,
@@ -21,6 +22,7 @@ VaultItem.propTypes = {
 export default function VaultItem({
   // id,
   // name,
+  url,
   total,
   used,
   time,
@@ -31,7 +33,6 @@ export default function VaultItem({
   sx
 }) {
   // const navigate = useNavigate();
-
   return (
     <div>
       {isLoading ? (
@@ -45,6 +46,7 @@ export default function VaultItem({
         <ItemBox time={time} sx={{ ...sx }} onClick={() => {}}>
           <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>
             <NodeTitle>{`${ownerName}'s Vault`}</NodeTitle>
+            <NodeDescription>{url}</NodeDescription>
             <VaultValue>{`${used} MB / ${total} MB`}</VaultValue>
             <Stack
               direction={{ xs: 'column', sm: 'row' }}

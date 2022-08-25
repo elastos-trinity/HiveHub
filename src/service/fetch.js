@@ -296,58 +296,47 @@ export const checkBackupStatus = async (did) => {
 };
 
 export const backupVault = async (did, targetNodeUrl) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  // Vault to back up
-  const vault = new Vault(appContext, nodeProvider);
-  const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
-  const backupService = vault.getBackupService();
-  // Backup Service on target Node
-  const targetVault = new Vault(appContext, targetNodeUrl);
-  const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
-  const targetBackupInfo = await targetBackupSubscription.checkSubscription();
-  const targetBackupServiceDid = targetBackupInfo.getServiceDid();
-  const targetBackupService = targetVault.getBackupService();
-  backupService.setBackupContext({
-    getParameter(parameter) {
-      switch (parameter) {
-        case 'targetAddress':
-          return targetNodeUrl;
-        case 'targetServiceDid':
-          return targetBackupServiceDid;
-        default:
-          break;
-      }
-      return null;
-    },
-    getType() {
-      return null;
-    },
-    async getAuthorization(srcDid, targetDid, targetHost) {
-      try {
-        const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
-        // TODO: EE return wrong format credential, just place a correct one to make demo work.
-        await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
-        return '{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR#hive-backup-credential","type":["HiveBackupCredential","VerifiableCredential"],"issuer":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq","issuanceDate":"2022-06-30T02:58:05Z","expirationDate":"2027-06-30T02:58:05Z","credentialSubject":{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","sourceHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetNodeURL":"http://localhost:5005"},"proof":{"type":"ECDSAsecp256r1","created":"2022-06-30T02:58:06Z","verificationMethod":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq#primary","signature":"4IFGnkBb9drcsD4V0GHlHZ5bSaO1CO0c69-k9d5yhTZvbEqnyXncNKhNLvKs2yaNk1ARgj6o1gUIDc74moNxWA"}}';
-      } catch (e) {
-        throw new HiveException(e.toString());
-      }
-    }
-  });
-
-  // try {
-  //   await subscriptionBackup.unsubscribe();
-  // } catch (e) {
-  //   if (!(e instanceof NotFoundException)) {
-  //     throw e;
-  //   }
-  // }
-
   try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    // Vault to back up
+    const vault = new Vault(appContext, nodeProvider);
+    const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
+    const backupService = vault.getBackupService();
+    // Backup Service on target Node
+    const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
     // subscribe the backup service
+    await targetBackupSubscription.unsubscribe();
     await targetBackupSubscription.subscribe();
     console.log('subscribe a backup service.');
-
+    const targetBackupInfo = await targetBackupSubscription.checkSubscription();
+    const targetBackupServiceDid = targetBackupInfo.getServiceDid();
+    backupService.setBackupContext({
+      getParameter(parameter) {
+        switch (parameter) {
+          case 'targetAddress':
+            return targetNodeUrl;
+          case 'targetServiceDid':
+            return targetBackupServiceDid;
+          default:
+            break;
+        }
+        return null;
+      },
+      getType() {
+        return null;
+      },
+      async getAuthorization(srcDid, targetDid, targetHost) {
+        try {
+          const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+          // TODO: EE return wrong format credential, just place a correct one to make demo work.
+          await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
+          return '{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR#hive-backup-credential","type":["HiveBackupCredential","VerifiableCredential"],"issuer":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq","issuanceDate":"2022-06-30T02:58:05Z","expirationDate":"2027-06-30T02:58:05Z","credentialSubject":{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","sourceHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetNodeURL":"http://localhost:5005"},"proof":{"type":"ECDSAsecp256r1","created":"2022-06-30T02:58:06Z","verificationMethod":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq#primary","signature":"4IFGnkBb9drcsD4V0GHlHZ5bSaO1CO0c69-k9d5yhTZvbEqnyXncNKhNLvKs2yaNk1ARgj6o1gUIDc74moNxWA"}}';
+        } catch (e) {
+          throw new HiveException(e.toString());
+        }
+      }
+    });
     // deactivate the vault to avoid data changes in the backup process.
     await vaultSubscription.deactivate();
     console.log('deactivate the source vault.');

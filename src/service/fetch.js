@@ -301,19 +301,20 @@ export const backupVault = async (did, targetNodeUrl) => {
   // Vault to back up
   const vault = new Vault(appContext, nodeProvider);
   const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
-  const backupSubscription = new BackupSubscription(appContext, nodeProvider);
-  const backupInfo = await backupSubscription.checkSubscription();
-  const backupServiceDid = backupInfo.getServiceDid();
+  const backupService = vault.getBackupService();
   // Backup Service on target Node
   const targetVault = new Vault(appContext, targetNodeUrl);
-  const backupService = targetVault.getBackupService();
+  const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
+  const targetBackupInfo = await targetBackupSubscription.checkSubscription();
+  const targetBackupServiceDid = targetBackupInfo.getServiceDid();
+  const targetBackupService = targetVault.getBackupService();
   backupService.setBackupContext({
     getParameter(parameter) {
       switch (parameter) {
         case 'targetAddress':
           return targetNodeUrl;
         case 'targetServiceDid':
-          return backupServiceDid;
+          return targetBackupServiceDid;
         default:
           break;
       }
@@ -344,7 +345,7 @@ export const backupVault = async (did, targetNodeUrl) => {
 
   try {
     // subscribe the backup service
-    await backupSubscription.subscribe();
+    await targetBackupSubscription.subscribe();
     console.log('subscribe a backup service.');
 
     // deactivate the vault to avoid data changes in the backup process.

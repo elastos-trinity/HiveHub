@@ -314,7 +314,7 @@ export const backupVault = async (did, targetNodeUrl) => {
         await targetBackupSubscription.subscribe();
       } else {
         console.error(err);
-        return;
+        return 0;
       }
     }
     console.log('subscribe a backup service.');

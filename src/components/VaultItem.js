@@ -45,8 +45,10 @@ export default function VaultItem({
       ) : (
         <ItemBox time={time} sx={{ ...sx }} onClick={() => {}}>
           <Stack spacing={{ xs: '10px', sm: '20px' }} pt={{ xs: '10px', sm: '5px' }}>
-            <NodeTitle>{`${ownerName}'s Vault`}</NodeTitle>
-            <NodeDescription>{url}</NodeDescription>
+            <Stack spacing={1}>
+              <NodeTitle>{`${ownerName}'s Vault`}</NodeTitle>
+              <NodeDescription>{url}</NodeDescription>
+            </Stack>
             <VaultValue>{`${used} MB / ${total} MB`}</VaultValue>
             <Stack
               direction={{ xs: 'column', sm: 'row' }}

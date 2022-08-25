@@ -58,34 +58,36 @@ export default function NodeItem({
         >
           <Stack>
             <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
-              <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
-                <NodeTitle>{isMyNode ? name : `${ownerName}'s Node`}</NodeTitle>
-                {status ? (
-                  <Chip
-                    label="online"
-                    color="success"
-                    sx={{
-                      height: { xs: '11px !important', md: '19px !important' },
-                      color: 'white',
-                      '& .MuiChip-label': {
-                        px: { xs: '5px !important', sm: '12px !important' }
-                      }
-                    }}
-                  />
-                ) : (
-                  <Chip
-                    label="offline"
-                    sx={{
-                      height: { xs: '11px !important', md: '19px !important' },
-                      color: 'black',
-                      '& .MuiChip-label': {
-                        px: { xs: '5px !important', sm: '12px !important' }
-                      }
-                    }}
-                  />
-                )}
+              <Stack spacing={1}>
+                <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
+                  <NodeTitle>{isMyNode ? name : `${ownerName}'s Node`}</NodeTitle>
+                  {status ? (
+                    <Chip
+                      label="online"
+                      color="success"
+                      sx={{
+                        height: { xs: '11px !important', md: '19px !important' },
+                        color: 'white',
+                        '& .MuiChip-label': {
+                          px: { xs: '5px !important', sm: '12px !important' }
+                        }
+                      }}
+                    />
+                  ) : (
+                    <Chip
+                      label="offline"
+                      sx={{
+                        height: { xs: '11px !important', md: '19px !important' },
+                        color: 'black',
+                        '& .MuiChip-label': {
+                          px: { xs: '5px !important', sm: '12px !important' }
+                        }
+                      }}
+                    />
+                  )}
+                </Stack>
+                <NodeDescription>{url}</NodeDescription>
               </Stack>
-              <NodeDescription>{url}</NodeDescription>
               <NodeDescription>{description}</NodeDescription>
             </Stack>
 

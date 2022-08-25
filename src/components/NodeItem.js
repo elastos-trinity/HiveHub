@@ -90,7 +90,6 @@ export default function NodeItem({
               </Stack>
               <NodeDescription>{description}</NodeDescription>
             </Stack>
-
             <Stack direction="row" mt={{ xs: '20px', sm: '50px' }}>
               <MHidden width="mdDown">
                 <Typography component="div" noWrap sx={{ flexGrow: 1 }} alignItems="center">

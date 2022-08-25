@@ -13,7 +13,6 @@ import { NodeSummaryBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import {
   backupVault,
-  checkBackupStatus,
   findBackupNodeProvider,
   getHiveNodesList,
   getHiveVaultInfo,
@@ -31,7 +30,6 @@ export default function HiveHome() {
   const [myNodeItems, setMyNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
   const [onProgress, setOnProgress] = useState(false);
-  const [hasBackup, setHasBackup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +47,6 @@ export default function HiveHome() {
           myNodeList.push(participatedNode);
         } else setVaultItems([]);
         setMyNodeItems(myNodeList);
-        setHasBackup(await checkBackupStatus(user.did));
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -170,10 +167,7 @@ export default function HiveHome() {
           px={1}
           sx={{ width: '100%', margin: '40px auto' }}
         >
-          <CustomButton
-            onClick={handleBackup}
-            disabled={!vaultItems.length || hasBackup || onProgress}
-          >
+          <CustomButton onClick={handleBackup} disabled={!vaultItems.length || onProgress}>
             Backup
           </CustomButton>
           <CustomButton onClick={handleMigrate} disabled={!vaultItems.length || onProgress}>

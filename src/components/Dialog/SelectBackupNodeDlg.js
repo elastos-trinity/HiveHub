@@ -12,18 +12,25 @@ SelectBackupNodeDlg.propTypes = {
   fromNode: PropTypes.string,
   onClose: PropTypes.func,
   onClick: PropTypes.func,
-  onProgress: PropTypes.bool,
+  onProgress: PropTypes.bool
 };
 
-export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, onClose, onClick, onProgress }) {
+export default function SelectBackupNodeDlg({
+  dlgType,
+  activeNodes,
+  fromNode,
+  onClose,
+  onClick,
+  onProgress
+}) {
   const { enqueueSnackbar } = useSnackbar();
-  const [nodeList, setNodeList] = useState(activeNodes);
-  const [selected, setSelected] = useState(undefined);
+  const [nodeList, setNodeList] = useState(activeNodes.filter((item) => item !== fromNode));
+  const [selected, setSelected] = useState(0);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const availableNodes = activeNodes.filter((item) => item !== fromNode);
-    // const availableNodes = ['hive-testnet2.trinity-tech.io', 'hive-testnet3.trinity-tech.io'];
+    // const availableNodes = activeNodes.filter((item) => item !== fromNode);
+    const availableNodes = ['hive-testnet2.trinity-tech.io', 'hive-testnet3.trinity-tech.io'];
     if (!availableNodes.length) {
       enqueueSnackbar('No available node provider', {
         variant: 'error',
@@ -35,10 +42,7 @@ export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, on
   }, [activeNodes, fromNode]);
 
   const handleChange = (event) => {
-    const selectedIndex =
-      typeof event.target.value === 'string'
-        ? parseInt(event.target.value, 10)
-        : event.target.value;
+    const selectedIndex = event.target.value;
     setSelected(selectedIndex);
     setError(false);
   };
@@ -57,7 +61,6 @@ export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, on
             Node Provider
           </Typography>
           <Select
-            defaultValue={undefined}
             variant="outlined"
             value={selected}
             onChange={handleChange}
@@ -97,7 +100,8 @@ export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, on
         <PrimaryButton
           fullWidth
           onClick={() => {
-            if (selected !== undefined && selected !== null) onClick();
+            if (selected !== undefined && selected !== null)
+              onClick(nodeList.length && selected < nodeList.length ? nodeList[selected] : '');
             else setError(selected === undefined || selected === null);
           }}
           disabled={onProgress}

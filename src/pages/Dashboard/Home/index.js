@@ -14,7 +14,6 @@ import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
 import {
   backupVault,
-  findBackupNodeProvider,
   getHiveNodesList,
   getHiveVaultInfo,
   migrateVault,
@@ -59,18 +58,22 @@ export default function HiveHome() {
     if (user.did) fetchData();
   }, [user.did]);
 
-  const handleBackup = async () => {
+  const handleBackup = async (backupNodeProvider) => {
     if (!user.did) return;
     if (!vaultItems.length) return;
     setOnProgress(true);
     try {
-      const backupNodeProvider = await findBackupNodeProvider(user.did);
       console.log('Backup vault to: ', backupNodeProvider);
       const result = await backupVault(user.did, backupNodeProvider);
       if (result === 1) {
         enqueueSnackbar('Backup vault succeed', {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        setDlgState({
+          ...dlgState,
+          selectBackupNodeDlgOpened: false,
+          selectMigrateNodeDlgOpened: false
         });
       } else if (result === 2) {
         enqueueSnackbar('Already backup', {
@@ -93,20 +96,24 @@ export default function HiveHome() {
     setOnProgress(false);
   };
 
-  const handleMigrate = async () => {
+  const handleMigrate = async (backupNodeProvider) => {
     if (!user.did) return;
     if (!vaultItems.length) return;
     setOnProgress(true);
     try {
-      const backupNodeProvider = await findBackupNodeProvider(user.did);
       console.log('Migrate vault to: ', backupNodeProvider);
       const result = await migrateVault(user.did, backupNodeProvider);
-      if (result)
+      if (result) {
         enqueueSnackbar('Migrate vault succeed', {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
-      else
+        setDlgState({
+          ...dlgState,
+          selectBackupNodeDlgOpened: false,
+          selectMigrateNodeDlgOpened: false
+        });
+      } else
         enqueueSnackbar('Migrate vault error', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -118,11 +125,13 @@ export default function HiveHome() {
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
     }
+    setOnProgress(false);
   };
 
   // For test
   const handleUnbind = async () => {
     if (!user.nodeProvider || user.did) return;
+    setOnProgress(true);
     try {
       console.log('Unbind DID from ', user.nodeProvider);
       // await unbindDID(user.did);
@@ -283,9 +292,9 @@ export default function HiveHome() {
               selectMigrateNodeDlgOpened: false
             });
           }}
-          onClick={() => {
-            if (dlgState.selectBackupNodeDlgOpened) handleBackup();
-            else handleMigrate();
+          onClick={(targetNodeProvider) => {
+            if (dlgState.selectBackupNodeDlgOpened) handleBackup(targetNodeProvider);
+            else handleMigrate(targetNodeProvider);
           }}
         />
       </ModalDialog>

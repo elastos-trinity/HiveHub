@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Stack, Typography } from '@mui/material';
-import { useSnackbar } from 'notistack';
 import { DialogTitleTypo } from '../CustomTypos';
 import { PrimaryButton } from '../CustomButtons';
 import { MenuItemStyle } from '../CustomContainer';
@@ -23,7 +22,6 @@ export default function SelectBackupNodeDlg({
   onClick,
   onProgress
 }) {
-  const { enqueueSnackbar } = useSnackbar();
   const [nodeList, setNodeList] = useState(activeNodes.filter((item) => item !== fromNode));
   const [selected, setSelected] = useState(0);
   const [error, setError] = useState(false);
@@ -31,13 +29,8 @@ export default function SelectBackupNodeDlg({
   useEffect(() => {
     const availableNodes = activeNodes.filter((item) => item !== fromNode);
     // const availableNodes = ['hive-testnet2.trinity-tech.io', 'hive-testnet3.trinity-tech.io'];
-    if (!availableNodes.length) {
-      enqueueSnackbar('No available node provider', {
-        variant: 'error',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
-      });
-      onClose();
-    } else setNodeList(availableNodes);
+    if (!availableNodes.length) onClose();
+    else setNodeList(availableNodes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNodes, fromNode]);
 

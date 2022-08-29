@@ -59,7 +59,7 @@ export default function HiveHome() {
   }, [user.did]);
 
   const handleBackup = async (backupNodeProvider) => {
-    if (!user.did) return;
+    if (!user.did || !backupNodeProvider) return;
     if (!vaultItems.length) return;
     setOnProgress(true);
     try {
@@ -97,7 +97,7 @@ export default function HiveHome() {
   };
 
   const handleMigrate = async (backupNodeProvider) => {
-    if (!user.did) return;
+    if (!user.did || !backupNodeProvider) return;
     if (!vaultItems.length) return;
     setOnProgress(true);
     try {
@@ -149,6 +149,22 @@ export default function HiveHome() {
     setOnProgress(false);
   };
 
+  const openSelectNodeDlg = (dlgType) => {
+    const availableNodes = user.activeNodes.filter((item) => item !== user.nodeProvider);
+    if (!availableNodes.length) {
+      enqueueSnackbar('No available node provider', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    } else {
+      setDlgState({
+        ...dlgState,
+        selectBackupNodeDlgOpened: dlgType === 1,
+        selectMigrateNodeDlgOpened: dlgType !== 1
+      });
+    }
+  };
+
   return (
     <>
       {/* <PageTitleTypo mt={{ xs: 5, md: 6 }}>Home</PageTitleTypo> */}
@@ -187,25 +203,13 @@ export default function HiveHome() {
           sx={{ width: '100%', margin: '40px auto' }}
         >
           <CustomButton
-            onClick={() => {
-              setDlgState({
-                ...dlgState,
-                selectBackupNodeDlgOpened: true,
-                selectMigrateNodeDlgOpened: false
-              });
-            }}
+            onClick={() => openSelectNodeDlg(1)}
             disabled={!vaultItems.length || onProgress || loading}
           >
             Backup
           </CustomButton>
           <CustomButton
-            onClick={() => {
-              setDlgState({
-                ...dlgState,
-                selectBackupNodeDlgOpened: false,
-                selectMigrateNodeDlgOpened: true
-              });
-            }}
+            onClick={() => openSelectNodeDlg(2)}
             disabled={!vaultItems.length || onProgress || loading}
           >
             Migrate

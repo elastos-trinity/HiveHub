@@ -19,6 +19,7 @@ export default function HiveNodes() {
   const { dlgState, setDlgState } = useDialogContext();
   const [loading, setLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(emptyNodeItem));
+  const [onProgress, setOnProgress] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +39,7 @@ export default function HiveNodes() {
       });
       return;
     }
+    setOnProgress(true);
     const result = await removeHiveNode(nid);
     if (result) {
       enqueueSnackbar('Remove Hive Node success.', {
@@ -51,6 +53,7 @@ export default function HiveNodes() {
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
     }
+    setOnProgress(false);
   };
 
   return (
@@ -108,6 +111,7 @@ export default function HiveNodes() {
       >
         <ConfirmDlg
           message="Do you really want to remove this node?"
+          onProgress={onProgress}
           onClose={() => {
             setDlgState({
               ...dlgState,

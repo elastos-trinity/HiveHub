@@ -6,10 +6,11 @@ import { PrimaryButton } from '../CustomButtons';
 ConfirmDlg.propTypes = {
   message: PropTypes.string.isRequired,
   onClose: PropTypes.func,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onProgress: PropTypes.bool
 };
 
-export default function ConfirmDlg({ message, onClose, onClick }) {
+export default function ConfirmDlg({ message, onClose, onClick, onProgress }) {
   return (
     <Stack spacing={4} width={320}>
       <Stack alignItems="center" spacing={2}>
@@ -22,7 +23,7 @@ export default function ConfirmDlg({ message, onClose, onClick }) {
         <PrimaryButton btncolor="secondary" fullWidth onClick={onClose}>
           Close
         </PrimaryButton>
-        <PrimaryButton btncolor="pink" fullWidth onClick={onClick}>
+        <PrimaryButton btncolor="pink" fullWidth onClick={onClick} disabled={onProgress}>
           Confirm
         </PrimaryButton>
       </Stack>

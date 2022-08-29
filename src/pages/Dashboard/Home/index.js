@@ -11,6 +11,7 @@ import {
 import { CustomButton } from '../../../components/CustomButtons';
 import { NodeSummaryBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
+import { useDialogContext } from '../../../contexts/DialogContext';
 import {
   backupVault,
   findBackupNodeProvider,
@@ -21,9 +22,12 @@ import {
   // unbindDID
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
+import ModalDialog from '../../../components/ModalDialog';
+import SelectBackupNodeDlg from '../../../components/Dialog/SelectBackupNodeDlg';
 
 export default function HiveHome() {
   const { user } = useUserContext();
+  const { dlgState, setDlgState } = useDialogContext();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [participated, setParticipated] = useState(0);
@@ -136,6 +140,7 @@ export default function HiveHome() {
     setOnProgress(false);
   };
 
+  console.log('==========', dlgState.selectBackupNodeDlgOpened, dlgState.selectMigrateNodeDlgOpened)
   return (
     <>
       {/* <PageTitleTypo mt={{ xs: 5, md: 6 }}>Home</PageTitleTypo> */}
@@ -174,13 +179,25 @@ export default function HiveHome() {
           sx={{ width: '100%', margin: '40px auto' }}
         >
           <CustomButton
-            onClick={handleBackup}
+            onClick={() => {
+              setDlgState({
+                ...dlgState,
+                selectBackupNodeDlgOpened: true,
+                selectMigrateNodeDlgOpened: false
+              });
+            }}
             disabled={!vaultItems.length || onProgress || loading}
           >
             Backup
           </CustomButton>
           <CustomButton
-            onClick={handleMigrate}
+            onClick={() => {
+              setDlgState({
+                ...dlgState,
+                selectBackupNodeDlgOpened: false,
+                selectMigrateNodeDlgOpened: true
+              });
+            }}
             disabled={!vaultItems.length || onProgress || loading}
           >
             Migrate
@@ -245,6 +262,30 @@ export default function HiveHome() {
           </NodeSummaryBox>
         </Stack>
       </Stack>
+      <ModalDialog
+        open={dlgState.selectBackupNodeDlgOpened || dlgState.selectMigrateNodeDlgOpened}
+        onClose={() => {
+          setDlgState({
+            ...dlgState,
+            selectBackupNodeDlgOpened: false,
+            selectMigrateNodeDlgOpened: false
+          });
+        }}
+      >
+        <SelectBackupNodeDlg
+          dlgType={dlgState.selectBackupNodeDlgOpened ? 0 : 1}
+          activeNodes={user.activeNodes}
+          fromNode={user.nodeProvider}
+          onClose={() => {
+            setDlgState({
+              ...dlgState,
+              selectBackupNodeDlgOpened: false,
+              selectMigrateNodeDlgOpened: false
+            });
+          }}
+          onClick={() => {}}
+        />
+      </ModalDialog>
     </>
   );
 }

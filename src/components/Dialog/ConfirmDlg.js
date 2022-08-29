@@ -19,10 +19,10 @@ export default function ConfirmDlg({ message, onClose, onClick }) {
         </Typography>
       </Stack>
       <Stack direction="row" spacing={2}>
-        <PrimaryButton btnColor="secondary" fullWidth onClick={onClose}>
+        <PrimaryButton btncolor="secondary" fullWidth onClick={onClose}>
           Close
         </PrimaryButton>
-        <PrimaryButton btnColor="pink" fullWidth onClick={onClick}>
+        <PrimaryButton btncolor="pink" fullWidth onClick={onClick}>
           Confirm
         </PrimaryButton>
       </Stack>

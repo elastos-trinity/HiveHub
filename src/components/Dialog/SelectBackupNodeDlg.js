@@ -29,8 +29,8 @@ export default function SelectBackupNodeDlg({
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // const availableNodes = activeNodes.filter((item) => item !== fromNode);
-    const availableNodes = ['hive-testnet2.trinity-tech.io', 'hive-testnet3.trinity-tech.io'];
+    const availableNodes = activeNodes.filter((item) => item !== fromNode);
+    // const availableNodes = ['hive-testnet2.trinity-tech.io', 'hive-testnet3.trinity-tech.io'];
     if (!availableNodes.length) {
       enqueueSnackbar('No available node provider', {
         variant: 'error',

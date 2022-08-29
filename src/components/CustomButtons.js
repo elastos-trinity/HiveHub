@@ -188,10 +188,10 @@ export const BaseButton = styled(Button)(({ size }) => ({
   fontWeight: 700
 }));
 
-export const PrimaryButton = styled(BaseButton)(({ btnColor }) => ({
-  background: buttonStyles[btnColor].bgColor,
-  color: buttonStyles[btnColor].color,
+export const PrimaryButton = styled(BaseButton)(({ btncolor = 'primary' }) => ({
+  background: buttonStyles[btncolor].bgColor,
+  color: buttonStyles[btncolor].color,
   '&:hover': {
-    background: buttonStyles[btnColor].hoverBgColor
+    background: buttonStyles[btncolor].hoverBgColor
   }
 }));

@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const FeatureGrid = styled(Grid)(({ theme }) => ({
@@ -40,5 +40,11 @@ export const NodeDetailBox = styled(CustomBox)(({ theme }) => ({
   padding: '15px 25px 20px 20px',
   [theme.breakpoints.up('md')]: {
     padding: '30px 72px 40px 40px'
+  }
+}));
+
+export const MenuItemStyle = styled(MenuItem)(() => ({
+  '&:hover': {
+    background: '#e8f4ff'
   }
 }));

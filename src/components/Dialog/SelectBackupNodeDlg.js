@@ -1,25 +1,22 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { Select, MenuItem, Stack, Typography } from '@mui/material';
+import { Select, Stack, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { DialogTitleTypo } from '../CustomTypos';
 import { PrimaryButton } from '../CustomButtons';
-
-const MenuItemStyle = styled(MenuItem)(() => ({
-  '&:hover': {
-    background: '#e8f4ff'
-  }
-}));
+import { MenuItemStyle } from '../CustomContainer';
 
 SelectBackupNodeDlg.propTypes = {
   dlgType: PropTypes.number.isRequired,
   activeNodes: PropTypes.array,
   fromNode: PropTypes.string,
   onClose: PropTypes.func,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onProgress: PropTypes.bool,
 };
 
-export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, onClose, onClick }) {
+export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, onClose, onClick, onProgress }) {
+  const { enqueueSnackbar } = useSnackbar();
   const [nodeList, setNodeList] = useState(activeNodes);
   const [selected, setSelected] = useState(undefined);
   const [error, setError] = useState(false);
@@ -27,8 +24,13 @@ export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, on
   useEffect(() => {
     const availableNodes = activeNodes.filter((item) => item !== fromNode);
     // const availableNodes = ['hive-testnet2.trinity-tech.io', 'hive-testnet3.trinity-tech.io'];
-    if (!availableNodes.length) onClose();
-    else setNodeList(availableNodes);
+    if (!availableNodes.length) {
+      enqueueSnackbar('No available node provider', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      onClose();
+    } else setNodeList(availableNodes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNodes, fromNode]);
 
@@ -38,7 +40,7 @@ export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, on
         ? parseInt(event.target.value, 10)
         : event.target.value;
     setSelected(selectedIndex);
-    setError(false)
+    setError(false);
   };
 
   return (
@@ -98,6 +100,7 @@ export default function SelectBackupNodeDlg({ dlgType, activeNodes, fromNode, on
             if (selected !== undefined && selected !== null) onClick();
             else setError(selected === undefined || selected === null);
           }}
+          disabled={onProgress}
         >
           confirm
         </PrimaryButton>

@@ -140,7 +140,6 @@ export default function HiveHome() {
     setOnProgress(false);
   };
 
-  console.log('==========', dlgState.selectBackupNodeDlgOpened, dlgState.selectMigrateNodeDlgOpened)
   return (
     <>
       {/* <PageTitleTypo mt={{ xs: 5, md: 6 }}>Home</PageTitleTypo> */}
@@ -204,7 +203,7 @@ export default function HiveHome() {
           </CustomButton>
           <CustomButton
             onClick={handleUnbind}
-            disabled={!user.nodeProvider || onProgress || true || loading}
+            disabled={!user.nodeProvider || onProgress || loading || true}
           >
             Unbind
           </CustomButton>
@@ -276,6 +275,7 @@ export default function HiveHome() {
           dlgType={dlgState.selectBackupNodeDlgOpened ? 0 : 1}
           activeNodes={user.activeNodes}
           fromNode={user.nodeProvider}
+          onProgress={onProgress}
           onClose={() => {
             setDlgState({
               ...dlgState,
@@ -283,7 +283,10 @@ export default function HiveHome() {
               selectMigrateNodeDlgOpened: false
             });
           }}
-          onClick={() => {}}
+          onClick={() => {
+            if (dlgState.selectBackupNodeDlgOpened) handleBackup();
+            else handleMigrate();
+          }}
         />
       </ModalDialog>
     </>

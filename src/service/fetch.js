@@ -487,8 +487,10 @@ export const migrateVault = async (did, targetNodeUrl) => {
     console.log('TODO: public user DID with backup node url here');
     console.log('remove the vault on vault node here, same node, skip');
     console.log('migration is done !!!');
+    return true;
   } catch (err) {
     console.error(err);
+    return false;
   }
 };
 

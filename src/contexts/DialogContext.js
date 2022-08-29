@@ -14,9 +14,14 @@ DialogContextProvider.propTypes = {
 
 function DialogContextProvider({ children }) {
   const [dlgState, setDlgState] = useState({
+    // remove node 
     confirmDlgOpened: false,
     removeNodeNid: 0,
-    removeNodeOwnerDid: ''
+    removeNodeOwnerDid: '',
+    // select backup / migrate node
+    selectBackupNodeDlgOpened: false,
+    selectMigrateNodeDlgOpened: false,
+    backupNodeUrl: ''
   });
 
   return (

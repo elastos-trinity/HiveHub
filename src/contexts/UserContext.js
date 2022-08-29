@@ -29,7 +29,8 @@ function UserContextProvider({ children }) {
     avatar: null,
     didDoc: undefined,
     credentials: {},
-    nodeProvider: ''
+    nodeProvider: '',
+    activeNodes: []
   });
 
   const getUserInfo = useCallback(
@@ -70,6 +71,7 @@ function UserContextProvider({ children }) {
         state.nodeProvider = nodeProvider;
         state.credentials = credentials;
         state.avatar = avatarUrl;
+        state.activeNodes = activeNodes;
         return state;
       });
     },

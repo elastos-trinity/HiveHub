@@ -173,13 +173,22 @@ export default function HiveHome() {
           px={1}
           sx={{ width: '100%', margin: '40px auto' }}
         >
-          <CustomButton onClick={handleBackup} disabled={!vaultItems.length || onProgress}>
+          <CustomButton
+            onClick={handleBackup}
+            disabled={!vaultItems.length || onProgress || loading}
+          >
             Backup
           </CustomButton>
-          <CustomButton onClick={handleMigrate} disabled={!vaultItems.length || onProgress}>
+          <CustomButton
+            onClick={handleMigrate}
+            disabled={!vaultItems.length || onProgress || loading}
+          >
             Migrate
           </CustomButton>
-          <CustomButton onClick={handleUnbind} disabled={!user.nodeProvider || onProgress || true}>
+          <CustomButton
+            onClick={handleUnbind}
+            disabled={!user.nodeProvider || onProgress || true || loading}
+          >
             Unbind
           </CustomButton>
         </Stack>

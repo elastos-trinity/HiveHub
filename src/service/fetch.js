@@ -405,6 +405,14 @@ export const migrateVault = async (did, targetNodeUrl) => {
     const vault = new Vault(appContext, nodeProvider);
     const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
     const backupService = vault.getBackupService();
+    // Remove vault on target node
+    const targetVaultSubscription = new VaultSubscription(appContext, targetNodeUrl);
+    try {
+      const targetVaultInfo = await targetVaultSubscription.checkSubscription();
+      if (targetVaultInfo) await targetVaultSubscription.unsubscribe();
+    } catch (err) {
+      console.error(err);
+    }
     // Backup Service on target Node
     const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
     // subscribe the backup service

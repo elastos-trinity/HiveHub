@@ -1,6 +1,7 @@
 export const config = {
   IsProductEnv: process.env.REACT_APP_PUBLIC_ENV === 'production',
   DIDResolverUrl: process.env.REACT_APP_PUBLIC_ENV === 'production' ? 'mainnet' : 'testnet',
+  nodeRegistryAddress: process.env.REACT_APP_NODE_REGISTRY_ADDRESS || '',
   serverUrl: 'https://service.hivehub.xyz',
   ApplicationDID: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML',
   GitHubRepo: 'https://github.com/elastos-trinity/HiveHub'

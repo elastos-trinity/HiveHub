@@ -347,6 +347,7 @@ export const backupVault = async (did, targetNodeUrl) => {
         }
       }
     });
+    
     // deactivate the vault to avoid data changes in the backup process.
     await vaultSubscription.deactivate();
     console.log('deactivate the source vault.');

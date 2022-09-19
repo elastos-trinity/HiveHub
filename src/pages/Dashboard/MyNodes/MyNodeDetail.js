@@ -15,12 +15,13 @@ import {
   createVault,
   destroyVault,
   getHiveNodeInfo,
-  getHiveNodesList,
+  // getHiveNodesList,
   getMyHiveNodeDetails
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
 import { PlusButton, DestroyVaultButton } from '../../../components/CustomButtons';
+import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 InfoItem.propTypes = {
   label: PropTypes.string.isRequired,
@@ -43,6 +44,7 @@ function InfoItem({ label, value }) {
 export default function MyNodeDetail() {
   const navigate = useNavigate();
   const { user } = useUserContext();
+  const { getHiveNodesList } = useHiveHubContracts();
   const { nodeId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);

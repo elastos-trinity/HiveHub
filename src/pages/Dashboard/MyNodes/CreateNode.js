@@ -14,7 +14,7 @@ import {
   checkHiveNodeStatus,
   // createHiveNode,
   getHiveNodeInfo,
-  getHiveNodesList,
+  // getHiveNodesList,
   getIPFromDomain,
   getLocationFromIP
 } from '../../../service/fetch';
@@ -23,7 +23,7 @@ import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 export default function CreateNode() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { addHiveNode } = useHiveHubContracts();
+  const { addHiveNode, getHiveNodesList } = useHiveHubContracts();
   const { user } = useUserContext();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);

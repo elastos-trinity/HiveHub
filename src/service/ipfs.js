@@ -26,3 +26,25 @@ export const uploadNode2Ipfs = (name, created, ip, ownerDid, area, email, url, r
       reject(error);
     }
   });
+
+export const getDataFromIpfs = async (url) => {
+  if (!url) return '';
+  if (typeof url !== 'string') return '';
+  const prefixLen = url.split(':', 2).join(':').length;
+  if (prefixLen >= url.length) return '';
+  const uri = url.substring(prefixLen + 1);
+  const fetchUrl = `${config.IPFSUploadUrl}/ipfs/${uri}`;
+  try {
+    const res = await fetch(fetchUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    });
+    const json = await res.json();
+    return json;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
+};

@@ -12,16 +12,18 @@ import CustomTextField from '../../../components/CustomTextField';
 import { getTime } from '../../../service/common';
 import {
   checkHiveNodeStatus,
-  createHiveNode,
+  // createHiveNode,
   getHiveNodeInfo,
   getHiveNodesList,
   getIPFromDomain,
   getLocationFromIP
 } from '../../../service/fetch';
+import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 export default function CreateNode() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { addHiveNode } = useHiveHubContracts();
   const { user } = useUserContext();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
@@ -132,7 +134,8 @@ export default function CreateNode() {
         setOnProgress(false);
         return;
       }
-      const result = await createHiveNode(newNode);
+      // const result = await createHiveNode(newNode);
+      const result = await addHiveNode(newNode);
       if (result) {
         enqueueSnackbar('Create Hive Node success.', {
           variant: 'success',

@@ -16,87 +16,105 @@ import {
   Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
-import HiveHubServer from './HiveHubServer';
+// import HiveHubServer from './HiveHubServer';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
 // ******************************* Hive Node (HiveHub Server) ************************************* //
 
-export const createHiveNode = async (node) => {
+// export const createHiveNode = async (node) => {
+//   try {
+//     const response = await HiveHubServer.addHiveNode(node);
+//     return response ? response.inserted_id : '';
+//   } catch (err) {
+//     console.error(err);
+//     return '';
+//   }
+// };
+
+// export const removeHiveNode = async (nid) => {
+//   if (!nid) return false;
+//   const ret = await HiveHubServer.removeHiveNode(nid);
+//   return ret === true;
+// };
+
+// deprecated
+// export const checkHiveNodeStatus = async (url) => {
+//   const status = await HiveHubServer.isOnline(url);
+//   return status;
+// };
+
+export const checkHiveNodeStatus = async (nodeUrl) => {
+  const url = `${nodeUrl}/api/v2/about/version`;
   try {
-    const response = await HiveHubServer.addHiveNode(node);
-    return response ? response.inserted_id : '';
-  } catch (err) {
-    console.error(err);
-    return '';
+    const response = await fetch(url, {
+      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin' // include, *same-origin, omit
+    });
+    return response.status >= 200 && response.status < 300;
+  } catch (e) {
+    return false;
   }
 };
 
-export const removeHiveNode = async (nid) => {
-  if (!nid) return false;
-  const ret = await HiveHubServer.removeHiveNode(nid);
-  return ret === true;
-};
+// deprecated
+// export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
+//   const nodes = await HiveHubServer.getHiveNodes(nid, did);
+//   const nodeList = [];
+//   await Promise.all(
+//     nodes.map(async (item) => {
+//       const node = { ...item };
+//       try {
+//         if (withName) {
+//           const credentials = await getCredentialsFromDID(node.owner_did);
+//           node.ownerName = credentials.name
+//             ? credentials.name
+//             : reduceHexAddress(node.owner_did, 4);
+//         } else {
+//           node.ownerName = reduceHexAddress(node.owner_did, 4);
+//         }
+//         if (withStatus) node.status = await HiveHubServer.isOnline(node.url);
+//         else node.status = false;
+//       } catch (e) {
+//         node.status = false;
+//         node.ownerName = reduceHexAddress(node.owner_did, 4);
+//       }
+//       if (onlyActive) {
+//         if (node.status) nodeList.push(node);
+//       } else nodeList.push(node);
+//       return node;
+//     })
+//   );
+//   return nodeList;
+// };
 
-export const checkHiveNodeStatus = async (url) => {
-  const status = await HiveHubServer.isOnline(url);
-  return status;
-};
-
-export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
-  const nodes = await HiveHubServer.getHiveNodes(nid, did);
-  const nodeList = [];
-  await Promise.all(
-    nodes.map(async (item) => {
-      const node = { ...item };
-      try {
-        if (withName) {
-          const credentials = await getCredentialsFromDID(node.owner_did);
-          node.ownerName = credentials.name
-            ? credentials.name
-            : reduceHexAddress(node.owner_did, 4);
-        } else {
-          node.ownerName = reduceHexAddress(node.owner_did, 4);
-        }
-        if (withStatus) node.status = await HiveHubServer.isOnline(node.url);
-        else node.status = false;
-      } catch (e) {
-        node.status = false;
-        node.ownerName = reduceHexAddress(node.owner_did, 4);
-      }
-      if (onlyActive) {
-        if (node.status) nodeList.push(node);
-      } else nodeList.push(node);
-      return node;
-    })
-  );
-  return nodeList;
-};
-
-export const getActiveHiveNodeUrl = async () => {
-  const nodes = await HiveHubServer.getHiveNodes();
-  const activeNodes = [];
-  await Promise.all(
-    nodes.map(async (item) => {
-      const node = { ...item };
-      try {
-        node.status = await HiveHubServer.isOnline(node.url);
-        if (
-          node.status &&
-          !activeNodes.includes(node.url) &&
-          ((node.url.includes('testnet') && !config.IsProductEnv) ||
-            (!node.url.includes('testnet') && config.IsProductEnv))
-        )
-          activeNodes.push(node.url);
-      } catch (e) {
-        node.status = false;
-      }
-      return node;
-    })
-  );
-  return activeNodes;
-};
+// deprecated
+// export const getActiveHiveNodeUrl = async () => {
+//   const nodes = await HiveHubServer.getHiveNodes();
+//   const activeNodes = [];
+//   await Promise.all(
+//     nodes.map(async (item) => {
+//       const node = { ...item };
+//       try {
+//         node.status = await HiveHubServer.isOnline(node.url);
+//         if (
+//           node.status &&
+//           !activeNodes.includes(node.url) &&
+//           ((node.url.includes('testnet') && !config.IsProductEnv) ||
+//             (!node.url.includes('testnet') && config.IsProductEnv))
+//         )
+//           activeNodes.push(node.url);
+//       } catch (e) {
+//         node.status = false;
+//       }
+//       return node;
+//     })
+//   );
+//   return activeNodes;
+// };
 
 export const getHiveNodeInfo = async (did, nodeProvider) => {
   const restService = await getRestService(did, nodeProvider);
@@ -213,17 +231,6 @@ export const getNodeProviderUrl = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   return nodeProvider;
-};
-
-export const getValidNodeProviderUrl = async (appContext, did) => {
-  const nodeProvider = await appContext.getProviderAddress(did);
-  // console.log("original: ", nodeProvider)
-  const activeNodes = await getActiveHiveNodeUrl();
-  // console.log(activeNodes)
-  if (!activeNodes.length) return '';
-  if (activeNodes.includes(nodeProvider)) return nodeProvider;
-  // console.log("updated: ", activeNodes[activeNodes.length - 1])
-  return activeNodes[activeNodes.length - 1];
 };
 
 export const getAuthService = async (did) => {
@@ -347,6 +354,7 @@ export const backupVault = async (did, targetNodeUrl) => {
         }
       }
     });
+
     // deactivate the vault to avoid data changes in the backup process.
     await vaultSubscription.deactivate();
     console.log('deactivate the source vault.');

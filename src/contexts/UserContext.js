@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import { getCredentialsFromDIDDoc } from '../service/common';
 import {
-  getActiveHiveNodeUrl,
   getDIDDocumentFromDID,
   getNodeProviderUrl,
   fetchHiveScriptPictureToDataUrl,
-  getHiveAvatarUrlFromDIDAvatarCredential
+  getHiveAvatarUrlFromDIDAvatarCredential,
+  checkHiveNodeStatus
 } from '../service/fetch';
 
 const initialState = {
@@ -30,7 +30,7 @@ function UserContextProvider({ children }) {
     didDoc: undefined,
     credentials: {},
     nodeProvider: '',
-    activeNodes: []
+    isActive: false
   });
 
   const getUserInfo = useCallback(
@@ -38,7 +38,7 @@ function UserContextProvider({ children }) {
       const didDoc = await getDIDDocumentFromDID(did);
       const credentials = getCredentialsFromDIDDoc(didDoc);
       const nodeProvider = await getNodeProviderUrl(did);
-      const activeNodes = await getActiveHiveNodeUrl();
+      const isActive = await checkHiveNodeStatus(nodeProvider);
       if (!didDoc) {
         enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
           variant: 'error',
@@ -49,7 +49,7 @@ function UserContextProvider({ children }) {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
-      } else if (!activeNodes.includes(nodeProvider)) {
+      } else if (!isActive) {
         enqueueSnackbar(
           `You are connected to invalid Hive Node(${nodeProvider}), Please select another one.`,
           {
@@ -71,7 +71,7 @@ function UserContextProvider({ children }) {
         state.nodeProvider = nodeProvider;
         state.credentials = credentials;
         state.avatar = avatarUrl;
-        state.activeNodes = activeNodes;
+        state.isActive = isActive;
         return state;
       });
     },

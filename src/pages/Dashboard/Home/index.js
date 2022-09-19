@@ -14,7 +14,7 @@ import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
 import {
   backupVault,
-  getHiveNodesList,
+  // getHiveNodesList,
   getHiveVaultInfo,
   migrateVault,
   getAppContext
@@ -23,15 +23,18 @@ import {
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import ModalDialog from '../../../components/ModalDialog';
 import SelectBackupNodeDlg from '../../../components/Dialog/SelectBackupNodeDlg';
+import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 export default function HiveHome() {
   const { user } = useUserContext();
+  const { getHiveNodesList, getActiveHiveNodeUrl } = useHiveHubContracts();
   const { dlgState, setDlgState } = useDialogContext();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [participated, setParticipated] = useState(0);
   const [myNodeItems, setMyNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
+  const [activeNodesUrl, setActiveNodesUrl] = useState([]);
   const [onProgress, setOnProgress] = useState(false);
 
   useEffect(() => {
@@ -41,15 +44,21 @@ export default function HiveHome() {
         const allNodeList = await getHiveNodesList(undefined, undefined, false, true, false);
         const myNodeList = await getHiveNodesList(undefined, user.did, false, true, false);
         const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+        const activeNodes = await getActiveHiveNodeUrl();
         if (vaultItem) {
           setVaultItems([vaultItem]);
           setParticipated(1);
           const appContext = await getAppContext(user.did);
           const participatedNodeUrl = await appContext.getProviderAddress(user.did);
-          const participatedNode = allNodeList.find((item) => item.url === participatedNodeUrl);
-          myNodeList.push(participatedNode);
+          const isIncluded =
+            myNodeList.findIndex((item) => item.url === participatedNodeUrl) !== -1;
+          if (!isIncluded) {
+            const participatedNode = allNodeList.find((item) => item.url === participatedNodeUrl);
+            myNodeList.push(participatedNode);
+          }
         } else setVaultItems([]);
         setMyNodeItems(myNodeList);
+        setActiveNodesUrl(activeNodes);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -150,7 +159,7 @@ export default function HiveHome() {
   };
 
   const openSelectNodeDlg = (dlgType) => {
-    const availableNodes = user.activeNodes.filter((item) => item !== user.nodeProvider);
+    const availableNodes = activeNodesUrl.filter((item) => item !== user.nodeProvider);
     if (!availableNodes.length) {
       enqueueSnackbar('No available node provider', {
         variant: 'error',
@@ -286,7 +295,7 @@ export default function HiveHome() {
       >
         <SelectBackupNodeDlg
           dlgType={dlgState.selectBackupNodeDlgOpened ? 0 : 1}
-          activeNodes={user.activeNodes}
+          activeNodes={activeNodesUrl}
           fromNode={user.nodeProvider}
           onProgress={onProgress}
           onClose={() => {

@@ -28,3 +28,4 @@ src/generatedGitInfo.json
 .eslintcache
 
 yarn.lock
+package-lock.json

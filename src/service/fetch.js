@@ -16,28 +16,28 @@ import {
   Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
-import HiveHubServer from './HiveHubServer';
+// import HiveHubServer from './HiveHubServer';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
 // ******************************* Hive Node (HiveHub Server) ************************************* //
 
-export const createHiveNode = async (node) => {
-  try {
-    const response = await HiveHubServer.addHiveNode(node);
-    return response ? response.inserted_id : '';
-  } catch (err) {
-    console.error(err);
-    return '';
-  }
-};
+// export const createHiveNode = async (node) => {
+//   try {
+//     const response = await HiveHubServer.addHiveNode(node);
+//     return response ? response.inserted_id : '';
+//   } catch (err) {
+//     console.error(err);
+//     return '';
+//   }
+// };
 
-export const removeHiveNode = async (nid) => {
-  if (!nid) return false;
-  const ret = await HiveHubServer.removeHiveNode(nid);
-  return ret === true;
-};
+// export const removeHiveNode = async (nid) => {
+//   if (!nid) return false;
+//   const ret = await HiveHubServer.removeHiveNode(nid);
+//   return ret === true;
+// };
 
 // deprecated
 // export const checkHiveNodeStatus = async (url) => {
@@ -61,60 +61,60 @@ export const checkHiveNodeStatus = async (nodeUrl) => {
 };
 
 // deprecated
-export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
-  const nodes = await HiveHubServer.getHiveNodes(nid, did);
-  const nodeList = [];
-  await Promise.all(
-    nodes.map(async (item) => {
-      const node = { ...item };
-      try {
-        if (withName) {
-          const credentials = await getCredentialsFromDID(node.owner_did);
-          node.ownerName = credentials.name
-            ? credentials.name
-            : reduceHexAddress(node.owner_did, 4);
-        } else {
-          node.ownerName = reduceHexAddress(node.owner_did, 4);
-        }
-        if (withStatus) node.status = await HiveHubServer.isOnline(node.url);
-        else node.status = false;
-      } catch (e) {
-        node.status = false;
-        node.ownerName = reduceHexAddress(node.owner_did, 4);
-      }
-      if (onlyActive) {
-        if (node.status) nodeList.push(node);
-      } else nodeList.push(node);
-      return node;
-    })
-  );
-  return nodeList;
-};
+// export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
+//   const nodes = await HiveHubServer.getHiveNodes(nid, did);
+//   const nodeList = [];
+//   await Promise.all(
+//     nodes.map(async (item) => {
+//       const node = { ...item };
+//       try {
+//         if (withName) {
+//           const credentials = await getCredentialsFromDID(node.owner_did);
+//           node.ownerName = credentials.name
+//             ? credentials.name
+//             : reduceHexAddress(node.owner_did, 4);
+//         } else {
+//           node.ownerName = reduceHexAddress(node.owner_did, 4);
+//         }
+//         if (withStatus) node.status = await HiveHubServer.isOnline(node.url);
+//         else node.status = false;
+//       } catch (e) {
+//         node.status = false;
+//         node.ownerName = reduceHexAddress(node.owner_did, 4);
+//       }
+//       if (onlyActive) {
+//         if (node.status) nodeList.push(node);
+//       } else nodeList.push(node);
+//       return node;
+//     })
+//   );
+//   return nodeList;
+// };
 
 // deprecated
-export const getActiveHiveNodeUrl = async () => {
-  const nodes = await HiveHubServer.getHiveNodes();
-  const activeNodes = [];
-  await Promise.all(
-    nodes.map(async (item) => {
-      const node = { ...item };
-      try {
-        node.status = await HiveHubServer.isOnline(node.url);
-        if (
-          node.status &&
-          !activeNodes.includes(node.url) &&
-          ((node.url.includes('testnet') && !config.IsProductEnv) ||
-            (!node.url.includes('testnet') && config.IsProductEnv))
-        )
-          activeNodes.push(node.url);
-      } catch (e) {
-        node.status = false;
-      }
-      return node;
-    })
-  );
-  return activeNodes;
-};
+// export const getActiveHiveNodeUrl = async () => {
+//   const nodes = await HiveHubServer.getHiveNodes();
+//   const activeNodes = [];
+//   await Promise.all(
+//     nodes.map(async (item) => {
+//       const node = { ...item };
+//       try {
+//         node.status = await HiveHubServer.isOnline(node.url);
+//         if (
+//           node.status &&
+//           !activeNodes.includes(node.url) &&
+//           ((node.url.includes('testnet') && !config.IsProductEnv) ||
+//             (!node.url.includes('testnet') && config.IsProductEnv))
+//         )
+//           activeNodes.push(node.url);
+//       } catch (e) {
+//         node.status = false;
+//       }
+//       return node;
+//     })
+//   );
+//   return activeNodes;
+// };
 
 export const getHiveNodeInfo = async (did, nodeProvider) => {
   const restService = await getRestService(did, nodeProvider);

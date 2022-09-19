@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import { create } from 'ipfs-http-client';
 import { config } from '../config';
 
@@ -22,8 +21,7 @@ export const uploadNode2Ipfs = (name, created, ip, ownerDid, area, email, url, r
       const jsonMetaObj = JSON.stringify(metaObj);
       // add the metadata itself as well
       const metaRecv = Promise.resolve(client.add(jsonMetaObj));
-      const nodeUri = `hivehub:json:${metaRecv.path}`;
-      resolve(nodeUri);
+      resolve(metaRecv);
     } catch (error) {
       reject(error);
     }

@@ -98,6 +98,21 @@ export const getActiveHiveNodeUrl = async () => {
   return activeNodes;
 };
 
+export const isActiveNode = async (nodeUrl) => {
+  const url = `${nodeUrl}/api/v2/about/version`;
+  try {
+    const response = await fetch(url, {
+      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin' // include, *same-origin, omit
+    });
+    return response.status >= 200 && response.status < 300;
+  } catch (e) {
+    return false;
+  }
+};
+
 export const getHiveNodeInfo = async (did, nodeProvider) => {
   const restService = await getRestService(did, nodeProvider);
   const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
@@ -347,7 +362,7 @@ export const backupVault = async (did, targetNodeUrl) => {
         }
       }
     });
-    
+
     // deactivate the vault to avoid data changes in the backup process.
     await vaultSubscription.deactivate();
     console.log('deactivate the source vault.');

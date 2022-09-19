@@ -1,8 +1,9 @@
 import Web3 from 'web3';
-import { isInAppBrowser } from '../service/common';
 import { essentialsConnector } from '../service/connectivity';
 import { callContractMethod } from '../service/contract';
 import { getDataFromIpfs, uploadNode2Ipfs } from '../service/ipfs';
+import { getCredentialsFromDID, isActiveNode } from '../service/fetch';
+import { isInAppBrowser, reduceHexAddress } from '../service/common';
 
 export default function useHiveHubContracts() {
   const walletConnectProvider = isInAppBrowser()
@@ -16,7 +17,7 @@ export default function useHiveHubContracts() {
       callType: 'call',
       price: '0'
     });
-    console.log('========', nodeIds);
+    // console.log('========', nodeIds);
     const nodes = [];
     await Promise.all(
       nodeIds.map(async (nodeIdx) => {
@@ -31,13 +32,13 @@ export default function useHiveHubContracts() {
           let isMatched = true;
           if (nodeId) {
             if (nodeItem.tokenId !== nodeId) {
-              console.log('=======', nodeId, nodeItem.tokenId, nodeInfo.tokenId);
+              // console.log('=======', nodeId, nodeItem.tokenId, nodeInfo.tokenId);
               isMatched = false;
             }
           }
           if (ownerDid) {
             if (ownerDid !== nodeInfo.owner_did) {
-              console.log('=======', ownerDid, nodeInfo.owner_did);
+              // console.log('=======', ownerDid, nodeInfo.owner_did);
               isMatched = false;
             }
           }
@@ -48,8 +49,38 @@ export default function useHiveHubContracts() {
         }
       })
     );
-    console.log('=======', nodes);
+    // console.log('=======', nodes);
     return nodes;
+  };
+
+  const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
+    const nodes = await getHiveNodes(nid, did);
+    const nodeList = [];
+    await Promise.all(
+      nodes.map(async (item) => {
+        const node = { ...item };
+        try {
+          if (withName) {
+            const credentials = await getCredentialsFromDID(node.owner_did);
+            node.ownerName = credentials.name
+              ? credentials.name
+              : reduceHexAddress(node.owner_did, 4);
+          } else {
+            node.ownerName = reduceHexAddress(node.owner_did, 4);
+          }
+          if (withStatus) node.status = await isActiveNode(node.url);
+          else node.status = false;
+        } catch (e) {
+          node.status = false;
+          node.ownerName = reduceHexAddress(node.owner_did, 4);
+        }
+        if (onlyActive) {
+          if (node.status) nodeList.push(node);
+        } else nodeList.push(node);
+        return node;
+      })
+    );
+    return nodeList;
   };
 
   const addHiveNode = async (nodeInfo) => {
@@ -113,6 +144,7 @@ export default function useHiveHubContracts() {
 
   return {
     getHiveNodes,
+    getHiveNodesList,
     addHiveNode,
     removeHiveNode
   };

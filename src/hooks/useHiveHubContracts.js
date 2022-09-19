@@ -1,18 +1,56 @@
 import Web3 from 'web3';
-import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from '../service/common';
 import { essentialsConnector } from '../service/connectivity';
 import { callContractMethod } from '../service/contract';
-import { uploadNode2Ipfs } from '../service/ipfs';
+import { getDataFromIpfs, uploadNode2Ipfs } from '../service/ipfs';
 
 export default function useHiveHubContracts() {
-  const { enqueueSnackbar } = useSnackbar;
   const walletConnectProvider = isInAppBrowser()
     ? window.elastos.getWeb3Provider()
     : essentialsConnector.getWalletConnectProvider();
   const walletConnectWeb3 = new Web3(walletConnectProvider);
 
-  const getHiveNodes = async () => {};
+  const getHiveNodes = async (nodeId, ownerDid) => {
+    const nodeIds = await callContractMethod(walletConnectWeb3, {
+      methodName: 'nodeIds',
+      callType: 'call',
+      price: '0'
+    });
+    console.log('========', nodeIds);
+    const nodes = [];
+    await Promise.all(
+      nodeIds.map(async (nodeIdx) => {
+        try {
+          const nodeItem = await callContractMethod(walletConnectWeb3, {
+            methodName: 'nodeByIndex',
+            callType: 'call',
+            price: '0',
+            index: nodeIdx
+          });
+          const nodeInfo = await getDataFromIpfs(nodeItem.tokenURI || '');
+          let isMatched = true;
+          if (nodeId) {
+            if (nodeItem.tokenId !== nodeId) {
+              console.log('=======', nodeId, nodeItem.tokenId, nodeInfo.tokenId);
+              isMatched = false;
+            }
+          }
+          if (ownerDid) {
+            if (ownerDid !== nodeInfo.owner_did) {
+              console.log('=======', ownerDid, nodeInfo.owner_did);
+              isMatched = false;
+            }
+          }
+          console.log(isMatched);
+          if (isMatched) nodes.push(nodeInfo);
+        } catch (err) {
+          console.error(err);
+        }
+      })
+    );
+    console.log('=======', nodes);
+    return nodes;
+  };
 
   const addHiveNode = async (nodeInfo) => {
     try {

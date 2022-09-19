@@ -50,8 +50,12 @@ export default function HiveHome() {
           setParticipated(1);
           const appContext = await getAppContext(user.did);
           const participatedNodeUrl = await appContext.getProviderAddress(user.did);
-          const participatedNode = allNodeList.find((item) => item.url === participatedNodeUrl);
-          myNodeList.push(participatedNode);
+          const isIncluded =
+            myNodeList.findIndex((item) => item.url === participatedNodeUrl) !== -1;
+          if (!isIncluded) {
+            const participatedNode = allNodeList.find((item) => item.url === participatedNodeUrl);
+            myNodeList.push(participatedNode);
+          }
         } else setVaultItems([]);
         setMyNodeItems(myNodeList);
         setActiveNodesUrl(activeNodes);

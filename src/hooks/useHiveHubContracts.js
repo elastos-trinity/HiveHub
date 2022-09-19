@@ -43,7 +43,7 @@ export default function useHiveHubContracts() {
               isMatched = false;
             }
           }
-          console.log(isMatched);
+          // console.log('===',isMatched);
           if (isMatched) nodes.push(nodeInfo);
         } catch (err) {
           console.error(err);

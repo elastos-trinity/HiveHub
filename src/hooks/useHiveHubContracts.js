@@ -1,91 +1,51 @@
 import Web3 from 'web3';
+import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from '../service/common';
 import { essentialsConnector } from '../service/connectivity';
-import { NODE_REGISTRY_ABI } from '../contracts/NodeRegistry';
-import { config } from '../config';
+import { callContractMethod } from '../service/contract';
 
-export default function useHiveHubContract() {
-    const walletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider);
+export default function useHiveHubContracts() {
+  const { enqueueSnackbar } = useSnackbar;
+  const walletConnectProvider = isInAppBrowser()
+    ? window.elastos.getWeb3Provider()
+    : essentialsConnector.getWalletConnectProvider();
+  const walletConnectWeb3 = new Web3(walletConnectProvider);
 
-    const callContractMethod = (walletConnectWeb3, param) =>
-        new Promise((resolve, reject) => {
-            let contractMethod = null;
-            let accounts = [];
-            let gasPrice = '';
-            if (!NODE_REGISTRY_ABI || !config.nodeRegistryAddress) return;
-            const HiveHubContract = new walletConnectWeb3.eth.Contract(
-                NODE_REGISTRY_ABI,
-                config.nodeRegistryAddress
-            );
-            switch (param.methodName) {
-                case 'balanceOf':
-                    contractMethod = HiveHubContract.methods.balanceOf(param.account);
-                    break;
-                default:
-                    contractMethod = undefined;
-                    break;
-            }
-            if (!contractMethod) return;
-
-            const handleTxEvent = (hash) => {
-                console.log('transactionHash', hash);
-            };
-            const handleReceiptEvent = (receipt) => {
-                console.log('receipt', receipt);
-                resolve();
-            };
-            const handleErrorEvent = (error) => {
-                console.error('error', error);
-                reject(error);
-            };
-
-            if (param.callType === 'call') {
-                contractMethod.call().then((res) => resolve(res));
-            } else if (param.callType === 'send') {
-                walletConnectWeb3.eth
-                    .getAccounts()
-                    .then((_accounts) => {
-                        accounts = _accounts;
-                        return walletConnectWeb3.eth.getGasPrice();
-                    })
-                    .then(async (_gasPrice) => {
-                        gasPrice = parseInt(_gasPrice, 10) > 20 * 1e9 ? (20 * 1e9).toString() : gasPrice;
-                        return contractMethod.estimateGas({
-                            from: accounts[0],
-                            gas: 8000000,
-                            value: param.price
-                        });
-                    })
-                    .then((_estimatedGas) => {
-                        const gasLimit = parseInt((_estimatedGas * 1.5).toString(), 10);
-                        const transactionParams = {
-                            from: accounts[0],
-                            gasPrice,
-                            gas: gasLimit > 8000000 ? 8000000 : gasLimit,
-                            value: param.price
-                        };
-                        contractMethod
-                            .send(transactionParams)
-                            .once('transactionHash', handleTxEvent)
-                            .once('receipt', handleReceiptEvent)
-                            .on('error', handleErrorEvent);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            }
-        });
-    const getHiveNodes = () => { };
-    const addHiveNode = () => { };
-    const removeHiveNode = () => { };
-
-    return {
-        callContractMethod,
-        getHiveNodes,
-        addHiveNode,
-        removeHiveNode
+  const getHiveNodes = async () => {};
+  const addHiveNode = async (tokenId, tokenUri, nodeEntry) => {
+    const platformInfo = await callContractMethod(walletConnectWeb3, {
+      methodName: 'getPlatformFee',
+      callType: 'call',
+      price: '0'
+    });
+    await callContractMethod(walletConnectWeb3, {
+      methodName: 'mint',
+      callType: 'send',
+      price: platformInfo.platformFee,
+      tokenId,
+      tokenUri,
+      nodeEntry
+    });
+  };
+  const removeHiveNode = async (tokenId) => {
+    try {
+      await callContractMethod(walletConnectWeb3, {
+        methodName: 'burn',
+        callType: 'send',
+        price: '0',
+        tokenId
+      });
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
     }
+  };
+
+  return {
+    callContractMethod,
+    getHiveNodes,
+    addHiveNode,
+    removeHiveNode
+  };
 }

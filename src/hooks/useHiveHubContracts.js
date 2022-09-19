@@ -44,7 +44,7 @@ export default function useHiveHubContracts() {
             }
           }
           // console.log('===',isMatched);
-          if (isMatched) nodes.push(nodeInfo);
+          if (isMatched) nodes.push({ ...nodeInfo, nid: nodeItem.tokenId });
         } catch (err) {
           console.error(err);
         }

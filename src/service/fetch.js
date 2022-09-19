@@ -39,11 +39,28 @@ export const removeHiveNode = async (nid) => {
   return ret === true;
 };
 
-export const checkHiveNodeStatus = async (url) => {
-  const status = await HiveHubServer.isOnline(url);
-  return status;
+// deprecated
+// export const checkHiveNodeStatus = async (url) => {
+//   const status = await HiveHubServer.isOnline(url);
+//   return status;
+// };
+
+export const checkHiveNodeStatus = async (nodeUrl) => {
+  const url = `${nodeUrl}/api/v2/about/version`;
+  try {
+    const response = await fetch(url, {
+      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin' // include, *same-origin, omit
+    });
+    return response.status >= 200 && response.status < 300;
+  } catch (e) {
+    return false;
+  }
 };
 
+// deprecated
 export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
   const nodes = await HiveHubServer.getHiveNodes(nid, did);
   const nodeList = [];
@@ -74,6 +91,7 @@ export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActiv
   return nodeList;
 };
 
+// deprecated
 export const getActiveHiveNodeUrl = async () => {
   const nodes = await HiveHubServer.getHiveNodes();
   const activeNodes = [];
@@ -96,21 +114,6 @@ export const getActiveHiveNodeUrl = async () => {
     })
   );
   return activeNodes;
-};
-
-export const isActiveNode = async (nodeUrl) => {
-  const url = `${nodeUrl}/api/v2/about/version`;
-  try {
-    const response = await fetch(url, {
-      method: 'GET', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin' // include, *same-origin, omit
-    });
-    return response.status >= 200 && response.status < 300;
-  } catch (e) {
-    return false;
-  }
 };
 
 export const getHiveNodeInfo = async (did, nodeProvider) => {
@@ -228,17 +231,6 @@ export const getNodeProviderUrl = async (did) => {
   const appContext = await getAppContext(did);
   const nodeProvider = await appContext.getProviderAddress(did);
   return nodeProvider;
-};
-
-export const getValidNodeProviderUrl = async (appContext, did) => {
-  const nodeProvider = await appContext.getProviderAddress(did);
-  // console.log("original: ", nodeProvider)
-  const activeNodes = await getActiveHiveNodeUrl();
-  // console.log(activeNodes)
-  if (!activeNodes.length) return '';
-  if (activeNodes.includes(nodeProvider)) return nodeProvider;
-  // console.log("updated: ", activeNodes[activeNodes.length - 1])
-  return activeNodes[activeNodes.length - 1];
 };
 
 export const getAuthService = async (did) => {

@@ -2,8 +2,9 @@ import Web3 from 'web3';
 import { essentialsConnector } from '../service/connectivity';
 import { callContractMethod } from '../service/contract';
 import { getDataFromIpfs, uploadNode2Ipfs } from '../service/ipfs';
-import { getCredentialsFromDID, isActiveNode } from '../service/fetch';
+import { checkHiveNodeStatus, getCredentialsFromDID } from '../service/fetch';
 import { isInAppBrowser, reduceHexAddress } from '../service/common';
+import { config } from '../config';
 
 export default function useHiveHubContracts() {
   const walletConnectProvider = isInAppBrowser()
@@ -68,7 +69,7 @@ export default function useHiveHubContracts() {
           } else {
             node.ownerName = reduceHexAddress(node.owner_did, 4);
           }
-          if (withStatus) node.status = await isActiveNode(node.url);
+          if (withStatus) node.status = await checkHiveNodeStatus(node.url);
           else node.status = false;
         } catch (e) {
           node.status = false;
@@ -81,6 +82,30 @@ export default function useHiveHubContracts() {
       })
     );
     return nodeList;
+  };
+
+  const getActiveHiveNodeUrl = async () => {
+    const nodes = await getHiveNodes();
+    const activeNodes = [];
+    await Promise.all(
+      nodes.map(async (item) => {
+        const node = { ...item };
+        try {
+          node.status = await checkHiveNodeStatus(node.url);
+          if (
+            node.status &&
+            !activeNodes.includes(node.url) &&
+            ((node.url.includes('testnet') && !config.IsProductEnv) ||
+              (!node.url.includes('testnet') && config.IsProductEnv))
+          )
+            activeNodes.push(node.url);
+        } catch (e) {
+          node.status = false;
+        }
+        return node;
+      })
+    );
+    return activeNodes;
   };
 
   const addHiveNode = async (nodeInfo) => {
@@ -145,6 +170,7 @@ export default function useHiveHubContracts() {
   return {
     getHiveNodes,
     getHiveNodesList,
+    getActiveHiveNodeUrl,
     addHiveNode,
     removeHiveNode
   };

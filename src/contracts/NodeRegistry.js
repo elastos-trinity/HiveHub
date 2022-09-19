@@ -69,18 +69,6 @@ module.exports.NODE_REGISTRY_ABI = [
         internalType: 'string',
         name: 'nodeEntry',
         type: 'string'
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'receiptAddr',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'ownerAddr',
-        type: 'address'
       }
     ],
     name: 'NodeRegistered',
@@ -440,34 +428,6 @@ module.exports.NODE_REGISTRY_ABI = [
     type: 'function'
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256'
-      },
-      {
-        internalType: 'string',
-        name: 'tokenURI',
-        type: 'string'
-      },
-      {
-        internalType: 'string',
-        name: 'nodeEntry',
-        type: 'string'
-      },
-      {
-        internalType: 'address',
-        name: 'receiptAddr',
-        type: 'address'
-      }
-    ],
-    name: 'mint',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function'
-  },
-  {
     inputs: [],
     name: 'name',
     outputs: [
@@ -506,16 +466,6 @@ module.exports.NODE_REGISTRY_ABI = [
             internalType: 'string',
             name: 'nodeEntry',
             type: 'string'
-          },
-          {
-            internalType: 'address',
-            name: 'receiptAddr',
-            type: 'address'
-          },
-          {
-            internalType: 'address',
-            name: 'ownerAddr',
-            type: 'address'
           }
         ],
         internalType: 'struct NodeRegistry.Node',
@@ -578,16 +528,6 @@ module.exports.NODE_REGISTRY_ABI = [
             internalType: 'string',
             name: 'nodeEntry',
             type: 'string'
-          },
-          {
-            internalType: 'address',
-            name: 'receiptAddr',
-            type: 'address'
-          },
-          {
-            internalType: 'address',
-            name: 'ownerAddr',
-            type: 'address'
           }
         ],
         internalType: 'struct NodeRegistry.Node',
@@ -629,16 +569,6 @@ module.exports.NODE_REGISTRY_ABI = [
             internalType: 'string',
             name: 'nodeEntry',
             type: 'string'
-          },
-          {
-            internalType: 'address',
-            name: 'receiptAddr',
-            type: 'address'
-          },
-          {
-            internalType: 'address',
-            name: 'ownerAddr',
-            type: 'address'
           }
         ],
         internalType: 'struct NodeRegistry.Node',
@@ -974,11 +904,6 @@ module.exports.NODE_REGISTRY_ABI = [
         internalType: 'string',
         name: 'tokenURI',
         type: 'string'
-      },
-      {
-        internalType: 'address',
-        name: 'receiptAddr',
-        type: 'address'
       }
     ],
     name: 'updateNode',

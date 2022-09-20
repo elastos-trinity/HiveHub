@@ -31,6 +31,9 @@ export const callContractMethod = (walletConnectWeb3, param) =>
       case 'nodeByIndex':
         contractMethod = HiveHubContract.methods.nodeByIndex(param.index);
         break;
+      case 'burn':
+        contractMethod = HiveHubContract.methods.burn(param.tokenId);
+        break;
       default:
         contractMethod = undefined;
         break;

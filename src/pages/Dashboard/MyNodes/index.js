@@ -109,6 +109,7 @@ export default function HiveNodes() {
             removeNodeNid: 0,
             removeNodeOwnerDid: ''
           });
+          setOnProgress(false);
         }}
       >
         <ConfirmDlg
@@ -121,6 +122,7 @@ export default function HiveNodes() {
               removeNodeNid: 0,
               removeNodeOwnerDid: ''
             });
+            setOnProgress(false);
           }}
           onClick={() => handleRemoveNode(dlgState.removeNodeNid, dlgState.removeNodeOwnerDid)}
         />

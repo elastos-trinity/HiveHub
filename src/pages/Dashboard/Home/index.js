@@ -31,6 +31,7 @@ export default function HiveHome() {
   const { dlgState, setDlgState } = useDialogContext();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
+  const [created, setCreated] = useState(0);
   const [participated, setParticipated] = useState(0);
   const [myNodeItems, setMyNodeItems] = useState(Array(3).fill(emptyNodeItem));
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
@@ -45,6 +46,7 @@ export default function HiveHome() {
         const myNodeList = await getHiveNodesList(undefined, user.did, false, true, false);
         const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
         const activeNodes = await getActiveHiveNodeUrl();
+        setCreated(myNodeList.length);
         if (vaultItem) {
           setVaultItems([vaultItem]);
           setParticipated(1);
@@ -196,7 +198,7 @@ export default function HiveHome() {
         >
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Created by me</NodeStatisticLabel>
-            <NodeStatisticBody>{loading ? 0 : myNodeItems.length - participated}</NodeStatisticBody>
+            <NodeStatisticBody>{loading ? 0 : created}</NodeStatisticBody>
           </Stack>
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Participated by me</NodeStatisticLabel>

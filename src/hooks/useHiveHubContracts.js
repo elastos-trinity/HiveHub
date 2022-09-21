@@ -22,13 +22,13 @@ export default function useHiveHubContracts() {
     // console.log('========', nodeIds);
     const nodes = [];
     await Promise.all(
-      nodeIds.map(async (nodeIdx) => {
+      nodeIds.map(async (_, index) => {
         try {
           const nodeItem = await callContractMethod(walletConnectWeb3, {
             methodName: 'nodeByIndex',
             callType: 'call',
             price: '0',
-            index: nodeIdx
+            index
           });
           const nodeInfo = await getDataFromIpfs(nodeItem.tokenURI || '');
           let isMatched = true;

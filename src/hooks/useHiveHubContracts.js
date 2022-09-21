@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { createHash } from 'crypto';
 import { essentialsConnector } from '../service/connectivity';
 import { callContractMethod } from '../service/contract';
 import { getDataFromIpfs, uploadNode2Ipfs } from '../service/ipfs';
@@ -21,13 +22,13 @@ export default function useHiveHubContracts() {
     // console.log('========', nodeIds);
     const nodes = [];
     await Promise.all(
-      nodeIds.map(async (nodeIdx) => {
+      nodeIds.map(async (_, index) => {
         try {
           const nodeItem = await callContractMethod(walletConnectWeb3, {
             methodName: 'nodeByIndex',
             callType: 'call',
             price: '0',
-            index: nodeIdx
+            index
           });
           const nodeInfo = await getDataFromIpfs(nodeItem.tokenURI || '');
           let isMatched = true;
@@ -110,11 +111,6 @@ export default function useHiveHubContracts() {
 
   const addHiveNode = async (nodeInfo) => {
     try {
-      const tokenId = await callContractMethod(walletConnectWeb3, {
-        methodName: 'totalSupply',
-        callType: 'call',
-        price: '0'
-      });
       const metaRes = await uploadNode2Ipfs(
         nodeInfo.name,
         nodeInfo.created,
@@ -125,6 +121,7 @@ export default function useHiveHubContracts() {
         nodeInfo.url,
         nodeInfo.remark
       );
+      const tokenId = `0x${createHash('sha256').update(metaRes.path).digest('hex')}`;
       const tokenUri = `hivehub:json:${metaRes.path}`;
       const nodeEntry = nodeInfo.url;
       const platformInfo = await callContractMethod(walletConnectWeb3, {

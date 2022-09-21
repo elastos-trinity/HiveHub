@@ -56,7 +56,7 @@ export default function HiveHome() {
             myNodeList.findIndex((item) => item.url === participatedNodeUrl) !== -1;
           if (!isIncluded) {
             const participatedNode = allNodeList.find((item) => item.url === participatedNodeUrl);
-            myNodeList.push(participatedNode);
+            if (participatedNode) myNodeList.push(participatedNode);
           }
         } else setVaultItems([]);
         setMyNodeItems(myNodeList);

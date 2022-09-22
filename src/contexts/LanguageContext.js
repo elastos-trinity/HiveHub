@@ -25,8 +25,8 @@ function LanguageContextProvider({ children }) {
       value={{
         language,
         setLanguage,
-        changeLanguage: () => {
-          i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en').catch(console.log);
+        changeLanguage: (lang) => {
+          i18n.changeLanguage(lang).catch(console.log);
         }
       }}
     >

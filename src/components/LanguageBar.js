@@ -16,9 +16,13 @@ LanguageBar.propTypes = {
   sx: PropTypes.object
 };
 
+const languageTypes = [
+  { value: 'en', name: 'English' },
+  { value: 'zh', name: '中文' }
+];
+
 export default function LanguageBar({ sx }) {
   const { language, setLanguage, changeLanguage } = useLanguageContext();
-  const [active, setActive] = useState(language === 'en' ? 'English' : '中文');
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -30,9 +34,8 @@ export default function LanguageBar({ sx }) {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    changeLanguage();
+    changeLanguage(language === 'en' ? 'zh' : 'en');
     setLanguage((prevState) => (prevState === 'en' ? 'zh' : 'en'));
-    setActive(language === 'en' ? '中文' : 'English');
     setOpen(false);
   };
 
@@ -42,15 +45,6 @@ export default function LanguageBar({ sx }) {
     }
     setOpen(false);
   };
-
-  // function handleListKeyDown(event) {
-  //   if (event.key === 'Tab') {
-  //     event.preventDefault();
-  //     setOpen(false);
-  //   } else if (event.key === 'Escape') {
-  //     setOpen(false);
-  //   }
-  // }
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
@@ -73,7 +67,7 @@ export default function LanguageBar({ sx }) {
         onClick={handleToggle}
         sx={{ color: 'black' }}
       >
-        {active}
+        {languageTypes.find((item) => item.value === language).name}
       </Button>
       <Popper
         open={open}
@@ -96,13 +90,14 @@ export default function LanguageBar({ sx }) {
                   autoFocusItem={open}
                   id="composition-menu"
                   aria-labelledby="composition-button"
-                  // onKeyDown={handleListKeyDown}
                 >
                   <MenuItem
                     sx={{ color: 'rgba(0, 0, 0, 0.3)' }}
                     onClick={(event) => handleChange(event)}
                   >
-                    {active === 'English' ? '中文' : 'English'}
+                    {languageTypes.find((item) => item.value === language).name === 'English'
+                      ? '中文'
+                      : 'English'}
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

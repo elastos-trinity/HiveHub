@@ -31,6 +31,7 @@ export default function HiveNodes() {
       setLoading(false);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
 
   const handleRemoveNode = async (nid, ownerDid) => {

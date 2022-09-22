@@ -67,6 +67,7 @@ export default function HiveHome() {
       }
     };
     if (user.did) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
 
   const handleBackup = async (backupNodeProvider) => {

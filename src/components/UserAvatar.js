@@ -78,7 +78,7 @@ export default function UserAvatar() {
             variant="subtitle1"
             sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
           >
-            {user.did}
+            {user?.credentials?.name || user.did}
           </Typography>
         </UsernameTooltip>
       </Button>

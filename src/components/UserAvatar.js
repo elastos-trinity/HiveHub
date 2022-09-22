@@ -73,7 +73,7 @@ export default function UserAvatar() {
         onClick={handleToggle}
         sx={{ color: 'black' }}
       >
-        <UsernameTooltip title={user.did || ''} placement="bottom-end">
+        <UsernameTooltip title={user.did || ''} placement="left">
           <Typography
             variant="subtitle1"
             sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}

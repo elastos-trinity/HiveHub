@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import '../service/i18n';
@@ -18,6 +18,9 @@ LanguageContextProvider.propTypes = {
 function LanguageContextProvider({ children }) {
   const { i18n } = useTranslation();
   const [language, setLanguage] = useState('en');
+  useEffect(() => {
+    i18n.changeLanguage('en');
+  }, []);
 
   return (
     <LanguageContext.Provider

@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useCallback, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import { getCredentialsFromDIDDoc } from '../service/common';

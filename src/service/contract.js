@@ -22,9 +22,6 @@ export const callContractMethod = (walletConnectWeb3, param) =>
       case 'getPlatformFee':
         contractMethod = HiveHubContract.methods.getPlatformFee();
         break;
-      case 'totalSupply':
-        contractMethod = HiveHubContract.methods.totalSupply();
-        break;
       case 'nodeIds':
         contractMethod = HiveHubContract.methods.nodeIds();
         break;

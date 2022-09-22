@@ -22,6 +22,7 @@ export default function HiveExplore() {
       setLoadingNode(false);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did, onlyActive]);
 
   return (

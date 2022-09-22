@@ -81,6 +81,7 @@ export default function NodeDetail() {
       setLoading(false);
     };
     if (user.did) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did, nodeId]);
 
   const handleCreateVault = () => {

@@ -23,7 +23,6 @@ UserContextProvider.propTypes = {
 
 function UserContextProvider({ children }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [ownerDid] = useState(localStorage.getItem('did'));
   const [user, setUser] = useState({
     did: localStorage.getItem('did'),
     avatar: null,
@@ -33,8 +32,8 @@ function UserContextProvider({ children }) {
     isActive: false
   });
 
-  const getUserInfo = useCallback(
-    async (did) => {
+  useEffect(() => {
+    const getUserInfo = async (did) => {
       const didDoc = await getDIDDocumentFromDID(did);
       const credentials = getCredentialsFromDIDDoc(didDoc);
       const nodeProvider = await getNodeProviderUrl(did);
@@ -74,15 +73,10 @@ function UserContextProvider({ children }) {
         state.isActive = isActive;
         return state;
       });
-    },
+    };
+    if (user.did) getUserInfo(user.did);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ownerDid]
-  );
-
-  useEffect(() => {
-    if (ownerDid) getUserInfo(ownerDid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ownerDid]);
+  }, [user.did]);
 
   return (
     <UserContext.Provider

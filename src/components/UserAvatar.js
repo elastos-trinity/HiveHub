@@ -29,7 +29,7 @@ const UsernameTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(() => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    marginTop: '0 !important',
+    marginTop: '50 !important',
     fontSize: 13,
     borderRadius: 4
   }
@@ -73,14 +73,28 @@ export default function UserAvatar() {
         onClick={handleToggle}
         sx={{ color: 'black' }}
       >
-        <UsernameTooltip title={user.did || ''} placement="left">
+        {open ? (
           <Typography
             variant="subtitle1"
             sx={{ width: '120px', color: '#FF931E', overflow: 'hidden', textOverflow: 'ellipsis' }}
           >
             {user?.credentials?.name || user.did}
           </Typography>
-        </UsernameTooltip>
+        ) : (
+          <UsernameTooltip title={user.did || ''} placement="bottom-end">
+            <Typography
+              variant="subtitle1"
+              sx={{
+                width: '120px',
+                color: '#FF931E',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {user?.credentials?.name || user.did}
+            </Typography>
+          </UsernameTooltip>
+        )}
       </Button>
       <Popper
         open={open}

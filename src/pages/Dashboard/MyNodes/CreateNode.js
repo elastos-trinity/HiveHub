@@ -9,15 +9,7 @@ import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import CustomTextField from '../../../components/CustomTextField';
-import { getTime } from '../../../service/common';
-import {
-  checkHiveNodeStatus,
-  // createHiveNode,
-  getHiveNodeInfo,
-  // getHiveNodesList,
-  getIPFromDomain,
-  getLocationFromIP
-} from '../../../service/fetch';
+import { checkHiveNodeStatus, getHiveNodeInfo } from '../../../service/fetch';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 export default function CreateNode() {
@@ -82,30 +74,13 @@ export default function CreateNode() {
         setOnProgress(false);
         return;
       }
-      // get ip and location
-      const hostName = url.includes('https://')
-        ? url.replace('https://', '')
-        : url.replace('http://', '');
-      const ipAddress = await getIPFromDomain(hostName);
-      const location = await getLocationFromIP(ipAddress, 'json');
-      const curTime = getTime(new Date().getTime());
-      // form a new node info
-      const newNode = {
-        name: nodeName,
-        created: `${curTime.date} ${curTime.time}`,
-        ip: ipAddress,
-        owner_did: ownerDid,
-        area: `${location.country} ${location.region} ${location.city}`,
-        email,
-        url,
-        remark: description
-      };
 
       // check accessible and ownership
       const nodeServiceDid = nodeInfo.getServiceDid();
       const nodeOwnerDid = nodeInfo.getOwnerDid();
       const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
       const vcs = nodeOwnershipPresentation.getCredentials();
+      const signature = vcs[0].getProof().getSignature();
       const credentialIssuer = `did:elastos:${vcs[0].getIssuer().getMethodSpecificId()}`;
       const holderDid = nodeOwnershipPresentation.getHolder().getMethodSpecificId();
       const presentationHolder = `did:elastos:${holderDid}`;
@@ -134,7 +109,19 @@ export default function CreateNode() {
         setOnProgress(false);
         return;
       }
-      // const result = await createHiveNode(newNode);
+
+      // form a new node info
+      const newNode = {
+        name: nodeName,
+        ownerDid,
+        description,
+        avatar: user.avatar,
+        email,
+        endpoint: url,
+        signature,
+        createdAt: new Date().getTime()
+      };
+
       const result = await addHiveNode(newNode);
       if (result) {
         enqueueSnackbar('Create Hive Node success.', {

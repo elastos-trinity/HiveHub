@@ -34,7 +34,6 @@ export const uploadNode2Ipfs = (
   createdAt
 ) =>
   new Promise((resolve, reject) => {
-    console.log('========', avatar);
     // create the metadata object we'll be storing
     const metaObj = {
       version: '2',

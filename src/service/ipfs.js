@@ -7,17 +7,19 @@ export const uploadAvatar2Ipfs = (avatar) =>
   new Promise((resolve, reject) => {
     if (!avatar) resolve('empty data');
     else {
-      const reader = new window.FileReader();
-      reader.readAsArrayBuffer(avatar.replace('data:image/png;base64,', ''));
-      reader.onloadend = async () => {
-        try {
-          const fileContent = Buffer.from(reader.result);
-          const added = await client.add(fileContent);
-          resolve(added);
-        } catch (error) {
-          reject(error);
-        }
-      };
+      const avatarBase64 = avatar.replace('data:image/png;base64,', '');
+      const binaryString = window.atob(avatarBase64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i += 1) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      try {
+        const added = Promise.resolve(client.add(bytes.buffer));
+        resolve(added);
+      } catch (error) {
+        reject(error);
+      }
     }
   });
 

@@ -3,6 +3,24 @@ import { config } from '../config';
 
 const client = create({ url: config.IPFSUploadUrl });
 
+export const uploadAvatar2Ipfs = (avatar) =>
+  new Promise((resolve, reject) => {
+    if (!avatar) resolve('empty data');
+    else {
+      const reader = new window.FileReader();
+      reader.readAsArrayBuffer(avatar.replace('data:image/png;base64,', ''));
+      reader.onloadend = async () => {
+        try {
+          const fileContent = Buffer.from(reader.result);
+          const added = await client.add(fileContent);
+          resolve(added);
+        } catch (error) {
+          reject(error);
+        }
+      };
+    }
+  });
+
 export const uploadNode2Ipfs = (
   name,
   ownerDid,
@@ -14,6 +32,7 @@ export const uploadNode2Ipfs = (
   createdAt
 ) =>
   new Promise((resolve, reject) => {
+    console.log('========', avatar);
     // create the metadata object we'll be storing
     const metaObj = {
       version: '2',

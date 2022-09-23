@@ -3,19 +3,53 @@ import { config } from '../config';
 
 const client = create({ url: config.IPFSUploadUrl });
 
-export const uploadNode2Ipfs = (name, created, ip, ownerDid, area, email, url, remark) =>
+export const uploadAvatar2Ipfs = (avatar) =>
+  new Promise((resolve, reject) => {
+    if (!avatar) resolve('empty data');
+    else {
+      const avatarBase64 = avatar.replace('data:image/png;base64,', '');
+      const binaryString = window.atob(avatarBase64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i += 1) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      try {
+        const added = Promise.resolve(client.add(bytes.buffer));
+        resolve(added);
+      } catch (error) {
+        reject(error);
+      }
+    }
+  });
+
+export const uploadNode2Ipfs = (
+  name,
+  ownerDid,
+  description,
+  avatar,
+  email,
+  endpoint,
+  signature,
+  createdAt
+) =>
   new Promise((resolve, reject) => {
     // create the metadata object we'll be storing
     const metaObj = {
-      version: '1',
+      version: '2',
+      type: 'HiveNode',
       name,
-      created,
-      ip,
-      owner_did: ownerDid,
-      area,
-      email,
-      url,
-      remark
+      creator: {
+        did: ownerDid
+      },
+      data: {
+        description,
+        avatar,
+        email,
+        endpoint,
+        createdAt,
+        signature
+      }
     };
     try {
       const jsonMetaObj = JSON.stringify(metaObj);

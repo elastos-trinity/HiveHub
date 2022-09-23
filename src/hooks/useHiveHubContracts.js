@@ -46,7 +46,7 @@ export default function useHiveHubContracts() {
               isMatched = false;
             }
           }
-          if (isMatched && nodeInfo.version === '2') nodes.push({ ...nodeInfo, nid: nodeItem.tokenId });
+          if (isMatched) nodes.push({ ...nodeInfo, nid: nodeItem.tokenId });
         } catch (err) {
           console.error(err);
         }

@@ -3,19 +3,33 @@ import { config } from '../config';
 
 const client = create({ url: config.IPFSUploadUrl });
 
-export const uploadNode2Ipfs = (name, created, ip, ownerDid, area, email, url, remark) =>
+export const uploadNode2Ipfs = (
+  name,
+  ownerDid,
+  description,
+  avatar,
+  email,
+  endpoint,
+  signature,
+  createdAt
+) =>
   new Promise((resolve, reject) => {
     // create the metadata object we'll be storing
     const metaObj = {
-      version: '1',
+      version: '2',
+      type: 'HiveNode',
       name,
-      created,
-      ip,
-      owner_did: ownerDid,
-      area,
-      email,
-      url,
-      remark
+      creator: {
+        did: ownerDid
+      },
+      data: {
+        description,
+        avatar,
+        email,
+        endpoint,
+        createdAt,
+        signature
+      }
     };
     try {
       const jsonMetaObj = JSON.stringify(metaObj);

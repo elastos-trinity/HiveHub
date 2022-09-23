@@ -3,8 +3,13 @@ import { createHash } from 'crypto';
 import { essentialsConnector } from '../service/connectivity';
 import { callContractMethod } from '../service/contract';
 import { getDataFromIpfs, uploadAvatar2Ipfs, uploadNode2Ipfs } from '../service/ipfs';
-import { checkHiveNodeStatus, getCredentialsFromDID } from '../service/fetch';
-import { isInAppBrowser, reduceHexAddress } from '../service/common';
+import {
+  checkHiveNodeStatus,
+  getCredentialsFromDID,
+  getIPFromDomain,
+  getLocationFromIP
+} from '../service/fetch';
+import { getTime, isInAppBrowser, reduceHexAddress } from '../service/common';
 import { config } from '../config';
 
 export default function useHiveHubContracts() {
@@ -41,7 +46,7 @@ export default function useHiveHubContracts() {
               isMatched = false;
             }
           }
-          if (isMatched) nodes.push({ ...nodeInfo, nid: nodeItem.tokenId });
+          if (isMatched && nodeInfo.version === '2') nodes.push({ ...nodeInfo, nid: nodeItem.tokenId });
         } catch (err) {
           console.error(err);
         }
@@ -55,21 +60,44 @@ export default function useHiveHubContracts() {
     const nodeList = [];
     await Promise.all(
       nodes.map(async (item) => {
-        const node = { ...item };
+        let created = '';
+        if (item.data.createdAt) {
+          const createdTime = getTime(item.data.createdAt);
+          created = `${createdTime.date} ${createdTime.time}`;
+        }
+        const node = {
+          ...item,
+          version: item.version,
+          type: item.type,
+          area: '',
+          created,
+          email: item.data.email,
+          ip: '',
+          name: item.name,
+          ownerName: reduceHexAddress(item.creator.did, 4),
+          owner_did: item.creator.did,
+          remark: item.data.description,
+          status: false,
+          url: item.data.endpoint
+        };
         try {
           if (withName) {
             const credentials = await getCredentialsFromDID(node.owner_did);
             node.ownerName = credentials.name
               ? credentials.name
               : reduceHexAddress(node.owner_did, 4);
-          } else {
-            node.ownerName = reduceHexAddress(node.owner_did, 4);
+            // get ip and location
+            const hostName = node.url.includes('https://')
+              ? node.url.replace('https://', '')
+              : node.url.replace('http://', '');
+            const ipAddress = await getIPFromDomain(hostName);
+            if (ipAddress) node.ip = ipAddress;
+            const location = await getLocationFromIP(ipAddress, 'json');
+            node.area = `${location.country} ${location.region} ${location.city}`;
           }
           if (withStatus) node.status = await checkHiveNodeStatus(node.url);
-          else node.status = false;
         } catch (e) {
-          node.status = false;
-          node.ownerName = reduceHexAddress(node.owner_did, 4);
+          console.error(e);
         }
         if (onlyActive) {
           if (node.status) nodeList.push(node);

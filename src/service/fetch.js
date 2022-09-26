@@ -217,8 +217,14 @@ export const createVault = (did, nodeProvider) =>
   });
 
 export const destroyVault = async (did) => {
-  const vaultSubscription = await getVaultSubscription(did, undefined);
-  await vaultSubscription.unsubscribe();
+  try {
+    const vaultSubscription = await getVaultSubscription(did, undefined);
+    await vaultSubscription.unsubscribe();
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 };
 
 export const isDIDUnbinded = async (did) => {

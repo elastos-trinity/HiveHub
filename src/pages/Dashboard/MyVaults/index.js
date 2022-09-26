@@ -5,34 +5,35 @@ import { PageTitleTypo } from '../../../components/CustomTypos';
 import VaultItem from '../../../components/VaultItem';
 import { emptyVaultItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
-import {
-  createVault,
-  getHiveVaultInfo,
-  backupVault,
-  checkBackupStatus,
-  findBackupNodeProvider,
-  migrateVault
-} from '../../../service/fetch';
+import { useDialogContext } from '../../../contexts/DialogContext';
+import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
+import { createVault, getHiveVaultInfo, backupVault, migrateVault } from '../../../service/fetch';
 import { CustomButton, PlusButton } from '../../../components/CustomButtons';
+import ModalDialog from '../../../components/ModalDialog';
+import SelectBackupNodeDlg from '../../../components/Dialog/SelectBackupNodeDlg';
 
 export default function HiveVaults() {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUserContext();
+  const { dlgState, setDlgState } = useDialogContext();
+  const { getActiveHiveNodeUrl } = useHiveHubContracts();
   const [loading, setLoading] = useState(false);
   const [myVaultsList, setMyVaultsList] = useState(Array(1).fill(emptyVaultItem));
   const [onProgress, setOnProgress] = useState(false);
-  const [hasBackup, setHasBackup] = useState(false);
+  const [activeNodesUrl, setActiveNodesUrl] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+      const activeNodes = await getActiveHiveNodeUrl();
       if (vaultItem) setMyVaultsList([vaultItem]);
       else setMyVaultsList([]);
-      setHasBackup(await checkBackupStatus(user.did));
+      setActiveNodesUrl(activeNodes);
       setLoading(false);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
 
   const handleCreateVault = () => {
@@ -59,18 +60,22 @@ export default function HiveVaults() {
       });
   };
 
-  const handleBackup = async () => {
-    if (!user.did) return;
+  const handleBackup = async (backupNodeProvider) => {
+    if (!user.did || !backupNodeProvider) return;
     if (!myVaultsList.length) return;
     setOnProgress(true);
     try {
-      const backupNodeProvider = await findBackupNodeProvider(user.did);
       console.log('Backup vault to: ', backupNodeProvider);
       const result = await backupVault(user.did, backupNodeProvider);
       if (result === 1) {
         enqueueSnackbar('Backup vault succeed', {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        setDlgState({
+          ...dlgState,
+          selectBackupNodeDlgOpened: false,
+          selectMigrateNodeDlgOpened: false
         });
       } else if (result === 2) {
         enqueueSnackbar('Already backup', {
@@ -93,18 +98,28 @@ export default function HiveVaults() {
     setOnProgress(false);
   };
 
-  const handleMigrate = async () => {
-    if (!user.did) return;
+  const handleMigrate = async (backupNodeProvider) => {
+    if (!user.did || !backupNodeProvider) return;
     if (!myVaultsList.length) return;
     setOnProgress(true);
     try {
-      const backupNodeProvider = await findBackupNodeProvider(user.did);
       console.log('Migrate vault to: ', backupNodeProvider);
-      await migrateVault(user.did, backupNodeProvider);
-      enqueueSnackbar('Migrate vault succeed', {
-        variant: 'success',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
-      });
+      const result = await migrateVault(user.did, backupNodeProvider);
+      if (result) {
+        enqueueSnackbar('Migrate vault succeed', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        setDlgState({
+          ...dlgState,
+          selectBackupNodeDlgOpened: false,
+          selectMigrateNodeDlgOpened: false
+        });
+      } else
+        enqueueSnackbar('Migrate vault error', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
     } catch (err) {
       console.log(err);
       enqueueSnackbar('Migrate vault error', {
@@ -112,11 +127,13 @@ export default function HiveVaults() {
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
     }
+    setOnProgress(false);
   };
 
   // For test
   const handleUnbind = async () => {
     if (!user.nodeProvider || user.did) return;
+    setOnProgress(true);
     try {
       console.log('Unbind DID from ', user.nodeProvider);
       // await unbindDID(user.did);
@@ -132,6 +149,22 @@ export default function HiveVaults() {
       });
     }
     setOnProgress(false);
+  };
+
+  const openSelectNodeDlg = (dlgType) => {
+    const availableNodes = activeNodesUrl.filter((item) => item !== user.nodeProvider);
+    if (!availableNodes.length) {
+      enqueueSnackbar('No available node provider', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    } else {
+      setDlgState({
+        ...dlgState,
+        selectBackupNodeDlgOpened: dlgType === 1,
+        selectMigrateNodeDlgOpened: dlgType !== 1
+      });
+    }
   };
 
   return (
@@ -172,19 +205,53 @@ export default function HiveVaults() {
           sx={{ width: '100%', margin: '40px auto' }}
         >
           <CustomButton
-            onClick={handleBackup}
-            disabled={!myVaultsList.length || hasBackup || onProgress}
+            onClick={() => openSelectNodeDlg(1)}
+            disabled={!myVaultsList.length || onProgress || loading}
           >
             Backup
           </CustomButton>
-          <CustomButton onClick={handleMigrate} disabled={!myVaultsList.length || onProgress}>
+          <CustomButton
+            onClick={() => openSelectNodeDlg(2)}
+            disabled={!myVaultsList.length || onProgress || loading}
+          >
             Migrate
           </CustomButton>
-          <CustomButton onClick={handleUnbind} disabled={!user.nodeProvider || onProgress || true}>
+          <CustomButton
+            onClick={handleUnbind}
+            disabled={!user.nodeProvider || onProgress || loading || true}
+          >
             Unbind
           </CustomButton>
         </Stack>
       </Stack>
+      <ModalDialog
+        open={dlgState.selectBackupNodeDlgOpened || dlgState.selectMigrateNodeDlgOpened}
+        onClose={() => {
+          setDlgState({
+            ...dlgState,
+            selectBackupNodeDlgOpened: false,
+            selectMigrateNodeDlgOpened: false
+          });
+        }}
+      >
+        <SelectBackupNodeDlg
+          dlgType={dlgState.selectBackupNodeDlgOpened ? 0 : 1}
+          activeNodes={activeNodesUrl}
+          fromNode={user.nodeProvider}
+          onProgress={onProgress}
+          onClose={() => {
+            setDlgState({
+              ...dlgState,
+              selectBackupNodeDlgOpened: false,
+              selectMigrateNodeDlgOpened: false
+            });
+          }}
+          onClick={(targetNodeProvider) => {
+            if (dlgState.selectBackupNodeDlgOpened) handleBackup(targetNodeProvider);
+            else handleMigrate(targetNodeProvider);
+          }}
+        />
+      </ModalDialog>
     </>
   );
 }

@@ -20,8 +20,11 @@ import {
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
+import { useDialogContext } from '../../../contexts/DialogContext';
 import { PlusButton, DestroyVaultButton } from '../../../components/CustomButtons';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
+import ModalDialog from '../../../components/ModalDialog';
+import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
 
 InfoItem.propTypes = {
   label: PropTypes.string.isRequired,
@@ -44,6 +47,7 @@ function InfoItem({ label, value }) {
 export default function MyNodeDetail() {
   const navigate = useNavigate();
   const { user } = useUserContext();
+  const { dlgState, setDlgState } = useDialogContext();
   const { getHiveNodesList } = useHiveHubContracts();
   const { nodeId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
@@ -129,11 +133,24 @@ export default function MyNodeDetail() {
     if (!vaultItems.length) return;
     setOnProgress(true);
     try {
-      await destroyVault(user.did);
-      enqueueSnackbar('Destroy vault succeed', {
-        variant: 'success',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
-      });
+      console.log('Destroy vault on Node ', nodeDetail.url);
+      const result = await destroyVault(user.did);
+      if (result) {
+        enqueueSnackbar('Destroy vault succeed', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        setDlgState({
+          ...dlgState,
+          confirmDlgOpened: false
+        });
+        window.location.reload();
+      } else {
+        enqueueSnackbar('Destroy vault error', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      }
     } catch (err) {
       console.error(err);
       enqueueSnackbar('Destroy vault error', {
@@ -147,18 +164,26 @@ export default function MyNodeDetail() {
   return (
     <>
       {loading ? (
-        <Skeleton
-          variant="rectangular"
-          animation="wave"
-          width="100%"
-          sx={{
-            bgcolor: '#E8F4FF',
-            borderRadius: 1,
-            height: { xs: '40px', md: '70px' },
-            mt: { xs: 5, md: 6 },
-            mb: 2.5
-          }}
-        />
+        <>
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width="100%"
+            sx={{
+              bgcolor: '#E8F4FF',
+              borderRadius: 1,
+              height: { xs: '40px', md: '70px' },
+              mt: { xs: 5, md: 6 },
+              mb: 2.5
+            }}
+          />
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width="100%"
+            sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '500px', md: '800px' } }}
+          />
+        </>
       ) : (
         <>
           <Stack
@@ -198,103 +223,122 @@ export default function MyNodeDetail() {
           >
             {nodeDetail.created}
           </NodeTimeLable>
-        </>
-      )}
-      {loading ? (
-        <Skeleton
-          variant="rectangular"
-          animation="wave"
-          width="100%"
-          sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '500px', md: '800px' } }}
-        />
-      ) : (
-        <NodeDetailBox>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <NodeDescription>{nodeDetail.remark}</NodeDescription>
-            <DestroyVaultButton
-              onClick={handleDestroyVault}
-              disabled={onProgress || !vaultItems.length}
-            >
-              Destroy Vault
-            </DestroyVaultButton>
-          </Stack>
-          <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
-            <InfoItem label="IP" value={nodeDetail.ip} />
-            <InfoItem label="Owner DID" value={nodeDetail.owner_did} />
-            <InfoItem label="Country/Region" value={nodeDetail.area} />
-            <InfoItem label="Email" value={nodeDetail.email} />
-            <InfoItem label="URL" value={nodeDetail.url} />
-          </Grid>
-          <Tabs
-            // centered
-            variant="fullWidth"
-            value={value}
-            onChange={handleChange}
-            textColor="inherit"
-            // aria-label="secondary tabs example"
-            TabIndicatorProps={{
-              sx: {
-                backgroundColor: 'black'
-              }
-            }}
-            sx={{
-              mt: { xs: 3, md: 6 },
-              fontSize: { xs: '12px', md: '25px' },
-              lineHeight: { xs: '15px', md: '30px' },
-              fontWeight: 700
-            }}
-          >
-            <Tab value="vault" label="Vault Service" />
-            <Tab value="backup" label="Backup Service" />
-          </Tabs>
-          {value === 'vault' ? (
-            <Box
+          <NodeDetailBox>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <NodeDescription>{nodeDetail.remark}</NodeDescription>
+              <DestroyVaultButton
+                onClick={() => {
+                  setDlgState({
+                    ...dlgState,
+                    confirmDlgOpened: true
+                  });
+                }}
+                disabled={onProgress || !vaultItems.length}
+              >
+                Destroy Vault
+              </DestroyVaultButton>
+            </Stack>
+            <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
+              <InfoItem label="IP" value={nodeDetail.ip} />
+              <InfoItem label="Owner DID" value={nodeDetail.owner_did} />
+              <InfoItem label="Country/Region" value={nodeDetail.area} />
+              <InfoItem label="Email" value={nodeDetail.email} />
+              <InfoItem label="URL" value={nodeDetail.url} />
+            </Grid>
+            <Tabs
+              // centered
+              variant="fullWidth"
+              value={value}
+              onChange={handleChange}
+              textColor="inherit"
+              // aria-label="secondary tabs example"
+              TabIndicatorProps={{
+                sx: {
+                  backgroundColor: 'black'
+                }
+              }}
               sx={{
-                mt: { xs: 2.5, md: 5 },
-                mb: { xs: 1, md: 2 },
-                width: '100%',
-                height: 'fit-content',
-                textAlign: 'left'
+                mt: { xs: 3, md: 6 },
+                fontSize: { xs: '12px', md: '25px' },
+                lineHeight: { xs: '15px', md: '30px' },
+                fontWeight: 700
               }}
             >
-              <Stack mt={{ xs: 1.75, md: 5 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
-                {vaultItems.map((item, index) => (
+              <Tab value="vault" label="Vault Service" />
+              <Tab value="backup" label="Backup Service" />
+            </Tabs>
+            {value === 'vault' ? (
+              <Box
+                sx={{
+                  mt: { xs: 2.5, md: 5 },
+                  mb: { xs: 1, md: 2 },
+                  width: '100%',
+                  height: 'fit-content',
+                  textAlign: 'left'
+                }}
+              >
+                <Stack mt={{ xs: 1.75, md: 5 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
+                  {vaultItems.map((item, index) => (
+                    <VaultSummaryItem
+                      key={`node-detail-vault-summary-${index}`}
+                      vaultName={item.name}
+                      vaultTotal={item.total}
+                      vaultUsed={item.used}
+                      isLoading={loading}
+                    />
+                  ))}
+                </Stack>
+                <PlusButton onClick={handleCreateVault} disabled={vaultItems.length > 0}>
+                  Add Vault
+                </PlusButton>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  mt: { xs: 2.5, md: 5 },
+                  mb: { xs: 1, md: 2 },
+                  width: '100%',
+                  height: 'fit-content',
+                  textAlign: 'left'
+                }}
+              >
+                {backupItems.map((item, index) => (
                   <VaultSummaryItem
-                    key={`node-detail-vault-summary-${index}`}
+                    key={`node-detail-backup-summary-${index}`}
                     vaultName={item.name}
                     vaultTotal={item.total}
                     vaultUsed={item.used}
                     isLoading={loading}
                   />
                 ))}
-              </Stack>
-              <PlusButton onClick={handleCreateVault} disabled={vaultItems.length > 0}>
-                Add Vault
-              </PlusButton>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                mt: { xs: 2.5, md: 5 },
-                mb: { xs: 1, md: 2 },
-                width: '100%',
-                height: 'fit-content',
-                textAlign: 'left'
-              }}
-            >
-              {backupItems.map((item, index) => (
-                <VaultSummaryItem
-                  key={`node-detail-backup-summary-${index}`}
-                  vaultName={item.name}
-                  vaultTotal={item.total}
-                  vaultUsed={item.used}
-                  isLoading={loading}
-                />
-              ))}
-            </Box>
-          )}
-        </NodeDetailBox>
+              </Box>
+            )}
+          </NodeDetailBox>
+        </>
       )}
+      <ModalDialog
+        open={dlgState.confirmDlgOpened}
+        onClose={() => {
+          setDlgState({
+            ...dlgState,
+            confirmDlgOpened: false
+          });
+          setOnProgress(false);
+        }}
+      >
+        <ConfirmDlg
+          message="If you remove this vault, your data will be lost."
+          onProgress={onProgress}
+          onClose={() => {
+            setDlgState({
+              ...dlgState,
+              confirmDlgOpened: false
+            });
+            setOnProgress(false);
+          }}
+          onClick={handleDestroyVault}
+        />
+      </ModalDialog>
     </>
   );
 }

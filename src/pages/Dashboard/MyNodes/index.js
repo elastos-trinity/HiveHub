@@ -114,7 +114,7 @@ export default function HiveNodes() {
         }}
       >
         <ConfirmDlg
-          message="Do you really want to remove this node?"
+          message="If you remove this node, all the vaults will be lost."
           onProgress={onProgress}
           onClose={() => {
             setDlgState({

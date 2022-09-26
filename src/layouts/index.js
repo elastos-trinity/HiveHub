@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import TopNavbar from '../components/Navbar/TopNavbar';
 import Sidebar from '../components/Navbar/Sidebar';
 import BottomNavbar from '../components/Navbar/BottomNavbar';
-import useConnectEE from '../hooks/useConnectEE';
+import useInitializeEE from '../hooks/useInitializeEE';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -40,7 +40,7 @@ const MainStyle = styled('div')(({ theme }) => ({
 
 export default function HiveHubLayout() {
   const location = useLocation();
-  useConnectEE(); // must
+  useInitializeEE();
   const [open, setOpen] = useState(false);
   const isLandingPage = location.pathname === '/landing';
 

@@ -15,7 +15,7 @@ export default function ConfirmDlg({ message, onClose, onClick, onProgress }) {
     <Stack spacing={4} width={320}>
       <Stack alignItems="center" spacing={2}>
         <DialogTitleTypo>Are you Sure?</DialogTitleTypo>
-        <Typography fontSize={16} fontWeight={400}>
+        <Typography fontSize={16} fontWeight={400} textAlign="center">
           {message}
         </Typography>
       </Stack>

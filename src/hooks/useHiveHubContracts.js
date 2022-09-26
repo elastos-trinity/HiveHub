@@ -42,7 +42,7 @@ export default function useHiveHubContracts() {
             }
           }
           if (ownerDid) {
-            if (ownerDid !== nodeInfo.owner_did) {
+            if (ownerDid !== nodeInfo.creator.did) {
               isMatched = false;
             }
           }

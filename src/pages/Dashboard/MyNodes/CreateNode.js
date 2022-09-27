@@ -116,6 +116,7 @@ export default function CreateNode() {
         ownerDid,
         description,
         avatar: user.avatar,
+        banner: '', // TODO: update it
         email,
         endpoint: url,
         signature,

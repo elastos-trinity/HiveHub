@@ -188,14 +188,6 @@ export default function HiveVaults() {
             sx={{ cursor: 'pointer' }}
           />
         ))}
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 3.75, md: 6.25 }}>
-          <PlusButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
-            Create Hive Vault
-          </PlusButton>
-          <PlusButton onClick={() => {}} hasPlus={false} disabled>
-            Access Hive Vaults
-          </PlusButton>
-        </Stack>
         <Stack
           direction="row"
           justifyContent="center"
@@ -224,6 +216,9 @@ export default function HiveVaults() {
           </CustomButton>
         </Stack>
       </Stack>
+      <PlusButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
+        Create Hive Vault
+      </PlusButton>
       <ModalDialog
         open={dlgState.selectBackupNodeDlgOpened || dlgState.selectMigrateNodeDlgOpened}
         onClose={() => {

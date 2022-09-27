@@ -2,7 +2,12 @@ import Web3 from 'web3';
 import { createHash } from 'crypto';
 import { essentialsConnector } from '../service/connectivity';
 import { callContractMethod } from '../service/contract';
-import { getDataFromIpfs, uploadAvatar2Ipfs, uploadNode2Ipfs } from '../service/ipfs';
+import {
+  getDataFromIpfs,
+  uploadAvatar2Ipfs,
+  uploadImage2Ipfs,
+  uploadNode2Ipfs
+} from '../service/ipfs';
 import {
   checkHiveNodeStatus,
   getCredentialsFromDID,
@@ -70,6 +75,8 @@ export default function useHiveHubContracts() {
           version: item.version,
           type: item.type,
           area: '',
+          avatar: item.data.avatar,
+          banner: item.data.banner,
           created,
           email: item.data.email,
           ip: '',
@@ -134,12 +141,14 @@ export default function useHiveHubContracts() {
 
   const addHiveNode = async (nodeInfo) => {
     try {
-      const imgRes = await uploadAvatar2Ipfs(nodeInfo.avatar);
+      const avatarRes = await uploadAvatar2Ipfs(nodeInfo.avatar);
+      const bannerRes = await uploadImage2Ipfs(nodeInfo.banner);
       const metaRes = await uploadNode2Ipfs(
         nodeInfo.name,
         nodeInfo.ownerDid,
         nodeInfo.description,
-        `pasar:image:${imgRes.path}`,
+        `pasar:image:${avatarRes.path}`,
+        bannerRes ? `pasar:image:${bannerRes.path}` : '',
         nodeInfo.email,
         nodeInfo.endpoint,
         nodeInfo.signature,

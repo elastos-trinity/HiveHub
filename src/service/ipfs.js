@@ -23,11 +23,30 @@ export const uploadAvatar2Ipfs = (avatar) =>
     }
   });
 
+export const uploadImage2Ipfs = (f) =>
+  new Promise((resolve, reject) => {
+    if (!f) resolve('');
+    else {
+      const reader = new window.FileReader();
+      reader.readAsArrayBuffer(f);
+      reader.onloadend = async () => {
+        try {
+          const fileContent = Buffer.from(reader.result);
+          const added = await client.add(fileContent);
+          resolve({ ...added, type: f.type });
+        } catch (error) {
+          reject(error);
+        }
+      };
+    }
+  });
+
 export const uploadNode2Ipfs = (
   name,
   ownerDid,
   description,
   avatar,
+  banner,
   email,
   endpoint,
   signature,
@@ -45,6 +64,7 @@ export const uploadNode2Ipfs = (
       data: {
         description,
         avatar,
+        banner,
         email,
         endpoint,
         createdAt,

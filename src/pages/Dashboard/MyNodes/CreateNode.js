@@ -26,6 +26,13 @@ export default function CreateNode() {
   const handleCreateNode = async () => {
     setOnProgress(true);
     if (ownerDid && url) {
+      if (!user.didDoc || !Object.keys(user.didDoc).length) {
+        enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        return;
+      }
       // check url format
       if (!(url.startsWith('https://') || url.startsWith('http://'))) {
         enqueueSnackbar('Invalid url format', {

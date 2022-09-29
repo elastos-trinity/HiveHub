@@ -38,7 +38,7 @@ function UserContextProvider({ children }) {
       const credentials = getCredentialsFromDIDDoc(didDoc);
       const nodeProvider = await getNodeProviderUrl(did);
       const isActive = await checkHiveNodeStatus(nodeProvider);
-      if (!didDoc) {
+      if (!didDoc || !Object.keys(didDoc).length) {
         enqueueSnackbar('Your DID is not published to the side chain, Please publish your DID.', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }

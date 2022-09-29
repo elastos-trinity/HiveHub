@@ -117,10 +117,15 @@ export const checkHiveNodeStatus = async (nodeUrl) => {
 // };
 
 export const getHiveNodeInfo = async (did, nodeProvider) => {
-  const restService = await getRestService(did, nodeProvider);
-  const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
-  const nodeInfo = await aboutService.getInfo();
-  return nodeInfo;
+  try {
+    const restService = await getRestService(did, nodeProvider);
+    const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
+    const nodeInfo = await aboutService.getInfo();
+    return nodeInfo;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getMyHiveNodeDetails = async (did, nodeProviderUrl) => {
@@ -161,44 +166,74 @@ export const getHiveVaultInfo = async (did, nodeProvider, type) => {
 // ******************************* HIVE-JS-SDK ************************************* //
 
 export const getAppContext = async (did) => {
-  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
-  const appContext = await instBCSHAH.getAppContext(did);
-  return appContext;
+  try {
+    const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+    const appContext = await instBCSHAH.getAppContext(did);
+    return appContext;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getRestService = async (did, nodeProviderUrl) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  const serviceEndpoint = new ServiceEndpoint(appContext, nodeProviderUrl || nodeProvider);
-  const httpClient = new HttpClient(
-    serviceEndpoint,
-    HttpClient.WITH_AUTHORIZATION,
-    HttpClient.DEFAULT_OPTIONS
-  );
-  return { serviceEndpoint, httpClient };
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    const serviceEndpoint = new ServiceEndpoint(appContext, nodeProviderUrl || nodeProvider);
+    const httpClient = new HttpClient(
+      serviceEndpoint,
+      HttpClient.WITH_AUTHORIZATION,
+      HttpClient.DEFAULT_OPTIONS
+    );
+    return { serviceEndpoint, httpClient };
+  } catch (err) {
+    console.error(err);
+    return { serviceEndpoint: undefined, httpClient: undefined };
+  }
 };
 
 export const getProvider = async (did, nodeProviderUrl) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  return new Provider(appContext, nodeProviderUrl || nodeProvider);
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    return new Provider(appContext, nodeProviderUrl || nodeProvider);
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getVaultSubscription = async (did, nodeProviderUrl) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  return new VaultSubscription(appContext, nodeProviderUrl || nodeProvider);
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    return new VaultSubscription(appContext, nodeProviderUrl || nodeProvider);
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getBackupSubscription = async (did, nodeProviderUrl) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  return new BackupSubscription(appContext, nodeProviderUrl || nodeProvider);
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    return new BackupSubscription(appContext, nodeProviderUrl || nodeProvider);
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getSubscriptionService = async (did) => {
-  const restService = await getRestService(did, undefined);
-  return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
+  try {
+    const restService = await getRestService(did, undefined);
+    return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const createVault = (did, nodeProvider) =>
@@ -228,26 +263,46 @@ export const destroyVault = async (did) => {
 };
 
 export const isDIDUnbinded = async (did) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  return nodeProvider !== undefined || nodeProvider !== null || nodeProvider !== '';
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    return nodeProvider !== undefined || nodeProvider !== null || nodeProvider !== '';
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 };
 
 export const getNodeProviderUrl = async (did) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  return nodeProvider;
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    return nodeProvider;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getAuthService = async (did) => {
-  const restService = await getRestService(did, undefined);
-  return new AuthService(restService.serviceEndpoint, restService.httpClient);
+  try {
+    const restService = await getRestService(did, undefined);
+    return new AuthService(restService.serviceEndpoint, restService.httpClient);
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getVault = async (did) => {
-  const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
-  const vault = await instBCSHAH.getVaultServices(did);
-  return vault;
+  try {
+    const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+    const vault = await instBCSHAH.getVaultServices(did);
+    return vault;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 // ******************************* Test ************************************* //
@@ -267,16 +322,20 @@ export const insertData = async (did) => {
 };
 
 export const getStoredData = async (did) => {
-  const COLLECTION_NAME = 'test_collection';
-  const query = { author: 'john doe1' };
-  const vault = await getVault(did);
-  const databaseService = vault.getDatabaseService();
   try {
-    const result = await databaseService.findOne(COLLECTION_NAME, query);
-    return result;
-  } catch (e) {
-    console.log(e);
-    return '';
+    const COLLECTION_NAME = 'test_collection';
+    const query = { author: 'john doe1' };
+    const vault = await getVault(did);
+    const databaseService = vault.getDatabaseService();
+    try {
+      const result = await databaseService.findOne(COLLECTION_NAME, query);
+      return result;
+    } catch (e) {
+      console.log(e);
+      return '';
+    }
+  } catch (err) {
+    console.error(err);
   }
 };
 
@@ -284,10 +343,14 @@ export const getStoredData = async (did) => {
 
 // TODO: Find available backup node
 export const findBackupNodeProvider = async (did) => {
-  const appContext = await getAppContext(did);
-  const nodeProvider = await appContext.getProviderAddress(did);
-  if (nodeProvider.includes('1')) return nodeProvider.replace('1', '2');
-  return nodeProvider.replace('2', '1');
+  try {
+    const appContext = await getAppContext(did);
+    const nodeProvider = await appContext.getProviderAddress(did);
+    if (nodeProvider.includes('1')) return nodeProvider.replace('1', '2');
+    return nodeProvider.replace('2', '1');
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const checkBackupStatus = async (did) => {

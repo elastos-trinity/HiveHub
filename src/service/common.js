@@ -21,13 +21,18 @@ export const getTime = (timestamp) => {
 };
 
 export const getCredentialsFromDIDDoc = (didDoc) => {
-  if (!didDoc) return undefined;
-  const credentials = didDoc.getCredentials();
-  const properties = credentials.reduce((props, c) => {
-    props[c.id.fragment] = c.subject.properties[c.id.fragment];
-    return props;
-  }, {});
-  return properties;
+  if (!didDoc || !Object.keys(didDoc).length) return undefined;
+  try {
+    const credentials = didDoc.getCredentials();
+    const properties = credentials.reduce((props, c) => {
+      props[c.id.fragment] = c.subject.properties[c.id.fragment];
+      return props;
+    }, {});
+    return properties;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
 };
 
 export const getServiceEndPointFromDIDDoc = (didDoc) => {

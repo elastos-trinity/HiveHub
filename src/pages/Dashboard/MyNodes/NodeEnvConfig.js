@@ -22,7 +22,6 @@ export default function NodeEnvConfig() {
   const [servicePK, setServicePK] = useState('');
   const [servicePKErr, setServicePKErr] = useState(false);
   const [passphrase, setPassphrase] = useState('');
-  const [passphraseErr, setPassphraseErr] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordErr, setPasswordErr] = useState(false);
   const [nodeName, setNodeName] = useState('');
@@ -33,7 +32,7 @@ export default function NodeEnvConfig() {
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
   const handleSaveEnvConfig = async () => {
-    if (ownerDid && servicePK && passphrase && password && nodeName && email && nodeDescription) {
+    if (ownerDid && servicePK && password && nodeName && email && nodeDescription) {
       let nodeCredential = '';
       try {
         const nodeInfo = await getHiveNodeInfo(ownerDid, undefined);
@@ -68,7 +67,6 @@ export default function NodeEnvConfig() {
     } else {
       setOwnerDidErr(!ownerDid);
       setServicePKErr(!servicePK);
-      setPassphraseErr(!passphrase);
       setPasswordErr(!password);
       setNodeNameErr(!nodeName);
       setEmailErr(!email);
@@ -113,12 +111,9 @@ export default function NodeEnvConfig() {
             inputValue={passphrase}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}
-            error={passphraseErr}
+            error={false}
             errorText="Passphrase can not be empty"
-            changeHandler={(value) => {
-              setPassphrase(value);
-              setPassphraseErr(false);
-            }}
+            changeHandler={(value) => setPassphrase(value)}
           />
           <CustomTextField
             placeholder="Password"

@@ -101,6 +101,12 @@ module.exports.NODE_REGISTRY_ABI = [
         internalType: 'string',
         name: 'newNodeURI',
         type: 'string'
+      },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'newNodeEntry',
+        type: 'string'
       }
     ],
     name: 'NodeUpdated',
@@ -123,6 +129,19 @@ module.exports.NODE_REGISTRY_ABI = [
       }
     ],
     name: 'OwnershipTransferred',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
+    ],
+    name: 'Paused',
     type: 'event'
   },
   {
@@ -205,6 +224,19 @@ module.exports.NODE_REGISTRY_ABI = [
       }
     ],
     name: 'Transfer',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
+    ],
+    name: 'Unpaused',
     type: 'event'
   },
   {
@@ -295,6 +327,19 @@ module.exports.NODE_REGISTRY_ABI = [
   },
   {
     inputs: [],
+    name: 'getLastTokenId',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'getPlatformFee',
     outputs: [
       {
@@ -305,6 +350,30 @@ module.exports.NODE_REGISTRY_ABI = [
       {
         internalType: 'uint256',
         name: 'platformFee',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'tokenURI',
+        type: 'string'
+      },
+      {
+        internalType: 'string',
+        name: 'nodeEntry',
+        type: 'string'
+      }
+    ],
+    name: 'getTokenId',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
         type: 'uint256'
       }
     ],
@@ -407,11 +476,6 @@ module.exports.NODE_REGISTRY_ABI = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256'
-      },
-      {
         internalType: 'string',
         name: 'tokenURI',
         type: 'string'
@@ -468,7 +532,7 @@ module.exports.NODE_REGISTRY_ABI = [
             type: 'string'
           }
         ],
-        internalType: 'struct NodeRegistry.Node',
+        internalType: 'struct INodeRegistryDataAndEvents.Node',
         name: '',
         type: 'tuple'
       }
@@ -530,7 +594,7 @@ module.exports.NODE_REGISTRY_ABI = [
             type: 'string'
           }
         ],
-        internalType: 'struct NodeRegistry.Node',
+        internalType: 'struct INodeRegistryDataAndEvents.Node',
         name: '',
         type: 'tuple'
       }
@@ -571,7 +635,7 @@ module.exports.NODE_REGISTRY_ABI = [
             type: 'string'
           }
         ],
-        internalType: 'struct NodeRegistry.Node',
+        internalType: 'struct INodeRegistryDataAndEvents.Node',
         name: '',
         type: 'tuple'
       }
@@ -644,6 +708,26 @@ module.exports.NODE_REGISTRY_ABI = [
         internalType: 'address',
         name: '',
         type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'pause',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'paused',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
       }
     ],
     stateMutability: 'view',
@@ -894,6 +978,13 @@ module.exports.NODE_REGISTRY_ABI = [
     type: 'function'
   },
   {
+    inputs: [],
+    name: 'unpause',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -903,6 +994,11 @@ module.exports.NODE_REGISTRY_ABI = [
       {
         internalType: 'string',
         name: 'tokenURI',
+        type: 'string'
+      },
+      {
+        internalType: 'string',
+        name: 'nodeEntry',
         type: 'string'
       }
     ],

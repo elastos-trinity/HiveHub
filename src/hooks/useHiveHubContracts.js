@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import { createHash } from 'crypto';
 import { essentialsConnector } from '../service/connectivity';
 import { callContractMethod } from '../service/contract';
 import {
@@ -155,11 +154,14 @@ export default function useHiveHubContracts() {
         nodeInfo.createdAt
       );
       const tokenId =
-        (await callContractMethod(walletConnectWeb3, {
-          methodName: 'getLastTokenId',
-          callType: 'call',
-          price: '0'
-        })) + 1;
+        parseInt(
+          await callContractMethod(walletConnectWeb3, {
+            methodName: 'getLastTokenId',
+            callType: 'call',
+            price: '0'
+          }),
+          10
+        ) + 1;
       const tokenUri = `hivehub:json:${metaRes.path}`;
       const nodeEntry = nodeInfo.endpoint;
       const platformInfo = await callContractMethod(walletConnectWeb3, {
@@ -176,7 +178,6 @@ export default function useHiveHubContracts() {
         methodName: 'mint',
         callType: 'send',
         price: platformInfo.platformFee,
-        tokenId,
         tokenUri,
         nodeEntry
       });

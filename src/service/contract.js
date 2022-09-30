@@ -19,6 +19,9 @@ export const callContractMethod = (walletConnectWeb3, param) =>
           param.nodeEntry
         );
         break;
+      case 'getLastTokenId':
+        contractMethod = HiveHubContract.methods.getLastTokenId();
+        break;
       case 'getPlatformFee':
         contractMethod = HiveHubContract.methods.getPlatformFee();
         break;

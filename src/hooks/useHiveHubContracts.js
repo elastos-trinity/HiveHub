@@ -154,7 +154,12 @@ export default function useHiveHubContracts() {
         nodeInfo.signature,
         nodeInfo.createdAt
       );
-      const tokenId = `0x${createHash('sha256').update(metaRes.path).digest('hex')}`;
+      const tokenId =
+        (await callContractMethod(walletConnectWeb3, {
+          methodName: 'getLastTokenId',
+          callType: 'call',
+          price: '0'
+        })) + 1;
       const tokenUri = `hivehub:json:${metaRes.path}`;
       const nodeEntry = nodeInfo.endpoint;
       const platformInfo = await callContractMethod(walletConnectWeb3, {

@@ -13,11 +13,7 @@ export const callContractMethod = (walletConnectWeb3, param) =>
     );
     switch (param.methodName) {
       case 'mint':
-        contractMethod = HiveHubContract.methods.mint(
-          param.tokenId,
-          param.tokenUri,
-          param.nodeEntry
-        );
+        contractMethod = HiveHubContract.methods.mint(param.tokenUri, param.nodeEntry);
         break;
       case 'getLastTokenId':
         contractMethod = HiveHubContract.methods.getLastTokenId();

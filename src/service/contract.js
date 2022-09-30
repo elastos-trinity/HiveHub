@@ -13,11 +13,10 @@ export const callContractMethod = (walletConnectWeb3, param) =>
     );
     switch (param.methodName) {
       case 'mint':
-        contractMethod = HiveHubContract.methods.mint(
-          param.tokenId,
-          param.tokenUri,
-          param.nodeEntry
-        );
+        contractMethod = HiveHubContract.methods.mint(param.tokenUri, param.nodeEntry);
+        break;
+      case 'getLastTokenId':
+        contractMethod = HiveHubContract.methods.getLastTokenId();
         break;
       case 'getPlatformFee':
         contractMethod = HiveHubContract.methods.getPlatformFee();
@@ -59,7 +58,7 @@ export const callContractMethod = (walletConnectWeb3, param) =>
           return walletConnectWeb3.eth.getGasPrice();
         })
         .then(async (_gasPrice) => {
-          gasPrice = parseInt(_gasPrice, 10) > 20 * 1e9 ? (20 * 1e9).toString() : gasPrice;
+          gasPrice = parseInt(_gasPrice, 10) > 20 * 1e9 ? (20 * 1e9).toString() : _gasPrice;
           return contractMethod.estimateGas({
             from: accounts[0],
             gas: 8000000,

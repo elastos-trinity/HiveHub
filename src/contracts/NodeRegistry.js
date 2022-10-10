@@ -1,5 +1,26 @@
 module.exports.NODE_REGISTRY_ABI = [
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'lastTokenId_',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: 'platformAddress_',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: 'platformFee_',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -360,11 +381,6 @@ module.exports.NODE_REGISTRY_ABI = [
     inputs: [
       {
         internalType: 'string',
-        name: 'tokenURI',
-        type: 'string'
-      },
-      {
-        internalType: 'string',
         name: 'nodeEntry',
         type: 'string'
       }
@@ -397,24 +413,6 @@ module.exports.NODE_REGISTRY_ABI = [
       }
     ],
     stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'platformAddress_',
-        type: 'address'
-      },
-      {
-        internalType: 'uint256',
-        name: 'platformFee_',
-        type: 'uint256'
-      }
-    ],
-    name: 'initialize',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function'
   },
   {

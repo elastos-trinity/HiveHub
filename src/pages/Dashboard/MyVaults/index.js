@@ -176,7 +176,6 @@ export default function HiveVaults() {
         {myVaultsList.map((item, index) => (
           <VaultItem
             key={index}
-            // id={item.id}
             url={user.nodeProvider}
             name={item.name}
             total={item.total}

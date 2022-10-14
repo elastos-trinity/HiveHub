@@ -12,12 +12,7 @@ import {
 import { NodeDetailBox } from '../../../components/CustomContainer';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PlusButton, DestroyVaultButton } from '../../../components/CustomButtons';
-import {
-  createVault,
-  destroyVault,
-  // getHiveNodesList,
-  getHiveVaultInfo
-} from '../../../service/fetch';
+import { createVault, destroyVault, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
@@ -237,12 +232,10 @@ export default function NodeDetail() {
               <InfoItem label="URL" value={nodeDetail.url} />
             </Grid>
             <Tabs
-              // centered
               variant="fullWidth"
               value={value}
               onChange={handleChange}
               textColor="inherit"
-              // aria-label="secondary tabs example"
               TabIndicatorProps={{
                 sx: {
                   backgroundColor: 'black'

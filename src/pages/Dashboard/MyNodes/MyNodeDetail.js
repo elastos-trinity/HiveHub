@@ -15,7 +15,6 @@ import {
   createVault,
   destroyVault,
   getHiveNodeInfo,
-  // getHiveNodesList,
   getMyHiveNodeDetails
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
@@ -246,12 +245,10 @@ export default function MyNodeDetail() {
               <InfoItem label="URL" value={nodeDetail.url} />
             </Grid>
             <Tabs
-              // centered
               variant="fullWidth"
               value={value}
               onChange={handleChange}
               textColor="inherit"
-              // aria-label="secondary tabs example"
               TabIndicatorProps={{
                 sx: {
                   backgroundColor: 'black'

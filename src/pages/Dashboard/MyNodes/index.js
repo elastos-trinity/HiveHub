@@ -6,7 +6,6 @@ import { PageTitleTypo } from '../../../components/CustomTypos';
 import NodeItem from '../../../components/NodeItem';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
-// import { getHiveNodesList, removeHiveNode } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
 import { PlusButton } from '../../../components/CustomButtons';
 import ModalDialog from '../../../components/ModalDialog';

@@ -9,7 +9,6 @@ export const isSupportedNetwork = (chainId) =>
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp) => {
   const date = new Date(parseInt(timestamp, 10));
-  // const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
   const dateString = date.toLocaleDateString('en-US');
   const dateStrs = dateString.split('/');
   const dateStr = `${dateStrs[2]}-${dateStrs[0]}-${dateStrs[1]}`;

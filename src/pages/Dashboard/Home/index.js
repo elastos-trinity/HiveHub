@@ -12,14 +12,7 @@ import { CustomButton } from '../../../components/CustomButtons';
 import { NodeSummaryBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
-import {
-  backupVault,
-  // getHiveNodesList,
-  getHiveVaultInfo,
-  migrateVault,
-  getAppContext
-  // unbindDID
-} from '../../../service/fetch';
+import { backupVault, getHiveVaultInfo, migrateVault, getAppContext } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import ModalDialog from '../../../components/ModalDialog';
 import SelectBackupNodeDlg from '../../../components/Dialog/SelectBackupNodeDlg';
@@ -146,7 +139,6 @@ export default function HiveHome() {
     setOnProgress(true);
     try {
       console.log('Unbind DID from ', user.nodeProvider);
-      // await unbindDID(user.did);
       enqueueSnackbar('Unbind DID succeed', {
         variant: 'success',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -189,7 +181,6 @@ export default function HiveHome() {
           py={5}
           sx={{
             width: '100%',
-            // boxShadow: '0px 0px 10px rgba(255, 147, 30, 0.3)',
             border: '2px solid #E5E5E5',
             borderRadius: '20px',
             backgroundColor: 'white',

@@ -2,7 +2,6 @@ import {
   VaultSubscription,
   AboutService,
   ServiceEndpoint,
-  HttpClient,
   AuthService,
   BackupSubscription,
   Provider,
@@ -118,8 +117,8 @@ export const checkHiveNodeStatus = async (nodeUrl) => {
 
 export const getHiveNodeInfo = async (did, nodeProvider) => {
   try {
-    const restService = await getRestService(did, nodeProvider);
-    const aboutService = new AboutService(restService.serviceEndpoint, restService.httpClient);
+    const serviceEndpoint = await getServiceEndpoint(did, nodeProvider);
+    const aboutService = new AboutService(serviceEndpoint);
     const nodeInfo = await aboutService.getInfo();
     return nodeInfo;
   } catch (err) {
@@ -176,20 +175,15 @@ export const getAppContext = async (did) => {
   }
 };
 
-export const getRestService = async (did, nodeProviderUrl) => {
+export const getServiceEndpoint = async (did, nodeProviderUrl) => {
   try {
     const appContext = await getAppContext(did);
     const nodeProvider = await appContext.getProviderAddress(did);
     const serviceEndpoint = new ServiceEndpoint(appContext, nodeProviderUrl || nodeProvider);
-    const httpClient = new HttpClient(
-      serviceEndpoint,
-      HttpClient.WITH_AUTHORIZATION,
-      HttpClient.DEFAULT_OPTIONS
-    );
-    return { serviceEndpoint, httpClient };
+    return serviceEndpoint;
   } catch (err) {
     console.error(err);
-    return { serviceEndpoint: undefined, httpClient: undefined };
+    return undefined;
   }
 };
 
@@ -228,8 +222,8 @@ export const getBackupSubscription = async (did, nodeProviderUrl) => {
 
 export const getSubscriptionService = async (did) => {
   try {
-    const restService = await getRestService(did, undefined);
-    return new SubscriptionService(restService.serviceEndpoint, restService.httpClient);
+    const serviceEndpoint = await getServiceEndpoint(did, undefined);
+    return new SubscriptionService(serviceEndpoint);
   } catch (err) {
     console.error(err);
     return undefined;
@@ -286,8 +280,8 @@ export const getNodeProviderUrl = async (did) => {
 
 export const getAuthService = async (did) => {
   try {
-    const restService = await getRestService(did, undefined);
-    return new AuthService(restService.serviceEndpoint, restService.httpClient);
+    const serviceEndpoint = await getServiceEndpoint(did, undefined);
+    return new AuthService(serviceEndpoint);
   } catch (err) {
     console.error(err);
     return undefined;

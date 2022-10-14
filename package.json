@@ -39,7 +39,7 @@
     "@elastosfoundation/did-js-sdk": "^2.2.9",
     "@elastosfoundation/elastos-connectivity-sdk-js": "^1.1.4",
     "@elastosfoundation/essentials-connector-client-browser": "^1.0.41",
-    "@elastosfoundation/hive-js-sdk": "^2.8.1",
+    "@elastosfoundation/hive-js-sdk": "^2.9.4",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@iconify/icons-eva": "^1.1.0",

@@ -3,7 +3,6 @@ import { Stack, Button } from '@mui/material';
 import NodeItem from '../../../components/NodeItem';
 import { PageTitleTypo, FilterByTypo } from '../../../components/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
-// import { getHiveNodesList } from '../../../service/fetch';
 import { emptyNodeItem } from '../../../utils/filler';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 

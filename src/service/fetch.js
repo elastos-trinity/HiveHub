@@ -8,41 +8,17 @@ import {
   SubscriptionService,
   AlreadyExistsException,
   Vault,
-  // NotFoundException,
   InsertOptions,
   BackupResultResult,
   HiveException,
   Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
-// import HiveHubServer from './HiveHubServer';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
 
 // ******************************* Hive Node (HiveHub Server) ************************************* //
-
-// export const createHiveNode = async (node) => {
-//   try {
-//     const response = await HiveHubServer.addHiveNode(node);
-//     return response ? response.inserted_id : '';
-//   } catch (err) {
-//     console.error(err);
-//     return '';
-//   }
-// };
-
-// export const removeHiveNode = async (nid) => {
-//   if (!nid) return false;
-//   const ret = await HiveHubServer.removeHiveNode(nid);
-//   return ret === true;
-// };
-
-// deprecated
-// export const checkHiveNodeStatus = async (url) => {
-//   const status = await HiveHubServer.isOnline(url);
-//   return status;
-// };
 
 export const checkHiveNodeStatus = async (nodeUrl) => {
   const url = `${nodeUrl}/api/v2/about/version`;
@@ -58,62 +34,6 @@ export const checkHiveNodeStatus = async (nodeUrl) => {
     return false;
   }
 };
-
-// deprecated
-// export const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
-//   const nodes = await HiveHubServer.getHiveNodes(nid, did);
-//   const nodeList = [];
-//   await Promise.all(
-//     nodes.map(async (item) => {
-//       const node = { ...item };
-//       try {
-//         if (withName) {
-//           const credentials = await getCredentialsFromDID(node.owner_did);
-//           node.ownerName = credentials.name
-//             ? credentials.name
-//             : reduceHexAddress(node.owner_did, 4);
-//         } else {
-//           node.ownerName = reduceHexAddress(node.owner_did, 4);
-//         }
-//         if (withStatus) node.status = await HiveHubServer.isOnline(node.url);
-//         else node.status = false;
-//       } catch (e) {
-//         node.status = false;
-//         node.ownerName = reduceHexAddress(node.owner_did, 4);
-//       }
-//       if (onlyActive) {
-//         if (node.status) nodeList.push(node);
-//       } else nodeList.push(node);
-//       return node;
-//     })
-//   );
-//   return nodeList;
-// };
-
-// deprecated
-// export const getActiveHiveNodeUrl = async () => {
-//   const nodes = await HiveHubServer.getHiveNodes();
-//   const activeNodes = [];
-//   await Promise.all(
-//     nodes.map(async (item) => {
-//       const node = { ...item };
-//       try {
-//         node.status = await HiveHubServer.isOnline(node.url);
-//         if (
-//           node.status &&
-//           !activeNodes.includes(node.url) &&
-//           ((node.url.includes('testnet') && !config.IsProductEnv) ||
-//             (!node.url.includes('testnet') && config.IsProductEnv))
-//         )
-//           activeNodes.push(node.url);
-//       } catch (e) {
-//         node.status = false;
-//       }
-//       return node;
-//     })
-//   );
-//   return activeNodes;
-// };
 
 export const getHiveNodeInfo = async (did, nodeProvider) => {
   try {
@@ -330,6 +250,7 @@ export const getStoredData = async (did) => {
     }
   } catch (err) {
     console.error(err);
+    return '';
   }
 };
 
@@ -344,6 +265,7 @@ export const findBackupNodeProvider = async (did) => {
     return nodeProvider.replace('2', '1');
   } catch (err) {
     console.error(err);
+    return '';
   }
 };
 
@@ -411,7 +333,6 @@ export const backupVault = async (did, targetNodeUrl) => {
           // TODO: EE return wrong format credential, just place a correct one to make demo work.
           const token = await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
           return token;
-          // return '{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR#hive-backup-credential","type":["HiveBackupCredential","VerifiableCredential"],"issuer":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq","issuanceDate":"2022-06-30T02:58:05Z","expirationDate":"2027-06-30T02:58:05Z","credentialSubject":{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","sourceHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetNodeURL":"http://localhost:5005"},"proof":{"type":"ECDSAsecp256r1","created":"2022-06-30T02:58:06Z","verificationMethod":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq#primary","signature":"4IFGnkBb9drcsD4V0GHlHZ5bSaO1CO0c69-k9d5yhTZvbEqnyXncNKhNLvKs2yaNk1ARgj6o1gUIDc74moNxWA"}}';
         } catch (e) {
           throw new HiveException(e.toString());
         }

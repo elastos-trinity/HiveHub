@@ -20,6 +20,7 @@ function LanguageContextProvider({ children }) {
   const [language, setLanguage] = useState('en');
   useEffect(() => {
     i18n.changeLanguage('en');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

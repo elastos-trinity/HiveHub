@@ -121,14 +121,14 @@ export default function useHiveHubContracts() {
       nodes.map(async (item) => {
         const node = { ...item };
         try {
-          node.status = await checkHiveNodeStatus(node.url);
+          node.status = await checkHiveNodeStatus(node.data.endpoint);
           if (
             node.status &&
-            !activeNodes.includes(node.url) &&
-            ((node.url.includes('testnet') && !config.IsProductEnv) ||
-              (!node.url.includes('testnet') && config.IsProductEnv))
+            !activeNodes.includes(node.data.endpoint) &&
+            ((node.data.endpoint.includes('testnet') && !config.IsProductEnv) ||
+              (!node.data.endpoint.includes('testnet') && config.IsProductEnv))
           )
-            activeNodes.push(node.url);
+            activeNodes.push(node.data.endpoint);
         } catch (e) {
           node.status = false;
         }

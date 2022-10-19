@@ -11,9 +11,11 @@ import {
   InsertOptions,
   BackupResultResult,
   HiveException,
-  Backup
+  Backup,
+  VaultNotFoundException
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
+import { DID as ConnDID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';
@@ -288,61 +290,62 @@ export const checkBackupStatus = async (did) => {
 };
 
 export const backupVault = async (did, targetNodeUrl) => {
+  const appContext = await getAppContext(did);
+  // const nodeProvider = await appContext.getProviderAddress(did);
+  // Vault to back up
+  const vault = new Vault(appContext);
+  const vaultSubscription = new VaultSubscription(appContext);
+  const backupService = vault.getBackupService();
+  // Backup Service on target Node
+  const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
+  // subscribe the backup service
   try {
-    const appContext = await getAppContext(did);
-    const nodeProvider = await appContext.getProviderAddress(did);
-    // Vault to back up
-    const vault = new Vault(appContext, nodeProvider);
-    const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
-    const backupService = vault.getBackupService();
-    // Backup Service on target Node
-    const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
-    // subscribe the backup service
-    try {
-      await targetBackupSubscription.subscribe();
-    } catch (err) {
-      if (err instanceof AlreadyExistsException) {
-        await targetBackupSubscription.unsubscribe();
-        await targetBackupSubscription.subscribe();
-      } else {
-        console.error(err);
-        return 0;
+    await targetBackupSubscription.subscribe();
+  } catch (err) {
+    if (err instanceof AlreadyExistsException) {
+      // await targetBackupSubscription.unsubscribe();
+      // await targetBackupSubscription.subscribe();
+      console.debug(`The backup service is already exists on the target node.`);
+    } else {
+      console.error(`Failed to subscribe the backup service on the target hive node: ${err}`);
+      return 0;
+    }
+  }
+  console.log('subscribe a backup service.');
+  const targetBackupInfo = await targetBackupSubscription.checkSubscription();
+  const targetBackupServiceDid = targetBackupInfo.getServiceDid();
+  backupService.setBackupContext({
+    getParameter(parameter) {
+      switch (parameter) {
+        case 'targetAddress':
+          return targetNodeUrl;
+        case 'targetServiceDid':
+          return targetBackupServiceDid;
+        default:
+          break;
+      }
+      return null;
+    },
+    getType() {
+      return null;
+    },
+    async getAuthorization(srcDid, targetDid, targetHost) {
+      try {
+        const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+        // TODO: EE return wrong format credential, just place a correct one to make demo work.
+        const token = await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
+        return token;
+      } catch (e) {
+        throw new HiveException(e.toString());
       }
     }
-    console.log('subscribe a backup service.');
-    const targetBackupInfo = await targetBackupSubscription.checkSubscription();
-    const targetBackupServiceDid = targetBackupInfo.getServiceDid();
-    backupService.setBackupContext({
-      getParameter(parameter) {
-        switch (parameter) {
-          case 'targetAddress':
-            return targetNodeUrl;
-          case 'targetServiceDid':
-            return targetBackupServiceDid;
-          default:
-            break;
-        }
-        return null;
-      },
-      getType() {
-        return null;
-      },
-      async getAuthorization(srcDid, targetDid, targetHost) {
-        try {
-          const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
-          // TODO: EE return wrong format credential, just place a correct one to make demo work.
-          const token = await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
-          return token;
-        } catch (e) {
-          throw new HiveException(e.toString());
-        }
-      }
-    });
+  });
 
-    // deactivate the vault to avoid data changes in the backup process.
-    await vaultSubscription.deactivate();
-    console.log('deactivate the source vault.');
+  // deactivate the vault to avoid data changes in the backup process.
+  await vaultSubscription.deactivate();
+  console.log('deactivate the source vault.');
 
+  try {
     // backup the vault data.
     await backupService.startBackup();
 
@@ -364,13 +367,14 @@ export const backupVault = async (did, targetNodeUrl) => {
       // eslint-disable-next-line no-await-in-loop
       await sleep(1000);
     }
-    console.log('backup done.');
-    return 0;
   } catch (e) {
-    if (e instanceof AlreadyExistsException) return 2;
-    console.error(e);
-    return 0;
+    console.error(`Failed to backup: ${e}`);
+    return false;
+  } finally {
+    await vaultSubscription.activate();
   }
+  console.log('backup done.');
+  return 1;
 };
 
 /**
@@ -387,73 +391,80 @@ export const backupVault = async (did, targetNodeUrl) => {
  *      6. unsubscribe the vault on node A.
  *      7. all done. the vault can be used on node B.
  *
+ * @return true if successfully, false if failed.
  */
 
 export const migrateVault = async (did, targetNodeUrl) => {
+  const appContext = await getAppContext(did);
+  // const nodeProvider = await appContext.getProviderAddress(did);
+  // Vault to back up
+  const vault = new Vault(appContext);
+  const vaultSubscription = new VaultSubscription(appContext);
+  const backupService = vault.getBackupService();
+  // Remove vault on target node
+  const targetVaultSubscription = new VaultSubscription(appContext, targetNodeUrl);
   try {
-    const appContext = await getAppContext(did);
-    const nodeProvider = await appContext.getProviderAddress(did);
-    // Vault to back up
-    const vault = new Vault(appContext, nodeProvider);
-    const vaultSubscription = new VaultSubscription(appContext, nodeProvider);
-    const backupService = vault.getBackupService();
-    // Remove vault on target node
-    const targetVaultSubscription = new VaultSubscription(appContext, targetNodeUrl);
-    try {
-      const targetVaultInfo = await targetVaultSubscription.checkSubscription();
-      if (targetVaultInfo) await targetVaultSubscription.unsubscribe();
-    } catch (err) {
-      console.error(err);
+    const targetVaultInfo = await targetVaultSubscription.checkSubscription();
+    if (targetVaultInfo) await targetVaultSubscription.unsubscribe();
+  } catch (err) {
+    if (err instanceof VaultNotFoundException) {
+      console.debug(`No vault on target hive node.`);
+    } else {
+      console.error(`Failed to try to unsubscribe the vault of the target node: ${err}`);
+      return false;
     }
-    // Backup Service on target Node
-    const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
-    // subscribe the backup service
-    try {
-      await targetBackupSubscription.subscribe();
-    } catch (err) {
-      if (err instanceof AlreadyExistsException) {
-        await targetBackupSubscription.unsubscribe();
-        await targetBackupSubscription.subscribe();
-      } else {
-        console.error(err);
-        return 0;
+  }
+  // Backup Service on target Node
+  const targetBackupSubscription = new BackupSubscription(appContext, targetNodeUrl);
+  // subscribe the backup service
+  try {
+    await targetBackupSubscription.subscribe();
+  } catch (err) {
+    if (err instanceof AlreadyExistsException) {
+      // await targetBackupSubscription.unsubscribe();
+      // await targetBackupSubscription.subscribe();
+      console.debug(`The backup service is already exists on the target node.`);
+    } else {
+      console.error(`Failed to subscribe the backup service on the target hive node: ${err}`);
+      return false;
+    }
+  }
+  console.log('subscribe a backup service.');
+  const targetBackupInfo = await targetBackupSubscription.checkSubscription();
+  const targetBackupServiceDid = targetBackupInfo.getServiceDid();
+  backupService.setBackupContext({
+    getParameter(parameter) {
+      switch (parameter) {
+        case 'targetAddress':
+          return targetNodeUrl;
+        case 'targetServiceDid':
+          return targetBackupServiceDid;
+        default:
+          break;
+      }
+      return null;
+    },
+    getType() {
+      return null;
+    },
+    async getAuthorization(srcDid, targetDid, targetHost) {
+      try {
+        const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
+        // TODO: EE return wrong format credential, just place a correct one to make demo work.
+        const token = await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
+        return token;
+        // return '{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR#hive-backup-credential","type":["HiveBackupCredential","VerifiableCredential"],"issuer":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq","issuanceDate":"2022-06-30T02:58:05Z","expirationDate":"2027-06-30T02:58:05Z","credentialSubject":{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","sourceHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetNodeURL":"http://localhost:5005"},"proof":{"type":"ECDSAsecp256r1","created":"2022-06-30T02:58:06Z","verificationMethod":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq#primary","signature":"4IFGnkBb9drcsD4V0GHlHZ5bSaO1CO0c69-k9d5yhTZvbEqnyXncNKhNLvKs2yaNk1ARgj6o1gUIDc74moNxWA"}}';
+      } catch (e) {
+        throw new HiveException(e.toString());
       }
     }
-    console.log('subscribe a backup service.');
-    const targetBackupInfo = await targetBackupSubscription.checkSubscription();
-    const targetBackupServiceDid = targetBackupInfo.getServiceDid();
-    backupService.setBackupContext({
-      getParameter(parameter) {
-        switch (parameter) {
-          case 'targetAddress':
-            return targetNodeUrl;
-          case 'targetServiceDid':
-            return targetBackupServiceDid;
-          default:
-            break;
-        }
-        return null;
-      },
-      getType() {
-        return null;
-      },
-      async getAuthorization(srcDid, targetDid, targetHost) {
-        try {
-          const instBCSHAH = new BrowserConnectivitySDKHiveAuthHelper(config.DIDResolverUrl);
-          // TODO: EE return wrong format credential, just place a correct one to make demo work.
-          const token = await instBCSHAH.getBackupCredential(srcDid, targetDid, targetHost);
-          return token;
-          // return '{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR#hive-backup-credential","type":["HiveBackupCredential","VerifiableCredential"],"issuer":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq","issuanceDate":"2022-06-30T02:58:05Z","expirationDate":"2027-06-30T02:58:05Z","credentialSubject":{"id":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","sourceHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetHiveNodeDID":"did:elastos:ipUGBPuAgEx6Le99f4TyDfNZtXVT2NKXPR","targetNodeURL":"http://localhost:5005"},"proof":{"type":"ECDSAsecp256r1","created":"2022-06-30T02:58:06Z","verificationMethod":"did:elastos:iWVsBA12QrDcp4UBjuys1tykHD2u6XWVYq#primary","signature":"4IFGnkBb9drcsD4V0GHlHZ5bSaO1CO0c69-k9d5yhTZvbEqnyXncNKhNLvKs2yaNk1ARgj6o1gUIDc74moNxWA"}}';
-        } catch (e) {
-          throw new HiveException(e.toString());
-        }
-      }
-    });
+  });
 
-    // deactivate the vault to a void data changes in the backup process.
-    await vaultSubscription.deactivate();
-    console.log('deactivate the source vault.');
+  // deactivate the vault to a void data changes in the backup process.
+  await vaultSubscription.deactivate();
+  console.log('deactivate the source vault.');
 
+  try {
     // backup the vault data.
     await backupService.startBackup();
 
@@ -475,23 +486,32 @@ export const migrateVault = async (did, targetNodeUrl) => {
       await sleep(1000);
     }
     console.log('backup done.');
+  } catch (e) {
+    console.error(`Failed to backup: ${e}`);
+    return false;
+  } finally {
+    await vaultSubscription.activate();
+  }
 
-    // promotion, same vault, so need remove vault first.
-    await vaultSubscription.unsubscribe();
+  // promote
+  const backup = new Backup(appContext, targetNodeUrl);
+  await backup.getPromotionService().promote();
+  console.log('promotion over from backup data to a new vault.');
 
-    // promote
-    const backup = new Backup(appContext, targetNodeUrl);
-    await backup.getPromotionService().promote();
-    console.log('promotion over from backup data to a new vault.');
-
-    console.log('TODO: public user DID with backup node url here');
-    console.log('remove the vault on vault node here, same node, skip');
-    console.log('migration is done !!!');
-    return true;
-  } catch (err) {
-    console.error(err);
+  console.log('TODO: public user DID with backup node url here');
+  const didAccess = new ConnDID.DIDAccess();
+  const result = await didAccess.updateHiveVaultAddress(targetNodeUrl, '');
+  if (!result) {
+    console.error('Failed to publish the target hive url for user did.');
     return false;
   }
+
+  // promotion, same vault, so need remove vault first.
+  console.log('remove the vault on vault node here, same node, skip');
+  await vaultSubscription.unsubscribe();
+
+  console.log('migration is done !!!');
+  return true;
 };
 
 // TODO: unsubscribe + unbind from DID Doc

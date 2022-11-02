@@ -65,26 +65,26 @@ export default function useHiveHubContracts() {
     await Promise.all(
       nodes.map(async (item) => {
         let created = '';
-        if (item.data.createdAt) {
+        if (item?.data?.createdAt) {
           const createdTime = getTime(item.data.createdAt);
           created = `${createdTime.date} ${createdTime.time}`;
         }
         const node = {
           ...item,
-          version: item.version,
-          type: item.type,
+          version: item?.version || '',
+          type: item?.type || '',
           area: '',
-          avatar: item.data.avatar,
-          banner: item.data.banner,
+          avatar: item?.data?.avatar || '',
+          banner: item?.data?.banner || '',
           created,
-          email: item.data.email,
+          email: item?.data?.email || '',
           ip: '',
-          name: item.name,
-          ownerName: reduceHexAddress(item.creator.did, 4),
-          owner_did: item.creator.did,
-          remark: item.data.description,
+          name: item?.name || '',
+          ownerName: reduceHexAddress(item?.creator?.did, 4),
+          owner_did: item?.creator?.did || '',
+          remark: item?.data?.description || item?.description || '',
           status: false,
-          url: item.data.endpoint
+          url: item?.data?.endpoint || ''
         };
         try {
           if (withName) {

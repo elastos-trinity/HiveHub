@@ -58,11 +58,11 @@ export const uploadNode2Ipfs = (
       version: '2',
       type: 'HiveNode',
       name,
+      description,
       creator: {
         did: ownerDid
       },
       data: {
-        description,
         avatar,
         banner,
         email,

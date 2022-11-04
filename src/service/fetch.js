@@ -15,7 +15,7 @@ import {
   VaultNotFoundException
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
-import { DID as ConnDID } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { DID as ConnDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import { BrowserConnectivitySDKHiveAuthHelper } from './BrowserConnectivitySDKHiveAuthHelper';
 import { config } from '../config';
 import { checkIfValidIP, getTime, reduceHexAddress, sleep } from './common';

@@ -80,6 +80,7 @@ export default function HiveHome() {
           selectBackupNodeDlgOpened: false,
           selectMigrateNodeDlgOpened: false
         });
+        window.location.reload();
       } else if (result === 2) {
         enqueueSnackbar('Already backup', {
           variant: 'error',
@@ -118,6 +119,7 @@ export default function HiveHome() {
           selectBackupNodeDlgOpened: false,
           selectMigrateNodeDlgOpened: false
         });
+        window.location.reload();
       } else
         enqueueSnackbar('Migrate vault error', {
           variant: 'error',

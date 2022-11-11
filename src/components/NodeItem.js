@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Stack, Typography, Chip, Skeleton } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { MHidden } from './@material-extend';
 import ItemBox from './ItemBox';
 import { NodeTitle, NodeValue, NodeDescription } from './CustomTypos';
@@ -38,6 +39,14 @@ export default function NodeItem({
   sx
 }) {
   const navigate = useNavigate();
+  const isOwnerName = !ownerName.startsWith('did:elastos:');
+  const [isHovering, setIsHovering] = useState(false);
+  const handleMouseOver = () => {
+    if (isOwnerName) setIsHovering(true);
+  };
+  const handleMouseOut = () => {
+    if (isOwnerName) setIsHovering(false);
+  };
 
   return (
     <div>
@@ -60,7 +69,7 @@ export default function NodeItem({
             <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
               <Stack spacing={1}>
                 <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
-                  <NodeTitle>{isMyNode ? name : `${ownerName}'s Node`}</NodeTitle>
+                  <NodeTitle>{isMyNode ? name : name}</NodeTitle>
                   {status ? (
                     <Chip
                       label="online"
@@ -96,11 +105,9 @@ export default function NodeItem({
                   <Stack direction="row" sx={{ pb: '5px' }}>
                     <NodeDescription sx={{ pr: { xs: '5px', sm: '10px' } }}>IP:</NodeDescription>
                     <NodeValue sx={{ pr: '50px' }}>{ip}</NodeValue>
-                    <NodeDescription sx={{ pr: { xs: '5px', sm: '10px' } }}>
-                      Owner DID:
-                    </NodeDescription>
-                    <NodeValue noWrap sx={{ pr: '20px' }}>
-                      {did}
+                    <NodeDescription sx={{ pr: { xs: '5px', sm: '10px' } }}>Owner:</NodeDescription>
+                    <NodeValue noWrap sx={{ pr: '20px' }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+                      {isHovering ? did : ownerName}
                     </NodeValue>
                   </Stack>
                 </Typography>
@@ -113,8 +120,8 @@ export default function NodeItem({
                       <NodeValue noWrap>{ip}</NodeValue>
                     </Stack>
                     <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
-                      <NodeDescription>Owner DID:</NodeDescription>
-                      <NodeValue noWrap>{did}</NodeValue>
+                      <NodeDescription>Owner:</NodeDescription>
+                      <NodeValue noWrap>{ownerName}</NodeValue>
                     </Stack>
                   </Stack>
                 </Typography>

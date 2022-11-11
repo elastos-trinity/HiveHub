@@ -38,6 +38,29 @@ function InfoItem({ label, value }) {
   );
 }
 
+function InfoItemOwnerName({ label, value, value2 }) {
+  const isOwnerName = !value2.startsWith('did:elastos:');
+  const [isHovering, setIsHovering] = useState(false);
+  const handleMouseOver = () => {
+    if (isOwnerName) setIsHovering(true);
+  };
+  const handleMouseOut = () => {
+    if (isOwnerName) setIsHovering(false);
+  };
+  return (
+    <Grid item lg={6} md={12} sm={12} xs={12} sx={{ textAlign: 'left', mb: 2 }}>
+      <Typography component="div" variant="body1" noWrap>
+        <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
+          <NodeDescription>{label}:</NodeDescription>
+          <NodeValue noWrap onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+            {isHovering ? value : value2}
+          </NodeValue>
+        </Stack>
+      </Typography>
+    </Grid>
+  );
+}
+
 export default function NodeDetail() {
   const { user } = useUserContext();
   const { getHiveNodesList } = useHiveHubContracts();
@@ -59,7 +82,7 @@ export default function NodeDetail() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const details = await getHiveNodesList(nodeId, undefined, false, true, false);
+      const details = await getHiveNodesList(nodeId, undefined, true, true, false);
       setNodeDetail(details.length ? details[0] : undefined);
       const vaultItem = await getHiveVaultInfo(
         user.did,
@@ -226,7 +249,7 @@ export default function NodeDetail() {
             </Stack>
             <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
               <InfoItem label="IP" value={nodeDetail.ip} />
-              <InfoItem label="Owner DID" value={nodeDetail.owner_did} />
+              <InfoItemOwnerName label="Owner" value={nodeDetail.owner_did} value2={nodeDetail.ownerName} />
               <InfoItem label="Country/Region" value={nodeDetail.area} />
               <InfoItem label="Email" value={nodeDetail.email} />
               <InfoItem label="URL" value={nodeDetail.url} />

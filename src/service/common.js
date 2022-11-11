@@ -1,3 +1,4 @@
+import { DID } from '@elastosfoundation/did-js-sdk';
 import { config } from '../config';
 
 export const isInAppBrowser = () =>
@@ -47,6 +48,20 @@ export const reduceHexAddress = (strAddress, nDigits) =>
         strAddress.length
       )}`
     : '';
+
+export const resolveNameByDidStr = async (did) => {
+  try {
+    const doc = await DID.from(did).resolve();
+    const credential = doc.getCredential('name');
+    if (!credential) return did;
+
+    const name = credential.getSubject()?.getProperty('name');
+    return !name ? did : name;
+  } catch (e) {
+    console.error(`Get an error when resolve did ${did}`);
+    return did;
+  }
+};
 
 export const sleep = (ms) =>
   new Promise((resolve) => {

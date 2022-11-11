@@ -8,7 +8,7 @@ const en = {
   'landing-title-your': 'your',
   'landing-title-decentralized-storage': 'Decentralized Storage',
   'landing-title-with-elastos': 'with Elastos DID',
-  'landing-connect-wallet': 'Connet Wallet',
+  'landing-connect-wallet': 'Connect Wallet',
   'landing-features': 'Features',
   'landing-feature-register-hive-node': 'Register Node',
   'landing-feature-create-vault': 'Create Vault',

@@ -13,7 +13,7 @@ import {
   getIPFromDomain,
   getLocationFromIP
 } from '../service/fetch';
-import { getTime, isInAppBrowser, reduceHexAddress } from '../service/common';
+import { getTime, isInAppBrowser, reduceHexAddress, resolveNameByDidStr } from '../service/common';
 import { config } from '../config';
 
 export default function useHiveHubContracts() {
@@ -80,7 +80,7 @@ export default function useHiveHubContracts() {
           email: item?.data?.email || '',
           ip: '',
           name: item?.name || '',
-          ownerName: reduceHexAddress(item?.creator?.did, 4),
+          ownerName: await reduceHexAddress(item?.creator?.did, 4),
           owner_did: item?.creator?.did || '',
           remark: item?.data?.description || item?.description || '',
           status: false,

@@ -27,36 +27,53 @@ export default function HiveHome() {
   const [created, setCreated] = useState(0);
   const [participated, setParticipated] = useState(0);
   const [myNodeItems, setMyNodeItems] = useState(Array(3).fill(emptyNodeItem));
-  const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
+  const [vaultItems, setVaultItems] = useState([]); // emptyVaultItem
   const [activeNodesUrl, setActiveNodesUrl] = useState([]);
   const [onProgress, setOnProgress] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+
       try {
-        setLoading(true);
-        const allNodeList = await getHiveNodesList(undefined, undefined, false, true, false);
-        const myNodeList = await getHiveNodesList(undefined, user.did, false, true, false);
-        const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
-        const activeNodes = await getActiveHiveNodeUrl();
-        setCreated(myNodeList.length);
-        if (vaultItem) {
-          setVaultItems([vaultItem]);
-          setParticipated(1);
-          const appContext = await getAppContext(user.did);
-          const participatedNodeUrl = await appContext.getProviderAddress(user.did);
-          const isIncluded =
-            myNodeList.findIndex((item) => item.url === participatedNodeUrl) !== -1;
-          if (!isIncluded) {
-            const participatedNode = allNodeList.find((item) => item.url === participatedNodeUrl);
-            if (participatedNode) myNodeList.push(participatedNode);
-          }
-        } else setVaultItems([]);
-        setMyNodeItems(myNodeList);
-        setActiveNodesUrl(activeNodes);
+        const results = await Promise.all([
+          getHiveNodesList(undefined, undefined, false, true, false),
+          getAppContext(user.did).then((context) => context.getProviderAddress(user.did))
+        ]);
+        const [allNodes, providerAddress] = results;
+        const myNodes = allNodes.filter((node) => node.owner_did === user.did);
+        setCreated(myNodes.length);
+
+        if (!providerAddress) {
+          setMyNodeItems(myNodes);
+          return;
+        }
+
+        // node list
+        const participatedNode = allNodes.find((item) => item.url === providerAddress);
+        if (participatedNode && !myNodes.find((item) => item.url === providerAddress)) {
+          myNodes.push(participatedNode);
+        }
+        setMyNodeItems(myNodes);
+
+        // participated count, vault info., active nodes
+        await Promise.all([
+          getActiveHiveNodeUrl().then((nodes) => {
+            setActiveNodesUrl(nodes);
+          }),
+          getHiveVaultInfo(user.did, undefined, 1).then((vaultInfo) => {
+            if (!vaultInfo) {
+              return;
+            }
+            setParticipated(1);
+            setVaultItems([vaultInfo]);
+          })
+        ]);
+
         setLoading(false);
       } catch (err) {
         console.error(err);
+        setLoading(false);
       }
     };
     if (user.did) fetchData();

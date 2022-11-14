@@ -24,12 +24,12 @@ export default function HiveHome() {
   const { dlgState, setDlgState } = useDialogContext();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
-  const [created, setCreated] = useState(0);
+  const [createdCount, setCreatedCount] = useState(0);
   const [participated, setParticipated] = useState(0);
-  const [myNodeItems, setMyNodeItems] = useState(Array(3).fill(emptyNodeItem));
-  const [vaultItems, setVaultItems] = useState([]); // emptyVaultItem
-  const [activeNodesUrl, setActiveNodesUrl] = useState([]);
-  const [onProgress, setOnProgress] = useState(false);
+  const [myNodesItem, setMyNodesItem] = useState(Array(3).fill(emptyNodeItem));
+  const [vaultInfoItem, setVaultInfoItem] = useState([]); // emptyVaultItem
+  const [otherActiveNodeUrls, setOtherActiveNodeUrls] = useState([]);
+  const [onProgress, setOnProgress] = useState(false); // backup, migrate is on progress.
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,33 +42,33 @@ export default function HiveHome() {
         ]);
         const [allNodes, providerAddress] = results;
         const myNodes = allNodes.filter((node) => node.owner_did === user.did);
-        setCreated(myNodes.length);
+        setCreatedCount(myNodes.length);
 
         if (!providerAddress) {
-          setMyNodeItems(myNodes);
+          setMyNodesItem(myNodes);
           return;
         }
 
         // node list
         const participatedNode = allNodes.find((item) => item.url === providerAddress);
-        if (participatedNode && !myNodes.find((item) => item.url === providerAddress)) {
-          myNodes.push(participatedNode);
+        participatedNode.participated = 'Y';
+        if (participatedNode) {
+          const n = myNodes.find((node) => node.url === providerAddress);
+          n.participated = 'Y';
+          if (!n) myNodes.push(participatedNode);
         }
-        setMyNodeItems(myNodes);
+        setMyNodesItem(myNodes);
 
-        // participated count, vault info., active nodes
-        await Promise.all([
-          getActiveHiveNodeUrl().then((nodes) => {
-            setActiveNodesUrl(nodes);
-          }),
-          getHiveVaultInfo(user.did, undefined, 1).then((vaultInfo) => {
-            if (!vaultInfo) {
-              return;
-            }
-            setParticipated(1);
-            setVaultItems([vaultInfo]);
-          })
-        ]);
+        // vaultInfo and other active nodes
+        const vaultInfo = await getHiveVaultInfo(user.did, undefined, 1);
+        if (!vaultInfo) {
+          return;
+        }
+
+        setParticipated(1);
+        setVaultInfoItem([vaultInfo]);
+        const ns = allNodes.filter((node) => node.status && node.url !== providerAddress);
+        if (ns) setOtherActiveNodeUrls(ns.map((node) => node.url));
 
         setLoading(false);
       } catch (err) {
@@ -82,7 +82,7 @@ export default function HiveHome() {
 
   const handleBackup = async (backupNodeProvider) => {
     if (!user.did || !backupNodeProvider) return;
-    if (!vaultItems.length) return;
+    if (!vaultInfoItem.length) return;
     setOnProgress(true);
     try {
       console.log('Backup vault to: ', backupNodeProvider);
@@ -121,7 +121,7 @@ export default function HiveHome() {
 
   const handleMigrate = async (backupNodeProvider) => {
     if (!user.did || !backupNodeProvider) return;
-    if (!vaultItems.length) return;
+    if (!vaultInfoItem.length) return;
     setOnProgress(true);
     try {
       console.log('Migrate vault to: ', backupNodeProvider);
@@ -173,8 +173,7 @@ export default function HiveHome() {
   };
 
   const openSelectNodeDlg = (dlgType) => {
-    const availableNodes = activeNodesUrl.filter((item) => item !== user.nodeProvider);
-    if (!availableNodes.length) {
+    if (!otherActiveNodeUrls.length) {
       enqueueSnackbar('No available node provider', {
         variant: 'error',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
@@ -209,11 +208,11 @@ export default function HiveHome() {
         >
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Created by me</NodeStatisticLabel>
-            <NodeStatisticBody>{loading ? 0 : created}</NodeStatisticBody>
+            <NodeStatisticBody>{loading ? '***' : createdCount}</NodeStatisticBody>
           </Stack>
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Participated by me</NodeStatisticLabel>
-            <NodeStatisticBody>{loading ? 0 : participated}</NodeStatisticBody>
+            <NodeStatisticBody>{loading ? '*' : participated}</NodeStatisticBody>
           </Stack>
         </Stack>
         <Stack
@@ -226,13 +225,13 @@ export default function HiveHome() {
         >
           <CustomButton
             onClick={() => openSelectNodeDlg(1)}
-            disabled={!vaultItems.length || onProgress || loading}
+            disabled={!vaultInfoItem.length || onProgress || loading}
           >
             Backup
           </CustomButton>
           <CustomButton
             onClick={() => openSelectNodeDlg(2)}
-            disabled={!vaultItems.length || onProgress || loading}
+            disabled={!vaultInfoItem.length || onProgress || loading}
           >
             Migrate
           </CustomButton>
@@ -262,19 +261,23 @@ export default function HiveHome() {
                 <Grid item xs={2} md={2} textAlign="left">
                   Name
                 </Grid>
-                <Grid item xs={8} md={8}>
+                <Grid item xs={6} md={6}>
                   URL
                 </Grid>
                 <Grid item xs={2} md={2}>
                   Status
                 </Grid>
+                <Grid item xs={2} md={2}>
+                  Participated
+                </Grid>
               </Grid>
-              {myNodeItems.map((item, index) => (
+              {myNodesItem.map((item, index) => (
                 <NodeSummaryItem
                   key={`node-summary-${index}`}
                   nodeName={item.name}
                   nodeURL={item.url}
                   nodeStatus={item.status}
+                  participated={item.participated}
                   isLoading={loading}
                 />
               ))}
@@ -283,7 +286,7 @@ export default function HiveHome() {
           <NodeSummaryBox>
             <Typography variant="h5">Vault Summary</Typography>
             <Stack spacing={{ xs: 4, md: 5 }} mt={{ xs: 4, md: 5 }}>
-              {vaultItems.map((item, index) => (
+              {vaultInfoItem.map((item, index) => (
                 <VaultSummaryItem
                   key={`vault-summary-${index}`}
                   vaultName={item.name}
@@ -308,7 +311,7 @@ export default function HiveHome() {
       >
         <SelectBackupNodeDlg
           dlgType={dlgState.selectBackupNodeDlgOpened ? 0 : 1}
-          activeNodes={activeNodesUrl}
+          activeNodes={otherActiveNodeUrls}
           fromNode={user.nodeProvider}
           onProgress={onProgress}
           onClose={() => {

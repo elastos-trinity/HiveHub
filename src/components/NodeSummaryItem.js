@@ -5,10 +5,11 @@ NodeSummaryItem.propTypes = {
   nodeName: PropTypes.string,
   nodeURL: PropTypes.string,
   nodeStatus: PropTypes.bool,
+  participated: PropTypes.string,
   isLoading: PropTypes.bool.isRequired
 };
 
-export default function NodeSummaryItem({ nodeName, nodeURL, nodeStatus, isLoading }) {
+export default function NodeSummaryItem({ nodeName, nodeURL, nodeStatus, participated, isLoading }) {
   return (
     <div>
       {isLoading ? (
@@ -34,7 +35,7 @@ export default function NodeSummaryItem({ nodeName, nodeURL, nodeStatus, isLoadi
               {nodeName}
             </Typography>
           </Grid>
-          <Grid item xs={8} md={8}>
+          <Grid item xs={6} md={6}>
             <Typography
               noWrap
               sx={{
@@ -59,6 +60,18 @@ export default function NodeSummaryItem({ nodeName, nodeURL, nodeStatus, isLoadi
                 sx={{ height: { xs: '16px !important', md: '20px !important' }, color: 'black' }}
               />
             )}
+          </Grid>
+          <Grid item xs={2} md={2}>
+            <Typography
+              noWrap
+              sx={{
+                fontSize: { xs: '12px', md: '15px' },
+                fontWeight: 600,
+                lineHeight: { xs: '12px', md: '18px' }
+              }}
+            >
+              {participated}
+            </Typography>
           </Grid>
         </Grid>
       )}

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
+import { DID, storage } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import { useSnackbar } from 'notistack';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
@@ -70,8 +70,10 @@ export default function useConnectEE() {
     console.log('Signing out user. Deleting session info');
     localStorage.removeItem('did');
     try {
-      if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
+      if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
         await essentialsConnector.getWalletConnectProvider().disconnect();
+        await storage.clean(); // clear app instance did cache
+      }
       if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
         await window.elastos.getWeb3Provider().disconnect();
     } catch (e) {

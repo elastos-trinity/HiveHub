@@ -40,9 +40,7 @@ export const checkHiveNodeStatus = async (nodeUrl) => {
 export const getHiveNodeInfo = async (did, nodeProvider) => {
   try {
     const serviceEndpoint = await getServiceEndpoint(did, nodeProvider);
-    const aboutService = new AboutService(serviceEndpoint);
-    const nodeInfo = await aboutService.getInfo();
-    return nodeInfo;
+    return new AboutService(serviceEndpoint).getInfo();
   } catch (err) {
     console.error(err);
     return undefined;
@@ -52,9 +50,8 @@ export const getHiveNodeInfo = async (did, nodeProvider) => {
 export const getMyHiveNodeDetails = async (did, nodeProviderUrl) => {
   try {
     const provider = await getProvider(did, nodeProviderUrl);
-    const vaults = await provider.getVaults();
-    const backups = await provider.getBackups();
-    return { vaults, backups };
+    const results = await Promise.all([provider.getVaults(), provider.getBackups()]);
+    return { vaults: results[0], backups: results[1] };
   } catch (err) {
     console.error(err);
     return undefined;

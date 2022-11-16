@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -13,8 +13,8 @@ import { NodeDetailBox } from '../../../components/CustomContainer';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import {
   createVault,
-  destroyVault,
-  getHiveNodeInfo,
+  destroyVault, getAppContext,
+  getHiveNodeInfo, getHiveVaultInfo,
   getMyHiveNodeDetails
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
@@ -70,12 +70,14 @@ export default function MyNodeDetail() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { dlgState, setDlgState } = useDialogContext();
-  const { getHiveNodesList } = useHiveHubContracts();
+  const { getHiveNodeItem } = useHiveHubContracts();
   const { nodeId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
+  const [boundNode, setBoundNode] = useState(false);
+  const [ownVault, setOwnVault] = useState(false);
   const [backupItems, setBackupItems] = useState([emptyVaultItem]);
   const [value, setValue] = useState('vault');
   const [onProgress, setOnProgress] = useState(false);
@@ -83,31 +85,41 @@ export default function MyNodeDetail() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const details = await getHiveNodesList(nodeId, undefined, true, true, false);
-      const myNodeInfo = details.length ? details[0] : undefined;
-      setNodeDetail(myNodeInfo);
-      if (myNodeInfo) {
-        const nodeInfo = await getHiveNodeInfo(user.did, myNodeInfo.url);
-        const nodeOwnerDid = nodeInfo.getOwnerDid();
-        if (nodeOwnerDid !== user.did) {
-          enqueueSnackbar('You are not the owner of this node.', {
-            variant: 'error',
-            anchorOrigin: { horizontal: 'right', vertical: 'top' }
-          });
+      try {
+        const detail = await getHiveNodeItem(nodeId, user.did, true, true, false);
+        setNodeDetail(detail);
+        if (detail) {
+          setVaultItems([]);
+          setBackupItems([]);
+
+          const nodeInfo = await getHiveNodeInfo(user.did, detail.url);
+          if (nodeInfo?.getOwnerDid() === user.did) {
+            await Promise.all([
+              await getAppContext(user.did).then(async (context) => {
+                const providerAddress = await context.getProviderAddress();
+                if (providerAddress === detail.url) {
+                  const vaultInfo = await getHiveVaultInfo(user.did, detail.url, 1);
+                  setBoundNode(true);
+                  setOwnVault(!!vaultInfo);
+                }
+              }),
+              await getMyHiveNodeDetails(user.did, detail.url).then((nodeInfoDetails) => {
+                if (nodeInfoDetails) {
+                  setVaultItems(nodeInfoDetails.vaults);
+                  setBackupItems(nodeInfoDetails.backups);
+                }
+              })
+            ]);
+          } else {
+            navigate('/dashboard/nodes');
+            return;
+          }
+        } else {
           navigate('/dashboard/nodes');
           return;
         }
-        const myNodeDetails = await getMyHiveNodeDetails(user.did, myNodeInfo.url);
-        if (myNodeDetails) {
-          setVaultItems(myNodeDetails.vaults);
-          setBackupItems(myNodeDetails.backups);
-        } else {
-          setVaultItems([]);
-          setBackupItems([]);
-        }
-      } else {
-        navigate('/dashboard/nodes');
-        return;
+      } catch (e) {
+        console.error(e);
       }
       setLoading(false);
     };
@@ -152,7 +164,7 @@ export default function MyNodeDetail() {
 
   const handleDestroyVault = async () => {
     if (!user.did) return;
-    if (!vaultItems.length) return;
+    if (!boundNode || !ownVault) return;
     setOnProgress(true);
     try {
       console.log('Destroy vault on Node ', nodeDetail.url);
@@ -182,6 +194,8 @@ export default function MyNodeDetail() {
     }
     setOnProgress(false);
   };
+
+  const formatStorage = (value, fixed=2) => value.toFixed(fixed);
 
   return (
     <>
@@ -255,7 +269,7 @@ export default function MyNodeDetail() {
                     confirmDlgOpened: true
                   });
                 }}
-                disabled={onProgress || !vaultItems.length}
+                disabled={onProgress || !boundNode || !ownVault}
               >
                 Destroy Vault
               </DestroyVaultButton>
@@ -302,13 +316,13 @@ export default function MyNodeDetail() {
                     <VaultSummaryItem
                       key={`node-detail-vault-summary-${index}`}
                       vaultName={item.name}
-                      vaultTotal={item.total}
-                      vaultUsed={item.used}
+                      vaultTotal={item.max_storage > 1000000 ? formatStorage(item.max_storage/1024/1024, 0) : item.max_storage }
+                      vaultUsed={formatStorage((item.file_use_storage + item.db_use_storage) / 1024 / 1024)}
                       isLoading={loading}
                     />
                   ))}
                 </Stack>
-                <PlusButton onClick={handleCreateVault} disabled={vaultItems.length > 0}>
+                <PlusButton onClick={handleCreateVault} disabled={!boundNode || ownVault}>
                   Add Vault
                 </PlusButton>
               </Box>
@@ -326,8 +340,8 @@ export default function MyNodeDetail() {
                   <VaultSummaryItem
                     key={`node-detail-backup-summary-${index}`}
                     vaultName={item.name}
-                    vaultTotal={item.total}
-                    vaultUsed={item.used}
+                    vaultTotal={item.max_storage > 1000000 ? formatStorage(item.max_storage/1024/1024, 0) : item.max_storage }
+                    vaultUsed={formatStorage((item.use_storage) / 1024 / 1024)}
                     isLoading={loading}
                   />
                 ))}

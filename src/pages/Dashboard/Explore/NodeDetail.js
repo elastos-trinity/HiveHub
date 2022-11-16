@@ -12,7 +12,7 @@ import {
 import { NodeDetailBox } from '../../../components/CustomContainer';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import { PlusButton, DestroyVaultButton } from '../../../components/CustomButtons';
-import { createVault, destroyVault, getHiveVaultInfo } from '../../../service/fetch';
+import { createVault, destroyVault, getAppContext, getHiveVaultInfo } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
@@ -63,12 +63,13 @@ function InfoItemOwnerName({ label, value, value2 }) {
 
 export default function NodeDetail() {
   const { user } = useUserContext();
-  const { getHiveNodesList } = useHiveHubContracts();
+  const { getHiveNodeItem } = useHiveHubContracts();
   const { enqueueSnackbar } = useSnackbar();
   const { dlgState, setDlgState } = useDialogContext();
   const [loading, setLoading] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);
   const [vaultItems, setVaultItems] = useState([emptyVaultItem]);
+  const [boundNode, setBoundNode] = useState(false);
   const [backupItems, setBackupItems] = useState([emptyVaultItem]);
   const [value, setValue] = useState('vault');
   const [onProgress, setOnProgress] = useState(false);
@@ -82,28 +83,33 @@ export default function NodeDetail() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const details = await getHiveNodesList(nodeId, undefined, true, true, false);
-      setNodeDetail(details.length ? details[0] : undefined);
-      const vaultItem = await getHiveVaultInfo(
-        user.did,
-        details.length ? details[0].url : undefined,
-        1
-      );
-      if (vaultItem) {
-        setVaultItems([vaultItem]);
-      } else setVaultItems([]);
-      const backupItem = await getHiveVaultInfo(
-        user.did,
-        details.length ? details[0].url : undefined,
-        2
-      );
-      if (backupItem) {
-        setBackupItems([backupItem]);
-      } else setBackupItems([]);
+      try {
+        setVaultItems([]);
+        setBackupItems([]);
+
+        const detail = await getHiveNodeItem(nodeId, undefined, true, true, false);
+        setNodeDetail(detail);
+        if (detail) {
+          await Promise.all([
+            await getAppContext(user.did).then(async (context) => {
+              const providerAddress = await context.getProviderAddress();
+              if (providerAddress === detail.url) {
+                const vaultInfo = await getHiveVaultInfo(user.did, detail.url, 1);
+                setBoundNode(true);
+                setVaultItems(vaultInfo ? [vaultInfo] : []);
+              }
+            }),
+            await getHiveVaultInfo(user.did, detail.url, 2).then((item) =>
+              setBackupItems(item ? [item] : [])
+            )
+          ]);
+        }
+      } catch (e) {
+        console.error(e);
+      }
       setLoading(false);
     };
-    if (user.did) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchData();
   }, [user.did, nodeId]);
 
   const handleCreateVault = () => {
@@ -139,7 +145,7 @@ export default function NodeDetail() {
 
   const handleDestroyVault = async () => {
     if (!user.did) return;
-    if (!vaultItems.length) return;
+    if (boundNode || !vaultItems.length) return;
     setOnProgress(true);
     try {
       console.log('Destroy vault on Node ', nodeDetail.url);
@@ -242,7 +248,7 @@ export default function NodeDetail() {
                     confirmDlgOpened: true
                   });
                 }}
-                disabled={onProgress || !vaultItems.length}
+                disabled={onProgress || !boundNode || !vaultItems.length}
               >
                 Destroy Vault
               </DestroyVaultButton>
@@ -295,7 +301,7 @@ export default function NodeDetail() {
                     />
                   ))}
                 </Stack>
-                <PlusButton onClick={handleCreateVault} disabled={vaultItems.length > 0}>
+                <PlusButton onClick={handleCreateVault} disabled={!boundNode || vaultItems.length > 0}>
                   Add Vault
                 </PlusButton>
               </Box>

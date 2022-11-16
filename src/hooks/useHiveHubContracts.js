@@ -22,6 +22,27 @@ export default function useHiveHubContracts() {
     : essentialsConnector.getWalletConnectProvider();
   const walletConnectWeb3 = new Web3(walletConnectProvider);
 
+  // TODO: maybe need use other value as the search key.
+  // private
+  const getHiveNode = async (nodeId, ownerDid) => {
+    try {
+      const nodeItem = await callContractMethod(walletConnectWeb3, {
+        methodName: 'nodeInfo',
+        callType: 'call',
+        price: '0',
+        tokenId: nodeId
+      });
+      if (!nodeItem) return null;
+      const nodeInfo = await getDataFromIpfs(nodeItem.tokenURI || '');
+      if (ownerDid && ownerDid !== nodeInfo.creator.did) return null;
+      return { ...nodeInfo, nid: nodeItem.tokenId};
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  // private
   const getHiveNodes = async (nodeId, ownerDid) => {
     const nodeIds = await callContractMethod(walletConnectWeb3, {
       methodName: 'nodeIds',
@@ -30,85 +51,77 @@ export default function useHiveHubContracts() {
     });
     const nodes = [];
     await Promise.all(
-      nodeIds.map(async (_, index) => {
-        try {
-          const nodeItem = await callContractMethod(walletConnectWeb3, {
-            methodName: 'nodeByIndex',
-            callType: 'call',
-            price: '0',
-            index
-          });
-          const nodeInfo = await getDataFromIpfs(nodeItem.tokenURI || '');
-          let isMatched = true;
-          if (nodeId) {
-            if (nodeItem.tokenId !== nodeId) {
-              isMatched = false;
-            }
-          }
-          if (ownerDid) {
-            if (ownerDid !== nodeInfo.creator.did) {
-              isMatched = false;
-            }
-          }
-          if (isMatched) nodes.push({ ...nodeInfo, nid: nodeItem.tokenId });
-        } catch (err) {
-          console.error(err);
+      nodeIds.map(async (_nodeId, index) => {
+        if (nodeId && nodeId !== _nodeId) {
+          return;
         }
+        const node = await getHiveNode(_nodeId, ownerDid);
+        if (node) nodes.push(node);
       })
     );
     return nodes;
   };
 
-  const getHiveNodesList = async (nid, did, withName, withStatus, onlyActive) => {
-    const nodes = await getHiveNodes(nid, did);
+  // private
+  const getHiveNodeDetailByNode = async (item, withName, withStatus, onlyActive) => {
+    let created = '';
+    if (item?.data?.createdAt) {
+      const createdTime = getTime(item.data.createdAt);
+      created = `${createdTime.date} ${createdTime.time}`;
+    }
+    const node = {
+      ...item,
+      version: item?.version || '',
+      type: item?.type || '',
+      area: '',
+      avatar: item?.data?.avatar || '',
+      banner: item?.data?.banner || '',
+      created,
+      email: item?.data?.email || '',
+      ip: '',
+      name: item?.name || '',
+      ownerName: await reduceHexAddress(item?.creator?.did, 4),
+      owner_did: item?.creator?.did || '',
+      remark: item?.data?.description || item?.description || '',
+      status: false,
+      url: item?.data?.endpoint || ''
+    };
+    try {
+      if (withName) {
+        const credentials = await getCredentialsFromDID(node.owner_did);
+        node.ownerName = credentials.name
+          ? credentials.name
+          : reduceHexAddress(node.owner_did, 4);
+        // get ip and location
+        const hostName = node.url.includes('https://')
+          ? node.url.replace('https://', '')
+          : node.url.replace('http://', '');
+        const ipAddress = await getIPFromDomain(hostName);
+        if (ipAddress) node.ip = ipAddress;
+        const location = await getLocationFromIP(ipAddress, 'json');
+        node.area = `${location.country} ${location.region} ${location.city}`;
+      }
+      if (withStatus) node.status = await checkHiveNodeStatus(node.url);
+    } catch (e) {
+      console.error(e);
+    }
+    if (onlyActive && withStatus && !node.status) return null;
+    return node;
+  };
+
+  const getHiveNodeItem = async (nodeId, ownerDid, withName, withStatus, onlyActive) => {
+    const item = await getHiveNode(nodeId, ownerDid);
+    if (!item) return null;
+    return getHiveNodeDetailByNode(item, withName, withStatus, onlyActive);
+  };
+
+  const getHiveNodesList = async (nodeId, ownerId, withName, withStatus, onlyActive) => {
+    const nodes = await getHiveNodes(nodeId, ownerId);
     const nodeList = [];
     await Promise.all(
       nodes.map(async (item) => {
-        let created = '';
-        if (item?.data?.createdAt) {
-          const createdTime = getTime(item.data.createdAt);
-          created = `${createdTime.date} ${createdTime.time}`;
-        }
-        const node = {
-          ...item,
-          version: item?.version || '',
-          type: item?.type || '',
-          area: '',
-          avatar: item?.data?.avatar || '',
-          banner: item?.data?.banner || '',
-          created,
-          email: item?.data?.email || '',
-          ip: '',
-          name: item?.name || '',
-          ownerName: await reduceHexAddress(item?.creator?.did, 4),
-          owner_did: item?.creator?.did || '',
-          remark: item?.data?.description || item?.description || '',
-          status: false,
-          url: item?.data?.endpoint || ''
-        };
-        try {
-          if (withName) {
-            const credentials = await getCredentialsFromDID(node.owner_did);
-            node.ownerName = credentials.name
-              ? credentials.name
-              : reduceHexAddress(node.owner_did, 4);
-            // get ip and location
-            const hostName = node.url.includes('https://')
-              ? node.url.replace('https://', '')
-              : node.url.replace('http://', '');
-            const ipAddress = await getIPFromDomain(hostName);
-            if (ipAddress) node.ip = ipAddress;
-            const location = await getLocationFromIP(ipAddress, 'json');
-            node.area = `${location.country} ${location.region} ${location.city}`;
-          }
-          if (withStatus) node.status = await checkHiveNodeStatus(node.url);
-        } catch (e) {
-          console.error(e);
-        }
-        if (onlyActive) {
-          if (node.status) nodeList.push(node);
-        } else nodeList.push(node);
-        return node;
+        const detail = await getHiveNodeDetailByNode(item, withName, withStatus, onlyActive);
+        if (detail) nodeList.push(detail);
       })
     );
     return nodeList;
@@ -204,7 +217,7 @@ export default function useHiveHubContracts() {
   };
 
   return {
-    getHiveNodes,
+    getHiveNodeItem,
     getHiveNodesList,
     getActiveHiveNodeUrl,
     addHiveNode,

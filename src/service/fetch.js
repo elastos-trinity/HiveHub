@@ -545,7 +545,7 @@ export const createHiveNodeEnvConfig = (
   const ipfsGatewayUrl = config.IsProductEnv
     ? 'https://ipfs.triniy-tech.io'
     : 'https://ipfs-test.trinity-feeds.app';
-  const content = ` EID_RESOLVER_URL = ${eidUrl}
+  const content = `EID_RESOLVER_URL = ${eidUrl}
 ESC_RESOLVER_URL = ${escUrl}
 SERVICE_DID_PRIVATE_KEY = ${serviceDIDContent}
 PASSPHRASE = ${passPhrase}

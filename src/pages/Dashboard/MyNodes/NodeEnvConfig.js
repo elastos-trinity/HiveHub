@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -6,12 +6,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 // eslint-disable-next-line camelcase
 import { binary_to_base58 } from 'base58-js';
+import { DIDStore, Mnemonic, RootIdentity, DID } from '@elastosfoundation/did-js-sdk';
+import { DID as ConDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import CustomTextField from '../../../components/CustomTextField';
-import { createHiveNodeEnvConfig, getHiveNodeInfo } from '../../../service/fetch';
+import { createHiveNodeEnvConfig, } from '../../../service/fetch';
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
@@ -20,10 +22,11 @@ export default function NodeEnvConfig() {
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [servicePK, setServicePK] = useState('');
+  const [serviceDIDContent, setServiceDIDContent] = useState('');
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [servicePKErr, setServicePKErr] = useState(false);
-  const [passphrase, setPassphrase] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordErr, setPasswordErr] = useState(false);
+  const [paymentReceivingAddress, setPaymentReceivingAddress] = useState('');
+  const [paymentReceivingAddressErr, setPaymentReceivingAddressErr] = useState(false);
   const [nodeName, setNodeName] = useState('');
   const [nodeNameErr, setNodeNameErr] = useState(false);
   const [email, setEmail] = useState('');
@@ -31,26 +34,76 @@ export default function NodeEnvConfig() {
   const [nodeDescription, setNodeDescription] = useState('');
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
+  const [serviceDIDPassword, storePass] = ['password', 'password'];
+
+  const generateNewServiceDid = async () => {
+    // Get root identity
+    const store = await DIDStore.open(`/data/didCache/serviceDID`);
+    let identity = await store.loadRootIdentity();
+    if (!identity) {
+      const mnemonic = Mnemonic.getInstance(Mnemonic.ENGLISH);
+      identity = await RootIdentity.createFromMnemonic(
+        mnemonic.generate(),
+        serviceDIDPassword,
+        store,
+        storePass,
+        true
+      );
+    }
+    store.setDefaultRootIdentity(identity);
+
+    // clean existed DIDs.
+    let dids = await store.listDids();
+    if (dids) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const did of dids) {
+        store.deleteDid(did);
+      }
+    }
+
+    // create a new one.
+    const doc = await identity.newDid(storePass);
+    const did = await identity.getDid(0);
+
+    // generate content.
+    dids = await store.listDids();
+    const didContent = await store.exportDid(dids[0], serviceDIDPassword, storePass);
+    setServiceDIDContent(binary_to_base58(new Uint8Array(Buffer.from(didContent))));
+    return `${dids[0].toString()}`;
+  };
+
+  useEffect(() => {
+    generateNewServiceDid().then((didStr) => {
+      setServicePK(didStr);
+      setPageLoaded(true);
+    });
+  }, []);
+
   const handleSaveEnvConfig = async () => {
-    if (ownerDid && servicePK && password && nodeName && email && nodeDescription) {
+    if (ownerDid && servicePK && nodeName && email && nodeDescription) {
       let nodeCredential = '';
       try {
-        const nodeInfo = await getHiveNodeInfo(ownerDid, undefined);
-        const nodeOwnershipPresentation = nodeInfo.getOwnershipPresentation();
-        const vcs = nodeOwnershipPresentation.getCredentials();
-        if (vcs && vcs.length) nodeCredential = binary_to_base58(vcs[0].toString());
+        const didAccess = new ConDID.DIDAccess();
+        const vc = await didAccess.issueCredential(
+          servicePK,
+          ['HiveNodeOwnerCredential', 'VerifiableCredential'],
+          { did: servicePK },
+          'hivenodeowner'
+        );
+        nodeCredential = binary_to_base58(new Uint8Array(Buffer.from(vc.toString())));
       } catch (err) {
         console.error(err);
       }
       try {
         createHiveNodeEnvConfig(
-          servicePK,
-          passphrase,
-          password,
+          serviceDIDContent,
+          serviceDIDPassword,
+          storePass,
+          nodeCredential,
+          paymentReceivingAddress,
           nodeName,
           email,
-          nodeDescription,
-          nodeCredential
+          nodeDescription
         );
         enqueueSnackbar('Create Hive Node ENV success.', {
           variant: 'success',
@@ -67,7 +120,6 @@ export default function NodeEnvConfig() {
     } else {
       setOwnerDidErr(!ownerDid);
       setServicePKErr(!servicePK);
-      setPasswordErr(!password);
       setNodeNameErr(!nodeName);
       setEmailErr(!email);
       setNodeDescriptionErr(!nodeDescription);
@@ -85,7 +137,7 @@ export default function NodeEnvConfig() {
           <CustomTextField
             placeholder="Owner DID"
             variant="standard"
-            inputValue={ownerDid}
+            inputValue={`${ownerDid} (Owner DID)`}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}
             error={ownerDidErr}
@@ -95,7 +147,7 @@ export default function NodeEnvConfig() {
           <CustomTextField
             placeholder="Service private Key"
             variant="standard"
-            inputValue={servicePK}
+            inputValue={`${servicePK} (Service DID)`}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}
             error={servicePKErr}
@@ -104,28 +156,19 @@ export default function NodeEnvConfig() {
               setServicePK(value);
               setServicePKErr(false);
             }}
+            disabled
           />
           <CustomTextField
-            placeholder="Passphrase"
+            placeholder="Payment Receiving Address"
             variant="standard"
-            inputValue={passphrase}
+            inputValue={paymentReceivingAddress}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}
-            error={false}
-            errorText="Passphrase can not be empty"
-            changeHandler={(value) => setPassphrase(value)}
-          />
-          <CustomTextField
-            placeholder="Password"
-            variant="standard"
-            inputValue={password}
-            fontSize={matchDownMd ? 10 : 20}
-            height={matchDownMd ? 12 : 24}
-            error={passwordErr}
-            errorText="Password can not be empty"
+            error={paymentReceivingAddressErr}
+            errorText="Payment receiving address can not empty"
             changeHandler={(value) => {
-              setPassword(value);
-              setPasswordErr(false);
+              setPaymentReceivingAddress(value);
+              setPaymentReceivingAddressErr(false);
             }}
           />
           <CustomTextField
@@ -180,7 +223,7 @@ export default function NodeEnvConfig() {
           >
             Cancel
           </ConfirmButton>
-          <ConfirmButton onClick={handleSaveEnvConfig}>Confirm</ConfirmButton>
+          <ConfirmButton onClick={handleSaveEnvConfig} disabled={!pageLoaded}>Confirm</ConfirmButton>
         </Stack>
       </ContainerBox>
     </>

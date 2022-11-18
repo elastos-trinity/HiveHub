@@ -524,74 +524,50 @@ export const unbindDID = async (did) => {
 };
 
 export const createHiveNodeEnvConfig = (
-  serviceDidPK,
-  passpharse,
+  serviceDIDContent,
+  passPhrase,
   password,
-  nodeName,
-  email,
-  nodeDescription,
   nodeCredential,
-  rpcEID = 'https://api.elastos.io/eid',
-  rpcESC = 'https://api.elastos.io/esc',
-  dataStorePath = './data',
-  sentryEnable = true,
-  sentryDSN = 'https://1dafd5d11608420aacbbf76f4288960f@o339076.ingest.sentry.io/5524839',
-  paymentEnable = true,
-  paymentConfigPath = './payment_config.json',
-  paymentContractAddr = '0x5fbdb2315678afecb367f032d93f642f64180aa3',
-  paymentReceivingAddr = '0x93b76C16e8A2c61a3149dF3AdCbE604be1F4137b',
-  atlasEnable = true,
-  mongoDBUri = 'https://localhost:27018',
-  ipfsNode = 'http://localhost:5020',
-  ipfsGateway = 'http://ipfs-gateway.trinity-tech.io:8080',
-  corsEnable = true,
-  version = 'v2.3.6',
-  lastCommit = 'cec7d255'
+  paymentReceivingAddress,
+  nodeName,
+  nodeEmail,
+  nodeDescription
 ) => {
-  let content = '## rpc API urls.\n';
-  content += `EID_RESOLVER_URL = ${rpcEID}\n`;
-  content += `ESC_RESOLVER_URL = ${rpcESC}\n`;
-  content += '\n';
-  content += '## private key to Hive node service DID\n';
-  content += `SERVICE_DID_PRIVATE_KEY = ${serviceDidPK}\n`;
-  content += `PASSPHRASE = ${passpharse}\n`;
-  content += `PASSWORD = ${password}\n`;
-  content += '\n';
-  content += '## Credential issued by User DID to service DID\n';
-  content += `NODE_CREDENTIAL = ${nodeCredential}\n`;
-  content += '\n';
-  content += '## local data store path\n';
-  content += `DATA_STORE_PATH = ${dataStorePath}\n`;
-  content += '\n';
-  content += '## enable to report issue via sentry\n';
-  content += `SENTRY_ENABLED = ${sentryEnable.toString().toLocaleUpperCase()}\n`;
-  content += `SENTRY_DSN = ${sentryDSN}\n`;
-  content += '\n';
-  content += '## payment configuration\n';
-  content += `PAYMENT_ENABLED = ${paymentEnable.toString().toUpperCase()}\n`;
-  content += `PAYMENT_CONFIG_PATH = ${paymentConfigPath}\n`;
-  content += `PAYMENT_CONTRACT_ADDRESS = ${paymentContractAddr}\n`;
-  content += `PAYMENT_RECEIVING_ADDRESS = ${paymentReceivingAddr}\n`;
-  content += '\n';
-  content += '## using atlas service or not (mongodb service)\n';
-  content += `ATLAS_ENABLED = ${atlasEnable.toString().toUpperCase()}\n`;
-  content += '# MONGODB_URL = "mongodb+srv://Fred:<password>@cluster0.tt3yh.mongodb.net"\n';
-  content += `MONGODB_URL = ${mongoDBUri}\n`;
-  content += '\n';
-  content += '## IPFS node service\n';
-  content += `IPFS_NODE_URL = ${ipfsNode}\n`;
-  content += `IPFS_GATEWAY_URL = ${ipfsGateway}\n`;
-  content += '\n';
-  content += `ENABLE_CORS = ${corsEnable.toString().toUpperCase()}\n`;
-  content += '\n';
-  content += '## Hive node version/commit ID.\n';
-  content += `VERSION = ${version}\n`;
-  content += `LAST_COMMIT = ${lastCommit}\n`;
-  content += '\n';
-  content += '## basic information about this node.\n';
-  content += `NODE_NAME = "${nodeName}"\n`;
-  content += `NODE_EMAIL = ${email}\n`;
-  content += `NODE_DESCRIPTION = "${nodeDescription}"`;
+  const eidUrl = config.IsProductEnv
+    ? 'https://api.elastos.io/eid'
+    : 'https://api-testnet.elastos.io/eid';
+  const escUrl = config.IsProductEnv
+    ? 'https://api.elastos.io/esc'
+    : 'https://api-testnet.elastos.io/esc';
+  const paymentContractAddress = config.IsProductEnv
+    ? '0x59E9f4ff80f3B3A4810b5264EB713DC04F9DFC31'
+    : '0x81897263EC51A2314d256703b2B9f57664B772a9';
+  const ipfsGatewayUrl = config.IsProductEnv
+    ? 'https://ipfs.triniy-tech.io'
+    : 'https://ipfs-test.trinity-feeds.app';
+  const content = ` EID_RESOLVER_URL = ${eidUrl}
+ESC_RESOLVER_URL = ${escUrl}
+SERVICE_DID_PRIVATE_KEY = ${serviceDIDContent}
+PASSPHRASE = ${passPhrase}
+PASSWORD = ${password}
+NODE_CREDENTIAL = ${nodeCredential}
+DATA_STORE_PATH = ./data
+SENTRY_ENABLED = False
+SENTRY_DSN =
+PAYMENT_ENABLED = ${paymentReceivingAddress ? 'True' : 'False'}
+PAYMENT_CONFIG_PATH = ./payment_config.json
+PAYMENT_CONTRACT_ADDRESS = ${paymentContractAddress}
+PAYMENT_RECEIVING_ADDRESS = ${paymentReceivingAddress}
+ATLAS_ENABLED = False
+MONGODB_URL = mongodb://localhost:27017
+IPFS_NODE_URL = http://localhost:5001
+IPFS_GATEWAY_URL = ${ipfsGatewayUrl}
+ENABLE_CORS = True
+VERSION = v2.9.1
+LAST_COMMIT = cec7d255
+NODE_NAME = ${nodeName}
+NODE_EMAIL = ${nodeEmail}
+NODE_DESCRIPTION = ${nodeDescription} `;
   //
   const element = document.createElement('a');
   const file = new Blob([content], {

@@ -7,7 +7,7 @@ const BaseTypography = styled(Typography)({
   fontStyle: 'normal'
 });
 
-export const LandingTitleTypo = styled(BaseTypography)(({ theme, sub }) => ({
+export const LandingTitleTypo = styled(BaseTypography)(({ theme, sub = false }) => ({
   fontWeight: 700,
   fontSize: sub ? '60px' : '90px',
   lineHeight: sub ? '73px' : '110px',

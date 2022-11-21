@@ -18,7 +18,6 @@ export default function ModalDialog({ open, onClose, children }) {
       fullScreen={matchDownMd}
       open={open}
       onClose={onClose}
-      onBackdropClick="false"
       sx={{ background: '#1890FF90' }}
       PaperProps={{
         sx: {

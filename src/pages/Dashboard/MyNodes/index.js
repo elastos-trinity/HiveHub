@@ -25,8 +25,13 @@ export default function HiveNodes() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const nodeList = await getHiveNodesList(undefined, user.did, true, true, false);
-      setMyNodeList(nodeList);
+      try {
+        const nodeList = await getHiveNodesList(undefined, user.did, true, true, false);
+        setMyNodeList(nodeList);
+      } catch (e) {
+        console.error(`Failed to load my nodes: ${e}`);
+        setMyNodeList([]);
+      }
       setLoading(false);
     };
     fetchData();

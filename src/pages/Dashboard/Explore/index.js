@@ -16,8 +16,13 @@ export default function HiveExplore() {
   useEffect(() => {
     const fetchData = async () => {
       setLoadingNode(true);
-      const nodeList = await getHiveNodesList(undefined, undefined, true, true, onlyActive);
-      setNodeItems(nodeList);
+      try {
+        const nodeList = await getHiveNodesList(undefined, undefined, true, true, onlyActive);
+        setNodeItems(nodeList);
+      } catch (e) {
+        console.log(`Failed to load nodes: ${e}`);
+        setNodeItems([]);
+      }
       setLoadingNode(false);
     };
     fetchData();

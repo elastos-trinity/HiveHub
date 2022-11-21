@@ -35,6 +35,12 @@ export default function HiveHome() {
     const fetchData = async () => {
       setLoading(true);
 
+      setCreatedCount(0);
+      setMyNodesItem([]);
+      setParticipated(0);
+      setVaultInfoItem([]);
+      setOtherActiveNodeUrls([]);
+
       try {
         const results = await Promise.all([
           getHiveNodesList(undefined, undefined, false, true, false),
@@ -46,35 +52,31 @@ export default function HiveHome() {
 
         if (!providerAddress) {
           setMyNodesItem(myNodes);
-          return;
+        } else {
+          // node list
+          const participatedNode = allNodes.find((item) => item.url === providerAddress);
+          participatedNode.participated = 'Y';
+          if (participatedNode) {
+            const n = myNodes.find((node) => node.url === providerAddress);
+            n.participated = 'Y';
+            if (!n) myNodes.push(participatedNode);
+          }
+          setMyNodesItem(myNodes);
+
+          // vaultInfo and other active nodes
+          const vaultInfo = await getHiveVaultInfo(user.did, undefined, 1);
+          if (vaultInfo) {
+            setParticipated(1);
+            setVaultInfoItem([vaultInfo]);
+            const ns = allNodes.filter((node) => node.status && node.url !== providerAddress);
+            if (ns) setOtherActiveNodeUrls(ns.map((node) => node.url));
+          }
         }
-
-        // node list
-        const participatedNode = allNodes.find((item) => item.url === providerAddress);
-        participatedNode.participated = 'Y';
-        if (participatedNode) {
-          const n = myNodes.find((node) => node.url === providerAddress);
-          n.participated = 'Y';
-          if (!n) myNodes.push(participatedNode);
-        }
-        setMyNodesItem(myNodes);
-
-        // vaultInfo and other active nodes
-        const vaultInfo = await getHiveVaultInfo(user.did, undefined, 1);
-        if (!vaultInfo) {
-          return;
-        }
-
-        setParticipated(1);
-        setVaultInfoItem([vaultInfo]);
-        const ns = allNodes.filter((node) => node.status && node.url !== providerAddress);
-        if (ns) setOtherActiveNodeUrls(ns.map((node) => node.url));
-
-        setLoading(false);
       } catch (err) {
-        console.error(err);
-        setLoading(false);
+        console.error(`&&&&&& home, main error, ${err}`);
       }
+
+      setLoading(false);
     };
     if (user.did) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,11 +210,11 @@ export default function HiveHome() {
         >
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Created by me</NodeStatisticLabel>
-            <NodeStatisticBody>{loading ? '***' : createdCount}</NodeStatisticBody>
+            <NodeStatisticBody>{loading ? '0' : createdCount}</NodeStatisticBody>
           </Stack>
           <Stack spacing={{ xs: 1, sm: 2 }}>
             <NodeStatisticLabel>Participated by me</NodeStatisticLabel>
-            <NodeStatisticBody>{loading ? '*' : participated}</NodeStatisticBody>
+            <NodeStatisticBody>{loading ? '0' : participated}</NodeStatisticBody>
           </Stack>
         </Stack>
         <Stack

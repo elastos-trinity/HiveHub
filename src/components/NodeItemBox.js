@@ -1,0 +1,111 @@
+import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Box, Stack, Typography, Chip, Skeleton } from '@mui/material';
+import { NodeTitle, NodeTimeLable, NodeLabelTypo } from './CustomTypos';
+
+NodeItemBox.propTypes = {
+  nodeId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  status: PropTypes.bool.isRequired,
+  time: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  endpoint: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  sx: PropTypes.object
+};
+
+export default function NodeItemBox({
+  nodeId,
+  name,
+  status,
+  time,
+  description,
+  endpoint,
+  isLoading,
+  sx
+}) {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      {isLoading ? (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width="100%"
+          sx={{ bgcolor: '#E8F4FF', borderRadius: 1, height: { xs: '150px', md: '200px' } }}
+        />
+      ) : (
+        <Box
+          onClick={() => navigate(`/dashboard/nodes/detail/${nodeId}`)}
+          sx={{
+            backgroundColor: 'rgba(255, 147, 30, 0.05)',
+            borderRadius: '20px',
+            width: '100%',
+            padding: { xs: '10px 10px 10px 20px', sm: '20px 20px 20px 40px' },
+            position: 'relative',
+            cursor: 'pointer',
+            ...sx
+          }}
+        >
+          <NodeTimeLable
+            sx={{
+              whiteSpace: 'nowrap',
+              position: 'absolute',
+              right: { xs: '10px', sm: '20px' },
+              top: { xs: '10px', sm: '30px' }
+            }}
+          >
+            {time}
+          </NodeTimeLable>
+          <Stack>
+            <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
+              <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
+                <NodeTitle>{name}</NodeTitle>
+                {status ? (
+                  <Chip
+                    label="online"
+                    color="success"
+                    sx={{
+                      height: { xs: '11px !important', md: '19px !important' },
+                      color: '#FFFFFF',
+                      '& .MuiChip-label': {
+                        px: { xs: '5px !important', sm: '12px !important' }
+                      }
+                    }}
+                  />
+                ) : (
+                  <Chip
+                    label="offline"
+                    color="error"
+                    sx={{
+                      height: { xs: '11px !important', md: '19px !important' },
+                      color: '#FFFFFF',
+                      '& .MuiChip-label': {
+                        px: { xs: '5px !important', sm: '12px !important' }
+                      }
+                    }}
+                  />
+                )}
+              </Stack>
+              <NodeLabelTypo sx={{ color: '#B3B3B3' }}>{description}</NodeLabelTypo>
+            </Stack>
+            <Typography
+              component="div"
+              noWrap
+              sx={{ flexGrow: 1, mt: { xs: '20px', sm: '50px' } }}
+              alignItems="center"
+            >
+              <Stack direction="row" sx={{ pb: '5px' }}>
+                <NodeLabelTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
+                  Endpoint:
+                </NodeLabelTypo>
+                <NodeLabelTypo>{endpoint}</NodeLabelTypo>
+              </Stack>
+            </Typography>
+          </Stack>
+        </Box>
+      )}
+    </div>
+  );
+}

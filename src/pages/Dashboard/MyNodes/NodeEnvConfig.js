@@ -8,6 +8,14 @@ import { useSnackbar } from 'notistack';
 import { binary_to_base58 } from 'base58-js';
 import { DIDStore, Mnemonic, RootIdentity, DID } from '@elastosfoundation/did-js-sdk';
 import { DID as ConDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { style } from '@mui/system';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { PageTitleTypo } from '../../../components/CustomTypos';
 import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
@@ -34,7 +42,14 @@ export default function NodeEnvConfig() {
   const [nodeDescription, setNodeDescription] = useState('');
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
 
+  const [open, setOpen] = useState(false);
+
   const [serviceDIDPassword, storePass] = ['password', 'password'];
+  const popUpErrorMsg = (msg) =>
+    enqueueSnackbar(msg, {
+      variant: 'error',
+      anchorOrigin: { horizontal: 'right', vertical: 'top' }
+    });
 
   const generateNewServiceDid = async () => {
     // Get root identity
@@ -80,20 +95,29 @@ export default function NodeEnvConfig() {
   }, []);
 
   const handleSaveEnvConfig = async () => {
-    if (ownerDid && servicePK && nodeName && email && nodeDescription) {
-      let nodeCredential = '';
+    async function getCredentialFromOwner() {
       try {
-        const didAccess = new ConDID.DIDAccess();
-        const vc = await didAccess.issueCredential(
+        const vc = await new ConDID.DIDAccess().issueCredential(
           servicePK,
           ['HiveNodeOwnerCredential', 'VerifiableCredential'],
           { did: servicePK },
           'hivenodeowner'
         );
-        nodeCredential = binary_to_base58(new Uint8Array(Buffer.from(vc.toString())));
+        if (!vc) return null;
+
+        return binary_to_base58(new Uint8Array(Buffer.from(vc.toString())));
       } catch (err) {
         console.error(err);
+        return null;
       }
+    }
+
+    if (ownerDid && servicePK && nodeName && email && nodeDescription) {
+      setOpen(true);
+      const nodeCredential = await getCredentialFromOwner();
+      setOpen(false);
+      if (!nodeCredential) popUpErrorMsg('Failed to generate the credential.');
+
       try {
         createHiveNodeEnvConfig(
           serviceDIDContent,
@@ -226,6 +250,21 @@ export default function NodeEnvConfig() {
           <ConfirmButton onClick={handleSaveEnvConfig} disabled={!pageLoaded}>Confirm</ConfirmButton>
         </Stack>
       </ContainerBox>
+      <Dialog
+        open={open}
+        // onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Operation Tip
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Please open Essentials application, and confirm the credential issuing dialog.
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -11,6 +11,7 @@ import HexagonShape from '../../components/HexagonShape';
 import generatedGitInfo from '../../generatedGitInfo.json';
 import { config } from '../../config';
 import FeaturePanel from '../../components/Landing/FeaturePanel';
+import PublicNodes from '../../components/Landing/PublicNodes';
 
 export default function LandingPage() {
   const { isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
@@ -50,8 +51,7 @@ export default function LandingPage() {
       >
         <Box mt={{ xs: '70px', md: '135px' }} sx={{ position: 'relative' }}>
           <LandingTitleTypo>
-            <span style={{ color: '#FF931E' }}>Your</span>
-            <span style={{ color: '#FFFFFF' }}> Decentralized Storage</span>
+            <span style={{ color: '#FF931E' }}>Your</span> Decentralized Storage
           </LandingTitleTypo>
           <LandingTitleTypo sx={{ color: '#FF931E' }}>Manager</LandingTitleTypo>
           <Box
@@ -83,7 +83,7 @@ export default function LandingPage() {
         <Stack
           direction="row"
           spacing={{ xs: 2.5, md: 5 }}
-          mt={{ xs: '50px', md: '40px' }}
+          mt={{ xs: '50px', md: '60px' }}
           justifyContent="center"
           sx={{ position: 'relative' }}
         >
@@ -108,24 +108,10 @@ export default function LandingPage() {
           >
             GitHub
           </LinkButton>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: { xs: '20vw', md: '5vw' },
-              right: { xs: '-15vw', md: '-10vw' },
-              zIndex: 1
-            }}
-          >
-            <HexagonShape
-              size={matchMdUp ? 3 : 0.9}
-              blurVal={matchMdUp ? 40 : 17.5}
-              opacityVal={matchMdUp ? 0.7 : 0.6}
-              width={matchMdUp ? 30 : 15}
-            />
-          </Box>
         </Stack>
       </Box>
       <FeaturePanel />
+      <PublicNodes />
       <Box sx={{ pt: { xs: 10, md: 20 } }}>
         <Stack
           direction="row"

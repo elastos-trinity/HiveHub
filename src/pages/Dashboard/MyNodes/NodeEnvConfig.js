@@ -116,7 +116,10 @@ export default function NodeEnvConfig() {
       setOpen(true);
       const nodeCredential = await getCredentialFromOwner();
       setOpen(false);
-      if (!nodeCredential) popUpErrorMsg('Failed to generate the credential.');
+      if (!nodeCredential) {
+        popUpErrorMsg('Failed to generate the credential.');
+        return;
+      }
 
       try {
         createHiveNodeEnvConfig(

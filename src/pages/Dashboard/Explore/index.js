@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react';
 import { Stack, Button } from '@mui/material';
 import NodeItem from '../../../components/NodeItem';
 import { PageTitleTypo, FilterByTypo } from '../../../components/CustomTypos';
-import { useUserContext } from '../../../contexts/UserContext';
 import { emptyNodeItem } from '../../../utils/filler';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 export default function HiveExplore() {
-  const { user } = useUserContext();
   const { getHiveNodesList } = useHiveHubContracts();
   const [loadingNode, setLoadingNode] = useState(false);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));
@@ -27,7 +25,7 @@ export default function HiveExplore() {
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.did, onlyActive]);
+  }, [onlyActive]);
 
   return (
     <>

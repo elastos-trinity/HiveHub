@@ -3,17 +3,19 @@ import { styled } from '@mui/material/styles';
 
 const BaseTypography = styled(Typography)({
   font: 'Montserrat',
-  color: '#000'
+  color: '#FFF',
+  fontStyle: 'normal'
 });
 
 export const LandingTitleTypo = styled(BaseTypography)(({ theme, sub }) => ({
-  fontWeight: sub ? 500 : 700,
-  fontSize: sub ? '35px' : '90px',
-  lineHeight: sub ? '43px' : '110px',
+  fontWeight: 700,
+  fontSize: sub ? '60px' : '90px',
+  lineHeight: sub ? '73px' : '110px',
   textAlign: 'center',
+  margin: sub ? '20px 0 40px' : '10px 0',
   [theme.breakpoints.down('md')]: {
-    fontSize: sub ? '15px' : '28px',
-    lineHeight: sub ? '18px' : '36px'
+    fontSize: sub ? '20px' : '28px',
+    lineHeight: sub ? '24px' : '36px'
   }
 }));
 
@@ -67,7 +69,7 @@ export const NodeTitle = styled(BaseTypography)(({ theme }) => ({
 }));
 
 export const NodeTimeLable = styled(BaseTypography)(({ theme }) => ({
-  color: 'rgba(0,0,0, 0.3)',
+  color: '#FF931E',
   fontWeight: 400,
   fontSize: '10px',
   lineHeight: '12px',
@@ -87,26 +89,18 @@ const NormalTypo = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
-export const NodeDescription = styled(NormalTypo)(({ theme }) => ({
-  color: 'rgba(0,0,0, 0.3)',
-  fontWeight: 400,
-  fontSize: '10px',
-  lineHeight: '12px',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '20px',
-    lineHeight: '24px'
-  }
-}));
+export const NodeLabelTypo = styled(NormalTypo)({
+  fontWeight: 400
+});
 
-export const NodeValue = styled(NormalTypo)(({ theme }) => ({
-  fontWeight: 600,
-  fontSize: '10px',
-  lineHeight: '12px',
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '20px',
-    lineHeight: '24px'
-  }
-}));
+export const NodeDescription = styled(NormalTypo)({
+  color: '#B3B3B3',
+  fontWeight: 400
+});
+
+export const NodeValue = styled(NormalTypo)({
+  fontWeight: 400
+});
 
 export const VaultValue = styled(BaseTypography)(({ theme }) => ({
   fontWeight: 400,

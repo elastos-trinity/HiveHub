@@ -106,7 +106,12 @@ export default function NodeItem({
                     <NodeDescription sx={{ pr: { xs: '5px', sm: '10px' } }}>IP:</NodeDescription>
                     <NodeValue sx={{ pr: '50px' }}>{ip}</NodeValue>
                     <NodeDescription sx={{ pr: { xs: '5px', sm: '10px' } }}>Owner:</NodeDescription>
-                    <NodeValue noWrap sx={{ pr: '20px' }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+                    <NodeValue
+                      noWrap
+                      sx={{ pr: '20px' }}
+                      onMouseOver={handleMouseOver}
+                      onMouseOut={handleMouseOut}
+                    >
                       {isHovering ? did : ownerName}
                     </NodeValue>
                   </Stack>

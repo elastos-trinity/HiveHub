@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Box, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SmallHexagon from '../SmallHexagon';
+import { LandingTitleTypo } from '../CustomTypos';
 
 const FeatureGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',
@@ -35,20 +36,7 @@ export default function FeaturePanel({ sx = {} }) {
         ...sx
       }}
     >
-      <Typography
-        sx={{
-          color: '#FFFFFF',
-          textAlign: 'center',
-          font: 'Montserrat',
-          fontStyle: 'normal',
-          fontWeight: 700,
-          margin: '10px 0 50px',
-          fontSize: { xs: '20px', md: '60px' },
-          lineHeight: { xs: '24px', md: '73px' }
-        }}
-      >
-        Features
-      </Typography>
+      <LandingTitleTypo sub>Features</LandingTitleTypo>
       <Grid container direction="row" alignItems="center" justifyContent="space-around">
         <FeatureGrid item xs={12} sm={6} md={3} sx={{ position: 'relative', top: '2px' }}>
           <Box sx={{ margin: '40px 0 40px' }}>

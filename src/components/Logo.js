@@ -10,7 +10,7 @@ export default function HiveLogo({ mobile = false }) {
   return (
     <Box component={RouterLink} to="/" sx={{ textDecoration: 'none' }}>
       <img
-        src={`/static/${mobile ? 'logo_mobile.svg' : 'logo_web.svg'}`}
+        src={`/static/${mobile ? 'Logo.svg' : 'Logo.svg'}`}
         alt="logo"
         width="100%"
         height="100%"

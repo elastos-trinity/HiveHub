@@ -16,20 +16,30 @@ export default function HiveVaults() {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUserContext();
   const { dlgState, setDlgState } = useDialogContext();
-  const { getActiveHiveNodeUrl } = useHiveHubContracts();
+  const { getActiveHiveNodeUrls } = useHiveHubContracts();
   const [loading, setLoading] = useState(false);
-  const [myVaultsList, setMyVaultsList] = useState(Array(1).fill(emptyVaultItem));
+  const [myVaults, setMyVaults] = useState(Array(1).fill(emptyVaultItem));
   const [onProgress, setOnProgress] = useState(false);
-  const [activeNodesUrl, setActiveNodesUrl] = useState([]);
+  const [activeNodesUrls, setActiveNodesUrls] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
-      const activeNodes = await getActiveHiveNodeUrl();
-      if (vaultItem) setMyVaultsList([vaultItem]);
-      else setMyVaultsList([]);
-      setActiveNodesUrl(activeNodes);
+
+      try {
+        const result = await Promise.all([
+          getHiveVaultInfo(user.did, undefined, 1),
+          getActiveHiveNodeUrls()
+        ]);
+        const [vaultItem, activeUrls] = result;
+        setMyVaults(vaultItem ? [vaultItem] : []);
+        setActiveNodesUrls(activeUrls);
+      } catch (e) {
+        console.error(e);
+        setMyVaults([]);
+        setActiveNodesUrls([]);
+      }
+
       setLoading(false);
     };
     fetchData();
@@ -62,7 +72,7 @@ export default function HiveVaults() {
 
   const handleBackup = async (backupNodeProvider) => {
     if (!user.did || !backupNodeProvider) return;
-    if (!myVaultsList.length) return;
+    if (!myVaults.length) return;
     setOnProgress(true);
     try {
       console.log('Backup vault to: ', backupNodeProvider);
@@ -100,7 +110,7 @@ export default function HiveVaults() {
 
   const handleMigrate = async (backupNodeProvider) => {
     if (!user.did || !backupNodeProvider) return;
-    if (!myVaultsList.length) return;
+    if (!myVaults.length) return;
     setOnProgress(true);
     try {
       console.log('Migrate vault to: ', backupNodeProvider);
@@ -152,7 +162,7 @@ export default function HiveVaults() {
   };
 
   const openSelectNodeDlg = (dlgType) => {
-    const availableNodes = activeNodesUrl.filter((item) => item !== user.nodeProvider);
+    const availableNodes = activeNodesUrls.filter((item) => item !== user.nodeProvider);
     if (!availableNodes.length) {
       enqueueSnackbar('No available node provider', {
         variant: 'error',
@@ -169,11 +179,11 @@ export default function HiveVaults() {
 
   return (
     <>
-      <PageTitleTypo mt={{ xs: 5, md: 6 }} mb={myVaultsList.length ? 0 : 1.25}>
+      <PageTitleTypo mt={{ xs: 5, md: 6 }} mb={myVaults.length ? 0 : 1.25}>
         My Vaults
       </PageTitleTypo>
       <Stack mt={{ xs: 4, md: 8 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
-        {myVaultsList.map((item, index) => (
+        {myVaults.map((item, index) => (
           <VaultItem
             key={index}
             url={user.nodeProvider}
@@ -197,13 +207,13 @@ export default function HiveVaults() {
         >
           <CustomButton
             onClick={() => openSelectNodeDlg(1)}
-            disabled={!myVaultsList.length || onProgress || loading}
+            disabled={!myVaults.length || onProgress || loading}
           >
             Backup
           </CustomButton>
           <CustomButton
             onClick={() => openSelectNodeDlg(2)}
-            disabled={!myVaultsList.length || onProgress || loading}
+            disabled={!myVaults.length || onProgress || loading}
           >
             Migrate
           </CustomButton>
@@ -215,7 +225,7 @@ export default function HiveVaults() {
           </CustomButton>
         </Stack>
       </Stack>
-      <PlusButton onClick={handleCreateVault} disabled={myVaultsList.length > 0}>
+      <PlusButton onClick={handleCreateVault} disabled={myVaults.length > 0}>
         Create Hive Vault
       </PlusButton>
       <ModalDialog
@@ -230,7 +240,7 @@ export default function HiveVaults() {
       >
         <SelectBackupNodeDlg
           dlgType={dlgState.selectBackupNodeDlgOpened ? 0 : 1}
-          activeNodes={activeNodesUrl}
+          activeNodes={activeNodesUrls}
           fromNode={user.nodeProvider}
           onProgress={onProgress}
           onClose={() => {

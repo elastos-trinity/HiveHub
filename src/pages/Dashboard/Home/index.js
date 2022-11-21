@@ -20,7 +20,7 @@ import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 export default function HiveHome() {
   const { user } = useUserContext();
-  const { getHiveNodesList, getActiveHiveNodeUrl } = useHiveHubContracts();
+  const { getHiveNodesList } = useHiveHubContracts();
   const { dlgState, setDlgState } = useDialogContext();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);

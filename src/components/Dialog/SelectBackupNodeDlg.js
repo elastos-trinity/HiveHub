@@ -47,7 +47,7 @@ export default function SelectBackupNodeDlg({
       </Stack>
       <Stack spacing={1}>
         <Typography fontSize={16} fontWeight={400} textAlign="center">
-          Select the node to {dlgType === 0 ? 'backup' : 'migrate'} your vault.
+          Select the node to {dlgType === 0 ? 'backup' : 'migrate'} your vault. (Need confirmed on the Essentials application)
         </Typography>
         <Stack spacing={0.5}>
           <Typography fontSize={12} fontWeight={700}>

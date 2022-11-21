@@ -127,7 +127,7 @@ export default function useHiveHubContracts() {
     return nodeList;
   };
 
-  const getActiveHiveNodeUrl = async () => {
+  const getActiveHiveNodeUrls = async () => {
     const nodes = await getHiveNodes();
     const activeNodes = [];
     await Promise.all(
@@ -219,7 +219,7 @@ export default function useHiveHubContracts() {
   return {
     getHiveNodeItem,
     getHiveNodesList,
-    getActiveHiveNodeUrl,
+    getActiveHiveNodeUrls,
     addHiveNode,
     removeHiveNode
   };

@@ -26,7 +26,13 @@ export default function Router() {
           path: 'dashboard',
           children: [
             { path: '', element: <Navigate to="/dashboard/node" replace /> },
-            { path: 'node', element: <MyNodes /> }
+            {
+              path: 'node',
+              children: [
+                { path: '', element: <MyNodes /> },
+                { path: 'envconfig', element: <EnvConfigPage /> }
+              ]
+            }
             // { path: 'explore', element: <HiveExplore /> },
             // { path: 'explore/detail/:nodeId', element: <NodeDetail /> },
             // { path: 'nodes', element: <HiveNodes /> },
@@ -65,6 +71,7 @@ export default function Router() {
 
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const MyNodes = Loadable(lazy(() => import('../pages/Dashboard/Node')));
+const EnvConfigPage = Loadable(lazy(() => import('../pages/Dashboard/Node/EnvConfiguration')));
 // unused
 const LandingPage = Loadable(lazy(() => import('../pages/Landing')));
 const HiveHome = Loadable(lazy(() => import('../pages/Dashboard/Home')));

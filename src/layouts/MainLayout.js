@@ -7,8 +7,8 @@ import Sidebar from '../components/Sidebar';
 import BottomNavbar from '../components/Navbar/BottomNavbar';
 import useInitializeEE from '../hooks/useInitializeEE';
 
-const APP_BAR_MOBILE = 64;
-const APP_BAR_DESKTOP = 92;
+const APP_BAR_MOBILE = 32;
+const APP_BAR_DESKTOP = 40;
 
 const MainStyle = styled('div')(({ theme }) => ({
   flexGrow: 1,

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Box, Stack, Typography, Chip, Skeleton } from '@mui/material';
-import { NodeTitle, NodeTimeLable, NodeLabelTypo } from './CustomTypos';
+import { NodeTitle, NodeTimeLable, NormalTypo } from './CustomTypos';
 
 NodeItemBox.propTypes = {
   nodeId: PropTypes.string,
@@ -140,7 +140,7 @@ export default function NodeItemBox({
                   />
                 )}
               </Stack>
-              <NodeLabelTypo sx={{ color: '#B3B3B3' }}>{description}</NodeLabelTypo>
+              <NormalTypo sx={{ color: '#B3B3B3' }}>{description}</NormalTypo>
             </Stack>
             <Typography
               component="div"
@@ -149,10 +149,10 @@ export default function NodeItemBox({
               alignItems="center"
             >
               <Stack direction="row" sx={{ pb: '5px' }}>
-                <NodeLabelTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
+                <NormalTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
                   Endpoint:
-                </NodeLabelTypo>
-                <NodeLabelTypo>{endpoint}</NodeLabelTypo>
+                </NormalTypo>
+                <NormalTypo>{endpoint}</NormalTypo>
               </Stack>
             </Typography>
           </Stack>

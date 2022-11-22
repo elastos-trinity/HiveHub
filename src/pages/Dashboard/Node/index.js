@@ -34,11 +34,13 @@ export default function MyNodes() {
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(0));
   const [onProgress, setOnProgress] = useState(false);
 
+  const btnLayout = myNodeList.length > 0 ? 'row' : 'column';
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const nodeList = await getHiveNodesList(undefined, user.did, true, true, false);
+        const nodeList = await getHiveNodesList(undefined, undefined, true, true, false);
         setMyNodeList(nodeList);
       } catch (e) {
         console.error(`Failed to load my nodes: ${e}`);
@@ -78,106 +80,96 @@ export default function MyNodes() {
   return (
     <>
       {!isLoading && !myNodeList.length && (
-        <>
-          <FeatureGrid item xs={12} sm={6} md={3} spacing={2} mt={{ xs: 5, md: 15 }}>
-            <Box sx={{ margin: '20px 0 20px' }}>
-              <SmallHexagon
-                borderColor="#FF931E"
-                rootHexagon
-                sideLength={30}
-                borderWidth={2}
-                backColor="transparent"
+        <FeatureGrid item xs={12} sm={6} md={3} spacing={2} mt={{ xs: 5, md: 15 }}>
+          <Box sx={{ margin: '20px 0 20px' }}>
+            <SmallHexagon
+              borderColor="#FF931E"
+              rootHexagon
+              sideLength={30}
+              borderWidth={2}
+              backColor="transparent"
+            >
+              <Typography
+                variant="h3"
+                sx={{ color: '#FFC98F', height: '30px', lineHeight: '32px' }}
               >
-                <Typography
-                  variant="h3"
-                  sx={{ color: '#FFC98F', height: '30px', lineHeight: '32px' }}
-                >
-                  +
-                </Typography>
+                +
+              </Typography>
+              <Box
+                sx={{
+                  transform: 'rotate(300deg)',
+                  position: 'absolute',
+                  top: '-23px',
+                  left: '-22px'
+                }}
+              >
                 <Box
                   sx={{
-                    transform: 'rotate(300deg)',
-                    position: 'absolute',
-                    top: '-23px',
-                    left: '-22px'
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '8px',
+                    backgroundColor: '#FFC98F'
                   }}
-                >
-                  <Box
-                    sx={{
-                      width: '16px',
-                      height: '16px',
-                      borderRadius: '8px',
-                      backgroundColor: '#FFC98F'
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      width: '2px',
-                      height: '16px',
-                      backgroundColor: '#FFC98F',
-                      marginLeft: '7px'
-                    }}
-                  />
-                </Box>
+                />
                 <Box
                   sx={{
-                    transform: 'rotate(120deg)',
-                    position: 'absolute',
-                    top: '21px',
-                    left: '53px'
+                    width: '2px',
+                    height: '16px',
+                    backgroundColor: '#FFC98F',
+                    marginLeft: '7px'
                   }}
-                >
-                  <Box
-                    sx={{
-                      width: '16px',
-                      height: '16px',
-                      borderRadius: '8px',
-                      backgroundColor: '#FFC98F'
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      width: '2px',
-                      height: '16px',
-                      backgroundColor: '#FFC98F',
-                      marginLeft: '7px'
-                    }}
-                  />
-                </Box>
-              </SmallHexagon>
-            </Box>
-            <Typography
-              sx={{
-                fontWeight: 700,
-                fontSize: '25px',
-                lineHeight: '30px',
-                color: '#FFFFFF',
-                py: 1
-              }}
-            >
-              Become your own node operator now!
-            </Typography>
-            <Typography
-              sx={{
-                fontWeight: 400,
-                fontSize: '15px',
-                lineHeight: '18px',
-                color: '#C4C4C4',
-                py: 1
-              }}
-            >
-              Create and deploy your own Hive node!
-            </Typography>
-          </FeatureGrid>
-          <Stack mt={{ xs: 4, md: 6 }} spacing={{ xs: 3.5, md: 5 }} sx={{ alignItems: 'center' }}>
-            <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/envconfig')}>
-              Configure .env file
-            </PlusButton>
-            <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/create')}>
-              Create node
-            </PlusButton>
-          </Stack>
-        </>
+                />
+              </Box>
+              <Box
+                sx={{
+                  transform: 'rotate(120deg)',
+                  position: 'absolute',
+                  top: '21px',
+                  left: '53px'
+                }}
+              >
+                <Box
+                  sx={{
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '8px',
+                    backgroundColor: '#FFC98F'
+                  }}
+                />
+                <Box
+                  sx={{
+                    width: '2px',
+                    height: '16px',
+                    backgroundColor: '#FFC98F',
+                    marginLeft: '7px'
+                  }}
+                />
+              </Box>
+            </SmallHexagon>
+          </Box>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              fontSize: '25px',
+              lineHeight: '30px',
+              color: '#FFFFFF',
+              py: 1
+            }}
+          >
+            Become your own node operator now!
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: 400,
+              fontSize: '15px',
+              lineHeight: '18px',
+              color: '#C4C4C4',
+              py: 1
+            }}
+          >
+            Create and deploy your own Hive node!
+          </Typography>
+        </FeatureGrid>
       )}
       {!!myNodeList.length && (
         <>
@@ -209,6 +201,19 @@ export default function MyNodes() {
           </Stack>
         </>
       )}
+      <Stack
+        direction={{ xs: 'column', md: btnLayout }}
+        mt={{ xs: 4, md: 6 }}
+        spacing={{ xs: 3.5, md: 5 }}
+        sx={{ alignItems: 'center' }}
+      >
+        <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/envconfig')}>
+          Configure .env file
+        </PlusButton>
+        <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/create')}>
+          Create node
+        </PlusButton>
+      </Stack>
       <ModalDialog
         open={dlgState.confirmDlgOpened}
         onClose={() => {

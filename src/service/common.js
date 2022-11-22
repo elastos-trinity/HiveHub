@@ -12,7 +12,7 @@ export const getTime = (timestamp) => {
   const date = new Date(parseInt(timestamp, 10));
   const dateString = date.toLocaleDateString('en-US');
   const dateStrs = dateString.split('/');
-  const dateStr = `${dateStrs[2]}-${dateStrs[0]}-${dateStrs[1]}`;
+  const dateStr = `${dateStrs[0]}-${dateStrs[1]}-${dateStrs[2]}`;
   const hours = date.getHours().toString().padStart(2, '0');
   const min = date.getMinutes().toString().padStart(2, '0');
   const seconds = date.getSeconds().toString().padStart(2, '0');

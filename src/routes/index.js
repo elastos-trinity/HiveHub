@@ -1,16 +1,17 @@
+import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
-import LandingPage from '../pages/Landing';
+import LoadingScreen from '../components/LoadingScreen';
 import HiveHubLayout from '../layouts';
-import HiveHome from '../pages/Dashboard/Home';
-import HiveExplore from '../pages/Dashboard/Explore';
-import NodeDetail from '../pages/Dashboard/Explore/NodeDetail';
-import HiveNodes from '../pages/Dashboard/MyNodes';
-import MyNodeDetail from '../pages/Dashboard/MyNodes/MyNodeDetail';
-import NodeEnvConfig from '../pages/Dashboard/MyNodes/NodeEnvConfig';
-import CreateNode from '../pages/Dashboard/MyNodes/CreateNode';
-import HiveVaults from '../pages/Dashboard/MyVaults';
 
 // ----------------------------------------------------------------------
+const Loadable = (Component) =>
+  function loadPage(props) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <Component {...props} />
+      </Suspense>
+    );
+  };
 
 export default function Router() {
   return useRoutes([
@@ -38,3 +39,13 @@ export default function Router() {
     }
   ]);
 }
+
+const LandingPage = Loadable(lazy(() => import('../pages/Landing')));
+const HiveHome = Loadable(lazy(() => import('../pages/Dashboard/Home')));
+const HiveExplore = Loadable(lazy(() => import('../pages/Dashboard/Explore')));
+const NodeDetail = Loadable(lazy(() => import('../pages/Dashboard/Explore/NodeDetail')));
+const HiveNodes = Loadable(lazy(() => import('../pages/Dashboard/MyNodes')));
+const MyNodeDetail = Loadable(lazy(() => import('../pages/Dashboard/MyNodes/MyNodeDetail')));
+const NodeEnvConfig = Loadable(lazy(() => import('../pages/Dashboard/MyNodes/NodeEnvConfig')));
+const CreateNode = Loadable(lazy(() => import('../pages/Dashboard/MyNodes/CreateNode')));
+const HiveVaults = Loadable(lazy(() => import('../pages/Dashboard/MyVaults')));

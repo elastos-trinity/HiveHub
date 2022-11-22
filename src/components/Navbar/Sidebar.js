@@ -102,22 +102,10 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
     <Scrollbar
       sx={{
         height: '100%',
+        background: '#131317',
         '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' }
       }}
     >
-      <Box
-        sx={{
-          height: '120px',
-          px: 2.5,
-          py: 3,
-          mx: '20px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <HiveLogo mobile={Boolean(true)} />
-      </Box>
       <Stack justifyContent="space-between">
         {showAvatar && (
           <Box sx={{ pb: 7.5, px: 2.5, mt: 2.5, visibility: `${user.did ? 'block' : 'hidden'}` }}>
@@ -190,6 +178,19 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           </Stack>
         </Box>
       </Stack>
+      <Box
+        sx={{
+          height: '120px',
+          px: 2.5,
+          py: 3,
+          mx: '20px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <HiveLogo mobile={Boolean(true)} />
+      </Box>
     </Scrollbar>
   );
 

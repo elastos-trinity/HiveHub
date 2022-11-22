@@ -41,7 +41,8 @@ export default function NodeItemBox({
           }}
         >
           <Skeleton
-            variant="text"
+            variant="rectangular"
+            animation="wave"
             sx={{
               whiteSpace: 'nowrap',
               position: 'absolute',
@@ -52,9 +53,10 @@ export default function NodeItemBox({
           <Stack>
             <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
               <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
-                <Skeleton variant="text" />
+                <Skeleton variant="rectangular" animation="wave" />
                 <Skeleton
-                  variant="text"
+                  variant="rectangular"
+                  animation="wave"
                   sx={{
                     height: { xs: '11px !important', md: '19px !important' },
                     color: '#FFFFFF',
@@ -64,7 +66,7 @@ export default function NodeItemBox({
                   }}
                 />
               </Stack>
-              <Skeleton variant="text" sx={{ color: '#B3B3B3' }} />
+              <Skeleton variant="rectangular" animation="wave" sx={{ color: '#B3B3B3' }} />
             </Stack>
             <Typography
               component="div"
@@ -73,8 +75,12 @@ export default function NodeItemBox({
               alignItems="center"
             >
               <Stack direction="row" sx={{ pb: '5px' }}>
-                <Skeleton variant="text" sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }} />
-                <Skeleton variant="text" />
+                <Skeleton
+                  variant="rectangular"
+                  animation="wave"
+                  sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}
+                />
+                <Skeleton variant="rectangular" animation="wave" />
               </Stack>
             </Typography>
           </Stack>

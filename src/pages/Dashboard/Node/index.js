@@ -4,15 +4,14 @@ import { Stack, Box, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import SmallHexagon from '../../../components/SmallHexagon';
-
-import NodeItem from '../../../components/NodeItem';
+import NodeItemBox from '../../../components/NodeItemBox';
+import { PlusButton } from '../../../components/CustomButtons';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
-import { emptyNodeItem } from '../../../utils/filler';
-import { PlusButton } from '../../../components/CustomButtons';
+import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 import ModalDialog from '../../../components/ModalDialog';
 import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
-import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
+import { HeaderTypo } from '../../../components/CustomTypos';
 
 const FeatureGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',
@@ -31,13 +30,13 @@ export default function MyNodes() {
   const { user } = useUserContext();
   const { getHiveNodesList, removeHiveNode } = useHiveHubContracts();
   const { dlgState, setDlgState } = useDialogContext();
-  const [loading, setLoading] = useState(false);
-  const [myNodeList, setMyNodeList] = useState(Array(2).fill(emptyNodeItem));
+  const [isLoading, setIsLoading] = useState(false);
+  const [myNodeList, setMyNodeList] = useState(Array(2).fill(0));
   const [onProgress, setOnProgress] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      setIsLoading(true);
       try {
         const nodeList = await getHiveNodesList(undefined, user.did, true, true, false);
         setMyNodeList(nodeList);
@@ -45,7 +44,7 @@ export default function MyNodes() {
         console.error(`Failed to load my nodes: ${e}`);
         setMyNodeList([]);
       }
-      setLoading(false);
+      setIsLoading(false);
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,7 +77,7 @@ export default function MyNodes() {
 
   return (
     <>
-      {!loading && !myNodeList.length && (
+      {!isLoading && !myNodeList.length && (
         <>
           <FeatureGrid item xs={12} sm={6} md={3} spacing={2} mt={{ xs: 5, md: 15 }}>
             <Box sx={{ margin: '20px 0 20px' }}>
@@ -180,36 +179,36 @@ export default function MyNodes() {
           </Stack>
         </>
       )}
-
-      <Stack mt={{ xs: 4, md: 8 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
-        {myNodeList.map((node, index) => (
-          <NodeItem
-            key={index}
-            id={node.nid}
-            name={node.name}
-            status={node.status}
-            time={node.created}
-            url={node.url}
-            description={node.remark}
-            ip={node.ip}
-            did={node.owner_did}
-            ownerName={node.ownerName}
-            isMyNode
-            isLoading={loading}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              setDlgState({
-                ...dlgState,
-                confirmDlgOpened: true,
-                removeNodeNid: node.nid,
-                removeNodeOwnerDid: node.owner_did
-              });
-            }}
-            sx={{ cursor: 'pointer' }}
-          />
-        ))}
-      </Stack>
+      {!!myNodeList.length && (
+        <>
+          <HeaderTypo sx={{ py: 1 }}>Deployed Hive nodes</HeaderTypo>
+          <Stack mt={{ xs: 2.5, md: 5 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
+            {myNodeList.map((item, index) => (
+              <NodeItemBox
+                key={`node-item-${index}`}
+                nodeId={item?.nid}
+                name={item?.name}
+                status={item?.status}
+                time={item?.created}
+                description={item?.remark}
+                endpoint={item?.url}
+                isLoading={isLoading}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setDlgState({
+                    ...dlgState,
+                    confirmDlgOpened: true,
+                    removeNodeNid: item.nid,
+                    removeNodeOwnerDid: item.owner_did
+                  });
+                }}
+                sx={{ cursor: 'pointer' }}
+              />
+            ))}
+          </Stack>
+        </>
+      )}
       <ModalDialog
         open={dlgState.confirmDlgOpened}
         onClose={() => {

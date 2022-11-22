@@ -80,7 +80,7 @@ export const NodeTimeLable = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
-export const HeaderType = styled(BaseTypography)(({ theme }) => ({
+export const HeaderTypo = styled(BaseTypography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: '12px',
   lineHeight: '15px',
@@ -89,6 +89,7 @@ export const HeaderType = styled(BaseTypography)(({ theme }) => ({
     lineHeight: '30px'
   }
 }));
+
 export const NormalTypo = styled(BaseTypography)(({ theme }) => ({
   fontWeight: 400,
   fontSize: '10px',

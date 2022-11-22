@@ -35,7 +35,7 @@ export default function useHiveHubContracts() {
       if (!nodeItem) return null;
       const nodeInfo = await getDataFromIpfs(nodeItem.tokenURI || '');
       if (ownerDid && ownerDid !== nodeInfo.creator.did) return null;
-      return { ...nodeInfo, nid: nodeItem.tokenId};
+      return { ...nodeInfo, nid: nodeItem.tokenId };
     } catch (err) {
       console.error(err);
       return null;
@@ -89,9 +89,7 @@ export default function useHiveHubContracts() {
     try {
       if (withName) {
         const credentials = await getCredentialsFromDID(node.owner_did);
-        node.ownerName = credentials.name
-          ? credentials.name
-          : reduceHexAddress(node.owner_did, 4);
+        node.ownerName = credentials.name ? credentials.name : reduceHexAddress(node.owner_did, 4);
         // get ip and location
         const hostName = node.url.includes('https://')
           ? node.url.replace('https://', '')

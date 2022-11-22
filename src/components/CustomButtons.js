@@ -15,7 +15,7 @@ export const LinkButton = styled(Button)(({ theme, btncolor }) => ({
   zIndex: 10,
   '&:hover': {
     border: `3px solid ${btncolor}`,
-    backgroundColor: 'white'
+    backgroundColor: 'rgba(255, 147, 30, 0.3)'
   },
   [theme.breakpoints.down('md')]: {
     fontSize: '12px',
@@ -24,18 +24,17 @@ export const LinkButton = styled(Button)(({ theme, btncolor }) => ({
     border: `2px solid ${btncolor}`,
     '&:hover': {
       border: `2px solid ${btncolor}`,
-      backgroundColor: 'white'
+      backgroundColor: 'rgba(255, 147, 30, 0.3)'
     }
   }
 }));
 
 const OutlinedButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#FFF',
-  // height: '50px',
-  width: 'fit-content',
+  background: '#1D1F21',
   border: '1px solid #FF931E',
   borderRadius: '200px',
-  padding: '15px 11px',
+  width: '240px',
+  padding: '15px 17px',
   color: '#FF931E',
   fontWeight: 600,
   fontSize: '15px',
@@ -45,7 +44,7 @@ const OutlinedButton = styled(Button)(({ theme }) => ({
     lineHeight: '24px',
     fontSize: '20px',
     border: '2px solid #FF931E',
-    padding: '23px 17px'
+    padding: '23px 27px'
   },
   '&:hover': {
     backgroundColor: 'rgba(255, 147, 30, 0.3)',

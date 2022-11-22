@@ -54,12 +54,10 @@ export default function HiveHubLayout() {
         overflow: 'hidden'
       }}
     >
+      <TopNavbar onOpenSidebar={() => setOpen(true)} />
       <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       {isLandingPage ? (
-        <>
-          <TopNavbar onOpenSidebar={() => setOpen(true)} />
-          <Outlet />
-        </>
+        <Outlet />
       ) : (
         <>
           <MainStyle>

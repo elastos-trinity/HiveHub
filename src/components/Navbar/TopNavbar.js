@@ -5,8 +5,6 @@ import { Box, Stack, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 import HiveLogo from '../Logo';
-import LanguageBar from '../LanguageBar';
-import UserAvatar from '../UserAvatar';
 import { MHidden } from '../@material-extend';
 import { useUserContext } from '../../contexts/UserContext';
 
@@ -44,7 +42,6 @@ export default function TopNavbar({ onOpenSidebar }) {
             mx={{ md: 5, lg: 7.5 }}
           >
             <HiveLogo />
-            {/* {user.did && pathname.includes('dashboard') ? <UserAvatar /> : <LanguageBar />} */}
           </Stack>
         </Box>
       </MHidden>

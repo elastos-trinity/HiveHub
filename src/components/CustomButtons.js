@@ -29,7 +29,7 @@ export const LinkButton = styled(Button)(({ theme, btncolor }) => ({
   }
 }));
 
-const OutlinedButton = styled(Button)(({ theme }) => ({
+export const OutlinedButton = styled(Button)(({ theme }) => ({
   background: '#1D1F21',
   border: '1px solid #FF931E',
   borderRadius: '200px',
@@ -91,21 +91,20 @@ export function PlusButton({ onClick, disabled, hasPlus = true, children }) {
 }
 
 export const ConfirmButton = styled(Button)(({ theme }) => ({
+  background: 'linear-gradient(270deg, #FF8A00 0%, #E23A45 100%)',
   borderRadius: '200px',
-  backgroundColor: '#FF931E',
   color: 'white',
   fontWeight: 600,
   lineHeight: '12px',
   fontSize: '10px',
   height: '30px',
-  padding: '9px 38px',
-  width: '120px',
+  padding: '9px 19px',
+  width: 'fit-content',
   [theme.breakpoints.up('md')]: {
     lineHeight: '24px',
     fontSize: '20px',
     height: '60px',
-    padding: '17px 68px',
-    width: '200px'
+    padding: '17px 34px'
   },
   '&:hover': {
     backgroundColor: 'rgba(255, 147, 30, 0.7)'

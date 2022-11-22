@@ -14,8 +14,7 @@ export const FeatureGrid = styled(Grid)(({ theme }) => ({
 }));
 
 export const CustomBox = styled(Box)({
-  backgroundColor: '#fff',
-  border: '2px solid #E5E5E5',
+  backgroundColor: 'rgba(255, 147, 30, 0.05)',
   borderRadius: '20px',
   width: '100%'
 });

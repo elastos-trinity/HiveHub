@@ -95,7 +95,7 @@ export default function HomePage() {
             <LinkButton
               btncolor="#FF931E"
               variant="outlined"
-              onClick={() => navigate('/dashboard/home')}
+              onClick={() => navigate('/dashboard/node')}
             >
               Dashboard
             </LinkButton>

@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TopNavbar from '../components/Navbar/TopNavbar';
-import Sidebar from '../components/Navbar/Sidebar';
+import Sidebar from '../components/Sidebar';
 import BottomNavbar from '../components/Navbar/BottomNavbar';
 import useInitializeEE from '../hooks/useInitializeEE';
 
@@ -40,9 +40,9 @@ const MainStyle = styled('div')(({ theme }) => ({
 
 export default function MainLayout() {
   const location = useLocation();
-  useInitializeEE();
   const [open, setOpen] = useState(false);
   const isHomePage = location.pathname === '/';
+  useInitializeEE();
 
   return (
     <Box
@@ -54,7 +54,7 @@ export default function MainLayout() {
         overflow: 'hidden'
       }}
     >
-      <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+      <Sidebar isOpen={open} onClose={() => setOpen(false)} />
       {isHomePage ? (
         <>
           <TopNavbar onOpenSidebar={() => setOpen(true)} />

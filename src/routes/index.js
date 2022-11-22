@@ -64,6 +64,7 @@ export default function Router() {
 }
 
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
+// unused
 const LandingPage = Loadable(lazy(() => import('../pages/Landing')));
 const HiveHome = Loadable(lazy(() => import('../pages/Dashboard/Home')));
 const HiveExplore = Loadable(lazy(() => import('../pages/Dashboard/Explore')));

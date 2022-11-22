@@ -42,12 +42,12 @@ export default function MainLayout() {
   const location = useLocation();
   useInitializeEE();
   const [open, setOpen] = useState(false);
-  const isLandingPage = location.pathname === '/landing';
+  const isHomePage = location.pathname === '/';
 
   return (
     <Box
       sx={{
-        display: isLandingPage ? 'block' : 'flex',
+        display: isHomePage ? 'block' : 'flex',
         minHeight: '100%',
         position: 'relative',
         background: '#1D1F21',
@@ -55,7 +55,7 @@ export default function MainLayout() {
       }}
     >
       <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-      {isLandingPage ? (
+      {isHomePage ? (
         <>
           <TopNavbar onOpenSidebar={() => setOpen(true)} />
           <Outlet />

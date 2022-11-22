@@ -1,6 +1,8 @@
 import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
+import MainLayout from '../layouts/MainLayout';
+// unused
 import HiveHubLayout from '../layouts';
 
 // ----------------------------------------------------------------------
@@ -15,6 +17,27 @@ const Loadable = (Component) =>
 
 export default function Router() {
   return useRoutes([
+    {
+      path: '/',
+      element: <MainLayout />,
+      children: [
+        { path: '', element: <HomePage /> },
+        {
+          path: 'dashboard',
+          children: [
+            { path: '', element: <Navigate to="/dashboard/home" replace /> },
+            { path: 'home', element: <HiveHome /> },
+            { path: 'explore', element: <HiveExplore /> },
+            { path: 'explore/detail/:nodeId', element: <NodeDetail /> },
+            { path: 'nodes', element: <HiveNodes /> },
+            { path: 'nodes/detail/:nodeId', element: <MyNodeDetail /> },
+            { path: 'nodes/envconfig', element: <NodeEnvConfig /> },
+            { path: 'nodes/create', element: <CreateNode /> },
+            { path: 'vaults', element: <HiveVaults /> }
+          ]
+        }
+      ]
+    },
     {
       path: '/',
       element: <HiveHubLayout />,
@@ -40,6 +63,7 @@ export default function Router() {
   ]);
 }
 
+const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const LandingPage = Loadable(lazy(() => import('../pages/Landing')));
 const HiveHome = Loadable(lazy(() => import('../pages/Dashboard/Home')));
 const HiveExplore = Loadable(lazy(() => import('../pages/Dashboard/Explore')));

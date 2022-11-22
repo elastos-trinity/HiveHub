@@ -1,5 +1,17 @@
-import { Box, MenuItem } from '@mui/material';
+import { Box, MenuItem, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
+// unused
+export const FeatureGrid = styled(Grid)(({ theme }) => ({
+  textAlign: 'center',
+  padding: '20px 0 30px',
+  fontSize: '30px',
+  lineHeight: '37px',
+  [theme.breakpoints.down('md')]: {
+    fontSize: '15px',
+    lineHeight: '18px'
+  }
+}));
 
 export const CustomBox = styled(Box)({
   backgroundColor: '#fff',

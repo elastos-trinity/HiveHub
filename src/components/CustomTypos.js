@@ -80,7 +80,17 @@ export const NodeTimeLable = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
-const NormalTypo = styled(BaseTypography)(({ theme }) => ({
+export const HeaderType = styled(BaseTypography)(({ theme }) => ({
+  fontWeight: 700,
+  fontSize: '12px',
+  lineHeight: '15px',
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '25px',
+    lineHeight: '30px'
+  }
+}));
+export const NormalTypo = styled(BaseTypography)(({ theme }) => ({
+  fontWeight: 400,
   fontSize: '10px',
   lineHeight: '12px',
   [theme.breakpoints.up('sm')]: {
@@ -89,17 +99,8 @@ const NormalTypo = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
-export const NodeLabelTypo = styled(NormalTypo)({
-  fontWeight: 400
-});
-
 export const NodeDescription = styled(NormalTypo)({
-  color: '#B3B3B3',
-  fontWeight: 400
-});
-
-export const NodeValue = styled(NormalTypo)({
-  fontWeight: 400
+  color: '#B3B3B3'
 });
 
 export const VaultValue = styled(BaseTypography)(({ theme }) => ({

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { MHidden } from './@material-extend';
 import ItemBox from './ItemBox';
-import { NodeTitle, NodeValue, NodeDescription } from './CustomTypos';
+import { NodeTitle, NormalTypo, NodeDescription } from './CustomTypos';
 import { AccessButton, DestroyVaultButton } from './CustomButtons';
 
 NodeItem.propTypes = {
@@ -104,16 +104,16 @@ export default function NodeItem({
                 <Typography component="div" noWrap sx={{ flexGrow: 1 }} alignItems="center">
                   <Stack direction="row" sx={{ pb: '5px' }}>
                     <NodeDescription sx={{ pr: { xs: '5px', sm: '10px' } }}>IP:</NodeDescription>
-                    <NodeValue sx={{ pr: '50px' }}>{ip}</NodeValue>
+                    <NormalTypo sx={{ pr: '50px' }}>{ip}</NormalTypo>
                     <NodeDescription sx={{ pr: { xs: '5px', sm: '10px' } }}>Owner:</NodeDescription>
-                    <NodeValue
+                    <NormalTypo
                       noWrap
                       sx={{ pr: '20px' }}
                       onMouseOver={handleMouseOver}
                       onMouseOut={handleMouseOut}
                     >
                       {isHovering ? did : ownerName}
-                    </NodeValue>
+                    </NormalTypo>
                   </Stack>
                 </Typography>
               </MHidden>
@@ -122,11 +122,11 @@ export default function NodeItem({
                   <Stack spacing="8px">
                     <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
                       <NodeDescription>IP:</NodeDescription>
-                      <NodeValue noWrap>{ip}</NodeValue>
+                      <NormalTypo noWrap>{ip}</NormalTypo>
                     </Stack>
                     <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
                       <NodeDescription>Owner:</NodeDescription>
-                      <NodeValue noWrap>{ownerName}</NodeValue>
+                      <NormalTypo noWrap>{ownerName}</NormalTypo>
                     </Stack>
                   </Stack>
                 </Typography>

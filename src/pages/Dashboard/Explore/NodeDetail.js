@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import {
   NodeTitle,
   NodeTimeLable,
-  NodeValue,
+  NormalTypo,
   NodeDescription
 } from '../../../components/CustomTypos';
 import { NodeDetailBox } from '../../../components/CustomContainer';
@@ -31,7 +31,7 @@ function InfoItem({ label, value }) {
       <Typography component="div" variant="body1" noWrap>
         <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
           <NodeDescription>{label}:</NodeDescription>
-          <NodeValue noWrap>{value}</NodeValue>
+          <NormalTypo noWrap>{value}</NormalTypo>
         </Stack>
       </Typography>
     </Grid>
@@ -52,9 +52,9 @@ function InfoItemOwnerName({ label, value, value2 }) {
       <Typography component="div" variant="body1" noWrap>
         <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
           <NodeDescription>{label}:</NodeDescription>
-          <NodeValue noWrap onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+          <NormalTypo noWrap onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
             {isHovering ? value : value2}
-          </NodeValue>
+          </NormalTypo>
         </Stack>
       </Typography>
     </Grid>

@@ -80,7 +80,7 @@ export default function MyNodes() {
     <>
       {!loading && !myNodeList.length && (
         <>
-          <FeatureGrid item xs={12} sm={6} md={3} spacing={2} mt={10}>
+          <FeatureGrid item xs={12} sm={6} md={3} spacing={2} mt={{ xs: 5, md: 15 }}>
             <Box sx={{ margin: '20px 0 20px' }}>
               <SmallHexagon
                 borderColor="#FF931E"

@@ -14,7 +14,7 @@ DialogContextProvider.propTypes = {
 
 function DialogContextProvider({ children }) {
   const [dlgState, setDlgState] = useState({
-    // remove node 
+    // remove node
     confirmDlgOpened: false,
     removeNodeNid: 0,
     removeNodeOwnerDid: '',

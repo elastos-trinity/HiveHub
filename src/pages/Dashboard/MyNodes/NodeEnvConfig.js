@@ -21,7 +21,7 @@ import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import CustomTextField from '../../../components/CustomTextField';
-import { createHiveNodeEnvConfig, } from '../../../service/fetch';
+import { createHiveNodeEnvConfig } from '../../../service/fetch';
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
@@ -250,7 +250,9 @@ export default function NodeEnvConfig() {
           >
             Cancel
           </ConfirmButton>
-          <ConfirmButton onClick={handleSaveEnvConfig} disabled={!pageLoaded}>Confirm</ConfirmButton>
+          <ConfirmButton onClick={handleSaveEnvConfig} disabled={!pageLoaded}>
+            Confirm
+          </ConfirmButton>
         </Stack>
       </ContainerBox>
       <Dialog
@@ -259,9 +261,7 @@ export default function NodeEnvConfig() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          Operation Tip
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">Operation Tip</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Please open Essentials application, and confirm the credential issuing dialog.

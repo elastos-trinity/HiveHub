@@ -16,6 +16,36 @@ import HexagonShape from '../../components/HexagonShape';
 import generatedGitInfo from '../../generatedGitInfo.json';
 import { config } from '../../config';
 
+// CustomBox.propTypes = {
+//   children: PropTypes.node
+// };
+
+// function CustomBox({ children }) {
+//   return (
+//     <Box
+//       sx={{
+//         margin: '20px auto',
+//         width: '25px',
+//         height: '25px',
+//         borderRadius: '50%',
+//         boxShadow: '0px 0px 20px 4px rgba(255, 147, 30, 0.3)'
+//       }}
+//     >
+//       <SmallHexagon
+//         borderColor="#FF931E"
+//         rootHexagon
+//         sideLength={15}
+//         borderWidth={0}
+//         backColor="white"
+//       >
+//         <Typography variant="body2" sx={{ color: '#FF931E', height: '15px', lineHeight: '15px' }}>
+//           {children}
+//         </Typography>
+//       </SmallHexagon>
+//     </Box>
+//   );
+// }
+
 export default function LandingPage() {
   const { isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
     useConnectEE();

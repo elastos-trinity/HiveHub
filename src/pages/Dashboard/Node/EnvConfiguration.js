@@ -12,11 +12,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { HeaderTypo, NormalTypo } from '../../../components/CustomTypos';
-import { ConfirmButton } from '../../../components/CustomButtons';
-import { ContainerBox } from '../../../components/CustomContainer';
+import { HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
+import { ConfirmButton } from '../../../components/Custom/CustomButtons';
+import { ContainerBox } from '../../../components/Custom/CustomContainer';
+import CustomTextField from '../../../components/Custom/CustomTextField';
 import { useUserContext } from '../../../contexts/UserContext';
-import CustomTextField from '../../../components/CustomTextField';
 import { createHiveNodeEnvConfig } from '../../../service/fetch';
 
 export default function NodeEnvConfig() {

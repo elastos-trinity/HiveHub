@@ -50,10 +50,21 @@ export default function HiveHubLayout() {
         display: isLandingPage ? 'block' : 'flex',
         minHeight: '100%',
         position: 'relative',
-        background: '#1D1F21',
+        background: 'rgba(255, 147, 30, 0.07)',
         overflow: 'hidden'
       }}
     >
+      <Box
+        component="img"
+        src="/static/bg_hexagon.svg"
+        sx={{
+          position: 'absolute',
+          top: { xs: '-250vw', sm: '-80vw', md: '-25vw' },
+          bottom: 0,
+          margin: 'auto',
+          zIndex: 0
+        }}
+      />
       <TopNavbar onOpenSidebar={() => setOpen(true)} />
       <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       {isLandingPage ? (

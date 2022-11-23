@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Box, Stack, Typography, Chip, Skeleton } from '@mui/material';
-import { NodeTitle, NodeTimeLable, NormalTypo } from './CustomTypos';
+import { NodeTitle, NodeTimeLable, NormalTypo } from './Custom/CustomTypos';
 
 NodeItemBox.propTypes = {
   nodeId: PropTypes.string,

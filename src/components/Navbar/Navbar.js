@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Stack, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
-import HiveLogo from '../Logo';
-import LanguageBar from '../LanguageBar';
-import UserAvatar from '../UserAvatar';
+import HiveLogo from '../Logo/Logo';
 import { MHidden } from '../@material-extend';
 import { useUserContext } from '../../contexts/UserContext';
 
@@ -32,7 +30,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             position: 'fixed',
             width: '100%',
             height: '120px',
-            background: '#fff7ef',
+            background: '#1D1F21',
             zIndex: 100
           }}
         >
@@ -44,7 +42,6 @@ export default function TopNavbar({ onOpenSidebar }) {
             mx={{ md: 5, lg: 7.5 }}
           >
             <HiveLogo />
-            {user.did && pathname.includes('dashboard') ? <UserAvatar /> : <LanguageBar />}
           </Stack>
         </Box>
       </MHidden>
@@ -54,7 +51,7 @@ export default function TopNavbar({ onOpenSidebar }) {
             position: 'fixed',
             width: '100%',
             height: '120px',
-            background: '#fff7ef',
+            background: '#1D1F21',
             zIndex: 100
           }}
         >
@@ -68,7 +65,7 @@ export default function TopNavbar({ onOpenSidebar }) {
           >
             <IconButton
               onClick={onOpenSidebar}
-              sx={{ mr: 1, color: 'text.primary', position: 'absolute', left: '20px' }}
+              sx={{ mr: 1, color: '#FFFFFF', position: 'absolute', left: '20px' }}
             >
               <Icon icon={menu2Fill} />
             </IconButton>

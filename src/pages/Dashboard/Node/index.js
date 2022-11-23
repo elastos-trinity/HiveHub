@@ -5,13 +5,13 @@ import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import SmallHexagon from '../../../components/SmallHexagon';
 import NodeItemBox from '../../../components/NodeItemBox';
-import { PlusButton } from '../../../components/CustomButtons';
+import { PlusButton } from '../../../components/Custom/CustomButtons';
+import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 import ModalDialog from '../../../components/ModalDialog';
 import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
-import { HeaderTypo } from '../../../components/CustomTypos';
 
 const FeatureGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',

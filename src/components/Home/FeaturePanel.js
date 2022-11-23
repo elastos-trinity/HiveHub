@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Box, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SmallHexagon from '../SmallHexagon';
-import { LandingTitleTypo } from '../CustomTypos';
+import { LandingTitleTypo } from '../Custom/CustomTypos';
 
 const FeatureGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',

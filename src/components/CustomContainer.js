@@ -1,7 +1,6 @@
-import { Box, MenuItem, Grid } from '@mui/material';
+import { Box, Grid, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-// unused
 export const FeatureGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',
   padding: '20px 0 30px',
@@ -14,7 +13,8 @@ export const FeatureGrid = styled(Grid)(({ theme }) => ({
 }));
 
 export const CustomBox = styled(Box)({
-  backgroundColor: 'rgba(255, 147, 30, 0.05)',
+  backgroundColor: '#fff',
+  border: '2px solid #E5E5E5',
   borderRadius: '20px',
   width: '100%'
 });

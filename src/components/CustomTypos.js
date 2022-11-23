@@ -3,19 +3,17 @@ import { styled } from '@mui/material/styles';
 
 const BaseTypography = styled(Typography)({
   font: 'Montserrat',
-  color: '#FFF',
-  fontStyle: 'normal'
+  color: '#000'
 });
 
-export const LandingTitleTypo = styled(BaseTypography)(({ theme, sub = false }) => ({
-  fontWeight: 700,
-  fontSize: sub ? '60px' : '90px',
-  lineHeight: sub ? '73px' : '110px',
+export const LandingTitleTypo = styled(BaseTypography)(({ theme, sub }) => ({
+  fontWeight: sub ? 500 : 700,
+  fontSize: sub ? '35px' : '90px',
+  lineHeight: sub ? '43px' : '110px',
   textAlign: 'center',
-  margin: sub ? '20px 0 40px' : '10px 0',
   [theme.breakpoints.down('md')]: {
-    fontSize: sub ? '20px' : '28px',
-    lineHeight: sub ? '24px' : '36px'
+    fontSize: sub ? '15px' : '28px',
+    lineHeight: sub ? '18px' : '36px'
   }
 }));
 
@@ -69,7 +67,7 @@ export const NodeTitle = styled(BaseTypography)(({ theme }) => ({
 }));
 
 export const NodeTimeLable = styled(BaseTypography)(({ theme }) => ({
-  color: '#FF931E',
+  color: 'rgba(0,0,0, 0.3)',
   fontWeight: 400,
   fontSize: '10px',
   lineHeight: '12px',
@@ -80,17 +78,17 @@ export const NodeTimeLable = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
-export const HeaderTypo = styled(BaseTypography)(({ theme }) => ({
-  fontWeight: 700,
-  fontSize: '12px',
-  lineHeight: '15px',
+export const NormalTypo = styled(BaseTypography)(({ theme }) => ({
+  fontSize: '10px',
+  lineHeight: '12px',
   [theme.breakpoints.up('sm')]: {
-    fontSize: '25px',
-    lineHeight: '30px'
+    fontSize: '20px',
+    lineHeight: '24px'
   }
 }));
 
-export const NormalTypo = styled(BaseTypography)(({ theme }) => ({
+export const NodeDescription = styled(NormalTypo)(({ theme }) => ({
+  color: 'rgba(0,0,0, 0.3)',
   fontWeight: 400,
   fontSize: '10px',
   lineHeight: '12px',
@@ -100,9 +98,15 @@ export const NormalTypo = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
-export const NodeDescription = styled(NormalTypo)({
-  color: '#B3B3B3'
-});
+export const NodeValue = styled(NormalTypo)(({ theme }) => ({
+  fontWeight: 600,
+  fontSize: '10px',
+  lineHeight: '12px',
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '20px',
+    lineHeight: '24px'
+  }
+}));
 
 export const VaultValue = styled(BaseTypography)(({ theme }) => ({
   fontWeight: 400,

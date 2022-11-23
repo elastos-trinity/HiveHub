@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
 import useHiveHubContracts from '../../hooks/useHiveHubContracts';
-import { LandingTitleTypo } from '../CustomTypos';
+import { LandingTitleTypo } from '../Custom/CustomTypos';
 import NodeItemBox from '../NodeItemBox';
 
 export default function PublicNodes() {

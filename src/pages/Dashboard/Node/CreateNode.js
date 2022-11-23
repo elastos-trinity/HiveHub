@@ -4,11 +4,11 @@ import { Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
-import { PageTitleTypo } from '../../../components/CustomTypos';
-import { ConfirmButton } from '../../../components/CustomButtons';
-import { ContainerBox } from '../../../components/CustomContainer';
+import { PageTitleTypo } from '../../../components/Custom/CustomTypos';
+import { ConfirmButton } from '../../../components/Custom/CustomButtons';
+import { ContainerBox } from '../../../components/Custom/CustomContainer';
+import CustomTextField from '../../../components/Custom/CustomTextField';
 import { useUserContext } from '../../../contexts/UserContext';
-import CustomTextField from '../../../components/CustomTextField';
 import { checkHiveNodeStatus, getHiveNodeInfo } from '../../../service/fetch';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 

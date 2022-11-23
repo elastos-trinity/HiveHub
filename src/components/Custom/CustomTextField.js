@@ -71,7 +71,6 @@ export default function CustomTextField({
     if (error) setInvalid(true);
   }, [error]);
 
-  // console.log(fontSize);
   return (
     <Stack spacing={0.5} sx={{ ...sx }}>
       {title && (
@@ -87,7 +86,11 @@ export default function CustomTextField({
         multiline={multiline}
         rows={rows}
         error={error}
+        color="warning"
         onChange={handleInputChange}
+        InputProps={{
+          style: { color: '#FF931E', borderBottom: '1px solid #FF931E' }
+        }}
         sx={{ fontSize, fontWeight, height }}
       />
       {error && invalid && (

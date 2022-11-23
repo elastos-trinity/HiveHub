@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import TopNavbar from '../components/Navbar/TopNavbar';
+import TopNavbar from '../components/Navbar/Navbar';
 import Sidebar from '../components/Sidebar';
 import BottomNavbar from '../components/Navbar/BottomNavbar';
 import useInitializeEE from '../hooks/useInitializeEE';

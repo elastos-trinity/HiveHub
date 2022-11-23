@@ -7,7 +7,7 @@ import { Typography, Avatar, Stack, Tooltip, Box, Drawer } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { tooltipClasses } from '@mui/material/Tooltip';
 // components
-import HiveLogo from '../Logo';
+import HiveLogo from '../Logo/Logo';
 import Scrollbar from '../Scrollbar';
 import { MHidden } from '../@material-extend';
 import { useUserContext } from '../../contexts/UserContext';

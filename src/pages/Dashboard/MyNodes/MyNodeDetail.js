@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import PropTypes, { number } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Chip, Grid, Stack, Tab, Tabs, Typography, Skeleton } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -67,6 +67,12 @@ function InfoItemOwnerName({ label, value, value2 }) {
     </Grid>
   );
 }
+
+InfoItemOwnerName.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  value2: PropTypes.string
+};
 
 export default function MyNodeDetail() {
   const navigate = useNavigate();

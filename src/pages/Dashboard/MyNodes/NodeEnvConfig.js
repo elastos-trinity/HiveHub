@@ -6,12 +6,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 // eslint-disable-next-line camelcase
 import { binary_to_base58 } from 'base58-js';
-import { DIDStore, Mnemonic, RootIdentity, DID } from '@elastosfoundation/did-js-sdk';
+import { DIDStore, Mnemonic, RootIdentity } from '@elastosfoundation/did-js-sdk';
 import { DID as ConDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { style } from '@mui/system';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -77,8 +73,8 @@ export default function NodeEnvConfig() {
     }
 
     // create a new one.
-    const doc = await identity.newDid(storePass);
-    const did = await identity.getDid(0);
+    // const doc = await identity.newDid(storePass);
+    // const did = await identity.getDid(0);
 
     // generate content.
     dids = await store.listDids();
@@ -92,6 +88,7 @@ export default function NodeEnvConfig() {
       setServicePK(didStr);
       setPageLoaded(true);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSaveEnvConfig = async () => {

@@ -13,7 +13,7 @@ import { NodeSummaryBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useDialogContext } from '../../../contexts/DialogContext';
 import { backupVault, getHiveVaultInfo, migrateVault, getAppContext } from '../../../service/fetch';
-import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
+import { emptyNodeItem } from '../../../utils/filler';
 import ModalDialog from '../../../components/ModalDialog';
 import SelectBackupNodeDlg from '../../../components/Dialog/SelectBackupNodeDlg';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';

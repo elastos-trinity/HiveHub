@@ -61,6 +61,12 @@ function InfoItemOwnerName({ label, value, value2 }) {
   );
 }
 
+InfoItemOwnerName.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  value2: PropTypes.string
+};
+
 export default function NodeDetail() {
   const { user } = useUserContext();
   const { getHiveNodeItem } = useHiveHubContracts();
@@ -110,6 +116,7 @@ export default function NodeDetail() {
       setLoading(false);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did, nodeId]);
 
   const handleCreateVault = () => {

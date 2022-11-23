@@ -34,10 +34,12 @@ export const callContractMethod = async (web3, param) => {
   }
 
   if (param.callType === 'call') {
+    // eslint-disable-next-line consistent-return
     return contractMethod.call();
   }
 
   if (param.callType === 'send') {
+    // eslint-disable-next-line consistent-return
     return new Promise((resolve, reject) => {
       const handleTxEvent = (hash) => {
         console.log('transactionHash', hash);

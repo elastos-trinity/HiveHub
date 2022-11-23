@@ -40,7 +40,7 @@ export default function MyNodes() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const nodeList = await getHiveNodesList(undefined, undefined, true, true, false);
+        const nodeList = await getHiveNodesList(undefined, user.did, true, true, false);
         setMyNodeList(nodeList);
       } catch (e) {
         console.error(`Failed to load my nodes: ${e}`);

@@ -88,7 +88,7 @@ export default function NodeItemBox({
       ) : (
         <Box
           onClick={() => {
-            if (!isLoading) navigate(`/dashboard/nodes/detail/${nodeId}`);
+            if (!isLoading) navigate(`/dashboard/node/detail/${nodeId}`);
           }}
           sx={{
             backgroundColor: 'rgba(255, 147, 30, 0.05)',

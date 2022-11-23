@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stack } from '@mui/material';
+import { Stack, Box, autocompleteClasses } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
@@ -42,6 +42,7 @@ export default function NodeEnvConfig() {
   const [nodeDescription, setNodeDescription] = useState('');
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
+  const [downloadOpen, setDownloadOpen] = useState(false);
 
   const [serviceDIDPassword, storePass] = ['password', 'password'];
 
@@ -167,6 +168,7 @@ export default function NodeEnvConfig() {
     }
   };
 
+  const handleDownload = () => {};
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -299,6 +301,65 @@ export default function NodeEnvConfig() {
           </ConfirmButton>
         </Stack>
       </ContainerBox>
+      <Dialog
+        open={downloadOpen}
+        aria-labelledby="download-dialog-title"
+        aria-describedby="download-dialog-description"
+        PaperProps={{
+          sx: {
+            background: '#161C24',
+            borderRadius: '40px',
+            px: 1,
+            py: 2
+          }
+        }}
+        TransitionProps={{
+          sx: {
+            background: 'rgba(22, 28, 36, 0.5)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '0px'
+          }
+        }}
+      >
+        <DialogTitle id="download-dialog-title">
+          <HeaderTypo sx={{ py: 1, textAlign: 'center' }}>Generate .env file</HeaderTypo>
+        </DialogTitle>
+        <DialogContent>
+          <img
+            src="/static/ic_lock.svg"
+            alt="lock"
+            width="60px"
+            style={{ margin: '0 auto 40px auto' }}
+          />
+          <DialogContentText id="download-dialog-description">
+            <NormalTypo sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
+              The generated .env file will be downloaded locally from the browser. Please store them
+              somewhere safe.
+            </NormalTypo>
+          </DialogContentText>
+          <Stack
+            direction="row"
+            mt={{ xs: 8, md: 10 }}
+            spacing={{ xs: 1.5, md: 3 }}
+            justifyContent="center"
+          >
+            <ConfirmButton
+              onClick={() => setDownloadOpen(false)}
+              sx={{
+                color: '#FF931E',
+                background: 'transparent',
+                border: { xs: '1px solid #FF931E', md: '2px solid #FF931E' },
+                width: { xs: '120px', md: '240px' }
+              }}
+            >
+              Cancel
+            </ConfirmButton>
+            <ConfirmButton onClick={handleDownload} sx={{ width: { xs: '120px', md: '240px' } }}>
+              Download
+            </ConfirmButton>
+          </Stack>
+        </DialogContent>
+      </Dialog>
       <Dialog
         open={tipOpen}
         aria-labelledby="alert-dialog-title"

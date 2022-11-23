@@ -30,7 +30,8 @@ export default function Router() {
               path: 'node',
               children: [
                 { path: '', element: <MyNodes /> },
-                { path: 'envconfig', element: <EnvConfigPage /> }
+                { path: 'envconfig', element: <EnvConfigPage /> },
+                { path: 'create', element: <CreateNodePage /> }
               ]
             }
             // { path: 'explore', element: <HiveExplore /> },
@@ -72,6 +73,7 @@ export default function Router() {
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const MyNodes = Loadable(lazy(() => import('../pages/Dashboard/Node')));
 const EnvConfigPage = Loadable(lazy(() => import('../pages/Dashboard/Node/EnvConfiguration')));
+const CreateNodePage = Loadable(lazy(() => import('../pages/Dashboard/Node/CreateNode')));
 // unused
 const LandingPage = Loadable(lazy(() => import('../pages/Landing')));
 const HiveHome = Loadable(lazy(() => import('../pages/Dashboard/Home')));

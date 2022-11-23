@@ -176,7 +176,7 @@ export default function NodeEnvConfig() {
     <>
       <HeaderTypo sx={{ py: 1 }}>Environment configuration for Hive node</HeaderTypo>
       <ContainerBox mt={{ xs: 2.5, md: 5 }}>
-        <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 3.75, md: 5 }}>
+        <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 0, md: 1 }}>
           <CustomTextField
             placeholder="Owner DID"
             variant="standard"
@@ -285,7 +285,12 @@ export default function NodeEnvConfig() {
             }}
           />
         </Stack>
-        <Stack direction="row" mt={{ xs: 8, md: 10 }} spacing={{ xs: 1.5, md: 3 }}>
+        <Stack
+          direction="row"
+          mt={{ xs: 6, md: 7.5 }}
+          mb={{ xs: 4, md: 12 }}
+          spacing={{ xs: 1.5, md: 3 }}
+        >
           <ConfirmButton
             onClick={() => navigate('/dashboard/node')}
             sx={{

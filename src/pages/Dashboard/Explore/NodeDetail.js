@@ -255,7 +255,11 @@ export default function NodeDetail() {
             </Stack>
             <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
               <InfoItem label="IP" value={nodeDetail.ip} />
-              <InfoItemOwnerName label="Owner" value={nodeDetail.owner_did} value2={nodeDetail.ownerName} />
+              <InfoItemOwnerName
+                label="Owner"
+                value={nodeDetail.owner_did}
+                value2={nodeDetail.ownerName}
+              />
               <InfoItem label="Country/Region" value={nodeDetail.area} />
               <InfoItem label="Email" value={nodeDetail.email} />
               <InfoItem label="URL" value={nodeDetail.url} />
@@ -301,7 +305,10 @@ export default function NodeDetail() {
                     />
                   ))}
                 </Stack>
-                <PlusButton onClick={handleCreateVault} disabled={!boundNode || vaultItems.length > 0}>
+                <PlusButton
+                  onClick={handleCreateVault}
+                  disabled={!boundNode || vaultItems.length > 0}
+                >
                   Add Vault
                 </PlusButton>
               </Box>

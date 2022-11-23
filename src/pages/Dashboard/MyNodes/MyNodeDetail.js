@@ -13,8 +13,10 @@ import { NodeDetailBox } from '../../../components/CustomContainer';
 import VaultSummaryItem from '../../../components/VaultSummaryItem';
 import {
   createVault,
-  destroyVault, getAppContext,
-  getHiveNodeInfo, getHiveVaultInfo,
+  destroyVault,
+  getAppContext,
+  getHiveNodeInfo,
+  getHiveVaultInfo,
   getMyHiveNodeDetails
 } from '../../../service/fetch';
 import { emptyNodeItem, emptyVaultItem } from '../../../utils/filler';
@@ -195,7 +197,7 @@ export default function MyNodeDetail() {
     setOnProgress(false);
   };
 
-  const formatStorage = (value, fixed=2) => value.toFixed(fixed);
+  const formatStorage = (value, fixed = 2) => value.toFixed(fixed);
 
   return (
     <>
@@ -276,7 +278,11 @@ export default function MyNodeDetail() {
             </Stack>
             <Grid container sx={{ mt: { xs: 3, md: 6 } }}>
               <InfoItem label="IP" value={nodeDetail.ip} />
-              <InfoItemOwnerName label="Owner" value={nodeDetail.owner_did} value2={nodeDetail.ownerName} />
+              <InfoItemOwnerName
+                label="Owner"
+                value={nodeDetail.owner_did}
+                value2={nodeDetail.ownerName}
+              />
               <InfoItem label="Country/Region" value={nodeDetail.area} />
               <InfoItem label="Email" value={nodeDetail.email} />
               <InfoItem label="URL" value={nodeDetail.url} />
@@ -316,8 +322,14 @@ export default function MyNodeDetail() {
                     <VaultSummaryItem
                       key={`node-detail-vault-summary-${index}`}
                       vaultName={item.name}
-                      vaultTotal={item.max_storage > 1000000 ? formatStorage(item.max_storage/1024/1024, 0) : item.max_storage }
-                      vaultUsed={formatStorage((item.file_use_storage + item.db_use_storage) / 1024 / 1024)}
+                      vaultTotal={
+                        item.max_storage > 1000000
+                          ? formatStorage(item.max_storage / 1024 / 1024, 0)
+                          : item.max_storage
+                      }
+                      vaultUsed={formatStorage(
+                        (item.file_use_storage + item.db_use_storage) / 1024 / 1024
+                      )}
                       isLoading={loading}
                     />
                   ))}
@@ -340,8 +352,12 @@ export default function MyNodeDetail() {
                   <VaultSummaryItem
                     key={`node-detail-backup-summary-${index}`}
                     vaultName={item.name}
-                    vaultTotal={item.max_storage > 1000000 ? formatStorage(item.max_storage/1024/1024, 0) : item.max_storage }
-                    vaultUsed={formatStorage((item.use_storage) / 1024 / 1024)}
+                    vaultTotal={
+                      item.max_storage > 1000000
+                        ? formatStorage(item.max_storage / 1024 / 1024, 0)
+                        : item.max_storage
+                    }
+                    vaultUsed={formatStorage(item.use_storage / 1024 / 1024)}
                     isLoading={loading}
                   />
                 ))}

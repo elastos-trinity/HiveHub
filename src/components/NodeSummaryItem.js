@@ -9,7 +9,13 @@ NodeSummaryItem.propTypes = {
   isLoading: PropTypes.bool.isRequired
 };
 
-export default function NodeSummaryItem({ nodeName, nodeURL, nodeStatus, participated, isLoading }) {
+export default function NodeSummaryItem({
+  nodeName,
+  nodeURL,
+  nodeStatus,
+  participated,
+  isLoading
+}) {
   return (
     <div>
       {isLoading ? (

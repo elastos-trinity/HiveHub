@@ -13,7 +13,7 @@ import {
   getIPFromDomain,
   getLocationFromIP
 } from '../service/fetch';
-import { getTime, isInAppBrowser, reduceHexAddress, resolveNameByDidStr } from '../service/common';
+import { getTime, isInAppBrowser, reduceHexAddress } from '../service/common';
 import { config } from '../config';
 
 export default function useHiveHubContracts() {
@@ -51,10 +51,8 @@ export default function useHiveHubContracts() {
     });
     const nodes = [];
     await Promise.all(
-      nodeIds.map(async (_nodeId, index) => {
-        if (nodeId && nodeId !== _nodeId) {
-          return;
-        }
+      nodeIds.map(async (_nodeId) => {
+        if (nodeId && nodeId !== _nodeId) return;
         const node = await getHiveNode(_nodeId, ownerDid);
         if (node) nodes.push(node);
       })

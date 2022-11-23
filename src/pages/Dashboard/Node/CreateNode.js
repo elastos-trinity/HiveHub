@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
-import { PageTitleTypo } from '../../../components/Custom/CustomTypos';
+import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import CustomTextField from '../../../components/Custom/CustomTextField';
@@ -156,9 +156,9 @@ export default function CreateNode() {
 
   return (
     <>
-      <PageTitleTypo mt={{ xs: 5, md: 6 }}>Create Node</PageTitleTypo>
+      <HeaderTypo sx={{ py: 1 }}>Create and deploy a Hive node</HeaderTypo>
       <ContainerBox mt={{ xs: 2.5, md: 5 }}>
-        <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 3.75, md: 5 }}>
+        <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 0, md: 1 }}>
           <CustomTextField
             placeholder="Owner DID"
             variant="standard"
@@ -182,7 +182,12 @@ export default function CreateNode() {
             }}
           />
         </Stack>
-        <Stack direction="row" mt={{ xs: 8, md: 10 }} spacing={{ xs: 1.5, md: 3 }}>
+        <Stack
+          direction="row"
+          mt={{ xs: 6, md: 7.5 }}
+          mb={{ xs: 0, md: 1 }}
+          spacing={{ xs: 1.5, md: 3 }}
+        >
           <ConfirmButton
             onClick={() => navigate('/dashboard/node')}
             sx={{

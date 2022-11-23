@@ -12,7 +12,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { HeaderTypo } from '../../../components/CustomTypos';
+import { HeaderTypo, NormalTypo } from '../../../components/CustomTypos';
 import { ConfirmButton } from '../../../components/CustomButtons';
 import { ContainerBox } from '../../../components/CustomContainer';
 import { useUserContext } from '../../../contexts/UserContext';
@@ -41,7 +41,7 @@ export default function NodeEnvConfig() {
   const [emailErr, setEmailErr] = useState(false);
   const [nodeDescription, setNodeDescription] = useState('');
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [tipOpen, setTipOpen] = useState(false);
 
   const [serviceDIDPassword, storePass] = ['password', 'password'];
 
@@ -57,7 +57,7 @@ export default function NodeEnvConfig() {
     let identity = await store.loadRootIdentity();
     if (!identity) {
       const mnemonic = Mnemonic.getInstance(Mnemonic.ENGLISH);
-      identity = await RootIdentity.createFromMnemonic(
+      identity = RootIdentity.createFromMnemonic(
         mnemonic.generate(),
         serviceDIDPassword,
         store,
@@ -122,9 +122,9 @@ export default function NodeEnvConfig() {
       email &&
       nodeDescription
     ) {
-      setOpen(true);
+      setTipOpen(true);
       const nodeCredential = await getCredentialFromOwner();
-      setOpen(false);
+      setTipOpen(false);
       if (!nodeCredential) {
         popUpErrorMsg('Failed to generate the credential.');
         return;
@@ -283,7 +283,7 @@ export default function NodeEnvConfig() {
             }}
           />
         </Stack>
-        <Stack direction="row" mt={{ xs: 8, md: 10 }} spacing={{ xs: 2.5, md: 5 }}>
+        <Stack direction="row" mt={{ xs: 8, md: 10 }} spacing={{ xs: 1.5, md: 3 }}>
           <ConfirmButton
             onClick={() => navigate('/dashboard/node')}
             sx={{
@@ -300,11 +300,28 @@ export default function NodeEnvConfig() {
         </Stack>
       </ContainerBox>
       <Dialog
-        open={open}
+        open={tipOpen}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{
+          sx: {
+            background: '#161C24',
+            borderRadius: '40px',
+            px: 1,
+            py: 2
+          }
+        }}
+        TransitionProps={{
+          sx: {
+            background: 'rgba(22, 28, 36, 0.5)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '0px'
+          }
+        }}
       >
-        <DialogTitle id="alert-dialog-title">Operation Tip</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <HeaderTypo>Operation Tip</HeaderTypo>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Please open Essentials application, and confirm the credential issuing dialog.

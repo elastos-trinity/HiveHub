@@ -40,22 +40,17 @@ export default function NodeItemBox({
             ...sx
           }}
         >
-          <Stack direction="row" spacing={2} sx={{ my: 1 }}>
-            <Typography component="div" variant="h4" width="100%">
+          <Stack direction="row" justifyContent="space-between" sx={{ my: 1 }}>
+            <Typography component="div" variant="h4" width="50%">
               <Skeleton animation="wave" />
             </Typography>
-            <Typography component="div" variant="h4" width="100%">
-              <Skeleton animation="wave" />
-            </Typography>
-          </Stack>
-          <Stack spacing={1} sx={{ my: 2 }}>
-            <Typography component="div" variant="h6">
-              <Skeleton animation="wave" />
-            </Typography>
-            <Typography component="div" variant="h6">
+            <Typography component="div" variant="h4" width="20%">
               <Skeleton animation="wave" />
             </Typography>
           </Stack>
+          <Typography component="div" variant="h6" sx={{ mb: 3 }}>
+            <Skeleton animation="wave" />
+          </Typography>
           <Typography component="div" variant="h6">
             <Skeleton animation="wave" />
           </Typography>

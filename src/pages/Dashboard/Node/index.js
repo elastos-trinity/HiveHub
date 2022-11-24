@@ -27,7 +27,8 @@ export default function MyNodes() {
       }
       setIsLoading(false);
     };
-    fetchData();
+    if (user.did) fetchData();
+    else navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
 

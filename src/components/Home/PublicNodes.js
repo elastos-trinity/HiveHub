@@ -33,7 +33,7 @@ export default function PublicNodes() {
         mx: { xs: 'auto', lg: '200px' }
       }}
     >
-      <LandingTitleTypo sub mt={{ xs: '50px', md: '100px' }} mb={{ xs: '40px', md: '80px' }}>
+      <LandingTitleTypo sub="true" mt={{ xs: '50px', md: '100px' }} mb={{ xs: '40px', md: '80px' }}>
         Public Nodes
       </LandingTitleTypo>
       <Stack spacing={6.25}>

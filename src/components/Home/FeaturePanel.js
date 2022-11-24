@@ -36,7 +36,7 @@ export default function FeaturePanel({ sx = {} }) {
         ...sx
       }}
     >
-      <LandingTitleTypo sub={Boolean(true)}>Features</LandingTitleTypo>
+      <LandingTitleTypo sub="true">Features</LandingTitleTypo>
       <Grid container direction="row" alignItems="center" justifyContent="space-around">
         <FeatureGrid item xs={12} sm={6} md={3} sx={{ position: 'relative', top: '2px' }}>
           <Box sx={{ margin: '40px 0 40px' }}>

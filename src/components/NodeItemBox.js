@@ -40,50 +40,25 @@ export default function NodeItemBox({
             ...sx
           }}
         >
-          <Skeleton
-            variant="rectangular"
-            animation="wave"
-            sx={{
-              whiteSpace: 'nowrap',
-              position: 'absolute',
-              right: { xs: '10px', sm: '20px' },
-              top: { xs: '10px', sm: '30px' }
-            }}
-          />
-          <Stack>
-            <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
-              <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
-                <Skeleton variant="rectangular" animation="wave" />
-                <Skeleton
-                  variant="rectangular"
-                  animation="wave"
-                  sx={{
-                    height: { xs: '11px !important', md: '19px !important' },
-                    color: '#FFFFFF',
-                    '& .MuiChip-label': {
-                      px: { xs: '5px !important', sm: '12px !important' }
-                    }
-                  }}
-                />
-              </Stack>
-              <Skeleton variant="rectangular" animation="wave" sx={{ color: '#B3B3B3' }} />
-            </Stack>
-            <Typography
-              component="div"
-              noWrap
-              sx={{ flexGrow: 1, mt: { xs: '20px', sm: '50px' } }}
-              alignItems="center"
-            >
-              <Stack direction="row" sx={{ pb: '5px' }}>
-                <Skeleton
-                  variant="rectangular"
-                  animation="wave"
-                  sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}
-                />
-                <Skeleton variant="rectangular" animation="wave" />
-              </Stack>
+          <Stack direction="row" spacing={2} sx={{ my: 1 }}>
+            <Typography component="div" variant="h4" width="100%">
+              <Skeleton animation="wave" />
+            </Typography>
+            <Typography component="div" variant="h4" width="100%">
+              <Skeleton animation="wave" />
             </Typography>
           </Stack>
+          <Stack spacing={1} sx={{ my: 2 }}>
+            <Typography component="div" variant="h6">
+              <Skeleton animation="wave" />
+            </Typography>
+            <Typography component="div" variant="h6">
+              <Skeleton animation="wave" />
+            </Typography>
+          </Stack>
+          <Typography component="div" variant="h6">
+            <Skeleton animation="wave" />
+          </Typography>
         </Box>
       ) : (
         <Box
@@ -110,7 +85,7 @@ export default function NodeItemBox({
           >
             {time}
           </NodeTimeLable>
-          <Stack>
+          <Stack spacing={{ xs: '20px', sm: '50px' }}>
             <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
               <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
                 <NodeTitle>{name}</NodeTitle>
@@ -142,12 +117,7 @@ export default function NodeItemBox({
               </Stack>
               <NormalTypo sx={{ color: '#B3B3B3' }}>{description}</NormalTypo>
             </Stack>
-            <Typography
-              component="div"
-              noWrap
-              sx={{ flexGrow: 1, mt: { xs: '20px', sm: '50px' } }}
-              alignItems="center"
-            >
+            <Typography component="div" noWrap sx={{ flexGrow: 1 }} alignItems="center">
               <Stack direction="row" sx={{ pb: '5px' }}>
                 <NormalTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
                   Endpoint:

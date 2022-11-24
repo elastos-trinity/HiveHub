@@ -20,11 +20,6 @@ import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 import ModalDialog from '../../../components/ModalDialog';
 import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
 
-InfoItem.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
-};
-
 function InfoItem({ label, value }) {
   return (
     <Grid item lg={6} md={12} sm={12} xs={12} sx={{ textAlign: 'left', mb: 2 }}>
@@ -37,6 +32,11 @@ function InfoItem({ label, value }) {
     </Grid>
   );
 }
+
+InfoItem.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+};
 
 function InfoItemOwnerName({ label, value, value2 }) {
   const isOwnerName = !value2.startsWith('did:elastos:');

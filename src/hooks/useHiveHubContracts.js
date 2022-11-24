@@ -78,7 +78,7 @@ export default function useHiveHubContracts() {
       email: item?.data?.email || '',
       ip: '',
       name: item?.name || '',
-      ownerName: await reduceHexAddress(item?.creator?.did, 4),
+      ownerName: reduceHexAddress(item?.creator?.did, 4),
       owner_did: item?.creator?.did || '',
       remark: item?.data?.description || item?.description || '',
       status: false,

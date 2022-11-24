@@ -1,36 +1,17 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Chip, Grid, Stack, Typography, Avatar } from '@mui/material';
-import { NormalTypo, NodeDescription } from '../../../components/CustomTypos';
+import { Box, Chip, Stack, Avatar } from '@mui/material';
+import { NodeTitle, HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
+import { ContainerBox } from '../../../components/Custom/CustomContainer';
+import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { getHiveNodeInfo } from '../../../service/fetch';
-import { emptyNodeItem } from '../../../utils/filler';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
-import { NodeTitle, HeaderTypo } from '../../../components/Custom/CustomTypos';
-import { ContainerBox } from '../../../components/Custom/CustomContainer';
-
-InfoItem.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
-};
-
-function InfoItem({ label, value }) {
-  return (
-    <Grid item lg={6} md={12} sm={12} xs={12} sx={{ textAlign: 'left', mb: 2 }}>
-      <Typography component="div" variant="body1" noWrap>
-        <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
-          <NodeDescription>{label}:</NodeDescription>
-          <NormalTypo noWrap>{value}</NormalTypo>
-        </Stack>
-      </Typography>
-    </Grid>
-  );
-}
 
 function DetailItem({ label, value }) {
   return (
-    <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
+    <Stack direction="row" spacing={{ xs: '5px', md: '10px' }}>
       <NormalTypo sx={{ py: 1, color: '#FF931E', width: '140px', textAlign: 'left' }}>
         {label}:
       </NormalTypo>
@@ -40,6 +21,11 @@ function DetailItem({ label, value }) {
     </Stack>
   );
 }
+
+DetailItem.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string
+};
 
 const detailInfo = [
   { label: 'DID', field: 'owner_did' },
@@ -57,13 +43,13 @@ export default function MyNodeDetail() {
   const { getHiveNodeItem } = useHiveHubContracts();
   const { nodeId } = useParams();
   const [isloading, setIsLoading] = useState(false);
-  const [nodeDetail, setNodeDetail] = useState(emptyNodeItem);
+  const [nodeDetail, setNodeDetail] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const detail = await getHiveNodeItem(nodeId, undefined, true, true, false);
+        const detail = await getHiveNodeItem(nodeId, user.did, true, true, false);
         setNodeDetail(detail || {});
         if (detail) {
           const nodeInfo = await getHiveNodeInfo(user.did, detail.url);
@@ -82,7 +68,7 @@ export default function MyNodeDetail() {
     <>
       <HeaderTypo sx={{ py: 1 }}>Node details</HeaderTypo>
       <Box
-        sx={{ mt: { xs: 2.5, md: 5 }, position: 'relative', height: { xs: '100px', sm: '200px' } }}
+        sx={{ mt: { xs: 2.5, md: 5 }, position: 'relative', height: { xs: '100px', md: '200px' } }}
       >
         <Stack sx={{ height: '100%', overflow: 'hidden' }}>
           <Box
@@ -98,13 +84,13 @@ export default function MyNodeDetail() {
       </Box>
       <ContainerBox sx={{ position: 'relative', borderRadius: '0px 0px 20px 20px' }}>
         <Avatar
-          src=""
+          src={nodeDetail?.avatar || ''}
           alt="avatarURL"
           sx={{
             position: 'absolute',
-            width: { xs: '50px', sm: '100px' },
-            height: { xs: '50px', sm: '100px' },
-            top: { xs: '-25px', sm: '-50px' },
+            width: { xs: '50px', md: '100px' },
+            height: { xs: '50px', md: '100px' },
+            top: { xs: '-25px', md: '-50px' },
             left: 0,
             right: 0,
             margin: 'auto'
@@ -114,7 +100,7 @@ export default function MyNodeDetail() {
           direction="row"
           spacing={2.5}
           alignItems="center"
-          sx={{ mt: { xs: 2.5, sm: 5 }, mx: 'auto', width: 'fit-content' }}
+          sx={{ mt: { xs: 2.5, md: 5 }, mx: 'auto', width: 'fit-content' }}
         >
           <NodeTitle>{nodeDetail?.name || '???'}</NodeTitle>
           {nodeDetail?.status ? (
@@ -125,7 +111,7 @@ export default function MyNodeDetail() {
                 height: { xs: '11px !important', md: '19px !important' },
                 color: '#FFFFFF',
                 '& .MuiChip-label': {
-                  px: { xs: '5px !important', sm: '12px !important' }
+                  px: { xs: '5px !important', md: '12px !important' }
                 }
               }}
             />
@@ -137,19 +123,30 @@ export default function MyNodeDetail() {
                 height: { xs: '11px !important', md: '19px !important' },
                 color: '#FFFFFF',
                 '& .MuiChip-label': {
-                  px: { xs: '5px !important', sm: '12px !important' }
+                  px: { xs: '5px !important', md: '12px !important' }
                 }
               }}
             />
           )}
         </Stack>
         <NormalTypo sx={{ color: '#B3B3B3', py: 1 }}>{nodeDetail?.description || ''}</NormalTypo>
-        <Stack spacing={{ xs: 1, sm: 2.5 }} mt={{ xs: 2, sm: 7 }} mb={{ xs: 1, sm: 4 }}>
+        <Stack spacing={{ xs: 1, md: 2.5 }} mt={{ xs: 2, md: 7 }} mb={{ xs: 1, md: 4 }}>
           {detailInfo.map((item, index) => (
             <DetailItem key={index} label={item.label} value={nodeDetail[item.field] || '---'} />
           ))}
         </Stack>
       </ContainerBox>
+      <ConfirmButton
+        onClick={() => navigate('/dashboard/node')}
+        sx={{
+          mt: { xs: 2.5, md: 5 },
+          color: '#FF931E',
+          background: 'transparent',
+          border: { xs: '1px solid #FF931E', md: '2px solid #FF931E' }
+        }}
+      >
+        Back
+      </ConfirmButton>
     </>
   );
 }

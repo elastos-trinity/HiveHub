@@ -31,7 +31,9 @@ function InfoItem({ label, value }) {
 function DetailItem({ label, value }) {
   return (
     <Stack direction="row" spacing={{ xs: '5px', sm: '10px' }}>
-      <NormalTypo sx={{ py: 1, color: '#FF931E' }}>{label}:</NormalTypo>
+      <NormalTypo sx={{ py: 1, color: '#FF931E', width: '140px', textAlign: 'left' }}>
+        {label}:
+      </NormalTypo>
       <NormalTypo sx={{ py: 1, color: '#FFF' }} noWrap>
         {value}
       </NormalTypo>
@@ -61,7 +63,7 @@ export default function MyNodeDetail() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const detail = await getHiveNodeItem(nodeId, user.did, true, true, false);
+        const detail = await getHiveNodeItem(nodeId, undefined, true, true, false);
         setNodeDetail(detail || {});
         if (detail) {
           const nodeInfo = await getHiveNodeInfo(user.did, detail.url);
@@ -79,7 +81,9 @@ export default function MyNodeDetail() {
   return (
     <>
       <HeaderTypo sx={{ py: 1 }}>Node details</HeaderTypo>
-      <Box sx={{ mt: { xs: 2.5, md: 5 }, position: 'relative', height: '200px' }}>
+      <Box
+        sx={{ mt: { xs: 2.5, md: 5 }, position: 'relative', height: { xs: '100px', sm: '200px' } }}
+      >
         <Stack sx={{ height: '100%', overflow: 'hidden' }}>
           <Box
             sx={{
@@ -92,15 +96,15 @@ export default function MyNodeDetail() {
           />
         </Stack>
       </Box>
-      <ContainerBox sx={{ position: 'relative', pt: 0, borderRadius: '0px 0px 20px 20px' }}>
+      <ContainerBox sx={{ position: 'relative', borderRadius: '0px 0px 20px 20px' }}>
         <Avatar
           src=""
           alt="avatarURL"
           sx={{
             position: 'absolute',
-            width: '100px',
-            height: '100px',
-            top: '-50px',
+            width: { xs: '50px', sm: '100px' },
+            height: { xs: '50px', sm: '100px' },
+            top: { xs: '-25px', sm: '-50px' },
             left: 0,
             right: 0,
             margin: 'auto'
@@ -110,7 +114,7 @@ export default function MyNodeDetail() {
           direction="row"
           spacing={2.5}
           alignItems="center"
-          sx={{ mt: 5, mx: 'auto', width: 'fit-content' }}
+          sx={{ mt: { xs: 2.5, sm: 5 }, mx: 'auto', width: 'fit-content' }}
         >
           <NodeTitle>{nodeDetail?.name || '???'}</NodeTitle>
           {nodeDetail?.status ? (
@@ -139,8 +143,8 @@ export default function MyNodeDetail() {
             />
           )}
         </Stack>
-        <NormalTypo sx={{ color: '#B3B3B3', py: 1 }}>{nodeDetail?.description || '---'}</NormalTypo>
-        <Stack spacing={2.5}>
+        <NormalTypo sx={{ color: '#B3B3B3', py: 1 }}>{nodeDetail?.description || ''}</NormalTypo>
+        <Stack spacing={{ xs: 1, sm: 2.5 }} mt={{ xs: 2, sm: 7 }} mb={{ xs: 1, sm: 4 }}>
           {detailInfo.map((item, index) => (
             <DetailItem key={index} label={item.label} value={nodeDetail[item.field] || '---'} />
           ))}

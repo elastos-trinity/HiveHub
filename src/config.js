@@ -3,7 +3,10 @@ export const config = {
   DIDResolverUrl: process.env.REACT_APP_PUBLIC_ENV === 'production' ? 'mainnet' : 'testnet',
   NodeRegistryAddress: process.env.REACT_APP_NODE_REGISTRY_ADDRESS || '',
   IPFSUploadUrl: process.env.REACT_APP_IPFS_UPLOAD_URL || '',
-  serverUrl: 'https://service.hivehub.xyz',
+  RpcUrl:
+    process.env.REACT_APP_PUBLIC_ENV === 'production'
+      ? 'https://api.elastos.io/eth'
+      : 'https://api-testnet.elastos.io/eth',
   ApplicationDID: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML',
   GitHubRepo: 'https://github.com/elastos-trinity/HiveHub'
 };

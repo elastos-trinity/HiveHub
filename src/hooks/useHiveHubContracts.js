@@ -17,9 +17,12 @@ import { getTime, isInAppBrowser, reduceHexAddress } from '../service/common';
 import { config } from '../config';
 
 export default function useHiveHubContracts() {
-  const walletConnectProvider = isInAppBrowser()
-    ? window.elastos.getWeb3Provider()
-    : essentialsConnector.getWalletConnectProvider();
+  let walletConnectProvider;
+  if (localStorage.getItem('did'))
+    walletConnectProvider = isInAppBrowser()
+      ? window.elastos.getWeb3Provider()
+      : essentialsConnector.getWalletConnectProvider();
+  else walletConnectProvider = new Web3.providers.HttpProvider(config.RpcUrl);
   const walletConnectWeb3 = new Web3(walletConnectProvider);
 
   // TODO: maybe need use other value as the search key.

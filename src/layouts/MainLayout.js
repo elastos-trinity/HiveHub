@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TopNavbar from '../components/Navbar/Navbar';
 import Sidebar from '../components/Sidebar';
-import BottomNavbar from '../components/Navbar/BottomNavbar';
 import useInitializeEE from '../hooks/useInitializeEE';
 
 const APP_BAR_MOBILE = 32;
@@ -61,12 +60,9 @@ export default function MainLayout() {
           <Outlet />
         </>
       ) : (
-        <>
-          <MainStyle>
-            <Outlet />
-          </MainStyle>
-          <BottomNavbar />
-        </>
+        <MainStyle>
+          <Outlet />
+        </MainStyle>
       )}
     </Box>
   );

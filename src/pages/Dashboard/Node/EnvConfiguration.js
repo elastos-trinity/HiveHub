@@ -78,8 +78,8 @@ export default function NodeEnvConfig() {
     }
 
     // create a new one.
-    // const doc = await identity.newDid(storePass);
-    // const did = await identity.getDid(0);
+    await identity.newDid(storePass);
+    identity.getDid(0);
 
     // generate content.
     dids = await store.listDids();

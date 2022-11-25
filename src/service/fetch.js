@@ -67,15 +67,15 @@ export const getHiveVaultInfo = async (did, nodeProvider, type) => {
     const vaultInfo = await vaultSubscription.checkSubscription();
     if (!vaultInfo) return undefined;
     const name = `${type === 1 ? 'Vault' : 'Backup'} Service-0 (${vaultInfo.getPricePlan()})`;
-    const total = parseInt(vaultInfo.getStorageQuota() / 1024 / 1024, 10);
-    const used = parseInt(vaultInfo.getStorageUsed() / 1024 / 1024, 10);
+    const total = (vaultInfo.getStorageQuota() / 1024 / 1024, 2).toFixed * 1.0;
+    const used = (vaultInfo.getStorageUsed() / 1024 / 1024, 2).toFixed * 1.0;
     const created = getTime(new Date(vaultInfo.getCreated().toString()).getTime());
     const time = `${created.date} ${created.time}`;
     const id = 0;
     const serviceDid = vaultInfo.getServiceDid();
     const credentials = await getCredentialsFromDID(did);
     const ownerName = credentials.name ? credentials.name : reduceHexAddress(did, 4);
-    return { id, name, total, used, time, ownerName, serviceDid };
+    return { ...vaultInfo, id, name, total, used, time, ownerName, serviceDid };
   } catch (e) {
     return undefined;
   }

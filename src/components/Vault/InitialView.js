@@ -12,7 +12,7 @@ VaultInitialView.propTypes = {
 export default function VaultInitialView({ onClickCreateVault, sx = {} }) {
   return (
     <Box sx={{ ...sx, textAlign: 'center' }}>
-      <FeatureGrid item xs={12} sm={6} md={3}>
+      <FeatureGrid>
         <Box sx={{ margin: '30px 0 40px' }}>
           <Box
             sx={{

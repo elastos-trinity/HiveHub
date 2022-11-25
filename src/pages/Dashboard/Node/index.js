@@ -8,7 +8,7 @@ import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
-export default function MyNodes() {
+export default function MyNode() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { getHiveNodesList } = useHiveHubContracts();
@@ -43,7 +43,10 @@ export default function MyNodes() {
             height: '100%'
           }}
         >
-          <NodeInitialView />
+          <NodeInitialView
+            onClickEnvConfig={() => navigate('/dashboard/node/envconfig')}
+            onClickCreateNode={() => navigate('/dashboard/node/create')}
+          />
         </div>
       )}
       {!!myNodeList.length && (

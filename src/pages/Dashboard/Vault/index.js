@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Stack, Grid } from '@mui/material';
 import VaultInitialView from '../../../components/Vault/InitialView';
 import VaultItemBox from '../../../components/VaultItemBox';
+import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
 import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
@@ -13,13 +14,46 @@ const mockVault = {
   total: 512
 };
 
+const mockDappOnVault = [
+  {
+    avatar: '/static/mock/ic_feeds.svg',
+    name: 'Feeds',
+    used: 100,
+    total: 512
+  },
+  {
+    avatar: '/static/mock/ic_pasar.svg',
+    name: 'Pasar',
+    used: 50,
+    total: 512
+  },
+  {
+    avatar: '/static/mock/ic_feeds.svg',
+    name: 'Feeds',
+    used: 100,
+    total: 512
+  },
+  {
+    avatar: '/static/mock/ic_pasar.svg',
+    name: 'Pasar',
+    used: 50,
+    total: 512
+  },
+  {
+    avatar: '/static/mock/ic_feeds.svg',
+    name: 'Feeds',
+    used: 100,
+    total: 512
+  }
+];
+
 export default function MyVault() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { getHiveNodesList } = useHiveHubContracts();
   const [isLoading, setIsLoading] = useState(false);
   const [myVault, setMyVault] = useState(mockVault);
-  const [dappsOnVault, setDappsOnVault] = useState(Array(2).fill(0));
+  const [dappsOnVault, setDappsOnVault] = useState(mockDappOnVault);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -71,9 +105,16 @@ export default function MyVault() {
             </Stack>
           </Stack>
           {!!dappsOnVault.length && (
-            <Grid mt={{ xs: 2.5, md: 5 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
+            <Grid container mt={{ xs: 1.5, md: 2.5 }} spacing={{ xs: 1.5, md: 2.5 }}>
               {dappsOnVault.map((item, index) => (
-                <VaultItemBox key={`Dapps-${index}`} sx={{ mt: { xs: 2.5, md: 5 }, mb: 5 }} />
+                <DappVaultGrid
+                  key={`Dapps-${index}`}
+                  name={item.name}
+                  avatar={item.avatar}
+                  used={item.used}
+                  total={item.total}
+                  isLoading={isLoading}
+                />
               ))}
             </Grid>
           )}

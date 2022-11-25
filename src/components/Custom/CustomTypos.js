@@ -100,6 +100,32 @@ export const NormalTypo = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
+export const LabelTypo = styled(BaseTypography)(({ theme }) => ({
+  color: '#C4C4C4',
+  fontWeight: 400,
+  fontSize: '8px',
+  lineHeight: '9px',
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '15px',
+    lineHeight: '18px'
+  }
+}));
+
+export const BadgeTypo = styled(BaseTypography)(({ theme }) => ({
+  background: 'rgba(255, 147, 30, 0.1)',
+  borderRadius: '30px',
+  padding: '10px 25px',
+  color: '#FF931E',
+  fontWeight: 500,
+  width: 'fit-content',
+  fontSize: '10px',
+  lineHeight: '12px',
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '18px',
+    lineHeight: '22px'
+  }
+}));
+
 export const NodeDescription = styled(NormalTypo)({
   color: '#B3B3B3'
 });

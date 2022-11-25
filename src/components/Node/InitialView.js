@@ -14,7 +14,7 @@ NodeInitialView.propTypes = {
 export default function NodeInitialView({ onClickEnvConfig, onClickCreateNode, sx = {} }) {
   return (
     <Box sx={{ ...sx }}>
-      <FeatureGrid item xs={12} sm={6} md={3} spacing={2}>
+      <FeatureGrid>
         <Box sx={{ margin: '20px 0 20px' }}>
           <SmallHexagon
             borderColor="#FF931E"

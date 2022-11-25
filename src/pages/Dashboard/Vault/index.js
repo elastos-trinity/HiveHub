@@ -61,6 +61,8 @@ export default function MyVault() {
             used={myVault?.used ?? 0}
             isLoading={isLoading}
             sx={{ mt: { xs: 2.5, md: 5 }, mb: 5 }}
+            onClickBackup={() => {}}
+            onClickMigrate={() => {}}
           />
           <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={2} alignItems="center">

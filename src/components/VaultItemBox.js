@@ -25,18 +25,24 @@ VaultItemBox.propTypes = {
   used: PropTypes.number,
   ownerName: PropTypes.string,
   isLoading: PropTypes.bool,
-  sx: PropTypes.object
+  sx: PropTypes.object,
+  onClickBackup: PropTypes.func,
+  onClickMigrate: PropTypes.func
 };
 
-export default function VaultItemBox({ total, used, ownerName, isLoading, sx = {} }) {
+export default function VaultItemBox({
+  total,
+  used,
+  ownerName,
+  isLoading,
+  sx = {},
+  onClickBackup,
+  onClickMigrate
+}) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const theme = useTheme();
   const matchSmUp = useMediaQuery(theme.breakpoints.up('sm'));
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -95,9 +101,9 @@ export default function VaultItemBox({ total, used, ownerName, isLoading, sx = {
             aria-controls={open ? 'composition-menu' : undefined}
             aria-expanded={open ? 'true' : undefined}
             aria-haspopup="true"
-            onClick={handleToggle}
+            onClick={() => setOpen((prevOpen) => !prevOpen)}
             sx={{
-              color: 'black',
+              minWidth: '0px',
               position: 'absolute',
               right: matchSmUp ? '24px' : '12px',
               top: matchSmUp ? '24px' : '12px'
@@ -133,7 +139,10 @@ export default function VaultItemBox({ total, used, ownerName, isLoading, sx = {
                       }}
                     >
                       <MenuItem
-                        onClick={() => {}}
+                        onClick={() => {
+                          onClickBackup();
+                          setOpen(false);
+                        }}
                         sx={{
                           background: '#131317',
                           borderRadius: '10px',
@@ -159,7 +168,10 @@ export default function VaultItemBox({ total, used, ownerName, isLoading, sx = {
                         </Stack>
                       </MenuItem>
                       <MenuItem
-                        onClick={() => {}}
+                        onClick={() => {
+                          onClickMigrate();
+                          setOpen(false);
+                        }}
                         sx={{
                           background: '#131317',
                           borderRadius: '10px',

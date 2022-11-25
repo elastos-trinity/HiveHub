@@ -17,8 +17,7 @@ import {
 } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
-import { BadgeTypo, LabelTypo } from './Custom/CustomTypos';
-import { NormalTypo } from './CustomTypos';
+import { BadgeTypo, LabelTypo, NormalTypo } from './Custom/CustomTypos';
 
 VaultItemBox.propTypes = {
   total: PropTypes.number,

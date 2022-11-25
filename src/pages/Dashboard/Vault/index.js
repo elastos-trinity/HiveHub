@@ -6,13 +6,14 @@ import VaultItemBox from '../../../components/VaultItemBox';
 import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
 import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
-import { getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
+import { checkBackupStatus, getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
 
 export default function MyVault() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
   const [myVault, setMyVault] = useState(null);
+  const [backupStatus, setBackupStatus] = useState(false);
   const [dappsOnVault, setDappsOnVault] = useState(Array(2).fill(0));
 
   useEffect(() => {
@@ -22,6 +23,8 @@ export default function MyVault() {
         const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
         if (vaultItem) {
           setMyVault(vaultItem);
+          const status = await checkBackupStatus(user.did);
+          setBackupStatus(status);
           const dapps = await getDappsOnVault(user.did, undefined);
           setDappsOnVault(dapps);
         }
@@ -35,6 +38,9 @@ export default function MyVault() {
     else navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
+
+  const handleBackup = () => {};
+  const handleMigrate = () => {};
 
   return (
     <>
@@ -57,10 +63,12 @@ export default function MyVault() {
             ownerName={myVault?.ownerName || '???'}
             total={myVault?.total ?? 0}
             used={myVault?.used ?? 0}
+            pricePlan={myVault?.pricePlan || 'Basic'}
+            hasBackup={backupStatus}
             isLoading={isLoading}
+            onClickBackup={handleBackup}
+            onClickMigrate={handleMigrate}
             sx={{ mt: { xs: 2.5, md: 5 }, mb: 5 }}
-            onClickBackup={() => {}}
-            onClickMigrate={() => {}}
           />
           <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={2} alignItems="center">

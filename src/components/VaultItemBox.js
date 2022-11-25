@@ -23,6 +23,8 @@ VaultItemBox.propTypes = {
   total: PropTypes.number,
   used: PropTypes.number,
   ownerName: PropTypes.string,
+  pricePlan: PropTypes.string,
+  hasBackup: PropTypes.bool,
   isLoading: PropTypes.bool,
   sx: PropTypes.object,
   onClickBackup: PropTypes.func,
@@ -33,6 +35,8 @@ export default function VaultItemBox({
   total,
   used,
   ownerName,
+  pricePlan,
+  hasBackup,
   isLoading,
   sx = {},
   onClickBackup,
@@ -206,10 +210,12 @@ export default function VaultItemBox({
             <NormalTypo
               sx={{ fontWeight: 600, color: '#FFF' }}
             >{`${ownerName}'s Vault`}</NormalTypo>
-            <BadgeTypo>Basic</BadgeTypo>
-            <BadgeTypo sx={{ color: '#E23A45', background: 'rgba(226, 58, 69, 0.05)' }}>
-              Not backed up yet
-            </BadgeTypo>
+            <BadgeTypo>{pricePlan}</BadgeTypo>
+            {!hasBackup && (
+              <BadgeTypo sx={{ color: '#E23A45', background: 'rgba(226, 58, 69, 0.05)' }}>
+                Not backed up yet
+              </BadgeTypo>
+            )}
           </Stack>
           <LabelTypo py={1}>{`${used} MB / ${total} MB`}</LabelTypo>
           <Stack

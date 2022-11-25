@@ -1,28 +1,17 @@
-import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Box, Grid, Typography, Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Typography, Stack } from '@mui/material';
 import SmallHexagon from '../SmallHexagon';
 import { PlusButton } from '../Custom/CustomButtons';
-
-const FeatureGrid = styled(Grid)(({ theme }) => ({
-  textAlign: 'center',
-  padding: '20px 0 30px',
-  fontSize: '30px',
-  lineHeight: '37px',
-  [theme.breakpoints.down('md')]: {
-    fontSize: '15px',
-    lineHeight: '18px'
-  }
-}));
+import { FeatureGrid } from '../Custom/CustomContainer';
+import { HeaderTypo, LabelTypo } from '../Custom/CustomTypos';
 
 NodeInitialView.propTypes = {
+  onClickEnvConfig: PropTypes.func,
+  onClickCreateNode: PropTypes.func,
   sx: PropTypes.object
 };
 
-export default function NodeInitialView({ sx = {} }) {
-  const navigate = useNavigate();
-
+export default function NodeInitialView({ onClickEnvConfig, onClickCreateNode, sx = {} }) {
   return (
     <Box sx={{ ...sx }}>
       <FeatureGrid item xs={12} sm={6} md={3} spacing={2}>
@@ -89,34 +78,14 @@ export default function NodeInitialView({ sx = {} }) {
             </Box>
           </SmallHexagon>
         </Box>
-        <Typography
-          sx={{
-            fontWeight: 700,
-            fontSize: '25px',
-            lineHeight: '30px',
-            color: '#FFFFFF',
-            py: 1
-          }}
-        >
-          Become your own node operator now!
-        </Typography>
-        <Typography
-          sx={{
-            fontWeight: 400,
-            fontSize: '15px',
-            lineHeight: '18px',
-            color: '#C4C4C4',
-            py: 1
-          }}
-        >
-          Create and deploy your own Hive node!
-        </Typography>
+        <HeaderTypo sx={{ py: 1 }}>Become your own node operator now!</HeaderTypo>
+        <LabelTypo sx={{ py: 1 }}>Create and deploy your own Hive node!</LabelTypo>
       </FeatureGrid>
       <Stack mt={{ xs: 4, md: 6 }} spacing={{ xs: 3.5, md: 5 }} sx={{ alignItems: 'center' }}>
-        <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/envconfig')}>
+        <PlusButton hasPlus={false} onClick={onClickEnvConfig}>
           Configure .env file
         </PlusButton>
-        <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/create')}>
+        <PlusButton hasPlus={false} onClick={onClickCreateNode}>
           Create node
         </PlusButton>
       </Stack>

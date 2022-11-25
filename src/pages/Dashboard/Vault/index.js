@@ -6,71 +6,35 @@ import VaultItemBox from '../../../components/VaultItemBox';
 import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
 import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
-import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
-
-const mockVault = {
-  ownerName: 'Frost',
-  used: 150,
-  total: 512
-};
-
-const mockDappOnVault = [
-  {
-    avatar: '/static/mock/ic_feeds.svg',
-    name: 'Feeds',
-    used: 100,
-    total: 512
-  },
-  {
-    avatar: '/static/mock/ic_pasar.svg',
-    name: 'Pasar',
-    used: 50,
-    total: 512
-  },
-  {
-    avatar: '/static/mock/ic_feeds.svg',
-    name: 'Feeds',
-    used: 100,
-    total: 512
-  },
-  {
-    avatar: '/static/mock/ic_pasar.svg',
-    name: 'Pasar',
-    used: 50,
-    total: 512
-  },
-  {
-    avatar: '/static/mock/ic_feeds.svg',
-    name: 'Feeds',
-    used: 100,
-    total: 512
-  }
-];
+import { getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
 
 export default function MyVault() {
   const navigate = useNavigate();
   const { user } = useUserContext();
-  const { getHiveNodesList } = useHiveHubContracts();
   const [isLoading, setIsLoading] = useState(false);
-  const [myVault, setMyVault] = useState(mockVault);
-  const [dappsOnVault, setDappsOnVault] = useState(mockDappOnVault);
+  const [myVault, setMyVault] = useState(null);
+  const [dappsOnVault, setDappsOnVault] = useState(Array(2).fill(0));
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setIsLoading(true);
-  //     try {
-  //       const nodeList = await getHiveNodesList(undefined, user.did, true, true, false);
-  //       setMyNodeList(nodeList || []);
-  //     } catch (e) {
-  //       console.error(`Failed to load my nodes: ${e}`);
-  //       setMyNodeList([]);
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   if (user.did) fetchData();
-  //   else navigate('/');
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user.did]);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+        if (vaultItem) {
+          setMyVault(vaultItem);
+          const dapps = await getDappsOnVault(user.did, undefined);
+          setDappsOnVault(dapps);
+        }
+      } catch (e) {
+        console.error(`Failed to load my nodes: ${e}`);
+        setMyVault(null);
+      }
+      setIsLoading(false);
+    };
+    if (user.did) fetchData();
+    else navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.did]);
 
   return (
     <>
@@ -109,10 +73,11 @@ export default function MyVault() {
               {dappsOnVault.map((item, index) => (
                 <DappVaultGrid
                   key={`Dapps-${index}`}
-                  name={item.name}
-                  avatar={item.avatar}
-                  used={item.used}
-                  total={item.total}
+                  name={item?.name || ''}
+                  appDid={item?.app_did || ''}
+                  avatar={item?.icon_url || ''}
+                  used={((item?.used_storage_size ?? 0) / 1024 / 1024).toFixed(2) * 1.0}
+                  total={myVault?.total ?? 0}
                   isLoading={isLoading}
                 />
               ))}

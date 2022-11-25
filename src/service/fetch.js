@@ -128,6 +128,17 @@ export const getVaultSubscription = async (did, nodeProviderUrl) => {
   }
 };
 
+export const getDappsOnVault = async (did, nodeProviderUrl) => {
+  try {
+    const valutSubscription = await getVaultSubscription(did, nodeProviderUrl);
+    const appStats = await valutSubscription.getAppStats();
+    return appStats;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
 export const getBackupSubscription = async (did, nodeProviderUrl) => {
   try {
     const appContext = await getAppContext(did);

@@ -72,6 +72,11 @@ export default function Sidebar({ isOpen, onClose }) {
   // const matchMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   useEffect(() => {
+    if (!user.did) navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.did]);
+
+  useEffect(() => {
     if (isOpen) {
       onClose();
     }

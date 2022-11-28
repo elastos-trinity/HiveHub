@@ -21,7 +21,7 @@ export default function BottomNavbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { user } = useUserContext();
-  const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
+  const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explorer' 'nodes' 'vaults'
   const matchXsDown = useMediaQuery('(max-width:450px)');
 
   useEffect(() => {
@@ -40,10 +40,10 @@ export default function BottomNavbar() {
     },
     {
       title: 'Explore',
-      path: '/dashboard/explore',
+      path: '/dashboard/explorer',
       icon: 'mdi:hexagon-multiple-outline',
       iconActive: 'mdi:hexagon-multiple',
-      label: 'explore'
+      label: 'explorer'
     },
     {
       title: 'My Nodes',
@@ -91,7 +91,7 @@ export default function BottomNavbar() {
                     icon={activeSection === item.label ? item.iconActive : item.icon}
                     fontSize={matchXsDown ? 20 : 30}
                     color={activeSection === item.label ? 'black' : 'rgba(0, 0, 0, 0.3)'}
-                    rotate={item.label === 'explore' ? 3 : 0}
+                    rotate={item.label === 'explorer' ? 3 : 0}
                   />
                   <Typography
                     sx={{

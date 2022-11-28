@@ -5,7 +5,7 @@ import { PageTitleTypo, FilterByTypo } from '../../../components/CustomTypos';
 import { emptyNodeItem } from '../../../utils/filler';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
-export default function HiveExplore() {
+export default function HiveExplorer() {
   const { getHiveNodesList } = useHiveHubContracts();
   const [loadingNode, setLoadingNode] = useState(false);
   const [nodeItems, setNodeItems] = useState(Array(3).fill(emptyNodeItem));

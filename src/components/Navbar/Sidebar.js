@@ -53,7 +53,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const { user } = useUserContext();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
+  const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explorer' 'nodes' 'vaults'
   const theme = useTheme();
   const matchMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const showAvatar = !(pathname.includes('dashboard') && matchMdUp);
@@ -77,10 +77,10 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
     },
     {
       title: 'Explore',
-      path: '/dashboard/explore',
+      path: '/dashboard/explorer',
       icon: 'mdi:hexagon-multiple-outline',
       iconActive: 'mdi:hexagon-multiple',
-      label: 'explore'
+      label: 'explorer'
     },
     {
       title: 'My Nodes',
@@ -140,7 +140,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
                     icon={activeSection === item.label ? item.iconActive : item.icon}
                     fontSize={30}
                     color={activeSection === item.label ? 'black' : 'rgba(0, 0, 0, 0.3)'}
-                    rotate={item.label === 'explore' ? 3 : 0}
+                    rotate={item.label === 'explorer' ? 3 : 0}
                   />
                   <Typography variant="h5" sx={{ ...(activeSection === item.label && activeLink) }}>
                     {item.title}

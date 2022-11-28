@@ -38,6 +38,10 @@ export default function Router() {
             {
               path: 'vault',
               children: [{ path: '', element: <MyVault /> }]
+            },
+            {
+              path: 'explore',
+              children: [{ path: '', element: <ExploreNode /> }]
             }
           ]
         }
@@ -74,6 +78,7 @@ const EnvConfigPage = Loadable(lazy(() => import('../pages/Dashboard/Node/EnvCon
 const CreateNodePage = Loadable(lazy(() => import('../pages/Dashboard/Node/CreateNode')));
 const NodeDetailPage = Loadable(lazy(() => import('../pages/Dashboard/Node/NodeDetail')));
 const MyVault = Loadable(lazy(() => import('../pages/Dashboard/Vault')));
+const ExploreNode = Loadable(lazy(() => import('../pages/Dashboard/Explore')));
 
 // unused
 const LandingPage = Loadable(lazy(() => import('../pages/Landing')));

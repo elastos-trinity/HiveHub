@@ -39,13 +39,6 @@ export default function Router() {
               path: 'vault',
               children: [{ path: '', element: <MyVault /> }]
             }
-            // { path: 'explore', element: <HiveExplore /> },
-            // { path: 'explore/detail/:nodeId', element: <NodeDetail /> },
-            // { path: 'nodes', element: <HiveNodes /> },
-            // { path: 'nodes/detail/:nodeId', element: <MyNodeDetail /> },
-            // { path: 'nodes/envconfig', element: <NodeEnvConfig /> },
-            // { path: 'nodes/create', element: <CreateNode /> },
-            // { path: 'vaults', element: <HiveVaults /> }
           ]
         }
       ]
@@ -61,8 +54,8 @@ export default function Router() {
           children: [
             { path: '', element: <Navigate to="/dashboard/home" replace /> },
             { path: 'home', element: <HiveHome /> },
-            { path: 'explore', element: <HiveExplore /> },
-            { path: 'explore/detail/:nodeId', element: <NodeDetail /> },
+            { path: 'explorer', element: <HiveExplorer /> },
+            { path: 'explorer/detail/:nodeId', element: <NodeDetail /> },
             { path: 'nodes', element: <HiveNodes /> },
             { path: 'nodes/detail/:nodeId', element: <MyNodeDetail /> },
             { path: 'nodes/envconfig', element: <NodeEnvConfig /> },
@@ -85,8 +78,8 @@ const MyVault = Loadable(lazy(() => import('../pages/Dashboard/Vault')));
 // unused
 const LandingPage = Loadable(lazy(() => import('../pages/Landing')));
 const HiveHome = Loadable(lazy(() => import('../pages/Dashboard/Home')));
-const HiveExplore = Loadable(lazy(() => import('../pages/Dashboard/Explore')));
-const NodeDetail = Loadable(lazy(() => import('../pages/Dashboard/Explore/NodeDetail')));
+const HiveExplorer = Loadable(lazy(() => import('../pages/Dashboard/Explorer')));
+const NodeDetail = Loadable(lazy(() => import('../pages/Dashboard/Explorer/NodeDetail')));
 const HiveNodes = Loadable(lazy(() => import('../pages/Dashboard/MyNodes')));
 const MyNodeDetail = Loadable(lazy(() => import('../pages/Dashboard/MyNodes/MyNodeDetail')));
 const NodeEnvConfig = Loadable(lazy(() => import('../pages/Dashboard/MyNodes/NodeEnvConfig')));

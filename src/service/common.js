@@ -74,3 +74,16 @@ export const checkIfValidIP = (str) => {
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi;
   return regexExp.test(str);
 };
+
+export const getValutPricingPlanBadge = (str) => {
+  switch (str) {
+    case 'Free':
+      return 'Basic';
+    case 'Rookie':
+      return 'Standard';
+    case 'Advanced':
+      return 'Pro';
+    default:
+      return '';
+  }
+};

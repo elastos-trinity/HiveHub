@@ -14,7 +14,10 @@ export default function ViewToggleGroup({ selected, onChange, sx = {} }) {
   return (
     <ToggleButtonGroup
       value={selected}
-      onChange={(_, value) => onChange(value)}
+      onChange={(_, value) => {
+        if (value === null) return;
+        onChange(value);
+      }}
       size="small"
       color="warning"
       exclusive

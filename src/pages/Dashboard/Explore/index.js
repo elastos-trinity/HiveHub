@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stack, Box } from '@mui/material';
+import { Stack } from '@mui/material';
 import StatusSelect from '../../../components/Explore/StatusSelect';
 import ViewToggleGroup from '../../../components/Explore/ViewToggleGroup';
 import EmptyNodeView from '../../../components/Explore/EmptyNodeView';
@@ -18,13 +18,14 @@ export default function ExploreNode() {
   const [viewMode, setViewMode] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [nodeList, setNodeList] = useState(Array(2).fill(0));
+  const [filteredNodeList, setFilteredNodeList] = useState(nodeList);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const nodeList = await getHiveNodesList(undefined, undefined, true, true, false);
-        setNodeList(nodeList || []);
+        const nodeItems = await getHiveNodesList(undefined, undefined, true, true, false);
+        setNodeList(nodeItems || []);
       } catch (e) {
         console.error(`Failed to load public nodes: ${e}`);
         setNodeList([]);
@@ -36,20 +37,27 @@ export default function ExploreNode() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
 
+  useEffect(() => {
+    let status;
+    if (statusFilter === 1) status = true;
+    else if (statusFilter === 2) status = false;
+    if (status !== undefined) {
+      const filteredItems = nodeList.filter((item) => item.status === status);
+      setFilteredNodeList(filteredItems || []);
+    } else setFilteredNodeList(nodeList);
+  }, [statusFilter, nodeList]);
+
+  console.log('========', viewMode);
   return (
     <>
       <Stack direction="row" justifyContent="space-between">
         <HeaderTypo sx={{ py: 1 }}>Explore all public Hive nodes</HeaderTypo>
         <Stack direction="row" spacing={2}>
-          <Box>
-            <StatusSelect selected={statusFilter} onChange={setStatusFilter} />
-          </Box>
-          <Box>
-            <ViewToggleGroup selected={viewMode} onChange={setViewMode} />
-          </Box>
+          <StatusSelect selected={statusFilter} onChange={setStatusFilter} />
+          <ViewToggleGroup selected={viewMode} onChange={setViewMode} />
         </Stack>
       </Stack>
-      {!isLoading && !nodeList.length && (
+      {!isLoading && !filteredNodeList.length && (
         <div
           style={{
             display: 'flex',
@@ -61,7 +69,7 @@ export default function ExploreNode() {
           <EmptyNodeView />
         </div>
       )}
-      {!!nodeList.length && viewMode === 0 && (
+      {!!filteredNodeList.length && viewMode === 0 && (
         <div
           style={{
             display: 'flex',
@@ -70,12 +78,12 @@ export default function ExploreNode() {
             height: '80%'
           }}
         >
-          <NodesMapView nodes={nodeList} sx={{ mt: { xs: 2.5, md: 5 } }} />
+          <NodesMapView nodes={filteredNodeList} sx={{ mt: { xs: 2.5, md: 5 } }} />
         </div>
       )}
-      {!!nodeList.length && viewMode === 1 && (
+      {!!filteredNodeList.length && viewMode === 1 && (
         <Stack mt={{ xs: 2.5, md: 5 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
-          {nodeList.map((item, index) => (
+          {filteredNodeList.map((item, index) => (
             <NodeItemBox
               key={`MyNode-Item-${index}`}
               nodeId={item?.nid}

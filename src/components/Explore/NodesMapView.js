@@ -30,10 +30,14 @@ export default function NodesMapView({ nodes = [], sx = {} }) {
     if (nullIndex === -1) {
       nodes.forEach((item) => {
         if (item?.latitude && item?.longitude) {
+          let color = '#B3B3B3'; // blank
+          if (item?.status === true) color = '#67B674'; // online
+          else if (item?.status === false) color = '#E23A45'; // offline
+          else color = '#FF881B'; // connecting
           map.addPin({
             lat: item.latitude,
             lng: item.longitude,
-            svgOptions: { color: '#67B674', radius: 0.22 }
+            svgOptions: { color, radius: 0.22 }
           });
         }
       });

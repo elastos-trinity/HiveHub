@@ -47,7 +47,6 @@ export default function ExploreNode() {
     } else setFilteredNodeList(nodeList);
   }, [statusFilter, nodeList]);
 
-  console.log('========', viewMode);
   return (
     <>
       <Stack direction="row" justifyContent="space-between">

@@ -4,32 +4,56 @@ import { Box } from '@mui/material';
 import * as DotMap from 'dotted-map';
 import DottedMap from 'dotted-map/without-countries';
 
+const { getMapJSON } = DotMap;
+const mapJsonString = getMapJSON({
+  width: 100,
+  grid: 'diagonal'
+});
+const map = new DottedMap({ map: JSON.parse(mapJsonString) });
+
 NodesMapView.propTypes = {
   nodes: PropTypes.array,
   sx: PropTypes.object
 };
 
 export default function NodesMapView({ nodes = [], sx = {} }) {
-  const { getMapJSON } = DotMap;
-  const mapJsonString = getMapJSON({ height: 100, grid: 'diagonal' });
-  const map = new DottedMap({ map: JSON.parse(mapJsonString) });
-
-  map.addPin({
-    lat: 40.73061,
-    lng: -73.935242,
-    svgOptions: { color: '#d6ff79', radius: 0.4 }
-  });
-
   const svgMap = map.getSVG({
-    shape: 'hexagon', // if you use hexagon, prefer the grid `diagonal`
+    shape: 'hexagon',
     radius: 0.22,
     color: '#B3B3B3',
     backgroundColor: '#1D1F21'
   });
+  const [srcMap, setSrcMap] = React.useState(svgMap);
+
+  React.useEffect(() => {
+    const nullIndex = nodes.indexOf(0);
+    if (nullIndex === -1) {
+      nodes.forEach((item) => {
+        if (item?.latitude && item?.longitude) {
+          map.addPin({
+            lat: item.latitude,
+            lng: item.longitude,
+            svgOptions: { color: '#67B674', radius: 0.22 }
+          });
+        }
+      });
+      const svgMap = map.getSVG({
+        shape: 'hexagon',
+        radius: 0.22,
+        color: '#B3B3B3',
+        backgroundColor: '#1D1F21'
+      });
+      setSrcMap(svgMap);
+    }
+  }, [nodes]);
 
   return (
-    <Box sx={{ ...sx }}>
-      <img src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`} alt="" />
-    </Box>
+    <Box
+      component="img"
+      src={`data:image/svg+xml;utf8,${encodeURIComponent(srcMap)}`}
+      alt="world_map"
+      height="100%"
+      sx={{ ...sx }}
+    />
   );
 }

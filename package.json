@@ -52,6 +52,7 @@
     "apexcharts": "^3.28.3",
     "base58-js": "^1.0.4",
     "date-fns": "^2.24.0",
+    "dotted-map": "^2.2.3",
     "firebase": "^9.9.1",
     "framer-motion": "^4.1.17",
     "i18next": "^21.8.16",

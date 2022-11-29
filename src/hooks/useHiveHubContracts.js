@@ -99,6 +99,8 @@ export default function useHiveHubContracts() {
         if (ipAddress) node.ip = ipAddress;
         const location = await getLocationFromIP(ipAddress, 'json');
         node.area = `${location.country} ${location.region} ${location.city}`;
+        node.latitude = location.latitude;
+        node.longitude = location.longitude;
       }
       if (withStatus) node.status = await checkHiveNodeStatus(node.url);
     } catch (e) {

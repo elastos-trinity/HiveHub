@@ -713,10 +713,16 @@ export const getLocationFromIP = async (ipAddress, format) => {
   try {
     const response = await fetch(url);
     const json = await response.json();
-    return { country: json.country_name, region: json.region, city: json.city };
+    return {
+      country: json.country_name,
+      region: json.region,
+      city: json.city,
+      latitude: json.latitude,
+      longitude: json.longitude
+    };
   } catch (err) {
     console.error(err);
-    return { country: '', region: '', city: '' };
+    return { country: '', region: '', city: '', latitude: undefined, longitude: undefined };
   }
 };
 

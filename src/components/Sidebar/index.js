@@ -67,7 +67,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const { pathname } = useLocation();
   const { user } = useUserContext();
   const { signOutWithEssentials } = useConnectEE();
-  const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
+  const [activeSection, setActiveSection] = useState(pathname.split('/')[1]); // value can be 'home' 'explore' 'nodes' 'vaults'
   // const theme = useTheme();
   // const matchMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -81,7 +81,7 @@ export default function Sidebar({ isOpen, onClose }) {
       onClose();
     }
     const segPath = pathname.split('/').filter((item) => item);
-    if (segPath.length) setActiveSection(segPath[segPath.length - 1]);
+    if (segPath.length) setActiveSection(segPath[1]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 

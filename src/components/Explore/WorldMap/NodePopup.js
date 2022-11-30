@@ -14,6 +14,7 @@ NodePopup.propTypes = {
   description: PropTypes.string,
   endpoint: PropTypes.string,
   ownerDid: PropTypes.string,
+  onClick: PropTypes.func,
   sx: PropTypes.object
 };
 
@@ -26,6 +27,7 @@ export default function NodePopup({
   description,
   endpoint,
   ownerDid,
+  onClick,
   sx
 }) {
   const [open, setOpen] = React.useState(false);
@@ -61,14 +63,14 @@ export default function NodePopup({
         onMouseLeave={() => setOpen(false)}
         placement="bottom-start"
         transition
-        sx={{ width: '400px', height: '150px' }}
+        sx={{ width: '400px', height: '150px', zIndex: 11111 }}
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps}>
             <Box
               onClick={() => {}}
               sx={{
-                backgroundColor: 'rgba(255, 147, 30, 0.05)',
+                backgroundColor: '#131317',
                 borderRadius: '20px',
                 width: '100%',
                 padding: { xs: '10px 10px 10px 20px', sm: '20px 20px 20px 40px' },
@@ -135,7 +137,7 @@ export default function NodePopup({
                       </Stack>
                     </Stack>
                   </Typography>
-                  <ConfirmButton onClick={() => {}}>Access</ConfirmButton>
+                  <ConfirmButton onClick={onClick}>Access</ConfirmButton>
                 </Stack>
               </Stack>
             </Box>

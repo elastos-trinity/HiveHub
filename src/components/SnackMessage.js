@@ -25,7 +25,7 @@ const variantStyles = {
   }
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     minWidth: '0 !important'
   }

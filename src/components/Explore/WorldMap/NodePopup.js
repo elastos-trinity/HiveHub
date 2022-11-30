@@ -63,7 +63,7 @@ export default function NodePopup({
         onMouseLeave={() => setOpen(false)}
         placement="bottom-start"
         transition
-        sx={{ width: '400px', height: '150px', zIndex: 11111 }}
+        sx={{ width: '500px', height: '150px', zIndex: 11111 }}
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps}>

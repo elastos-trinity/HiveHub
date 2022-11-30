@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import StatusSelect from '../../../components/Explore/StatusSelect';
 import ViewToggleGroup from '../../../components/Explore/ViewToggleGroup';
 import EmptyNodeView from '../../../components/Explore/EmptyNodeView';
-import NodesMapView from '../../../components/Explore/NodesMapView';
+import NodesMapView from '../../../components/Explore/WorldMap/NodesMapView';
 import NodeItemBox from '../../../components/NodeItemBox';
 import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';

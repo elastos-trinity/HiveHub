@@ -111,6 +111,17 @@ export const LabelTypo = styled(BaseTypography)(({ theme }) => ({
   }
 }));
 
+export const SettingTitleTypo = styled(BaseTypography)(({ theme }) => ({
+  color: '#FFF',
+  fontWeight: 700,
+  fontSize: '10px',
+  lineHeight: '12px',
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '18px',
+    lineHeight: '22px'
+  }
+}));
+
 export const BadgeTypo = styled(BaseTypography)(({ theme }) => ({
   background: 'rgba(255, 147, 30, 0.1)',
   borderRadius: '30px',

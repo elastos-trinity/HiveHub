@@ -59,8 +59,9 @@ export default function NodesMapView({ nodes = [] }) {
   //     longitude: -79,
   //     status: true,
   //     name: 'Rong',
-  //     created: 1669721460,
+  //     created: '9-21-2022 12:00',
   //     remark: 'mock hive node 1',
+  //     ip: '10.10.10.10',
   //     url: 'testnet-hive1.trinity-tech.io',
   //     owner_did: 'did:elastos:ijvDXRSCwFF9uMzpdLMZJW2e8i6xSjAkxQ'
   //   },
@@ -69,13 +70,15 @@ export default function NodesMapView({ nodes = [] }) {
   //     longitude: 73,
   //     status: false,
   //     name: 'Frost',
-  //     created: 1669721460,
+  //     created: '9-23-2022 12:00',
   //     remark: 'mock hive node 2',
+  //     ip: '10.10.10.10',
   //     url: 'testnet-hive2.trinity-tech.io',
   //     owner_did: 'did:elastos:ijvDXRSCwFF9uMzpdLMZJW2e8i6xSjAkxQ'
   //   }
   // ];
   const isLoaded = nodes.length > 0 && Object.keys(nodes[0]).length > 0;
+  const handleAccess = () => {};
 
   return (
     <>
@@ -89,7 +92,7 @@ export default function NodesMapView({ nodes = [] }) {
         {mapPattern.map((item, index) => (
           <polygon
             key={index}
-            points={getHexFromCircle(item.x, item.y, 3.5)}
+            points={getHexFromCircle(item.x, item.y, 3)}
             stroke="#1D1F21"
             fill="#B3B3B3"
             strokeWidth="1"
@@ -106,8 +109,9 @@ export default function NodesMapView({ nodes = [] }) {
               status={item?.status}
               time={item?.created}
               description={item?.remark}
-              endpoint={item?.url}
+              endpoint={item?.ip}
               ownerDid={item?.owner_did || ''}
+              onClick={handleAccess}
             />
           ))}
       </svg>

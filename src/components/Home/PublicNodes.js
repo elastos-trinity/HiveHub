@@ -52,7 +52,7 @@ export default function PublicNodes({ onClick }) {
             time={item?.created}
             description={item?.remark}
             endpoint={item?.url}
-            isOwner={item?.owner_did !== user.did}
+            isOwner={item?.owner_did === user.did}
             isLoading={isLoading}
           />
         ))}

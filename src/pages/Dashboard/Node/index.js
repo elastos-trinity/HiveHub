@@ -76,7 +76,7 @@ export default function MyNode() {
               Configure .env file
             </PlusButton>
             <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/create')}>
-              Create node
+              Register Node
             </PlusButton>
           </Stack>
         </>

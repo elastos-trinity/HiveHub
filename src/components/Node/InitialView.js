@@ -86,7 +86,7 @@ export default function NodeInitialView({ onClickEnvConfig, onClickCreateNode, s
           Configure .env file
         </PlusButton>
         <PlusButton hasPlus={false} onClick={onClickCreateNode}>
-          Create node
+          Register Node
         </PlusButton>
       </Stack>
     </Box>

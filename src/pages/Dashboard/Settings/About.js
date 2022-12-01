@@ -9,7 +9,7 @@ const aboutData = [
     value: config.IsProductEnv ? 'https://hivehub.xyz' : 'https://testnet.hivehub.xyz'
   },
   { title: 'Email', value: 'hivehub@trinity-tech.io' },
-  { title: 'Github', value: 'https://github.com/elastos-trinity/HiveHub.WebApp' },
+  { title: 'Github', value: config.GitHubRepo },
   { title: 'Version', value: 'v1.0.1' },
   { title: 'Commit ID', value: generatedGitInfo.gitCommitHash }
 ];

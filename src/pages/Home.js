@@ -8,10 +8,9 @@ import { LinkButton } from '../components/Custom/CustomButtons';
 import useConnectEE from '../hooks/useConnectEE';
 import { useUserContext } from '../contexts/UserContext';
 import HexagonShape from '../components/HexagonShape';
-import generatedGitInfo from '../generatedGitInfo.json';
-import { config } from '../config';
 import FeaturePanel from '../components/Home/FeaturePanel';
 import PublicNodes from '../components/Home/PublicNodes';
+import { config } from '../config';
 
 export default function HomePage() {
   const { isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
@@ -112,39 +111,20 @@ export default function HomePage() {
       </Box>
       <FeaturePanel />
       <PublicNodes />
-      <Box sx={{ pt: { xs: 10, md: 20 } }}>
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ textAlign: 'center' }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Typography
-            sx={{
-              fontSize: { xs: '15px', md: '20px' },
-              lineHeight: '50px',
-              fontWeight: 400,
-              fontFamily: 'Red Hat Display',
-              color: '#FFF'
-            }}
-          >
-            @ 2022 Trinity Tech Ltd.
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: '#1890FF',
-              paddingX: 1,
-              paddingY: 0.5,
-              borderRadius: 2,
-              background: '#E8F4FF'
-            }}
-          >
-            v2 - {generatedGitInfo.gitCommitHash}
-          </Typography>
-        </Stack>
-      </Box>
+      <Typography
+        sx={{
+          fontSize: { xs: '15px', md: '20px' },
+          lineHeight: '50px',
+          fontWeight: 400,
+          fontFamily: 'Red Hat Display',
+          color: '#FFF',
+          textAlign: 'center',
+          mt: { xs: 10, md: 20 },
+          mb: { xs: 2, md: 4 }
+        }}
+      >
+        @ 2022 Trinity Tech Ltd.
+      </Typography>
     </Container>
   );
 }

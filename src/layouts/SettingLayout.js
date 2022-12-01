@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Typography, Avatar, Stack, Grid, Tooltip, Box, Drawer } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { BadgeTypo, HeaderTypo } from '../components/Custom/CustomTypos';
-
-const NavBox = styled(Box)({
-  width: '100%',
-  color: 'rgba(0, 0, 0, 0.3)',
-  cursor: 'pointer'
-});
+import { Typography, Stack, Box } from '@mui/material';
+import { HeaderTypo } from '../components/Custom/CustomTypos';
 
 const subMenuItemsList = [
   {
@@ -37,7 +30,7 @@ export default function SettingLayout() {
   return (
     <>
       <HeaderTypo sx={{ py: 1 }}>User settings</HeaderTypo>
-      <Stack direction="row" mt={{ xs: 2.5, md: 5 }}>
+      <Stack direction="row" mt={{ xs: 2.5, md: 5 }} spacing={6}>
         <Stack
           sx={{
             background: 'rgba(255, 147, 30, 0.05)',

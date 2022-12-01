@@ -10,6 +10,7 @@ NodeItemBox.propTypes = {
   time: PropTypes.string,
   description: PropTypes.string,
   endpoint: PropTypes.string,
+  isOwner: PropTypes.bool,
   isLoading: PropTypes.bool,
   sx: PropTypes.object
 };
@@ -21,6 +22,7 @@ export default function NodeItemBox({
   time,
   description,
   endpoint,
+  isOwner = false,
   isLoading,
   sx
 }) {
@@ -58,7 +60,7 @@ export default function NodeItemBox({
       ) : (
         <Box
           onClick={() => {
-            if (!isLoading) navigate(`/dashboard/node/detail/${nodeId}`);
+            if (!isLoading && isOwner) navigate(`/dashboard/node/detail/${nodeId}`);
           }}
           sx={{
             backgroundColor: 'rgba(255, 147, 30, 0.05)',
@@ -66,7 +68,7 @@ export default function NodeItemBox({
             width: '100%',
             padding: { xs: '10px 10px 10px 20px', sm: '20px 20px 20px 40px' },
             position: 'relative',
-            cursor: 'pointer',
+            cursor: isOwner ? 'pointer' : 'auto',
             ...sx
           }}
         >

@@ -62,6 +62,7 @@ export default function MyNode() {
                 time={item?.created}
                 description={item?.remark}
                 endpoint={item?.url}
+                isOwner={item?.owner_did === user.did}
                 isLoading={isLoading}
               />
             ))}

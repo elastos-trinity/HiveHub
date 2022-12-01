@@ -91,6 +91,7 @@ export default function ExploreNode() {
               time={item?.created}
               description={item?.remark}
               endpoint={item?.url}
+              isOwner={item?.owner_did === user.did}
               isLoading={isLoading}
             />
           ))}

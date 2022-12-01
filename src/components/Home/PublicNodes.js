@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
+import { useUserContext } from '../../contexts/UserContext';
 import useHiveHubContracts from '../../hooks/useHiveHubContracts';
 import { LandingTitleTypo } from '../Custom/CustomTypos';
 import NodeItemBox from '../NodeItemBox';
 
 export default function PublicNodes() {
+  const { user } = useUserContext();
   const { getHiveNodesList } = useHiveHubContracts();
   const [nodes, setNodes] = useState(Array(3).fill(0));
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,7 @@ export default function PublicNodes() {
             time={item?.created}
             description={item?.remark}
             endpoint={item?.url}
+            isOwner={item?.owner_did !== user.did}
             isLoading={isLoading}
           />
         ))}

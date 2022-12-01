@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import MainLayout from '../layouts/MainLayout';
+import SettingLayout from '../layouts/SettingLayout';
 // unused
 import HiveHubLayout from '../layouts';
 
@@ -42,6 +43,15 @@ export default function Router() {
             {
               path: 'explore',
               children: [{ path: '', element: <ExploreNode /> }]
+            },
+            {
+              path: 'settings',
+              element: <SettingLayout />,
+              children: [
+                { path: '', element: <Navigate to="/dashboard/settings/about" replace /> },
+                { path: 'about', element: <AboutSettings /> },
+                { path: 'language', element: <LanguageSettings /> }
+              ]
             }
           ]
         }
@@ -79,6 +89,8 @@ const CreateNodePage = Loadable(lazy(() => import('../pages/Dashboard/Node/Creat
 const NodeDetailPage = Loadable(lazy(() => import('../pages/Dashboard/Node/NodeDetail')));
 const MyVault = Loadable(lazy(() => import('../pages/Dashboard/Vault')));
 const ExploreNode = Loadable(lazy(() => import('../pages/Dashboard/Explore')));
+const AboutSettings = Loadable(lazy(() => import('../pages/Dashboard/Settings/About')));
+const LanguageSettings = Loadable(lazy(() => import('../pages/Dashboard/Settings/Language')));
 
 // unused
 const LandingPage = Loadable(lazy(() => import('../pages/Landing')));

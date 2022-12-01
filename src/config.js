@@ -8,7 +8,7 @@ export const config = {
       ? 'https://api.elastos.io/eth'
       : 'https://api-testnet.elastos.io/eth',
   ApplicationDID: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML',
-  GitHubRepo: 'https://github.com/elastos-trinity/HiveHub'
+  GitHubRepo: 'https://github.com/elastos-trinity/HiveHub.WebApp'
 };
 
 export const firebaseConfig = {

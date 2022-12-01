@@ -39,7 +39,12 @@ export default function LanguageSettings() {
                       <SettingTitleTypo sx={{ fontWeight: 700 }}>{item.title}</SettingTitleTypo>
                     }
                     secondary={
-                      <LabelTypo my={1} ml={0.5} sx={{ color: 'rgba(196, 196, 196, 0.5)' }}>
+                      <LabelTypo
+                        component="span"
+                        my={1}
+                        ml={0.5}
+                        sx={{ color: 'rgba(196, 196, 196, 0.5)' }}
+                      >
                         {item.value}
                       </LabelTypo>
                     }

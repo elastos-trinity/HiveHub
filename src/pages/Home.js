@@ -32,6 +32,14 @@ export default function HomePage() {
     setLoading(false);
   };
 
+  const handleSeeMore = async () => {
+    if (user.did) navigate('/dashboard/explore');
+    else {
+      await login();
+      navigate('/dashboard/explore');
+    }
+  };
+
   return (
     <Container
       maxWidth="1000"
@@ -110,7 +118,7 @@ export default function HomePage() {
         </Stack>
       </Box>
       <FeaturePanel />
-      <PublicNodes />
+      <PublicNodes onClick={handleSeeMore} />
       <Typography
         sx={{
           fontSize: { xs: '15px', md: '20px' },

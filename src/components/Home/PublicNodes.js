@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { Box, Button, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { useUserContext } from '../../contexts/UserContext';
@@ -7,7 +7,11 @@ import useHiveHubContracts from '../../hooks/useHiveHubContracts';
 import { LandingTitleTypo } from '../Custom/CustomTypos';
 import NodeItemBox from '../NodeItemBox';
 
-export default function PublicNodes() {
+PublicNodes.propTypes = {
+  onClick: PropTypes.func
+};
+
+export default function PublicNodes({ onClick }) {
   const { user } = useUserContext();
   const { getHiveNodesList } = useHiveHubContracts();
   const [nodes, setNodes] = useState(Array(3).fill(0));
@@ -54,11 +58,10 @@ export default function PublicNodes() {
         ))}
         <Box sx={{ textAlign: 'right' }}>
           <Button
-            to="/dashboard/explore"
             size="small"
             color="inherit"
-            component={RouterLink}
             endIcon={<Icon icon="material-symbols:arrow-right-alt" color="#ff931e" />}
+            onClick={onClick}
           >
             <span
               style={{
@@ -78,4 +81,3 @@ export default function PublicNodes() {
     </Box>
   );
 }
-PublicNodes.propTypes = {};

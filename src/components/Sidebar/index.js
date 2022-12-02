@@ -214,7 +214,7 @@ export default function Sidebar({ isOpen, onClose }) {
           left: 0
         }}
       >
-        <HiveLogo mobile={Boolean(true)} />
+        <HiveLogo />
       </Box>
     </Scrollbar>
   );

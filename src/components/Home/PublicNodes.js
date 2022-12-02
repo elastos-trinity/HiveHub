@@ -22,7 +22,7 @@ export default function PublicNodes({ onClick }) {
       setIsLoading(true);
       try {
         const nodeList = await getHiveNodesList(undefined, undefined, true, true, false);
-        setNodes(nodeList);
+        setNodes((nodeList || []).slice(0, 5));
       } catch (e) {
         console.log(`Failed to load nodes: ${e}`);
         setNodes([]);

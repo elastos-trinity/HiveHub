@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Container, Typography, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 import { LandingTitleTypo } from '../components/Custom/CustomTypos';
 import { LinkButton } from '../components/Custom/CustomButtons';
 import useConnectEE from '../hooks/useConnectEE';
@@ -16,8 +17,9 @@ export default function HomePage() {
   const { isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
     useConnectEE();
   const { user } = useUserContext();
-  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const matchMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -60,17 +62,22 @@ export default function HomePage() {
           {matchMdUp ? (
             <>
               <LandingTitleTypo>
-                <span style={{ color: '#FF931E' }}>Your</span> Decentralized Storage
+                <span style={{ color: '#FF931E' }}>{t('home-title-your')}</span>
+                {` ${t('home-title-decentralized')} ${t('home-title-storage')}`}
               </LandingTitleTypo>
-              <LandingTitleTypo sx={{ color: '#FF931E' }}>Manager</LandingTitleTypo>
+              <LandingTitleTypo sx={{ color: '#FF931E' }}>
+                {t('home-title-manager')}
+              </LandingTitleTypo>
             </>
           ) : (
             <>
               <LandingTitleTypo>
-                <span style={{ color: '#FF931E' }}>Your</span> Decentralized
+                <span style={{ color: '#FF931E' }}>{t('home-title-your')}</span>{' '}
+                {t('home-title-decentralized')}
               </LandingTitleTypo>
               <LandingTitleTypo>
-                Storage <span style={{ color: '#FF931E' }}>Manager</span>
+                {t('home-title-storage')}
+                <span style={{ color: '#FF931E' }}> {t('home-title-manager')}</span>
               </LandingTitleTypo>
             </>
           )}
@@ -109,7 +116,7 @@ export default function HomePage() {
         >
           {!user.did ? (
             <LinkButton btncolor="#FF931E" variant="outlined" onClick={login} disabled={loading}>
-              Sign in with DID
+              {t('sign-in-with-did')}
             </LinkButton>
           ) : (
             <LinkButton
@@ -117,7 +124,7 @@ export default function HomePage() {
               variant="outlined"
               onClick={() => navigate('/dashboard/node')}
             >
-              Dashboard
+              {t('home-dashboard')}
             </LinkButton>
           )}
           <LinkButton
@@ -126,7 +133,7 @@ export default function HomePage() {
             target="_blank"
             href={config.GitHubRepo}
           >
-            GitHub
+            {t('home-github')}
           </LinkButton>
         </Stack>
       </Box>
@@ -146,7 +153,7 @@ export default function HomePage() {
           mb: { xs: 2, md: 4 }
         }}
       >
-        @ 2022 Trinity Tech Ltd.
+        {t('home-company-name')}
       </Typography>
     </Container>
   );

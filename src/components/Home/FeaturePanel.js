@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Box, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 import SmallHexagon from '../SmallHexagon';
 import { LandingTitleTypo } from '../Custom/CustomTypos';
 
@@ -20,6 +21,7 @@ FeaturePanel.propTypes = {
 };
 
 export default function FeaturePanel({ sx = {} }) {
+  const { t } = useTranslation();
   return (
     <Box
       sx={{
@@ -37,7 +39,9 @@ export default function FeaturePanel({ sx = {} }) {
         ...sx
       }}
     >
-      <LandingTitleTypo sub="true">Features</LandingTitleTypo>
+      <LandingTitleTypo sub="true" my={{ xs: 3.75, md: 5 }}>
+        {t('home-features')}
+      </LandingTitleTypo>
       <Grid container direction="row" alignItems="center" justifyContent="space-around">
         <FeatureGrid item xs={12} sm={6} md={3} sx={{ position: 'relative', top: '2px' }}>
           <Box sx={{ margin: '40px 0 40px' }}>
@@ -106,7 +110,7 @@ export default function FeaturePanel({ sx = {} }) {
               </Box>
             </SmallHexagon>
           </Box>
-          <span style={{ color: '#FFFFFF' }}>Deploy Node</span>
+          <span style={{ color: '#FFFFFF' }}>{t('home-deploy-node')}</span>
         </FeatureGrid>
         <FeatureGrid item xs={12} sm={6} md={3}>
           <Box sx={{ margin: '30px 0 40px' }}>
@@ -128,7 +132,7 @@ export default function FeaturePanel({ sx = {} }) {
               </Typography>
             </Box>
           </Box>
-          <span style={{ color: '#FFFFFF' }}>Create Vault</span>
+          <span style={{ color: '#FFFFFF' }}>{t('home-create-vault')}</span>
         </FeatureGrid>
         <FeatureGrid item xs={12} sm={6} md={3}>
           <Box sx={{ margin: '30px 0 40px' }}>
@@ -159,7 +163,7 @@ export default function FeaturePanel({ sx = {} }) {
               />
             </Box>
           </Box>
-          <span style={{ color: '#FFFFFF' }}>Backup</span>
+          <span style={{ color: '#FFFFFF' }}>{t('home-backup')}</span>
         </FeatureGrid>
         <FeatureGrid item xs={12} sm={6} md={3}>
           <Grid
@@ -218,7 +222,7 @@ export default function FeaturePanel({ sx = {} }) {
               </Box>
             </Grid>
           </Grid>
-          <span style={{ color: '#FFFFFF' }}>Migrate</span>
+          <span style={{ color: '#FFFFFF' }}>{t('home-migrate')}</span>
         </FeatureGrid>
       </Grid>
     </Box>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
+import { useTranslation } from 'react-i18next';
 import { useUserContext } from '../../contexts/UserContext';
 import useHiveHubContracts from '../../hooks/useHiveHubContracts';
 import { LandingTitleTypo } from '../Custom/CustomTypos';
@@ -13,6 +14,7 @@ PublicNodes.propTypes = {
 
 export default function PublicNodes({ onClick }) {
   const { user } = useUserContext();
+  const { t } = useTranslation();
   const { getHiveNodesList } = useHiveHubContracts();
   const [nodes, setNodes] = useState(Array(3).fill(0));
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +42,7 @@ export default function PublicNodes({ onClick }) {
       }}
     >
       <LandingTitleTypo sub="true" mt={{ xs: '40px', md: '100px' }} mb={{ xs: '20px', md: '80px' }}>
-        Public Nodes
+        {t('home-public-nodes')}
       </LandingTitleTypo>
       <Stack spacing={{ xs: 3.5, md: 6.25 }}>
         {nodes.map((item, index) => (
@@ -73,7 +75,7 @@ export default function PublicNodes({ onClick }) {
                 lineHeight: '19px'
               }}
             >
-              See more
+              {t('home-see-more')}
             </span>
           </Button>
         </Box>

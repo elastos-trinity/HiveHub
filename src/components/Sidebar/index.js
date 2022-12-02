@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { Typography, Avatar, Stack, Tooltip, Box, Drawer } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { tooltipClasses } from '@mui/material/Tooltip';
-// components
+import { useTranslation } from 'react-i18next';
 import HiveLogo from '../Logo/Logo';
 import Scrollbar from '../Scrollbar';
 import { MHidden } from '../@material-extend';
@@ -67,6 +67,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const { pathname } = useLocation();
   const { user } = useUserContext();
   const { signOutWithEssentials } = useConnectEE();
+  const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState(pathname.split('/')[1]); // value can be 'home' 'explore' 'nodes' 'vaults'
   // const theme = useTheme();
   // const matchMdUp = useMediaQuery(theme.breakpoints.up('md'));
@@ -87,31 +88,31 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const menuItemsList = [
     {
-      title: 'My Nodes',
+      title: t('sidebar-menu-mynodes'),
       path: '/dashboard/node',
       icon: 'mdi:hexagon-outline',
       label: 'node'
     },
     {
-      title: 'Vault',
+      title: t('sidebar-menu-vault'),
       path: '/dashboard/vault',
       icon: 'tabler:square-dot',
       label: 'vault'
     },
     {
-      title: 'Explore',
+      title: t('sidebar-menu-explore'),
       path: '/dashboard/explore',
       icon: 'mdi:hexagon-multiple-outline',
       label: 'explore'
     },
     {
-      title: 'Settings',
+      title: t('sidebar-menu-settings'),
       path: '/dashboard/settings',
       icon: 'tabler:settings',
       label: 'settings'
     },
     {
-      title: 'Log out',
+      title: t('sidebar-menu-logout'),
       path: '/',
       icon: 'mdi:logout',
       label: 'logout'

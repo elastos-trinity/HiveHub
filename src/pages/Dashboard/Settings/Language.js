@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Stack, Divider, Box, List, ListItem, ListItemText } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { SettingTitleTypo, LabelTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
+import { useLanguageContext } from '../../../contexts/LanguageContext';
 
 const languageData = [
   { title: 'English', value: 'English' },
@@ -9,7 +10,19 @@ const languageData = [
 ];
 
 export default function LanguageSettings() {
-  const [selected, setSelected] = useState(0);
+  const { language, setLanguage, changeLanguage } = useLanguageContext();
+  const [selected, setSelected] = useState(language === 'en' ? 0 : 1);
+
+  const handleChange = (id) => {
+    if (id === 0) {
+      setLanguage('en');
+      changeLanguage('en');
+    } else {
+      setLanguage('zh');
+      changeLanguage('zh');
+    }
+    setSelected(id);
+  };
 
   return (
     <Box
@@ -28,7 +41,7 @@ export default function LanguageSettings() {
         <List sx={{ p: 0, width: '100%' }}>
           {languageData.map((item, _i) => (
             <Box key={_i} sx={{ width: '100%', pt: _i ? 2 : 0 }}>
-              <ListItem button sx={{ p: 0 }} onClick={() => setSelected(_i)}>
+              <ListItem button sx={{ p: 0 }} onClick={() => handleChange(_i)}>
                 <Stack
                   direction="row"
                   sx={{ width: '100%', color: 'text.primary' }}

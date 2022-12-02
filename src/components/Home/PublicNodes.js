@@ -39,10 +39,10 @@ export default function PublicNodes({ onClick }) {
         mx: { xs: 'auto', lg: '200px' }
       }}
     >
-      <LandingTitleTypo sub="true" mt={{ xs: '50px', md: '100px' }} mb={{ xs: '40px', md: '80px' }}>
+      <LandingTitleTypo sub="true" mt={{ xs: '40px', md: '100px' }} mb={{ xs: '20px', md: '80px' }}>
         Public Nodes
       </LandingTitleTypo>
-      <Stack spacing={6.25}>
+      <Stack spacing={{ xs: 3.5, md: 6.25 }}>
         {nodes.map((item, index) => (
           <NodeItemBox
             key={`node-item-${index}`}

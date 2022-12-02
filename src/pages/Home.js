@@ -53,19 +53,32 @@ export default function HomePage() {
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
-          paddingBottom: '500px'
+          paddingBottom: { xs: '250px', md: '500px' }
         }}
       >
         <Box mt={{ xs: '70px', md: '135px' }} sx={{ position: 'relative' }}>
-          <LandingTitleTypo>
-            <span style={{ color: '#FF931E' }}>Your</span> Decentralized Storage
-          </LandingTitleTypo>
-          <LandingTitleTypo sx={{ color: '#FF931E' }}>Manager</LandingTitleTypo>
+          {matchMdUp ? (
+            <>
+              <LandingTitleTypo>
+                <span style={{ color: '#FF931E' }}>Your</span> Decentralized Storage
+              </LandingTitleTypo>
+              <LandingTitleTypo sx={{ color: '#FF931E' }}>Manager</LandingTitleTypo>
+            </>
+          ) : (
+            <>
+              <LandingTitleTypo>
+                <span style={{ color: '#FF931E' }}>Your</span> Decentralized
+              </LandingTitleTypo>
+              <LandingTitleTypo>
+                Storage <span style={{ color: '#FF931E' }}>Manager</span>
+              </LandingTitleTypo>
+            </>
+          )}
           <Box
             sx={{
               position: 'absolute',
-              top: '-10vw',
-              right: '12vw',
+              top: { xs: '-20vw', sm: '-15vw', md: '-10vw' },
+              right: { xs: '8vw', sm: '10vw', md: '12vw' },
               zIndex: 1
             }}
           >
@@ -90,7 +103,7 @@ export default function HomePage() {
         <Stack
           direction="row"
           spacing={{ xs: 2.5, md: 5 }}
-          mt={{ xs: '50px', md: '60px' }}
+          mt={7.5}
           justifyContent="center"
           sx={{ position: 'relative' }}
         >
@@ -117,7 +130,9 @@ export default function HomePage() {
           </LinkButton>
         </Stack>
       </Box>
-      <FeaturePanel />
+      <Box sx={{ px: 2 }}>
+        <FeaturePanel />
+      </Box>
       <PublicNodes onClick={handleSeeMore} />
       <Typography
         sx={{

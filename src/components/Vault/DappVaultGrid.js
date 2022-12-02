@@ -49,7 +49,8 @@ export default function DappVaultGrid({
   if (!name || !avatar) {
     const id = dappList.findIndex((el) => el.appDid === appDid);
     const dappId = id < 0 ? 0 : id;
-    name = dappList[dappId].name;
+    if (dappId === 0 && appDid) name = reduceHexAddress(appDid, 10);
+    else name = dappList[dappId].name;
     avatar = dappList[dappId].avatar;
   }
 
@@ -89,7 +90,7 @@ export default function DappVaultGrid({
         >
           <Stack direction="row" spacing={2} alignItems="center">
             <img src={avatar} alt="dapp_avatar" width="30px" />
-            <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }}>
+            <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }} noWrap>
               {name || reduceHexAddress(appDid, 6)}
             </NormalTypo>
           </Stack>

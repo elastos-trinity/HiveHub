@@ -9,12 +9,7 @@ HiveHubLogo.propTypes = {
 export default function HiveHubLogo({ mobile = false }) {
   return (
     <Box component={RouterLink} to="/" sx={{ textDecoration: 'none' }}>
-      <img
-        src={`/static/${mobile ? 'Logo.svg' : 'Logo.svg'}`}
-        alt="logo"
-        width="100%"
-        height="100%"
-      />
+      <img src="/static/Logo.svg" alt="logo" width={mobile ? '120px' : '100%'} />
     </Box>
   );
 }

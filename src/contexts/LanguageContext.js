@@ -17,11 +17,11 @@ LanguageContextProvider.propTypes = {
 
 function LanguageContextProvider({ children }) {
   const { i18n } = useTranslation();
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(localStorage.getItem('hivehub_language') || 'en');
   useEffect(() => {
-    i18n.changeLanguage('en');
+    i18n.changeLanguage(language);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [language]);
 
   return (
     <LanguageContext.Provider
@@ -30,6 +30,7 @@ function LanguageContextProvider({ children }) {
         language,
         setLanguage,
         changeLanguage: (lang) => {
+          localStorage.setItem('hivehub_language', lang);
           i18n.changeLanguage(lang).catch(console.log);
         }
       }}

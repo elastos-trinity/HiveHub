@@ -80,7 +80,7 @@ PlusButton.propTypes = {
 export function PlusButton({ onClick, disabled, hasPlus = true, children }) {
   return (
     <OutlinedButton
-      sx={{ height: { xs: '30px', md: '70px' } }}
+      sx={{ height: { xs: '30px', md: '70px' }, textTransform: 'inherit' }}
       onClick={onClick}
       disabled={disabled}
     >

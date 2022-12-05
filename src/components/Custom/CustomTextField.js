@@ -18,27 +18,30 @@ CustomTextField.propTypes = {
   errorText: PropTypes.string,
   limit: PropTypes.number,
   sx: PropTypes.any,
-  changeHandler: PropTypes.func
+  changeHandler: PropTypes.func,
+  type: PropTypes.any
 };
 
-export default function CustomTextField({
-  variant,
-  disabled,
-  inputValue,
-  title,
-  placeholder,
-  height,
-  multiline,
-  rows,
-  fontSize,
-  fontWeight,
-  number = false,
-  error = false,
-  errorText = '',
-  limit,
-  sx,
-  changeHandler
-}) {
+export default function CustomTextField(props) {
+  const {
+    variant,
+    disabled,
+    inputValue,
+    title,
+    placeholder,
+    height,
+    multiline,
+    rows,
+    fontSize,
+    fontWeight,
+    number = false,
+    error = false,
+    errorText = '',
+    limit,
+    sx,
+    changeHandler,
+    type = undefined
+  } = props;
   const [text, setText] = useState('');
   const [invalid, setInvalid] = useState(true);
 
@@ -76,6 +79,7 @@ export default function CustomTextField({
       )}
       <TextField
         variant={variant}
+        type={type}
         disabled={disabled}
         placeholder={placeholder}
         value={text}

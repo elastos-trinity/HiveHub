@@ -138,7 +138,7 @@ export default function NodeEnvConfig() {
         createHiveNodeEnvConfig(
           serviceDIDContent,
           serviceDIDPassword,
-          storePass,
+          password,
           nodeCredential,
           paymentReceivingAddress,
           nodeName,
@@ -149,7 +149,7 @@ export default function NodeEnvConfig() {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
-        navigate('/dashboard/nodes');
+        navigate('/dashboard/node');
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Creating Hive Node ENV failed.', {
@@ -204,6 +204,7 @@ export default function NodeEnvConfig() {
           <CustomTextField
             placeholder="Password"
             variant="standard"
+            type="password"
             inputValue={password}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}
@@ -217,6 +218,7 @@ export default function NodeEnvConfig() {
           <CustomTextField
             placeholder="Repeat password"
             variant="standard"
+            type="password"
             inputValue={repeatPwd}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}

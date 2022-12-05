@@ -125,7 +125,7 @@ export default function MyNode() {
       )}
       <ModalDialog open={dlgState.confirmDlgOpened}>
         <ConfirmDlg
-          message="After confirm, need verify on the Essentials application."
+          message="After clicked the 'Confirm' button, please verify on the Essentials application."
           onProgress={onProgress}
           onClose={() => {
             setDlgState({

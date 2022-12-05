@@ -100,6 +100,7 @@ export const ConfirmButton = styled(Button)(({ theme }) => ({
   height: '30px',
   padding: '9px 19px',
   width: 'fit-content',
+  textTransform: 'inherit',
   [theme.breakpoints.up('md')]: {
     lineHeight: '24px',
     fontSize: '20px',

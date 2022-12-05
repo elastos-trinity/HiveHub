@@ -4,6 +4,7 @@ import { Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
@@ -17,6 +18,7 @@ export default function CreateNode() {
   const { enqueueSnackbar } = useSnackbar();
   const { addHiveNode, getHiveNodesList } = useHiveHubContracts();
   const { user } = useUserContext();
+  const { t } = useTranslation();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [url, setUrl] = useState('');
@@ -136,7 +138,7 @@ export default function CreateNode() {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
-        navigate('/dashboard/nodes');
+        navigate('/dashboard/node');
       } else {
         enqueueSnackbar('Create Hive Node failed.', {
           variant: 'error',
@@ -156,7 +158,7 @@ export default function CreateNode() {
 
   return (
     <>
-      <HeaderTypo sx={{ py: 1 }}>Create and deploy a Hive node</HeaderTypo>
+      <HeaderTypo sx={{ py: 1 }}>{t('node-create-title')}</HeaderTypo>
       <ContainerBox mt={{ xs: 2.5, md: 5 }}>
         <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 0, md: 1 }}>
           <CustomTextField
@@ -196,10 +198,10 @@ export default function CreateNode() {
               border: { xs: '1px solid #FF931E', md: '2px solid #FF931E' }
             }}
           >
-            Back
+            {t('btn-back')}
           </ConfirmButton>
           <ConfirmButton disabled={onProgress} onClick={handleCreateNode}>
-            Deploy node
+            {t('btn-deploy-node')}
           </ConfirmButton>
         </Stack>
       </ContainerBox>

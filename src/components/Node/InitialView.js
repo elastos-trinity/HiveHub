@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Box, Typography, Stack } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import SmallHexagon from '../SmallHexagon';
 import { PlusButton } from '../Custom/CustomButtons';
 import { FeatureGrid } from '../Custom/CustomContainer';
@@ -12,6 +13,7 @@ NodeInitialView.propTypes = {
 };
 
 export default function NodeInitialView({ onClickEnvConfig, onClickCreateNode, sx = {} }) {
+  const { t } = useTranslation();
   return (
     <Box sx={{ ...sx }}>
       <FeatureGrid>
@@ -78,15 +80,15 @@ export default function NodeInitialView({ onClickEnvConfig, onClickCreateNode, s
             </Box>
           </SmallHexagon>
         </Box>
-        <HeaderTypo sx={{ py: 1 }}>Become your own node operator now!</HeaderTypo>
-        <LabelTypo sx={{ py: 1 }}>Create and deploy your own Hive node!</LabelTypo>
+        <HeaderTypo sx={{ py: 1 }}>{t('node-init-title')}</HeaderTypo>
+        <LabelTypo sx={{ py: 1 }}>{t('node-init-label')}</LabelTypo>
       </FeatureGrid>
       <Stack mt={{ xs: 4, md: 6 }} spacing={{ xs: 3.5, md: 5 }} sx={{ alignItems: 'center' }}>
         <PlusButton hasPlus={false} onClick={onClickEnvConfig}>
-          Configure .env file
+          {t('btn-config-env')}
         </PlusButton>
         <PlusButton hasPlus={false} onClick={onClickCreateNode}>
-          Register Node
+          {t('btn-register-node')}
         </PlusButton>
       </Stack>
     </Box>

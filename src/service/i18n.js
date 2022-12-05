@@ -23,6 +23,10 @@ const en = {
   'sidebar-menu-explore': 'Explore',
   'sidebar-menu-settings': 'Settings',
   'sidebar-menu-logout': 'Log out',
+  'node-init-title': 'Become your own node operator now!',
+  'node-init-label': 'Create and deploy your own Hive node!',
+  'btn-config-env': 'Configure .env file',
+  'btn-register-node': 'Register Node',
 
   'display-language': 'English',
   'landing-title-manage': 'Manage',
@@ -114,6 +118,10 @@ const zh = {
   'sidebar-menu-explore': 'Explore',
   'sidebar-menu-settings': 'Settings',
   'sidebar-menu-logout': 'Log out',
+  'node-init-title': 'Become your own node operator now!',
+  'node-init-label': 'Create and deploy your own Hive node!',
+  'btn-config-env': 'Configure .env file',
+  'btn-register-node': 'Register Node',
 
   'display-language': '中文',
   'landing-title-manage': '管理',

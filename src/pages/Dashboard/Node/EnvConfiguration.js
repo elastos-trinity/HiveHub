@@ -34,7 +34,7 @@ export default function NodeEnvConfig() {
   const [password, setPassword] = useState('');
   const [passwordErr, setPasswordErr] = useState(false);
   const [repeatPwd, setRepeatPwd] = useState('');
-  const [repeatPwdErr, setRepeatPwdErr] = useState(0);
+  const [repeatPwdErr, setRepeatPwdErr] = useState(false);
   const [paymentReceivingAddress, setPaymentReceivingAddress] = useState('');
   const [paymentReceivingAddressErr, setPaymentReceivingAddressErr] = useState(false);
   const [nodeName, setNodeName] = useState('');
@@ -164,10 +164,7 @@ export default function NodeEnvConfig() {
       setNodeNameErr(!nodeName);
       setNodeDescriptionErr(!nodeDescription);
       setEmailErr(!email);
-      let repeatErr = 0;
-      if (!repeatPwd) repeatErr = 1;
-      else if (repeatErr !== password) repeatErr = 2;
-      setRepeatPwdErr(repeatErr);
+      setRepeatPwdErr(repeatPwd !== password);
     }
   };
 
@@ -223,16 +220,11 @@ export default function NodeEnvConfig() {
             inputValue={repeatPwd}
             fontSize={matchDownMd ? 10 : 20}
             height={matchDownMd ? 12 : 24}
-            error={repeatPwdErr !== 0}
-            errorText={
-              repeatPwdErr === 1 ? 'Repeat password can not be empty' : 'Incorrect password'
-            }
+            error={repeatPwdErr}
+            errorText="Incorrect password"
             changeHandler={(value) => {
               setRepeatPwd(value);
-              let repeatErr = 0;
-              if (!repeatPwd) repeatErr = 1;
-              else if (repeatErr !== password) repeatErr = 2;
-              setRepeatPwdErr(repeatErr);
+              setRepeatPwdErr(value !== password);
             }}
           />
           <CustomTextField

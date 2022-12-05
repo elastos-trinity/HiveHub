@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Stack, Typography, TextField } from '@mui/material';
+import { Stack, Typography, TextField, Box } from '@mui/material';
 
 CustomTextField.propTypes = {
   variant: PropTypes.any,
@@ -58,18 +58,14 @@ export default function CustomTextField({
   };
 
   useEffect(() => {
-    setInvalid(number ? text === '' || Number.isNaN(Number(text)) : !text);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text]);
-
-  useEffect(() => {
     setText(inputValue === undefined || (number && inputValue === 'NaN') ? '' : inputValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
 
   useEffect(() => {
-    if (error) setInvalid(true);
-  }, [error]);
+    setInvalid((number ? text === '' || Number.isNaN(Number(text)) : !text) || error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, error]);
 
   return (
     <Stack spacing={0.5} sx={{ ...sx }}>
@@ -94,9 +90,16 @@ export default function CustomTextField({
         sx={{ fontSize, fontWeight, height }}
       />
       {error && invalid && (
-        <Typography fontSize={12} fontWeight={500} color="#EB5757">
-          {errorText}
-        </Typography>
+        <Box sx={{ position: 'relative' }}>
+          <Typography
+            fontSize={12}
+            fontWeight={500}
+            color="#EB5757"
+            sx={{ position: 'absolute', mt: '10px !important', mx: 'auto', width: '100%' }}
+          >
+            {errorText}
+          </Typography>
+        </Box>
       )}
     </Stack>
   );

@@ -26,8 +26,18 @@ const en = {
   'node-init-title': 'Become your own node operator now!',
   'node-init-label': 'Create and deploy your own Hive node!',
   'node-deployed-node': 'Deployed Hive nodes',
+  'node-envconfig-title': 'Environment configuration for Hive node',
   'btn-config-env': 'Configure .env file',
   'btn-register-node': 'Register Node',
+  'btn-back': 'Back',
+  'btn-generate-env': 'Generate .env file',
+  'btn-cancel': 'Cancel',
+  'btn-download': 'Download',
+  'dlg-generate-env-label':
+    'The generated .env file will be downloaded locally from the browser. Please store them somewhere safe.',
+  'alert-operation-tip-title': 'Operation Tip',
+  'alert-operation-tip-label':
+    'Please open Essentials application, and confirm the credential issuing dialog.',
 
   'display-language': 'English',
   'landing-title-manage': 'Manage',
@@ -122,8 +132,18 @@ const zh = {
   'node-init-title': 'Become your own node operator now!',
   'node-init-label': 'Create and deploy your own Hive node!',
   'node-deployed-node': 'Deployed Hive nodes',
+  'node-envconfig-title': 'Environment configuration for Hive node',
   'btn-config-env': 'Configure .env file',
   'btn-register-node': 'Register Node',
+  'btn-back': 'Back',
+  'btn-generate-env': 'Generate .env file',
+  'btn-cancel': 'Cancel',
+  'btn-download': 'Download',
+  'dlg-generate-env-label':
+    'The generated .env file will be downloaded locally from the browser. Please store them somewhere safe.',
+  'alert-operation-tip-title': 'Operation Tip',
+  'alert-operation-tip-label':
+    'Please open Essentials application, and confirm the credential issuing dialog.',
 
   'display-language': '中文',
   'landing-title-manage': '管理',

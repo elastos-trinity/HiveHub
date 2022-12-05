@@ -12,6 +12,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useTranslation } from 'react-i18next';
 import { HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
@@ -23,6 +24,7 @@ export default function NodeEnvConfig() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUserContext();
+  const { t } = useTranslation();
   const [ownerDid] = useState(user.did);
   const [ownerDidErr, setOwnerDidErr] = useState(false);
   const [servicePK, setServicePK] = useState('');
@@ -175,7 +177,7 @@ export default function NodeEnvConfig() {
 
   return (
     <>
-      <HeaderTypo sx={{ py: 1 }}>Environment configuration for Hive node</HeaderTypo>
+      <HeaderTypo sx={{ py: 1 }}>{t('node-envconfig-title')}</HeaderTypo>
       <ContainerBox mt={{ xs: 2.5, md: 5 }}>
         <Stack spacing={{ xs: 5, md: 7.5 }} mt={{ xs: 0, md: 1 }}>
           <CustomTextField
@@ -300,10 +302,10 @@ export default function NodeEnvConfig() {
               border: { xs: '1px solid #FF931E', md: '2px solid #FF931E' }
             }}
           >
-            Back
+            {t('btn-back')}
           </ConfirmButton>
           <ConfirmButton onClick={handleSaveEnvConfig} disabled={!pageLoaded}>
-            Generate .env file
+            {t('Generate .env file')}
           </ConfirmButton>
         </Stack>
       </ContainerBox>
@@ -328,7 +330,7 @@ export default function NodeEnvConfig() {
         }}
       >
         <DialogTitle id="download-dialog-title">
-          <HeaderTypo sx={{ py: 1, textAlign: 'center' }}>Generate .env file</HeaderTypo>
+          <HeaderTypo sx={{ py: 1, textAlign: 'center' }}>{t('btn-generate-env')}</HeaderTypo>
         </DialogTitle>
         <DialogContent>
           <img
@@ -339,8 +341,7 @@ export default function NodeEnvConfig() {
           />
           <DialogContentText id="download-dialog-description">
             <NormalTypo sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
-              The generated .env file will be downloaded locally from the browser. Please store them
-              somewhere safe.
+              {t('dlg-generate-env-label')}
             </NormalTypo>
           </DialogContentText>
           <Stack
@@ -358,10 +359,10 @@ export default function NodeEnvConfig() {
                 width: { xs: '120px', md: '240px' }
               }}
             >
-              Cancel
+              {t('btn-cancel')}
             </ConfirmButton>
             <ConfirmButton onClick={handleDownload} sx={{ width: { xs: '120px', md: '240px' } }}>
-              Download
+              {t('btn-download')}
             </ConfirmButton>
           </Stack>
         </DialogContent>
@@ -387,11 +388,11 @@ export default function NodeEnvConfig() {
         }}
       >
         <DialogTitle id="alert-dialog-title">
-          <HeaderTypo>Operation Tip</HeaderTypo>
+          <HeaderTypo>{t('alert-operation-tip-title')}</HeaderTypo>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Please open Essentials application, and confirm the credential issuing dialog.
+            {t('alert-operation-tip-label')}
           </DialogContentText>
         </DialogContent>
       </Dialog>

@@ -25,11 +25,15 @@ export default function HomePage() {
 
   const login = async () => {
     setLoading(true);
-    if (isConnectedEE) {
-      await signOutWithEssentialsWithoutRefresh();
-      await signInWithEssentials();
-    } else {
-      await signInWithEssentials();
+    try {
+      if (isConnectedEE) {
+        await signOutWithEssentialsWithoutRefresh();
+        await signInWithEssentials();
+      } else {
+        await signInWithEssentials();
+      }
+    } catch (e) {
+      console.error(e);
     }
     setLoading(false);
   };

@@ -160,7 +160,7 @@ export default function useHiveHubContracts() {
         nodeInfo.name,
         nodeInfo.ownerDid,
         nodeInfo.description,
-        `pasar:image:${avatarRes.path}`,
+        avatarRes ? `pasar:image:${avatarRes.path}` : '',
         bannerRes ? `pasar:image:${bannerRes.path}` : '',
         nodeInfo.email,
         nodeInfo.endpoint,

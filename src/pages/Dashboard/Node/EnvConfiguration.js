@@ -90,6 +90,23 @@ export default function NodeEnvConfig() {
     return `${dids[0].toString()}`;
   };
 
+  const getCredentialFromOwner = async () => {
+    try {
+      const vc = await new ConDID.DIDAccess().issueCredential(
+        servicePK,
+        ['HiveNodeOwnerCredential', 'VerifiableCredential'],
+        { did: servicePK },
+        'hivenodeowner'
+      );
+      if (!vc) return null;
+
+      return binary_to_base58(new Uint8Array(Buffer.from(vc.toString())));
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
   useEffect(() => {
     generateNewServiceDid().then((didStr) => {
       setServicePK(didStr);
@@ -98,24 +115,7 @@ export default function NodeEnvConfig() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSaveEnvConfig = async () => {
-    async function getCredentialFromOwner() {
-      try {
-        const vc = await new ConDID.DIDAccess().issueCredential(
-          servicePK,
-          ['HiveNodeOwnerCredential', 'VerifiableCredential'],
-          { did: servicePK },
-          'hivenodeowner'
-        );
-        if (!vc) return null;
-
-        return binary_to_base58(new Uint8Array(Buffer.from(vc.toString())));
-      } catch (err) {
-        console.error(err);
-        return null;
-      }
-    }
-
+  const handleGenerateEnvConfig = async () => {
     if (
       ownerDid &&
       servicePK &&
@@ -126,37 +126,7 @@ export default function NodeEnvConfig() {
       email &&
       nodeDescription
     ) {
-      setTipOpen(true);
-      const nodeCredential = await getCredentialFromOwner();
-      setTipOpen(false);
-      if (!nodeCredential) {
-        popUpErrorMsg('Failed to generate the credential.');
-        return;
-      }
-
-      try {
-        createHiveNodeEnvConfig(
-          serviceDIDContent,
-          serviceDIDPassword,
-          password,
-          nodeCredential,
-          paymentReceivingAddress,
-          nodeName,
-          email,
-          nodeDescription
-        );
-        enqueueSnackbar('Create Hive Node ENV success.', {
-          variant: 'success',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-        navigate('/dashboard/node');
-      } catch (err) {
-        console.error(err);
-        enqueueSnackbar('Creating Hive Node ENV failed.', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-      }
+      setDownloadOpen(true);
     } else {
       setOwnerDidErr(!ownerDid);
       setServicePKErr(!servicePK);
@@ -168,7 +138,40 @@ export default function NodeEnvConfig() {
     }
   };
 
-  const handleDownload = () => {};
+  const handleSaveEnvConfig = async () => {
+    setTipOpen(true);
+    const nodeCredential = await getCredentialFromOwner();
+    setTipOpen(false);
+    if (!nodeCredential) {
+      popUpErrorMsg('Failed to generate the credential.');
+      return;
+    }
+
+    try {
+      createHiveNodeEnvConfig(
+        serviceDIDContent,
+        serviceDIDPassword,
+        password,
+        nodeCredential,
+        paymentReceivingAddress,
+        nodeName,
+        email,
+        nodeDescription
+      );
+      enqueueSnackbar('Generating .env file success.', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      navigate('/dashboard/node');
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar('Generating .env file failed.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+  };
+
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -298,7 +301,7 @@ export default function NodeEnvConfig() {
           >
             {t('btn-back')}
           </ConfirmButton>
-          <ConfirmButton onClick={handleSaveEnvConfig} disabled={!pageLoaded}>
+          <ConfirmButton onClick={handleGenerateEnvConfig} disabled={!pageLoaded}>
             {t('Generate .env file')}
           </ConfirmButton>
         </Stack>
@@ -355,7 +358,10 @@ export default function NodeEnvConfig() {
             >
               {t('btn-cancel')}
             </ConfirmButton>
-            <ConfirmButton onClick={handleDownload} sx={{ width: { xs: '120px', md: '240px' } }}>
+            <ConfirmButton
+              onClick={handleSaveEnvConfig}
+              sx={{ width: { xs: '120px', md: '240px' } }}
+            >
               {t('btn-download')}
             </ConfirmButton>
           </Stack>

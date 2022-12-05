@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import NodeInitialView from '../../../components/Node/InitialView';
 import NodeItemBox from '../../../components/NodeItemBox';
 import { PlusButton } from '../../../components/Custom/CustomButtons';
@@ -12,6 +13,7 @@ export default function MyNode() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { getHiveNodesList } = useHiveHubContracts();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(0));
 
@@ -51,7 +53,7 @@ export default function MyNode() {
       )}
       {!!myNodeList.length && (
         <>
-          <HeaderTypo sx={{ py: 1 }}>Deployed Hive nodes</HeaderTypo>
+          <HeaderTypo sx={{ py: 1 }}>{t('node-deployed-node')}</HeaderTypo>
           <Stack mt={{ xs: 2.5, md: 5 }} mb={5} spacing={{ xs: 3.75, md: 6.25 }}>
             {myNodeList.map((item, index) => (
               <NodeItemBox
@@ -74,10 +76,10 @@ export default function MyNode() {
             sx={{ alignItems: 'left' }}
           >
             <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/envconfig')}>
-              Configure .env file
+              {t('btn-config-env')}
             </PlusButton>
             <PlusButton hasPlus={false} onClick={() => navigate('/dashboard/node/create')}>
-              Register Node
+              {t('btn-register-node')}
             </PlusButton>
           </Stack>
         </>

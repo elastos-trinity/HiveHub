@@ -25,6 +25,7 @@ const en = {
   'sidebar-menu-logout': 'Log out',
   'node-init-title': 'Become your own node operator now!',
   'node-init-label': 'Create and deploy your own Hive node!',
+  'node-deployed-node': 'Deployed Hive nodes',
   'btn-config-env': 'Configure .env file',
   'btn-register-node': 'Register Node',
 
@@ -120,6 +121,7 @@ const zh = {
   'sidebar-menu-logout': 'Log out',
   'node-init-title': 'Become your own node operator now!',
   'node-init-label': 'Create and deploy your own Hive node!',
+  'node-deployed-node': 'Deployed Hive nodes',
   'btn-config-env': 'Configure .env file',
   'btn-register-node': 'Register Node',
 

@@ -4,7 +4,6 @@ import { config } from '../config';
 export const callContractMethod = async (web3, param) => {
   let contractMethod = null;
   let accounts = [];
-  let gasPrice = '';
   if (!NODE_REGISTRY_ABI || !config.NodeRegistryAddress) return;
   const HiveHubContract = new web3.eth.Contract(NODE_REGISTRY_ABI, config.NodeRegistryAddress);
   switch (param.methodName) {
@@ -39,50 +38,30 @@ export const callContractMethod = async (web3, param) => {
   }
 
   if (param.callType === 'send') {
-    // eslint-disable-next-line consistent-return
-    return new Promise((resolve, reject) => {
-      const handleTxEvent = (hash) => {
-        console.log('transactionHash', hash);
-      };
-      const handleReceiptEvent = (receipt) => {
-        console.log('receipt', receipt);
-        resolve();
-      };
-      const handleErrorEvent = (error) => {
-        console.error('error', error);
-        reject(error);
-      };
+    accounts = await web3.eth.getAccounts();
+    let gasPrice = await web3.eth.getGasPrice();
+    gasPrice = parseInt(gasPrice, 10) > 20 * 1e9 ? (20 * 1e9).toString() : gasPrice;
+    const estimatedGas = await contractMethod.estimateGas({ from: accounts[0], gas: 8000000, value: param.price });
+    const gasLimit = parseInt((estimatedGas * 1.5).toString(), 10);
+    const transactionParams = {
+      from: accounts[0],
+      gasPrice,
+      gas: gasLimit > 8000000 ? 8000000 : gasLimit,
+      value: param.price
+    };
 
-      web3.eth
-        .getAccounts()
-        .then((_accounts) => {
-          accounts = _accounts;
-          return web3.eth.getGasPrice();
+    return new Promise((resolve, reject) => {
+      contractMethod
+        .send(transactionParams)
+        .once('transactionHash', (hash) => {
+          console.log('transactionHash', hash);
         })
-        .then(async (_gasPrice) => {
-          gasPrice = parseInt(_gasPrice, 10) > 20 * 1e9 ? (20 * 1e9).toString() : _gasPrice;
-          return contractMethod.estimateGas({
-            from: accounts[0],
-            gas: 8000000,
-            value: param.price
-          });
+        .once('receipt', (receipt) => {
+          console.log('receipt', receipt);
+          resolve();
         })
-        .then((_estimatedGas) => {
-          const gasLimit = parseInt((_estimatedGas * 1.5).toString(), 10);
-          const transactionParams = {
-            from: accounts[0],
-            gasPrice,
-            gas: gasLimit > 8000000 ? 8000000 : gasLimit,
-            value: param.price
-          };
-          contractMethod
-            .send(transactionParams)
-            .once('transactionHash', handleTxEvent)
-            .once('receipt', handleReceiptEvent)
-            .on('error', handleErrorEvent);
-        })
-        .catch((error) => {
-          console.error(error);
+        .on('error', (error) => {
+          console.error('error', error);
           reject(error);
         });
     });

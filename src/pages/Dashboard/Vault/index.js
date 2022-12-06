@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack, Grid } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import VaultInitialView from '../../../components/Vault/InitialView';
 import VaultItemBox from '../../../components/VaultItemBox';
 import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
@@ -11,6 +12,7 @@ import { checkBackupStatus, getDappsOnVault, getHiveVaultInfo } from '../../../s
 export default function MyVault() {
   const navigate = useNavigate();
   const { user } = useUserContext();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [myVault, setMyVault] = useState(null);
   const [backupStatus, setBackupStatus] = useState(false);
@@ -58,7 +60,7 @@ export default function MyVault() {
       )}
       {!!myVault && (
         <>
-          <HeaderTypo sx={{ py: 1 }}>Storage</HeaderTypo>
+          <HeaderTypo sx={{ py: 1 }}>{t('vault-storage')}</HeaderTypo>
           <VaultItemBox
             ownerName={myVault?.ownerName || '???'}
             total={myVault?.total ?? 0}
@@ -72,7 +74,7 @@ export default function MyVault() {
           />
           <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={2} alignItems="center">
-              <HeaderTypo sx={{ py: 1 }}>Dapps on this vault</HeaderTypo>
+              <HeaderTypo sx={{ py: 1 }}>{t('vault-dapps-on-vault')}</HeaderTypo>
               <BadgeTypo>{dappsOnVault.length}</BadgeTypo>
             </Stack>
           </Stack>

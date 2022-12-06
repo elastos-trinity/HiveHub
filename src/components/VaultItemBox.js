@@ -19,7 +19,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
 import { useTranslation } from 'react-i18next';
 import { BadgeTypo, LabelTypo, NormalTypo } from './Custom/CustomTypos';
-import { getValutPricingPlanBadge } from '../service/common';
+// import { getVaultPricingPlanBadge } from '../service/common';
 
 VaultItemBox.propTypes = {
   total: PropTypes.number,
@@ -217,7 +217,7 @@ export default function VaultItemBox({
             <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }}>{`${ownerName}${t(
               'vault-s-vault'
             )}`}</NormalTypo>
-            <BadgeTypo>{getValutPricingPlanBadge(pricePlan)}</BadgeTypo>
+            <BadgeTypo>{pricePlan}</BadgeTypo>
             {!hasBackup && (
               <BadgeTypo sx={{ color: '#E23A45', background: 'rgba(226, 58, 69, 0.05)' }}>
                 {t('badge-not-backup')}

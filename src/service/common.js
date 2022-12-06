@@ -75,7 +75,7 @@ export const checkIfValidIP = (str) => {
   return regexExp.test(str);
 };
 
-export const getValutPricingPlanBadge = (str) => {
+export const getVaultPricingPlanBadge = (str) => {
   switch (str) {
     case 'Free':
       return 'Basic';

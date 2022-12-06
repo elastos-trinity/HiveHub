@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Chip, Stack, Avatar, Skeleton, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { NodeTitle, HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
@@ -27,23 +28,24 @@ DetailItem.propTypes = {
   value: PropTypes.string
 };
 
-const detailInfo = [
-  { label: 'DID', field: 'owner_did' },
-  { label: 'Name', field: 'ownerName' },
-  { label: 'Description', field: 'remark' },
-  { label: 'Email', field: 'email' },
-  { label: 'Endpoint', field: 'url' },
-  { label: 'Created date', field: 'created' },
-  { label: 'Version', field: 'version' }
-];
-
 export default function MyNodeDetail() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { getHiveNodeItem } = useHiveHubContracts();
   const { nodeId } = useParams();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [nodeDetail, setNodeDetail] = useState({});
+
+  const detailInfo = [
+    { label: t('node-detail-did'), field: 'owner_did' },
+    { label: t('node-detail-name'), field: 'ownerName' },
+    { label: t('node-detail-description'), field: 'remark' },
+    { label: t('node-detail-email'), field: 'email' },
+    { label: t('node-detail-endpoint'), field: 'url' },
+    { label: t('node-detail-created-date'), field: 'created' },
+    { label: t('node-detail-version'), field: 'version' }
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,7 +68,7 @@ export default function MyNodeDetail() {
 
   return (
     <>
-      <HeaderTypo sx={{ py: 1 }}>Node details</HeaderTypo>
+      <HeaderTypo sx={{ py: 1 }}>{t('node-detail-title')}</HeaderTypo>
       <Box
         sx={{ mt: { xs: 2.5, md: 5 }, position: 'relative', height: { xs: '100px', md: '200px' } }}
       >
@@ -84,22 +86,6 @@ export default function MyNodeDetail() {
       </Box>
       {isLoading ? (
         <ContainerBox sx={{ position: 'relative', borderRadius: '0px 0px 20px 20px' }}>
-          {/* <Skeleton
-            variant="circular"
-            animation="wave"
-            width={{ xs: '50px', md: '100px' }}
-            height={{ xs: '50px', md: '100px' }}
-            sx={{
-              // bgcolor: 'grey',
-              position: 'absolute',
-              width: { xs: '50px', md: '100px' },
-              height: { xs: '50px', md: '100px' },
-              top: { xs: '-25px', md: '-50px' },
-              left: 0,
-              right: 0,
-              margin: 'auto'
-            }}
-          /> */}
           <Avatar
             src={nodeDetail?.avatar || ''}
             alt="avatarURL"
@@ -201,7 +187,7 @@ export default function MyNodeDetail() {
           border: { xs: '1px solid #FF931E', md: '2px solid #FF931E' }
         }}
       >
-        Back
+        {t('btn-back')}
       </ConfirmButton>
     </>
   );

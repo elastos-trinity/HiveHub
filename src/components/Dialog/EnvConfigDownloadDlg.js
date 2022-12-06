@@ -10,11 +10,12 @@ import { ConfirmButton } from '../Custom/CustomButtons';
 
 EnvConfigDownloadDlg.propTypes = {
   open: PropTypes.bool,
-  onClickCancel: PropTypes.func,
-  onClickDownload: PropTypes.func
+  onClose: PropTypes.func,
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool
 };
 
-export default function EnvConfigDownloadDlg({ open, onClickCancel, onClickDownload }) {
+export default function EnvConfigDownloadDlg({ open, onClose, onClick, disabled }) {
   const { t } = useTranslation();
   return (
     <Dialog
@@ -59,7 +60,7 @@ export default function EnvConfigDownloadDlg({ open, onClickCancel, onClickDownl
           justifyContent="center"
         >
           <ConfirmButton
-            onClick={onClickCancel}
+            onClick={onClose}
             sx={{
               color: '#FF931E',
               background: 'transparent',
@@ -69,7 +70,11 @@ export default function EnvConfigDownloadDlg({ open, onClickCancel, onClickDownl
           >
             {t('btn-cancel')}
           </ConfirmButton>
-          <ConfirmButton onClick={onClickDownload} sx={{ width: { xs: '120px', md: '240px' } }}>
+          <ConfirmButton
+            onClick={onClick}
+            sx={{ width: { xs: '120px', md: '240px' } }}
+            disabled={disabled}
+          >
             {t('btn-download')}
           </ConfirmButton>
         </Stack>

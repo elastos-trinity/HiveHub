@@ -43,6 +43,7 @@ export default function NodeEnvConfig() {
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
+  const [onProgress, setOnProgress] = useState(false);
 
   const [serviceDIDPassword, storePass] = ['password', 'password'];
 
@@ -137,6 +138,7 @@ export default function NodeEnvConfig() {
   };
 
   const handleSaveEnvConfig = async () => {
+    setOnProgress(true);
     setTipOpen(true);
     const nodeCredential = await getCredentialFromOwner();
     setTipOpen(false);
@@ -168,6 +170,7 @@ export default function NodeEnvConfig() {
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
     }
+    setOnProgress(false);
   };
 
   const theme = useTheme();
@@ -306,8 +309,9 @@ export default function NodeEnvConfig() {
       </ContainerBox>
       <EnvConfigDownloadDlg
         open={downloadOpen}
-        onClickCancel={() => setDownloadOpen(false)}
-        onClickDownload={handleSaveEnvConfig}
+        onClose={() => setDownloadOpen(false)}
+        onClick={handleSaveEnvConfig}
+        disabled={onProgress}
       />
       <CredentialIssueConfirmDlg open={tipOpen} />
     </>

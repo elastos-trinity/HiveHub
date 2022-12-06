@@ -8,6 +8,7 @@ import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
 import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import { checkBackupStatus, getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
+import BackupConfirmDlg from '../../../components/Dialog/BackupConfirmDlg';
 
 export default function MyVault() {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ export default function MyVault() {
   const [myVault, setMyVault] = useState(null);
   const [backupStatus, setBackupStatus] = useState(false);
   const [dappsOnVault, setDappsOnVault] = useState(Array(2).fill(0));
+  const [openBackupDlg, setOpenBackupDlg] = useState(false);
+  const [openMigrateDlg, setOpenMigrateDlg] = useState(false);
+  const [onProgress, setOnProgress] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,8 +72,8 @@ export default function MyVault() {
             pricePlan={myVault?.pricePlan || 'Basic'}
             hasBackup={backupStatus}
             isLoading={isLoading}
-            onClickBackup={handleBackup}
-            onClickMigrate={handleMigrate}
+            onClickBackup={() => setOpenBackupDlg(true)}
+            onClickMigrate={() => setOpenMigrateDlg(true)}
             sx={{ mt: { xs: 2.5, md: 5 }, mb: 5 }}
           />
           <Stack direction="row" spacing={1}>
@@ -95,6 +99,12 @@ export default function MyVault() {
           )}
         </>
       )}
+      <BackupConfirmDlg
+        open={openBackupDlg}
+        onClose={() => setOpenBackupDlg(false)}
+        onClick={handleBackup}
+        disabled={onProgress}
+      />
     </>
   );
 }

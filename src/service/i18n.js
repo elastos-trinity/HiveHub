@@ -58,6 +58,7 @@ const en = {
   'alert-operation-tip-title': 'Operation Tip',
   'alert-operation-tip-label':
     'Please open Essentials application, and confirm the credential issuing dialog.',
+  'dlg-backup-confirm-label': 'Are you sure you want to backup your data?',
 
   'display-language': 'English',
   'landing-title-manage': 'Manage',

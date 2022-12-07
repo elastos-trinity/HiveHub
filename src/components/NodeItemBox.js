@@ -122,19 +122,24 @@ export default function NodeItemBox({
                   Endpoint:
                 </NormalTypo>
                 <NormalTypo>{endpoint}</NormalTypo>
-                <Button sx={{
-                  whiteSpace: 'nowrap',
-                  position: 'absolute',
-                  // height: { xs: '20px', md: '100px' },
-                  fontSize: { xs: '10px', md: '20px' },
-                  color: "#7a7a7a",
-                  right: { xs: '10px', sm: '20px' },
-                  bottom: { xs: '10px', sm: '13px' }
-                }} variant="text" onClick={(event) => {
-                  if (onRemoveNode)
-                    onRemoveNode();
-                  event.stopPropagation();
-                }} >Remove</Button>
+                <Button
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    position: 'absolute',
+                    // height: { xs: '20px', md: '100px' },
+                    fontSize: { xs: '10px', md: '20px' },
+                    color: '#7a7a7a',
+                    right: { xs: '10px', sm: '20px' },
+                    bottom: { xs: '10px', sm: '13px' }
+                  }}
+                  variant="text"
+                  onClick={(event) => {
+                    if (onRemoveNode) onRemoveNode();
+                    event.stopPropagation();
+                  }}
+                >
+                  Remove
+                </Button>
               </Stack>
             </Typography>
           </Stack>

@@ -2,12 +2,19 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
 import VaultInitialView from '../../../components/Vault/InitialView';
 import VaultItemBox from '../../../components/VaultItemBox';
 import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
 import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
-import { checkBackupStatus, getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
+import {
+  checkBackupStatus,
+  getDappsOnVault,
+  getHiveVaultInfo,
+  backupVault,
+  migrateVault
+} from '../../../service/fetch';
 import BackupConfirmDlg from '../../../components/Dialog/BackupConfirmDlg';
 import MigrateConfirmDlg from '../../../components/Dialog/MigrateConfirmDlg';
 
@@ -15,6 +22,7 @@ export default function MyVault() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
   const [myVault, setMyVault] = useState(null);
   const [backupStatus, setBackupStatus] = useState(false);
@@ -46,7 +54,40 @@ export default function MyVault() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
 
-  const handleBackup = () => {};
+  const handleBackup = async (backupNodeProvider) => {
+    if (!user.did || !backupNodeProvider) return;
+    if (!myVault) return;
+    setOnProgress(true);
+    try {
+      console.log('====Backup vault to: ', backupNodeProvider);
+      const result = await backupVault(user.did, backupNodeProvider);
+      if (result === 1) {
+        enqueueSnackbar('Backup vault succeed', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        setOpenBackupDlg(false);
+        window.location.reload();
+      } else if (result === 2) {
+        enqueueSnackbar('Already backup', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      } else {
+        enqueueSnackbar('Backup vault error', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar('Backup vault error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+    setOnProgress(false);
+  };
   const handleMigrate = () => {};
 
   return (

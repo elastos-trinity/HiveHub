@@ -51,23 +51,19 @@ export const callContractMethod = async (web3, param) => {
     };
 
     return new Promise((resolve, reject) => {
-      try {
-        contractMethod
-          .send(transactionParams)
-          .once('transactionHash', (hash) => {
-            console.log('transactionHash', hash);
-          })
-          .once('receipt', (receipt) => {
-            console.log('receipt', receipt);
-            resolve();
-          })
-          .on('error', (error) => {
-            console.error('error', error);
-            reject(error);
-          });
-      } catch (e) {
-        reject(e);
-      }
+      contractMethod
+        .send(transactionParams)
+        .once('transactionHash', (hash) => {
+          console.log('transactionHash', hash);
+        })
+        .once('receipt', (receipt) => {
+          console.log('receipt', receipt);
+          resolve();
+        })
+        .on('error', (error) => {
+          console.error('error', error);
+          reject(error);
+        });
     });
   }
 

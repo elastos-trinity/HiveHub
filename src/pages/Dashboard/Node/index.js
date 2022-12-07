@@ -21,7 +21,11 @@ export default function MyNode() {
   const [isLoading, setIsLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(0));
 
-  const { dlgState, setDlgState } = useDialogContext({confirmDlgOpened: false, removeNodeNid: null, removeNodeOwnerDid: null});
+  const { dlgState, setDlgState } = useDialogContext({
+    confirmDlgOpened: false,
+    removeNodeNid: null,
+    removeNodeOwnerDid: null
+  });
   const [onProgress, setOnProgress] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -66,7 +70,7 @@ export default function MyNode() {
       });
     }
     setOnProgress(false);
-  }
+  };
 
   return (
     <>
@@ -101,9 +105,12 @@ export default function MyNode() {
                 isOwner={item?.owner_did === user.did}
                 isLoading={isLoading}
                 onRemoveNode={() => {
-                  setDlgState({ ...dlgState, confirmDlgOpened: true,
+                  setDlgState({
+                    ...dlgState,
+                    confirmDlgOpened: true,
                     removeNodeNid: item?.nid,
-                    removeNodeOwnerDid: item?.owner_did });
+                    removeNodeOwnerDid: item?.owner_did
+                  });
                 }}
               />
             ))}
@@ -132,7 +139,7 @@ export default function MyNode() {
               ...dlgState,
               confirmDlgOpened: false,
               removeHiveNode: null,
-              removeNodeOwnerDid: null,
+              removeNodeOwnerDid: null
             });
           }}
           onClick={() => handleRemoveNode(dlgState.removeNodeNid, dlgState.removeNodeOwnerDid)}

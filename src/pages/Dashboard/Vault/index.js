@@ -88,7 +88,35 @@ export default function MyVault() {
     }
     setOnProgress(false);
   };
-  const handleMigrate = () => {};
+
+  const handleMigrate = async (backupNodeProvider) => {
+    if (!user.did || !backupNodeProvider) return;
+    if (!myVault) return;
+    setOnProgress(true);
+    try {
+      console.log('Migrate vault to: ', backupNodeProvider);
+      const result = await migrateVault(user.did, backupNodeProvider);
+      if (result) {
+        enqueueSnackbar('Migrate vault succeed', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        setOpenMigrateDlg(false);
+        window.location.reload();
+      } else
+        enqueueSnackbar('Migrate vault error', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('Migrate vault error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+    setOnProgress(false);
+  };
 
   return (
     <>

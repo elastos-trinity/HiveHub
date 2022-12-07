@@ -48,7 +48,10 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
           width="60px"
           style={{ margin: '20px auto 30px auto' }}
         />
-        <DialogContentText id="backup-dialog-description">
+        <DialogContentText
+          id="backup-dialog-description"
+          sx={{ display: 'flex', justifyContent: 'center' }}
+        >
           <NormalTypo component="span" sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
             {t('dlg-backup-confirm-label')}
           </NormalTypo>
@@ -71,7 +74,7 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
             {t('btn-cancel')}
           </ConfirmButton>
           <ConfirmButton
-            onClick={onClick}
+            onClick={() => onClick('https://hive-testnet2.trinity-tech.io')}
             sx={{ width: { xs: '120px', md: '240px' } }}
             disabled={disabled}
           >

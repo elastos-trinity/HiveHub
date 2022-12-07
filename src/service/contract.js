@@ -56,19 +56,23 @@ export const callContractMethod = async (web3, param) => {
 
     // eslint-disable-next-line consistent-return
     return new Promise((resolve, reject) => {
-      contractMethod
-        .send(transactionParams)
-        .once('transactionHash', (hash) => {
-          console.log('transactionHash', hash);
-        })
-        .once('receipt', (receipt) => {
-          console.log('receipt', receipt);
-          resolve();
-        })
-        .on('error', (error) => {
-          console.error('error', error);
-          reject(error);
-        });
+      try {
+        contractMethod
+          .send(transactionParams)
+          .once('transactionHash', (hash) => {
+            console.log('transactionHash', hash);
+          })
+          .once('receipt', (receipt) => {
+            console.log('receipt', receipt);
+            resolve();
+          })
+          .on('error', (error) => {
+            console.error('error', error);
+            reject(error);
+          });
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 

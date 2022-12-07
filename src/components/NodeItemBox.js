@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Box, Stack, Typography, Chip, Skeleton, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { NodeTitle, NodeTimeLable, NormalTypo } from './Custom/CustomTypos';
 
 NodeItemBox.propTypes = {
@@ -29,7 +30,7 @@ export default function NodeItemBox({
   onRemoveNode = null
 }) {
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   return (
     <div>
       {isLoading ? (
@@ -90,7 +91,7 @@ export default function NodeItemBox({
                 <NodeTitle>{name}</NodeTitle>
                 {status ? (
                   <Chip
-                    label="online"
+                    label={t('badge-online')}
                     color="success"
                     sx={{
                       height: { xs: '11px !important', md: '19px !important' },
@@ -102,7 +103,7 @@ export default function NodeItemBox({
                   />
                 ) : (
                   <Chip
-                    label="offline"
+                    label={t('badge-offline')}
                     color="error"
                     sx={{
                       height: { xs: '11px !important', md: '19px !important' },
@@ -119,27 +120,28 @@ export default function NodeItemBox({
             <Typography component="div" noWrap sx={{ flexGrow: 1 }} alignItems="center">
               <Stack direction="row" sx={{ pb: '5px' }}>
                 <NormalTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
-                  Endpoint:
+                  {t('node-detail-endpoint')}:
                 </NormalTypo>
                 <NormalTypo>{endpoint}</NormalTypo>
-                <Button
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    position: 'absolute',
-                    // height: { xs: '20px', md: '100px' },
-                    fontSize: { xs: '10px', md: '20px' },
-                    color: '#7a7a7a',
-                    right: { xs: '10px', sm: '20px' },
-                    bottom: { xs: '10px', sm: '13px' }
-                  }}
-                  variant="text"
-                  onClick={(event) => {
-                    if (onRemoveNode) onRemoveNode();
-                    event.stopPropagation();
-                  }}
-                >
-                  Remove
-                </Button>
+                {isOwner && (
+                  <Button
+                    sx={{
+                      whiteSpace: 'nowrap',
+                      position: 'absolute',
+                      fontSize: { xs: '10px', md: '20px' },
+                      color: '#7a7a7a',
+                      right: { xs: '10px', sm: '20px' },
+                      bottom: { xs: '10px', sm: '13px' }
+                    }}
+                    variant="text"
+                    onClick={(event) => {
+                      if (onRemoveNode) onRemoveNode();
+                      event.stopPropagation();
+                    }}
+                  >
+                    {t('btn-remove')}
+                  </Button>
+                )}
               </Stack>
             </Typography>
           </Stack>

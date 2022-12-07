@@ -43,6 +43,8 @@ const en = {
   'vault-s-vault': `'s Vault`,
   'vault-used': 'used',
   'badge-not-backup': 'Not backed up yet',
+  'badge-online': 'online',
+  'badge-offline': 'offline',
   'btn-config-env': 'Configure .env file',
   'btn-register-node': 'Register node',
   'btn-back': 'Back',
@@ -53,6 +55,7 @@ const en = {
   'btn-create-vault': 'Create vault',
   'btn-backup': 'Backup',
   'btn-migrate': 'Migrate',
+  'btn-remove': 'Remove',
   'dlg-generate-env-label':
     'The generated .env file will be downloaded locally from the browser. Please store them somewhere safe.',
   'alert-operation-tip-title': 'Operation Tip',

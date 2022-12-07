@@ -59,6 +59,7 @@ const en = {
   'alert-operation-tip-label':
     'Please open Essentials application, and confirm the credential issuing dialog.',
   'dlg-backup-confirm-label': 'Are you sure you want to backup your data?',
+  'dlg-migrate-confirm-label': 'Are you sure you want to migrate your data?',
 
   'display-language': 'English',
   'landing-title-manage': 'Manage',
@@ -185,6 +186,8 @@ const zh = {
   'alert-operation-tip-title': 'Operation Tip',
   'alert-operation-tip-label':
     'Please open Essentials application, and confirm the credential issuing dialog.',
+  'dlg-backup-confirm-label': 'Are you sure you want to backup your data?',
+  'dlg-migrate-confirm-label': 'Are you sure you want to migrate your data?',
 
   'display-language': '中文',
   'landing-title-manage': '管理',

@@ -9,6 +9,7 @@ import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import { checkBackupStatus, getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
 import BackupConfirmDlg from '../../../components/Dialog/BackupConfirmDlg';
+import MigrateConfirmDlg from '../../../components/Dialog/MigrateConfirmDlg';
 
 export default function MyVault() {
   const navigate = useNavigate();
@@ -103,6 +104,12 @@ export default function MyVault() {
         open={openBackupDlg}
         onClose={() => setOpenBackupDlg(false)}
         onClick={handleBackup}
+        disabled={onProgress}
+      />
+      <MigrateConfirmDlg
+        open={openMigrateDlg}
+        onClose={() => setOpenMigrateDlg(false)}
+        onClick={handleMigrate}
         disabled={onProgress}
       />
     </>

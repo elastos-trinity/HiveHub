@@ -49,7 +49,7 @@ export default function MigrateConfirmDlg({ open, onClose, onClick, disabled }) 
           style={{ margin: '20px auto 30px auto' }}
         />
         <DialogContentText id="migrate-dialog-description">
-          <NormalTypo sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
+          <NormalTypo component="span" sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
             {t('dlg-migrate-confirm-label')}
           </NormalTypo>
         </DialogContentText>

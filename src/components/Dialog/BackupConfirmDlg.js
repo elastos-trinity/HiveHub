@@ -46,7 +46,7 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
           src="/static/ic_backup.svg"
           alt="backup_icon"
           width="60px"
-          style={{ margin: '0 auto 40px auto' }}
+          style={{ margin: '20px auto 30px auto' }}
         />
         <DialogContentText id="backup-dialog-description">
           <NormalTypo sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
@@ -55,7 +55,7 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
         </DialogContentText>
         <Stack
           direction="row"
-          mt={{ xs: 8, md: 10 }}
+          mt={{ xs: 5, md: 7.5 }}
           spacing={{ xs: 1.5, md: 3 }}
           justifyContent="center"
         >

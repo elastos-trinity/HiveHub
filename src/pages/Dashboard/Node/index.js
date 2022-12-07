@@ -22,7 +22,7 @@ export default function MyNode() {
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(0));
 
   const { dlgState, setDlgState } = useDialogContext({
-    confirmDlgOpened: false,
+    open: false,
     removeNodeNid: null,
     removeNodeOwnerDid: null
   });
@@ -56,13 +56,14 @@ export default function MyNode() {
     }
     setOnProgress(true);
     const result = await removeHiveNode(nid);
+    console.log(`&&&&&& remove node: ${nid}, ${ownerDid}`);
     // const result = true;
     if (result) {
       enqueueSnackbar('Remove Hive Node success.', {
         variant: 'success',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
-      window.location.reload();
+      // window.location.reload();
     } else {
       enqueueSnackbar('Remove Hive Node failed.', {
         variant: 'error',
@@ -107,7 +108,7 @@ export default function MyNode() {
                 onRemoveNode={() => {
                   setDlgState({
                     ...dlgState,
-                    confirmDlgOpened: true,
+                    open: true,
                     removeNodeNid: item?.nid,
                     removeNodeOwnerDid: item?.owner_did
                   });
@@ -130,17 +131,18 @@ export default function MyNode() {
           </Stack>
         </>
       )}
-      <ModalDialog open={dlgState.confirmDlgOpened}>
+      <ModalDialog open={dlgState.open}>
         <ConfirmDlg
-          message="After clicked the 'Confirm' button, please verify on the Essentials application."
+          message="After confirm, need verify on the Essentials application."
           onProgress={onProgress}
           onClose={() => {
             setDlgState({
               ...dlgState,
-              confirmDlgOpened: false,
+              open: false,
               removeHiveNode: null,
               removeNodeOwnerDid: null
             });
+            setOnProgress(false);
           }}
           onClick={() => handleRemoveNode(dlgState.removeNodeNid, dlgState.removeNodeOwnerDid)}
         />

@@ -41,11 +41,7 @@ export const callContractMethod = async (web3, param) => {
     accounts = await web3.eth.getAccounts();
     let gasPrice = await web3.eth.getGasPrice();
     gasPrice = parseInt(gasPrice, 10) > 20 * 1e9 ? (20 * 1e9).toString() : gasPrice;
-    const estimatedGas = await contractMethod.estimateGas({
-      from: accounts[0],
-      gas: 8000000,
-      value: param.price
-    });
+    const estimatedGas = await contractMethod.estimateGas({ from: accounts[0], gas: 8000000, value: param.price });
     const gasLimit = parseInt((estimatedGas * 1.5).toString(), 10);
     const transactionParams = {
       from: accounts[0],
@@ -54,25 +50,20 @@ export const callContractMethod = async (web3, param) => {
       value: param.price
     };
 
-    // eslint-disable-next-line consistent-return
     return new Promise((resolve, reject) => {
-      try {
-        contractMethod
-          .send(transactionParams)
-          .once('transactionHash', (hash) => {
-            console.log('transactionHash', hash);
-          })
-          .once('receipt', (receipt) => {
-            console.log('receipt', receipt);
-            resolve();
-          })
-          .on('error', (error) => {
-            console.error('error', error);
-            reject(error);
-          });
-      } catch (e) {
-        reject(e);
-      }
+      contractMethod
+        .send(transactionParams)
+        .once('transactionHash', (hash) => {
+          console.log('transactionHash', hash);
+        })
+        .once('receipt', (receipt) => {
+          console.log('receipt', receipt);
+          resolve();
+        })
+        .on('error', (error) => {
+          console.error('error', error);
+          reject(error);
+        });
     });
   }
 

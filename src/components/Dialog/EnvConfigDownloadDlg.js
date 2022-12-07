@@ -49,7 +49,7 @@ export default function EnvConfigDownloadDlg({ open, onClose, onClick, disabled 
           style={{ margin: '10px auto 30px auto' }}
         />
         <DialogContentText id="download-dialog-description">
-          <NormalTypo sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
+          <NormalTypo component="span" sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
             {t('dlg-generate-env-label')}
           </NormalTypo>
         </DialogContentText>

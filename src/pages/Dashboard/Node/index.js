@@ -2,20 +2,28 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
 import NodeInitialView from '../../../components/Node/InitialView';
 import NodeItemBox from '../../../components/NodeItemBox';
 import { PlusButton } from '../../../components/Custom/CustomButtons';
 import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
+import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
+import ModalDialog from '../../../components/ModalDialog';
+import { useDialogContext } from '../../../contexts/DialogContext';
 
 export default function MyNode() {
   const navigate = useNavigate();
   const { user } = useUserContext();
-  const { getHiveNodesList } = useHiveHubContracts();
+  const { getHiveNodesList, removeHiveNode } = useHiveHubContracts();
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(0));
+
+  const { dlgState, setDlgState } = useDialogContext({open: false, removeNodeNid: null, removeNodeOwnerDid: null});
+  const [onProgress, setOnProgress] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +41,33 @@ export default function MyNode() {
     else navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
+
+  const handleRemoveNode = async (nid, ownerDid) => {
+    if (ownerDid !== user.did) {
+      enqueueSnackbar('Only owner can remove its node.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      return;
+    }
+    setOnProgress(true);
+    const result = await removeHiveNode(nid);
+    console.log(`&&&&&& remove node: ${nid}, ${ownerDid}`)
+    // const result = true;
+    if (result) {
+      enqueueSnackbar('Remove Hive Node success.', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      // window.location.reload();
+    } else {
+      enqueueSnackbar('Remove Hive Node failed.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+    setOnProgress(false);
+  }
 
   return (
     <>
@@ -66,6 +101,11 @@ export default function MyNode() {
                 endpoint={item?.url}
                 isOwner={item?.owner_did === user.did}
                 isLoading={isLoading}
+                onRemoveNode={() => {
+                  setDlgState({ ...dlgState, open: true,
+                    removeNodeNid: item?.nid,
+                    removeNodeOwnerDid: item?.owner_did });
+                }}
               />
             ))}
           </Stack>
@@ -84,6 +124,22 @@ export default function MyNode() {
           </Stack>
         </>
       )}
+      <ModalDialog open={dlgState.open}>
+        <ConfirmDlg
+          message="After confirm, need verify on the Essentials application."
+          onProgress={onProgress}
+          onClose={() => {
+            setDlgState({
+              ...dlgState,
+              open: false,
+              removeHiveNode: null,
+              removeNodeOwnerDid: null,
+            });
+            setOnProgress(false);
+          }}
+          onClick={() => handleRemoveNode(dlgState.removeNodeNid, dlgState.removeNodeOwnerDid)}
+        />
+      </ModalDialog>
     </>
   );
 }

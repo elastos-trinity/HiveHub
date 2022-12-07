@@ -17,8 +17,9 @@ import {
 } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
+import { useTranslation } from 'react-i18next';
 import { BadgeTypo, LabelTypo, NormalTypo } from './Custom/CustomTypos';
-import { getValutPricingPlanBadge } from '../service/common';
+// import { getVaultPricingPlanBadge } from '../service/common';
 
 VaultItemBox.propTypes = {
   total: PropTypes.number,
@@ -43,6 +44,7 @@ export default function VaultItemBox({
   onClickBackup,
   onClickMigrate
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const theme = useTheme();
@@ -168,7 +170,9 @@ export default function VaultItemBox({
                           >
                             <img src="/static/ic_backup.svg" alt="backup_icon" width="16px" />
                           </Box>
-                          <LabelTypo sx={{ fontWeight: 700, color: '#FFF' }}>Backup</LabelTypo>
+                          <LabelTypo sx={{ fontWeight: 700, color: '#FFF' }}>
+                            {t('btn-backup')}
+                          </LabelTypo>
                         </Stack>
                       </MenuItem>
                       <MenuItem
@@ -198,7 +202,9 @@ export default function VaultItemBox({
                           >
                             <img src="/static/ic_migrate.svg" alt="migrate_icon" width="24px" />
                           </Box>
-                          <LabelTypo sx={{ fontWeight: 700, color: '#FFF' }}>Migrate</LabelTypo>
+                          <LabelTypo sx={{ fontWeight: 700, color: '#FFF' }}>
+                            {t('btn-migrate')}
+                          </LabelTypo>
                         </Stack>
                       </MenuItem>
                     </MenuList>
@@ -208,13 +214,13 @@ export default function VaultItemBox({
             )}
           </Popper>
           <Stack direction="row" spacing={2} alignItems="center">
-            <NormalTypo
-              sx={{ fontWeight: 600, color: '#FFF' }}
-            >{`${ownerName}'s Vault`}</NormalTypo>
-            <BadgeTypo>{getValutPricingPlanBadge(pricePlan)}</BadgeTypo>
+            <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }}>{`${ownerName}${t(
+              'vault-s-vault'
+            )}`}</NormalTypo>
+            <BadgeTypo>{pricePlan}</BadgeTypo>
             {!hasBackup && (
               <BadgeTypo sx={{ color: '#E23A45', background: 'rgba(226, 58, 69, 0.05)' }}>
-                Not backed up yet
+                {t('badge-not-backup')}
               </BadgeTypo>
             )}
           </Stack>

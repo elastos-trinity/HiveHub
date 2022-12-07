@@ -8,17 +8,15 @@ import { useSnackbar } from 'notistack';
 import { binary_to_base58 } from 'base58-js';
 import { DIDStore, Mnemonic, RootIdentity } from '@elastosfoundation/did-js-sdk';
 import { DID as ConDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import { useTranslation } from 'react-i18next';
-import { HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
+import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import CustomTextField from '../../../components/Custom/CustomTextField';
 import { useUserContext } from '../../../contexts/UserContext';
 import { createHiveNodeEnvConfig } from '../../../service/fetch';
+import EnvConfigDownloadDlg from '../../../components/Dialog/EnvConfigDownloadDlg';
+import CredentialIssueConfirmDlg from '../../../components/Dialog/CredentialIssueConfirmDlg';
 
 export default function NodeEnvConfig() {
   const navigate = useNavigate();
@@ -45,6 +43,7 @@ export default function NodeEnvConfig() {
   const [nodeDescriptionErr, setNodeDescriptionErr] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
+  const [onProgress, setOnProgress] = useState(false);
 
   const [serviceDIDPassword, storePass] = ['password', 'password'];
 
@@ -139,6 +138,7 @@ export default function NodeEnvConfig() {
   };
 
   const handleSaveEnvConfig = async () => {
+    setOnProgress(true);
     setTipOpen(true);
     const nodeCredential = await getCredentialFromOwner();
     setTipOpen(false);
@@ -170,6 +170,7 @@ export default function NodeEnvConfig() {
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
     }
+    setOnProgress(false);
   };
 
   const theme = useTheme();
@@ -306,96 +307,13 @@ export default function NodeEnvConfig() {
           </ConfirmButton>
         </Stack>
       </ContainerBox>
-      <Dialog
+      <EnvConfigDownloadDlg
         open={downloadOpen}
-        aria-labelledby="download-dialog-title"
-        aria-describedby="download-dialog-description"
-        PaperProps={{
-          sx: {
-            background: '#161C24',
-            borderRadius: '40px',
-            px: 1,
-            py: 2
-          }
-        }}
-        TransitionProps={{
-          sx: {
-            background: 'rgba(22, 28, 36, 0.5)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: '0px'
-          }
-        }}
-      >
-        <DialogTitle id="download-dialog-title">
-          <HeaderTypo sx={{ py: 1, textAlign: 'center' }}>{t('btn-generate-env')}</HeaderTypo>
-        </DialogTitle>
-        <DialogContent>
-          <img
-            src="/static/ic_lock.svg"
-            alt="lock"
-            width="60px"
-            style={{ margin: '0 auto 40px auto' }}
-          />
-          <DialogContentText id="download-dialog-description">
-            <NormalTypo sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
-              {t('dlg-generate-env-label')}
-            </NormalTypo>
-          </DialogContentText>
-          <Stack
-            direction="row"
-            mt={{ xs: 8, md: 10 }}
-            spacing={{ xs: 1.5, md: 3 }}
-            justifyContent="center"
-          >
-            <ConfirmButton
-              onClick={() => setDownloadOpen(false)}
-              sx={{
-                color: '#FF931E',
-                background: 'transparent',
-                border: { xs: '1px solid #FF931E', md: '2px solid #FF931E' },
-                width: { xs: '120px', md: '240px' }
-              }}
-            >
-              {t('btn-cancel')}
-            </ConfirmButton>
-            <ConfirmButton
-              onClick={handleSaveEnvConfig}
-              sx={{ width: { xs: '120px', md: '240px' } }}
-            >
-              {t('btn-download')}
-            </ConfirmButton>
-          </Stack>
-        </DialogContent>
-      </Dialog>
-      <Dialog
-        open={tipOpen}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        PaperProps={{
-          sx: {
-            background: '#161C24',
-            borderRadius: '40px',
-            px: 1,
-            py: 2
-          }
-        }}
-        TransitionProps={{
-          sx: {
-            background: 'rgba(22, 28, 36, 0.5)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: '0px'
-          }
-        }}
-      >
-        <DialogTitle id="alert-dialog-title">
-          <HeaderTypo>{t('alert-operation-tip-title')}</HeaderTypo>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {t('alert-operation-tip-label')}
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
+        onClose={() => setDownloadOpen(false)}
+        onClick={handleSaveEnvConfig}
+        disabled={onProgress}
+      />
+      <CredentialIssueConfirmDlg open={tipOpen} />
     </>
   );
 }

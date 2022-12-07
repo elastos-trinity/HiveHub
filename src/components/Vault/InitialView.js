@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { PlusButton } from '../Custom/CustomButtons';
 import { FeatureGrid } from '../Custom/CustomContainer';
 import { HeaderTypo, LabelTypo } from '../Custom/CustomTypos';
@@ -10,6 +11,7 @@ VaultInitialView.propTypes = {
 };
 
 export default function VaultInitialView({ onClickCreateVault, sx = {} }) {
+  const { t } = useTranslation();
   return (
     <Box sx={{ ...sx, textAlign: 'center' }}>
       <FeatureGrid>
@@ -29,8 +31,8 @@ export default function VaultInitialView({ onClickCreateVault, sx = {} }) {
             </Typography>
           </Box>
         </Box>
-        <HeaderTypo sx={{ py: 1 }}>Get started with a new storage vault!</HeaderTypo>
-        <LabelTypo sx={{ py: 1 }}>Create a new storage vault now!</LabelTypo>
+        <HeaderTypo sx={{ py: 1 }}>{t('vault-init-title')}</HeaderTypo>
+        <LabelTypo sx={{ py: 1 }}>{t('vault-init-label')}</LabelTypo>
       </FeatureGrid>
       <PlusButton
         hasPlus={false}
@@ -40,7 +42,7 @@ export default function VaultInitialView({ onClickCreateVault, sx = {} }) {
           mt: { xs: 4, md: 6 }
         }}
       >
-        Create vault
+        {t('btn-create-vault')}
       </PlusButton>
     </Box>
   );

@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack, Grid } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import VaultInitialView from '../../../components/Vault/InitialView';
 import VaultItemBox from '../../../components/VaultItemBox';
 import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
 import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import { checkBackupStatus, getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
+import BackupConfirmDlg from '../../../components/Dialog/BackupConfirmDlg';
+import MigrateConfirmDlg from '../../../components/Dialog/MigrateConfirmDlg';
 
 export default function MyVault() {
   const navigate = useNavigate();
   const { user } = useUserContext();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [myVault, setMyVault] = useState(null);
   const [backupStatus, setBackupStatus] = useState(false);
   const [dappsOnVault, setDappsOnVault] = useState(Array(2).fill(0));
+  const [openBackupDlg, setOpenBackupDlg] = useState(false);
+  const [openMigrateDlg, setOpenMigrateDlg] = useState(false);
+  const [onProgress, setOnProgress] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,7 +65,7 @@ export default function MyVault() {
       )}
       {!!myVault && (
         <>
-          <HeaderTypo sx={{ py: 1 }}>Storage</HeaderTypo>
+          <HeaderTypo sx={{ py: 1 }}>{t('vault-storage')}</HeaderTypo>
           <VaultItemBox
             ownerName={myVault?.ownerName || '???'}
             total={myVault?.total ?? 0}
@@ -66,13 +73,13 @@ export default function MyVault() {
             pricePlan={myVault?.pricePlan || 'Basic'}
             hasBackup={backupStatus}
             isLoading={isLoading}
-            onClickBackup={handleBackup}
-            onClickMigrate={handleMigrate}
+            onClickBackup={() => setOpenBackupDlg(true)}
+            onClickMigrate={() => setOpenMigrateDlg(true)}
             sx={{ mt: { xs: 2.5, md: 5 }, mb: 5 }}
           />
           <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={2} alignItems="center">
-              <HeaderTypo sx={{ py: 1 }}>Dapps on this vault</HeaderTypo>
+              <HeaderTypo sx={{ py: 1 }}>{t('vault-dapps-on-vault')}</HeaderTypo>
               <BadgeTypo>{dappsOnVault.length}</BadgeTypo>
             </Stack>
           </Stack>
@@ -93,6 +100,18 @@ export default function MyVault() {
           )}
         </>
       )}
+      <BackupConfirmDlg
+        open={openBackupDlg}
+        onClose={() => setOpenBackupDlg(false)}
+        onClick={handleBackup}
+        disabled={onProgress}
+      />
+      <MigrateConfirmDlg
+        open={openMigrateDlg}
+        onClose={() => setOpenMigrateDlg(false)}
+        onClick={handleMigrate}
+        disabled={onProgress}
+      />
     </>
   );
 }

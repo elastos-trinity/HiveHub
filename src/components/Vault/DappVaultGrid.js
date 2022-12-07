@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Stack, LinearProgress, Skeleton, Typography, Box, Grid } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { LabelTypo, NormalTypo } from '../Custom/CustomTypos';
 import { reduceHexAddress } from '../../service/common';
 
@@ -46,6 +47,7 @@ export default function DappVaultGrid({
   isLoading,
   innerSx = {}
 }) {
+  const { t } = useTranslation();
   if (!name || !avatar) {
     const id = dappList.findIndex((el) => el.appDid === appDid);
     const dappId = id < 0 ? 0 : id;
@@ -94,7 +96,9 @@ export default function DappVaultGrid({
               {name || reduceHexAddress(appDid, 6)}
             </NormalTypo>
           </Stack>
-          <LabelTypo my={2}>{used} MB used</LabelTypo>
+          <LabelTypo my={2}>
+            {used} MB {t('vault-used')}
+          </LabelTypo>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
             alignItems={{ xs: 'end', sm: 'center' }}

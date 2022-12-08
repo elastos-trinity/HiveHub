@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Stack, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
-import HiveLogo from '../Logo/Logo';
+import HiveLogo from '../Logo';
 import { MHidden } from '../@material-extend';
 import { useUserContext } from '../../contexts/UserContext';
 

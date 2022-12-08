@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Stack, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
-import VaultInitialView from '../../../components/Vault/InitialView';
+import VaultInitialView from '../../../components/Dashboard/Vault/InitialView';
 import VaultItemBox from '../../../components/VaultItemBox';
-import DappVaultGrid from '../../../components/Vault/DappVaultGrid';
+import DappVaultGrid from '../../../components/Dashboard/Vault/DappVaultGrid';
 import { BadgeTypo, HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import {

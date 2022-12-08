@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
-import NodeInitialView from '../../../components/Node/InitialView';
+import NodeInitialView from '../../../components/Dashboard/Node/InitialView';
 import NodeItemBox from '../../../components/NodeItemBox';
 import { PlusButton } from '../../../components/Custom/CustomButtons';
 import { HeaderTypo } from '../../../components/Custom/CustomTypos';

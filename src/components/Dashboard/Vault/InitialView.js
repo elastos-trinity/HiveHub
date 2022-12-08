@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { PlusButton } from '../Custom/CustomButtons';
-import { FeatureGrid } from '../Custom/CustomContainer';
-import { HeaderTypo, LabelTypo } from '../Custom/CustomTypos';
+import { PlusButton } from '../../Custom/CustomButtons';
+import { FeatureGrid } from '../../Custom/CustomContainer';
+import { HeaderTypo, LabelTypo } from '../../Custom/CustomTypos';
 
 VaultInitialView.propTypes = {
   onClickCreateVault: PropTypes.func,

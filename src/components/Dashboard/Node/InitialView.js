@@ -1,14 +1,19 @@
 import PropTypes from 'prop-types';
-import { Box, Typography } from '@mui/material';
-import SmallHexagon from '../SmallHexagon';
-import { FeatureGrid } from '../Custom/CustomContainer';
-import { HeaderTypo, LabelTypo } from '../Custom/CustomTypos';
+import { Box, Typography, Stack } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import SmallHexagon from '../../SmallHexagon';
+import { PlusButton } from '../../Custom/CustomButtons';
+import { FeatureGrid } from '../../Custom/CustomContainer';
+import { HeaderTypo, LabelTypo } from '../../Custom/CustomTypos';
 
-EmptyNodeView.propTypes = {
+NodeInitialView.propTypes = {
+  onClickEnvConfig: PropTypes.func,
+  onClickCreateNode: PropTypes.func,
   sx: PropTypes.object
 };
 
-export default function EmptyNodeView({ sx = {} }) {
+export default function NodeInitialView({ onClickEnvConfig, onClickCreateNode, sx = {} }) {
+  const { t } = useTranslation();
   return (
     <Box sx={{ ...sx }}>
       <FeatureGrid>
@@ -75,13 +80,17 @@ export default function EmptyNodeView({ sx = {} }) {
             </Box>
           </SmallHexagon>
         </Box>
-        <HeaderTypo sx={{ py: 1 }}>No deployed nodes found!</HeaderTypo>
-        <LabelTypo sx={{ py: 1 }}>
-          No deployed nodes available yet.
-          <br />
-          Please come back later!
-        </LabelTypo>
+        <HeaderTypo sx={{ py: 1 }}>{t('node-init-title')}</HeaderTypo>
+        <LabelTypo sx={{ py: 1 }}>{t('node-init-label')}</LabelTypo>
       </FeatureGrid>
+      <Stack mt={{ xs: 4, md: 6 }} spacing={{ xs: 3.5, md: 5 }} sx={{ alignItems: 'center' }}>
+        <PlusButton hasPlus={false} onClick={onClickEnvConfig}>
+          {t('btn-config-env')}
+        </PlusButton>
+        <PlusButton hasPlus={false} onClick={onClickCreateNode}>
+          {t('btn-register-node')}
+        </PlusButton>
+      </Stack>
     </Box>
   );
 }

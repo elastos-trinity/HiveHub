@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Stack, LinearProgress, Skeleton, Typography, Box, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { LabelTypo, NormalTypo } from '../Custom/CustomTypos';
-import { reduceHexAddress } from '../../service/common';
+import { LabelTypo, NormalTypo } from '../../Custom/CustomTypos';
+import { reduceHexAddress } from '../../../service/common';
 
 DappVaultGrid.propTypes = {
   avatar: PropTypes.string,

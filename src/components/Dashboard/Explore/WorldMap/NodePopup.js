@@ -2,9 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Stack, Typography, Chip, Popper, Fade } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { NodeTitle, NodeTimeLable, NormalTypo } from '../../Custom/CustomTypos';
+import { NodeTitle, NodeTimeLable, NormalTypo } from '../../../Custom/CustomTypos';
 import { getMapX, getMapY, getHexFromCircle } from './utils';
-import { ConfirmButton } from '../../Custom/CustomButtons';
+import { ConfirmButton } from '../../../Custom/CustomButtons';
 
 NodePopup.propTypes = {
   longitude: PropTypes.number,

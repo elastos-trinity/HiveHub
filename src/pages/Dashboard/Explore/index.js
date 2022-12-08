@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
-import StatusSelect from '../../../components/Explore/StatusSelect';
-import ViewToggleGroup from '../../../components/Explore/ViewToggleGroup';
-import EmptyNodeView from '../../../components/Explore/EmptyNodeView';
-import NodesMapView from '../../../components/Explore/WorldMap/NodesMapView';
+import StatusSelect from '../../../components/Dashboard/Explore/StatusSelect';
+import ViewToggleGroup from '../../../components/Dashboard/Explore/ViewToggleGroup';
+import EmptyNodeView from '../../../components/Dashboard/Explore/EmptyNodeView';
+import NodesMapView from '../../../components/Dashboard/Explore/WorldMap/NodesMapView';
 import NodeItemBox from '../../../components/NodeItemBox';
 import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';

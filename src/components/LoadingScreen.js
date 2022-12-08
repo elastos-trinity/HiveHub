@@ -3,7 +3,7 @@ import NProgress from 'nprogress';
 import { motion } from 'framer-motion';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import { Box, GlobalStyles } from '@mui/material';
-import HiveLogo from './Logo/Logo';
+import HiveLogo from './Logo';
 
 // ----------------------------------------------------------------------
 

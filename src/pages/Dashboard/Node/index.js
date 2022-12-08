@@ -10,7 +10,7 @@ import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
-import ModalDialog from '../../../components/ModalDialog';
+import ModalDialog from '../../../components/Dialog/ModalDialog';
 import { useDialogContext } from '../../../contexts/DialogContext';
 
 export default function MyNode() {

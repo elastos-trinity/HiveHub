@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Stack, Typography } from '@mui/material';
-import { DialogTitleTypo } from '../CustomTypos';
-import { PrimaryButton } from '../CustomButtons';
+import { DialogTitleTypo } from '../Custom/CustomTypos';
+import { PrimaryButton } from '../Custom/CustomButtons';
 
 ConfirmDlg.propTypes = {
   message: PropTypes.string.isRequired,

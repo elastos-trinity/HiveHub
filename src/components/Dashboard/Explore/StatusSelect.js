@@ -2,7 +2,7 @@ import React from 'react';
 import { Select } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import PropTypes from 'prop-types';
-import { LabelTypo } from '../Custom/CustomTypos';
+import { LabelTypo } from '../../Custom/CustomTypos';
 
 const MenuProps = {
   anchorOrigin: {

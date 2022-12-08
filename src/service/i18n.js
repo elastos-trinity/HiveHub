@@ -65,6 +65,8 @@ const en = {
     'Please open Essentials application, and confirm the credential issuing dialog.',
   'dlg-backup-confirm-label': 'Are you sure you want to backup your data?',
   'dlg-migrate-confirm-label': 'Are you sure you want to migrate your data?',
+  'dlg-remove-node-confirm-title': 'Remove node',
+  'dlg-remove-node-confirm-label': 'Are you sure you want to remove your node?',
 
   'display-language': 'English',
   'landing-title-manage': 'Manage',
@@ -198,6 +200,8 @@ const zh = {
     'Please open Essentials application, and confirm the credential issuing dialog.',
   'dlg-backup-confirm-label': 'Are you sure you want to backup your data?',
   'dlg-migrate-confirm-label': 'Are you sure you want to migrate your data?',
+  'dlg-remove-node-confirm-title': 'Remove node',
+  'dlg-remove-node-confirm-label': 'Are you sure you want to remove your node?',
 
   'display-language': '中文',
   'landing-title-manage': '管理',

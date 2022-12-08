@@ -18,45 +18,45 @@ const Loadable = (Component) =>
 
 export default function Router() {
   return useRoutes([
-    {
-      path: '/',
-      element: <MainLayout />,
-      children: [
-        { path: '', element: <HomePage /> },
-        {
-          path: 'dashboard',
-          children: [
-            { path: '', element: <Navigate to="/dashboard/node" replace /> },
-            {
-              path: 'node',
-              children: [
-                { path: '', element: <MyNodes /> },
-                { path: 'envconfig', element: <EnvConfigPage /> },
-                { path: 'create', element: <CreateNodePage /> },
-                { path: 'detail/:nodeId', element: <NodeDetailPage /> }
-              ]
-            },
-            {
-              path: 'vault',
-              children: [{ path: '', element: <MyVault /> }]
-            },
-            {
-              path: 'explore',
-              children: [{ path: '', element: <ExploreNode /> }]
-            },
-            {
-              path: 'settings',
-              element: <SettingLayout />,
-              children: [
-                { path: '', element: <Navigate to="/dashboard/settings/about" replace /> },
-                { path: 'about', element: <AboutSettings /> },
-                { path: 'language', element: <LanguageSettings /> }
-              ]
-            }
-          ]
-        }
-      ]
-    },
+    // {
+    //   path: '/',
+    //   element: <MainLayout />,
+    //   children: [
+    //     { path: '', element: <HomePage /> },
+    //     {
+    //       path: 'dashboard',
+    //       children: [
+    //         { path: '', element: <Navigate to="/dashboard/node" replace /> },
+    //         {
+    //           path: 'node',
+    //           children: [
+    //             { path: '', element: <MyNodes /> },
+    //             { path: 'envconfig', element: <EnvConfigPage /> },
+    //             { path: 'create', element: <CreateNodePage /> },
+    //             { path: 'detail/:nodeId', element: <NodeDetailPage /> }
+    //           ]
+    //         },
+    //         {
+    //           path: 'vault',
+    //           children: [{ path: '', element: <MyVault /> }]
+    //         },
+    //         {
+    //           path: 'explore',
+    //           children: [{ path: '', element: <ExploreNode /> }]
+    //         },
+    //         {
+    //           path: 'settings',
+    //           element: <SettingLayout />,
+    //           children: [
+    //             { path: '', element: <Navigate to="/dashboard/settings/about" replace /> },
+    //             { path: 'about', element: <AboutSettings /> },
+    //             { path: 'language', element: <LanguageSettings /> }
+    //           ]
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // },
     {
       path: '/',
       element: <HiveHubLayout />,

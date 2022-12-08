@@ -134,9 +134,9 @@ export default function NodeItemBox({
                       bottom: { xs: '10px', sm: '13px' }
                     }}
                     variant="text"
-                    onClick={(event) => {
-                      if (onRemoveNode) onRemoveNode();
-                      event.stopPropagation();
+                    onClick={(e) => {
+                      onRemoveNode(nodeId);
+                      e.stopPropagation();
                     }}
                   >
                     {t('btn-remove')}

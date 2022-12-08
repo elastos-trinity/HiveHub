@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import StatusSelect from '../../../components/Dashboard/Explore/StatusSelect';
 import ViewToggleGroup from '../../../components/Dashboard/Explore/ViewToggleGroup';
 import EmptyNodeView from '../../../components/Dashboard/Explore/EmptyNodeView';
@@ -9,16 +10,21 @@ import NodeItemBox from '../../../components/NodeItemBox';
 import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
+import RemoveNodeConfirmDlg from '../../../components/Dialog/RemoveNodeConfirmDlg';
 
 export default function ExploreNode() {
   const navigate = useNavigate();
   const { user } = useUserContext();
-  const { getHiveNodesList } = useHiveHubContracts();
+  const { getHiveNodesList, removeHiveNode } = useHiveHubContracts();
   const [statusFilter, setStatusFilter] = useState(0);
   const [viewMode, setViewMode] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [nodeList, setNodeList] = useState(Array(2).fill(0));
   const [filteredNodeList, setFilteredNodeList] = useState(nodeList);
+  const [openDlg, setOpenDlg] = useState(false);
+  const [selNId, setSelNId] = useState(null);
+  const [onProgress, setOnProgress] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +52,25 @@ export default function ExploreNode() {
       setFilteredNodeList(filteredItems || []);
     } else setFilteredNodeList(nodeList);
   }, [statusFilter, nodeList]);
+
+  const handleRemoveNode = async (nid) => {
+    if (Number.isNaN(nid)) return;
+    setOnProgress(true);
+    const result = await removeHiveNode(nid);
+    if (result) {
+      enqueueSnackbar('Remove Hive Node success.', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      window.location.reload();
+    } else {
+      enqueueSnackbar('Remove Hive Node failed.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+    setOnProgress(false);
+  };
 
   return (
     <>
@@ -93,10 +118,23 @@ export default function ExploreNode() {
               endpoint={item?.url}
               isOwner={item?.owner_did === user.did}
               isLoading={isLoading}
+              onRemoveNode={(nId) => {
+                setSelNId(nId);
+                setOpenDlg(true);
+              }}
             />
           ))}
         </Stack>
       )}
+      <RemoveNodeConfirmDlg
+        open={openDlg}
+        onClose={() => {
+          setOpenDlg(false);
+          setSelNId(null);
+        }}
+        onClick={() => handleRemoveNode(selNId)}
+        disabled={onProgress}
+      />
     </>
   );
 }

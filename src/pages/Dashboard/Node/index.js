@@ -9,9 +9,7 @@ import { PlusButton } from '../../../components/Custom/CustomButtons';
 import { HeaderTypo } from '../../../components/Custom/CustomTypos';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
-import ConfirmDlg from '../../../components/Dialog/ConfirmDlg';
-import ModalDialog from '../../../components/Dialog/ModalDialog';
-import { useDialogContext } from '../../../contexts/DialogContext';
+import RemoveNodeConfirmDlg from '../../../components/Dialog/RemoveNodeConfirmDlg';
 
 export default function MyNode() {
   const navigate = useNavigate();
@@ -20,12 +18,8 @@ export default function MyNode() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [myNodeList, setMyNodeList] = useState(Array(2).fill(0));
-
-  const { dlgState, setDlgState } = useDialogContext({
-    confirmDlgOpened: false,
-    removeNodeNid: null,
-    removeNodeOwnerDid: null
-  });
+  const [openDlg, setOpenDlg] = useState(false);
+  const [selNId, setSelNId] = useState(null);
   const [onProgress, setOnProgress] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -46,17 +40,10 @@ export default function MyNode() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
 
-  const handleRemoveNode = async (nid, ownerDid) => {
-    if (ownerDid !== user.did) {
-      enqueueSnackbar('Only owner can remove its node.', {
-        variant: 'error',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
-      });
-      return;
-    }
+  const handleRemoveNode = async (nid) => {
+    if (Number.isNaN(nid)) return;
     setOnProgress(true);
     const result = await removeHiveNode(nid);
-    // const result = true;
     if (result) {
       enqueueSnackbar('Remove Hive Node success.', {
         variant: 'success',
@@ -104,13 +91,9 @@ export default function MyNode() {
                 endpoint={item?.url}
                 isOwner={item?.owner_did === user.did}
                 isLoading={isLoading}
-                onRemoveNode={() => {
-                  setDlgState({
-                    ...dlgState,
-                    confirmDlgOpened: true,
-                    removeNodeNid: item?.nid,
-                    removeNodeOwnerDid: item?.owner_did
-                  });
+                onRemoveNode={(nId) => {
+                  setSelNId(nId);
+                  setOpenDlg(true);
                 }}
               />
             ))}
@@ -130,21 +113,15 @@ export default function MyNode() {
           </Stack>
         </>
       )}
-      <ModalDialog open={dlgState.confirmDlgOpened}>
-        <ConfirmDlg
-          message="After clicked the 'Confirm' button, please verify on the Essentials application."
-          onProgress={onProgress}
-          onClose={() => {
-            setDlgState({
-              ...dlgState,
-              confirmDlgOpened: false,
-              removeHiveNode: null,
-              removeNodeOwnerDid: null
-            });
-          }}
-          onClick={() => handleRemoveNode(dlgState.removeNodeNid, dlgState.removeNodeOwnerDid)}
-        />
-      </ModalDialog>
+      <RemoveNodeConfirmDlg
+        open={openDlg}
+        onClose={() => {
+          setOpenDlg(false);
+          setSelNId(null);
+        }}
+        onClick={() => handleRemoveNode(selNId)}
+        disabled={onProgress}
+      />
     </>
   );
 }

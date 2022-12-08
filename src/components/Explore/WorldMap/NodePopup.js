@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Stack, Typography, Chip, Popper, Fade } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { NodeTitle, NodeTimeLable, NormalTypo } from '../../Custom/CustomTypos';
 import { getMapX, getMapY, getHexFromCircle } from './utils';
 import { ConfirmButton } from '../../Custom/CustomButtons';
@@ -30,6 +31,7 @@ export default function NodePopup({
   onClick,
   sx
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -94,7 +96,7 @@ export default function NodePopup({
                     <NodeTitle>{name}</NodeTitle>
                     {status ? (
                       <Chip
-                        label="online"
+                        label={t('badge-online')}
                         color="success"
                         sx={{
                           height: { xs: '11px !important', md: '19px !important' },
@@ -106,7 +108,7 @@ export default function NodePopup({
                       />
                     ) : (
                       <Chip
-                        label="offline"
+                        label={t('badge-offline')}
                         color="error"
                         sx={{
                           height: { xs: '11px !important', md: '19px !important' },
@@ -125,19 +127,19 @@ export default function NodePopup({
                     <Stack spacing={1}>
                       <Stack direction="row" sx={{ pb: '5px' }}>
                         <NormalTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
-                          Endpoint:
+                          {t('node-detail-endpoint')}:
                         </NormalTypo>
                         <NormalTypo>{endpoint}</NormalTypo>
                       </Stack>
                       <Stack direction="row" sx={{ pb: '5px' }}>
                         <NormalTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
-                          Owner DID:
+                          {t('node-detail-owner-did')}:
                         </NormalTypo>
                         <NormalTypo noWrap>{ownerDid}</NormalTypo>
                       </Stack>
                     </Stack>
                   </Typography>
-                  <ConfirmButton onClick={onClick}>Access</ConfirmButton>
+                  <ConfirmButton onClick={onClick}>{t('btn-access')}</ConfirmButton>
                 </Stack>
               </Stack>
             </Box>

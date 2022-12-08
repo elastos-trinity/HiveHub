@@ -36,6 +36,7 @@ const en = {
   'node-detail-endpoint': 'Endpoint',
   'node-detail-created-date': 'Created date',
   'node-detail-version': 'Version',
+  'node-detail-owner-did': 'Owner DID',
   'vault-init-title': 'Get started with a new storage vault!',
   'vault-init-label': 'Create a new storage vault now!',
   'vault-storage': 'Storage',
@@ -56,6 +57,7 @@ const en = {
   'btn-backup': 'Backup',
   'btn-migrate': 'Migrate',
   'btn-remove': 'Remove',
+  'btn-access': 'Access',
   'dlg-generate-env-label':
     'The generated .env file will be downloaded locally from the browser. Please store them somewhere safe.',
   'alert-operation-tip-title': 'Operation Tip',

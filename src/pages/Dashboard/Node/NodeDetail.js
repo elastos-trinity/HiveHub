@@ -146,7 +146,7 @@ export default function MyNodeDetail() {
             <NodeTitle>{nodeDetail?.name || '???'}</NodeTitle>
             {nodeDetail?.status ? (
               <Chip
-                label="online"
+                label={t('badge-online')}
                 color="success"
                 sx={{
                   height: { xs: '11px !important', md: '19px !important' },
@@ -158,7 +158,7 @@ export default function MyNodeDetail() {
               />
             ) : (
               <Chip
-                label="offline"
+                label={t('badge-offline')}
                 color="error"
                 sx={{
                   height: { xs: '11px !important', md: '19px !important' },

@@ -136,7 +136,7 @@ export default function MyVault() {
         <>
           <HeaderTypo sx={{ py: 1 }}>{t('vault-storage')}</HeaderTypo>
           <VaultItemBox
-            ownerName={myVault?.ownerName || '???'}
+            endpoint={user?.nodeProvider || '???'}
             total={myVault?.total ?? 0}
             used={myVault?.used ?? 0}
             pricePlan={myVault?.pricePlan || 'Basic'}

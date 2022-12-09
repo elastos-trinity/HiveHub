@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Stack } from '@mui/material';
+import { MenuItem, Select, Stack, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -8,15 +9,44 @@ import { useTranslation } from 'react-i18next';
 import { HeaderTypo, NormalTypo } from '../Custom/CustomTypos';
 import { ConfirmButton } from '../Custom/CustomButtons';
 
+const MenuProps = {
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'left'
+  },
+  transformOrigin: {
+    vertical: 'top',
+    horizontal: 'left'
+  },
+  variant: 'menu'
+};
+
 BackupConfirmDlg.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   onClick: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  activeNodes: PropTypes.array
 };
 
-export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
+export default function BackupConfirmDlg({ open, onClose, onClick, disabled, activeNodes = [] }) {
   const { t } = useTranslation();
+  const [nodeList, setNodeList] = useState(activeNodes);
+  const [selected, setSelected] = useState(0);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!activeNodes.length) onClose();
+    else setNodeList(activeNodes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeNodes]);
+
+  const handleChange = (event) => {
+    const selectedIndex = event.target.value;
+    setSelected(selectedIndex);
+    setError(false);
+  };
+
   return (
     <Dialog
       open={open}
@@ -27,7 +57,8 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
           background: '#161C24',
           borderRadius: '40px',
           px: 1,
-          py: 2
+          py: 2,
+          maxWidth: '640px'
         }
       }}
       TransitionProps={{
@@ -42,23 +73,72 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
         <HeaderTypo sx={{ py: 1, textAlign: 'center' }}>{t('btn-backup')}</HeaderTypo>
       </DialogTitle>
       <DialogContent>
+        <DialogContentText
+          id="backup-dialog-description"
+          sx={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <NormalTypo component="span" sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
+            {t('dlg-backup-confirm-label-1')} {t('dlg-backup-confirm-label-2')}
+          </NormalTypo>
+        </DialogContentText>
         <img
           src="/static/ic_backup.svg"
           alt="backup_icon"
           width="60px"
           style={{ margin: '20px auto 30px auto' }}
         />
-        <DialogContentText
-          id="backup-dialog-description"
-          sx={{ display: 'flex', justifyContent: 'center' }}
-        >
-          <NormalTypo component="span" sx={{ py: 1, px: { xs: 1, md: 2 }, textAlign: 'center' }}>
-            {t('dlg-backup-confirm-label')}
+        <Stack spacing={0.5} px={{ xs: 0, md: 2 }}>
+          <NormalTypo sx={{ color: '#FF931E', p: 1 }}>
+            {t('dlg-backup-confirm-node-provider')}
           </NormalTypo>
-        </DialogContentText>
+          <Select
+            variant="outlined"
+            value={selected}
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'Without label' }}
+            size="small"
+            sx={{
+              border: error ? '2px solid #EB5757' : '2px solid #FF931E',
+              borderRadius: '20px',
+              width: '100%',
+              mr: { xs: 0, md: '100px' },
+              alignItems: 'center',
+              '& .MuiSelect-select': {
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderWidth: '0 !important'
+              }
+            }}
+            MenuProps={{
+              ...MenuProps,
+              sx: {
+                '& .MuiMenu-list': {
+                  background: '#131317',
+                  '& li': {
+                    justifyContent: 'center'
+                  }
+                }
+              }
+            }}
+          >
+            {nodeList.map((item, i) => (
+              <MenuItem key={i} value={i} autoFocus={selected === i}>
+                <NormalTypo py={1}>{item}</NormalTypo>
+              </MenuItem>
+            ))}
+          </Select>
+          {error > 0 && (
+            <Typography fontSize={12} fontWeight={500} color="#EB5757">
+              {t('dlg-backup-confirm-node-select-label')}
+            </Typography>
+          )}
+        </Stack>
         <Stack
           direction="row"
-          mt={{ xs: 5, md: 7.5 }}
+          mt={{ xs: 3, md: 5 }}
           spacing={{ xs: 1.5, md: 3 }}
           justifyContent="center"
         >
@@ -74,9 +154,12 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled }) {
             {t('btn-cancel')}
           </ConfirmButton>
           <ConfirmButton
-            onClick={() => onClick('https://hive-testnet2.trinity-tech.io')}
+            onClick={() => {
+              if (typeof selected === 'number' && selected < activeNodes.length)
+                onClick(activeNodes[selected]);
+            }}
             sx={{ width: { xs: '120px', md: '240px' } }}
-            disabled={disabled}
+            disabled={disabled || !activeNodes.length}
           >
             {t('btn-backup')}
           </ConfirmButton>

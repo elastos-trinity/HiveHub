@@ -220,6 +220,7 @@ export default function MyVault() {
         onClose={() => setOpenMigrateDlg(false)}
         onClick={handleMigrate}
         disabled={onProgress}
+        activeNodes={activeNodeUrls}
       />
     </>
   );

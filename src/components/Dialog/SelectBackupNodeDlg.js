@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Stack, Typography } from '@mui/material';
-import { DialogTitleTypo } from '../CustomTypos';
-import { PrimaryButton } from '../CustomButtons';
-import { MenuItemStyle } from '../CustomContainer';
+import { DialogTitleTypo } from '../Custom/CustomTypos';
+import { PrimaryButton } from '../Custom/CustomButtons';
+import { MenuItemStyle } from '../Custom/CustomContainer';
 
 SelectBackupNodeDlg.propTypes = {
   dlgType: PropTypes.number.isRequired,

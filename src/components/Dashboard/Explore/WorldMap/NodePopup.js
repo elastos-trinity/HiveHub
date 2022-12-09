@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Stack, Typography, Chip, Popper, Fade } from '@mui/material';
+import { Box, Stack, Typography, Chip, Popper, Fade, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { NodeTitle, NodeTimeLable, NormalTypo } from '../../../Custom/CustomTypos';
+import { BaseTypography } from '../../../Custom/CustomTypos';
 import { getMapX, getMapY, getHexFromCircle } from './utils';
-import { ConfirmButton } from '../../../Custom/CustomButtons';
 
 NodePopup.propTypes = {
   longitude: PropTypes.number,
@@ -65,7 +64,7 @@ export default function NodePopup({
         onMouseLeave={() => setOpen(false)}
         placement="bottom-start"
         transition
-        sx={{ width: '500px', height: '150px', zIndex: 11111 }}
+        sx={{ width: '320px', zIndex: 11111 }}
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps}>
@@ -75,34 +74,42 @@ export default function NodePopup({
                 backgroundColor: '#131317',
                 borderRadius: '20px',
                 width: '100%',
-                padding: { xs: '10px 10px 10px 20px', sm: '20px 20px 20px 40px' },
+                padding: '10px 10px 10px 20px',
                 position: 'relative',
                 ...sx
               }}
             >
-              <NodeTimeLable
+              <BaseTypography
                 sx={{
+                  color: '#B3B3B3',
+                  fontSize: '10px',
+                  lineHeight: '12px',
+                  fontWeight: 400,
                   whiteSpace: 'nowrap',
                   position: 'absolute',
-                  right: { xs: '10px', sm: '20px' },
-                  top: { xs: '10px', sm: '30px' }
+                  right: '10px',
+                  top: '10px'
                 }}
               >
                 {time}
-              </NodeTimeLable>
-              <Stack spacing={{ xs: '20px', sm: '50px' }}>
-                <Stack spacing="10px" py={{ xs: '10px', sm: '5px' }}>
-                  <Stack direction="row" alignItems="center" spacing={{ xs: '10px', sm: '20px' }}>
-                    <NodeTitle>{name}</NodeTitle>
+              </BaseTypography>
+              <Stack spacing="20px">
+                <Stack spacing="10px" py="10px">
+                  <Stack direction="row" alignItems="center" spacing="10px">
+                    <BaseTypography
+                      sx={{ fontWeight: 700, fontSize: '20px', lineHeight: '24px', color: '#FFF' }}
+                    >
+                      {name}
+                    </BaseTypography>
                     {status ? (
                       <Chip
                         label={t('badge-online')}
                         color="success"
                         sx={{
-                          height: { xs: '11px !important', md: '19px !important' },
+                          height: '11px !important',
                           color: '#FFFFFF',
                           '& .MuiChip-label': {
-                            px: { xs: '5px !important', sm: '12px !important' }
+                            px: '5px !important'
                           }
                         }}
                       />
@@ -111,35 +118,91 @@ export default function NodePopup({
                         label={t('badge-offline')}
                         color="error"
                         sx={{
-                          height: { xs: '11px !important', md: '19px !important' },
+                          height: '11px !important',
                           color: '#FFFFFF',
                           '& .MuiChip-label': {
-                            px: { xs: '5px !important', sm: '12px !important' }
+                            px: '5px !important'
                           }
                         }}
                       />
                     )}
                   </Stack>
-                  <NormalTypo sx={{ color: '#B3B3B3' }}>{description}</NormalTypo>
+                  <BaseTypography
+                    sx={{ fontWeight: 400, fontSize: '10px', lineHeight: '12px', color: '#B3B3B3' }}
+                  >
+                    {description}
+                  </BaseTypography>
                 </Stack>
-                <Stack direction="row">
+                <Stack direction="row" sx={{ display: 'flex', alignItems: 'end' }}>
                   <Typography component="div" noWrap sx={{ flexGrow: 1 }} alignItems="center">
                     <Stack spacing={1}>
                       <Stack direction="row" sx={{ pb: '5px' }}>
-                        <NormalTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
+                        <BaseTypography
+                          sx={{
+                            fontWeight: 400,
+                            fontSize: '10px',
+                            lineHeight: '12px',
+                            color: '#B3B3B3',
+                            pr: '5px'
+                          }}
+                        >
                           {t('node-detail-endpoint')}:
-                        </NormalTypo>
-                        <NormalTypo>{endpoint}</NormalTypo>
+                        </BaseTypography>
+                        <BaseTypography
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: '10px',
+                            lineHeight: '12px',
+                            color: '#FFF'
+                          }}
+                        >
+                          {endpoint}
+                        </BaseTypography>
                       </Stack>
                       <Stack direction="row" sx={{ pb: '5px' }}>
-                        <NormalTypo sx={{ color: '#FF931E', pr: { xs: '5px', sm: '10px' } }}>
+                        <BaseTypography
+                          sx={{
+                            fontWeight: 400,
+                            fontSize: '10px',
+                            lineHeight: '12px',
+                            color: '#B3B3B3',
+                            pr: '5px'
+                          }}
+                        >
                           {t('node-detail-owner-did')}:
-                        </NormalTypo>
-                        <NormalTypo noWrap>{ownerDid}</NormalTypo>
+                        </BaseTypography>
+                        <BaseTypography
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: '10px',
+                            lineHeight: '12px',
+                            color: '#FFF'
+                          }}
+                          noWrap
+                        >
+                          {ownerDid}
+                        </BaseTypography>
                       </Stack>
                     </Stack>
                   </Typography>
-                  <ConfirmButton onClick={onClick}>{t('btn-access')}</ConfirmButton>
+                  <Button
+                    sx={{
+                      mt: '10px',
+                      background: 'linear-gradient(270deg, #FF8A00 0%, #E23A45 100%)',
+                      borderRadius: '200px',
+                      color: 'white',
+                      fontWeight: 600,
+                      lineHeight: '12px',
+                      fontSize: '10px',
+                      height: '30px',
+                      padding: '7px 14px',
+                      width: 'fit-content',
+                      textTransform: 'inherit'
+                    }}
+                    onClick={onClick}
+                  >
+                    {t('btn-access')}
+                  </Button>
                 </Stack>
               </Stack>
             </Box>

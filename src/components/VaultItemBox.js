@@ -132,7 +132,7 @@ export default function VaultItemBox({
                   transformOrigin: placement === 'bottom-end' ? 'left top' : 'left bottom'
                 }}
               >
-                <Paper>
+                <Paper sx={{ background: 'none' }}>
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList
                       autoFocusItem={open}
@@ -239,7 +239,8 @@ export default function VaultItemBox({
                 height: '10px',
                 borderRadius: '100px',
                 width: '100%',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                zIndex: -1
               }}
             />
           </Stack>

@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const BaseTypography = styled(Typography)({
+export const BaseTypography = styled(Typography)({
   font: 'Montserrat',
   color: '#FFF',
   fontStyle: 'normal'

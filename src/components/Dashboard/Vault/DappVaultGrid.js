@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Stack, LinearProgress, Skeleton, Typography, Box, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { LabelTypo, NormalTypo } from '../../Custom/CustomTypos';
 import { reduceHexAddress } from '../../../service/common';
+import { fetchHiveScriptPictureToDataUrl } from '../../../service/fetch';
+import { useUserContext } from '../../../contexts/UserContext';
 
 DappVaultGrid.propTypes = {
   avatar: PropTypes.string,
@@ -48,13 +50,24 @@ export default function DappVaultGrid({
   innerSx = {}
 }) {
   const { t } = useTranslation();
-  if (!name || !avatar) {
-    const id = dappList.findIndex((el) => el.appDid === appDid);
-    const dappId = id < 0 ? 0 : id;
-    if (dappId === 0 && appDid) name = reduceHexAddress(appDid, 10);
-    else name = dappList[dappId].name;
-    avatar = dappList[dappId].avatar;
-  }
+  const { user } = useUserContext();
+  const [appName, setAppName] = useState(name || '');
+  const [appAvatar, setAppAvatar] = useState(avatar || '');
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (!name || !avatar) {
+        const id = dappList.findIndex((el) => el.appDid === appDid);
+        const dappId = id < 0 ? 0 : id;
+        setAppName(dappId === 0 && appDid ? reduceHexAddress(appDid, 10) : dappList[dappId].name);
+        setAppAvatar(dappList[dappId].avatar);
+      } else if (avatar) {
+        const avatarUrl = await fetchHiveScriptPictureToDataUrl(avatar, user.did);
+        setAppAvatar(avatarUrl);
+      }
+    };
+    if (user.did) fetch();
+  }, [appDid, avatar, name, user.did]);
 
   return (
     <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -91,9 +104,9 @@ export default function DappVaultGrid({
           }}
         >
           <Stack direction="row" spacing={2} alignItems="center">
-            <img src={avatar} alt="dapp_avatar" width="30px" />
+            <img src={appAvatar} alt="dapp_avatar" width="30px" />
             <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }} noWrap>
-              {name || reduceHexAddress(appDid, 6)}
+              {appName || reduceHexAddress(appDid, 6)}
             </NormalTypo>
           </Stack>
           <LabelTypo my={2}>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stack, Grid } from '@mui/material';
+import { Stack, Grid, Skeleton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import VaultInitialView from '../../../components/Dashboard/Vault/InitialView';
@@ -149,7 +149,13 @@ export default function MyVault() {
           <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={2} alignItems="center">
               <HeaderTypo sx={{ py: 1 }}>{t('vault-dapps-on-vault')}</HeaderTypo>
-              <BadgeTypo>{dappsOnVault.length}</BadgeTypo>
+              {isLoading ? (
+                <BadgeTypo component="div">
+                  <Skeleton animation="wave" width="20px" />
+                </BadgeTypo>
+              ) : (
+                <BadgeTypo>{dappsOnVault.length}</BadgeTypo>
+              )}
             </Stack>
           </Stack>
           {!!dappsOnVault.length && (

@@ -17,10 +17,12 @@ import {
 } from '../../../service/fetch';
 import BackupConfirmDlg from '../../../components/Dialog/BackupConfirmDlg';
 import MigrateConfirmDlg from '../../../components/Dialog/MigrateConfirmDlg';
+import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 export default function MyVault() {
   const navigate = useNavigate();
   const { user } = useUserContext();
+  const { getActiveHiveNodeUrls } = useHiveHubContracts();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +32,7 @@ export default function MyVault() {
   const [openBackupDlg, setOpenBackupDlg] = useState(false);
   const [openMigrateDlg, setOpenMigrateDlg] = useState(false);
   const [onProgress, setOnProgress] = useState(false);
+  const [activeNodeUrls, setAcitveNodeUrls] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +56,18 @@ export default function MyVault() {
     else navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const allUrls = await getActiveHiveNodeUrls();
+      let availableUrls = allUrls;
+      if (user?.nodeProvider || '')
+        availableUrls = (allUrls || []).filter((item) => item !== user.nodeProvider);
+      setAcitveNodeUrls(availableUrls);
+    };
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.nodeProvider]);
 
   const handleBackup = async (backupNodeProvider) => {
     if (!user.did || !backupNodeProvider) return;
@@ -118,6 +133,24 @@ export default function MyVault() {
     setOnProgress(false);
   };
 
+  const handleOpenBackupDlg = () => {
+    if (activeNodeUrls.length) setOpenBackupDlg(true);
+    else
+      enqueueSnackbar('No Active Hive Nodes.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+  };
+
+  const handleOpenMigrateDlg = () => {
+    if (activeNodeUrls.length) setOpenMigrateDlg(true);
+    else
+      enqueueSnackbar('No Active Hive Nodes.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+  };
+
   return (
     <>
       {!isLoading && !myVault && (
@@ -142,8 +175,8 @@ export default function MyVault() {
             pricePlan={myVault?.pricePlan || 'Basic'}
             hasBackup={backupStatus}
             isLoading={isLoading}
-            onClickBackup={() => setOpenBackupDlg(true)}
-            onClickMigrate={() => setOpenMigrateDlg(true)}
+            onClickBackup={handleOpenBackupDlg}
+            onClickMigrate={handleOpenMigrateDlg}
             sx={{ mt: { xs: 2.5, md: 5 }, mb: 5 }}
           />
           <Stack direction="row" spacing={1}>
@@ -180,6 +213,7 @@ export default function MyVault() {
         onClose={() => setOpenBackupDlg(false)}
         onClick={handleBackup}
         disabled={onProgress}
+        activeNodes={activeNodeUrls}
       />
       <MigrateConfirmDlg
         open={openMigrateDlg}

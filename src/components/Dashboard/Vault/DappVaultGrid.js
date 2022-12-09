@@ -64,6 +64,7 @@ export default function DappVaultGrid({
       } else if (avatar) {
         const avatarUrl = await fetchHiveScriptPictureToDataUrl(avatar, user.did);
         setAppAvatar(avatarUrl);
+        setAppName(name);
       }
     };
     if (user.did) fetch();

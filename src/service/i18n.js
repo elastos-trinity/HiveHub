@@ -63,7 +63,10 @@ const en = {
   'alert-operation-tip-title': 'Operation Tip',
   'alert-operation-tip-label':
     'Please open Essentials application, and confirm the credential issuing dialog.',
-  'dlg-backup-confirm-label': 'Are you sure you want to backup your data?',
+  'dlg-backup-confirm-label-1': 'Select your preferred node provider to backup your data.',
+  'dlg-backup-confirm-label-2': '(Final confirmation required from the Essentials app)',
+  'dlg-backup-confirm-node-provider': 'Node Provider',
+  'dlg-backup-confirm-node-select-label': 'Node Provider should be selected.',
   'dlg-migrate-confirm-label': 'Are you sure you want to migrate your data?',
   'dlg-remove-node-confirm-title': 'Remove node',
   'dlg-remove-node-confirm-label': 'Are you sure you want to remove your node?',
@@ -198,7 +201,8 @@ const zh = {
   'alert-operation-tip-title': 'Operation Tip',
   'alert-operation-tip-label':
     'Please open Essentials application, and confirm the credential issuing dialog.',
-  'dlg-backup-confirm-label': 'Are you sure you want to backup your data?',
+  'dlg-backup-confirm-label':
+    'Select your preferred node provider to backup your data.(Final confirmation required from the Essentials app)',
   'dlg-migrate-confirm-label': 'Are you sure you want to migrate your data?',
   'dlg-remove-node-confirm-title': 'Remove node',
   'dlg-remove-node-confirm-label': 'Are you sure you want to remove your node?',

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { MenuItem, Select, Stack, Typography } from '@mui/material';
+import { Box, MenuItem, Select, Stack, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -81,11 +81,12 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled, act
             {t('dlg-backup-confirm-label-1')} {t('dlg-backup-confirm-label-2')}
           </NormalTypo>
         </DialogContentText>
-        <img
+        <Box
+          component="img"
           src="/static/ic_backup.svg"
           alt="backup_icon"
           width="60px"
-          style={{ margin: '20px auto 30px auto' }}
+          sx={{ margin: { xs: '10px auto 15px auto', md: '20px auto 30px auto' } }}
         />
         <Stack spacing={0.5} px={{ xs: 0, md: 2 }}>
           <NormalTypo sx={{ color: '#FF931E', p: 1 }}>
@@ -126,7 +127,9 @@ export default function BackupConfirmDlg({ open, onClose, onClick, disabled, act
           >
             {nodeList.map((item, i) => (
               <MenuItem key={i} value={i} autoFocus={selected === i}>
-                <NormalTypo py={1}>{item}</NormalTypo>
+                <NormalTypo py={1} noWrap>
+                  {item}
+                </NormalTypo>
               </MenuItem>
             ))}
           </Select>

@@ -24,7 +24,7 @@ import { BadgeTypo, LabelTypo, NormalTypo } from './Custom/CustomTypos';
 VaultItemBox.propTypes = {
   total: PropTypes.number,
   used: PropTypes.number,
-  ownerName: PropTypes.string,
+  endpoint: PropTypes.string,
   pricePlan: PropTypes.string,
   hasBackup: PropTypes.bool,
   isLoading: PropTypes.bool,
@@ -36,7 +36,7 @@ VaultItemBox.propTypes = {
 export default function VaultItemBox({
   total,
   used,
-  ownerName,
+  endpoint,
   pricePlan,
   hasBackup,
   isLoading,
@@ -214,9 +214,9 @@ export default function VaultItemBox({
             )}
           </Popper>
           <Stack direction="row" spacing={2} alignItems="center">
-            <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }}>{`${ownerName}${t(
-              'vault-s-vault'
-            )}`}</NormalTypo>
+            <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }} noWrap>
+              {endpoint}
+            </NormalTypo>
             <BadgeTypo>{pricePlan}</BadgeTypo>
             {!hasBackup && (
               <BadgeTypo sx={{ color: '#E23A45', background: 'rgba(226, 58, 69, 0.05)' }}>

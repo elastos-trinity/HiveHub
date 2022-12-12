@@ -54,7 +54,7 @@ export default function ExploreNode() {
   }, [statusFilter, nodeList]);
 
   const handleRemoveNode = async (nid) => {
-    if (Number.isNaN(nid)) return;
+    if (typeof nid !== 'number') return;
     setOnProgress(true);
     const result = await removeHiveNode(nid);
     if (result) {

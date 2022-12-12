@@ -6,14 +6,13 @@ import { BaseTypography } from '../../../Custom/CustomTypos';
 import { getMapX, getMapY, getHexFromCircle } from './utils';
 
 NodePopup.propTypes = {
-  data: PropTypes.any,
+  data: PropTypes.array,
   isLoading: PropTypes.bool,
   onClick: PropTypes.func,
   sx: PropTypes.object
 };
 
 export default function NodePopup({ data = [], isLoading, onClick, sx }) {
-  // console.log('==========', data);
   const { t } = useTranslation();
   const [longitude, setLongitude] = React.useState(0);
   const [latitude, setLatitude] = React.useState(0);
@@ -31,10 +30,10 @@ export default function NodePopup({ data = [], isLoading, onClick, sx }) {
   };
 
   React.useEffect(() => {
-    if (!isLoading && Array.isArray(data) && data.length) {
-      setLongitude(data?.data[0]?.longitude ?? 0);
-      setLatitude(data?.data[0]?.latitude ?? 0);
-      const status = data?.data[0]?.status || false;
+    if (Array.isArray(data) && data.length) {
+      setLongitude(data[0]?.longitude ?? 0);
+      setLatitude(data[0]?.latitude ?? 0);
+      const status = data[0]?.status || false;
       let color = '#B3B3B3'; // blank
       if (status === true) color = '#67B674'; // online
       else if (status === false) color = '#E23A45'; // offline
@@ -42,8 +41,6 @@ export default function NodePopup({ data = [], isLoading, onClick, sx }) {
       setNodeColor(color);
     }
   }, [isLoading, data]);
-
-  console.log('===========', longitude, latitude, nodeColor, data);
 
   return (
     <>
@@ -77,7 +74,7 @@ export default function NodePopup({ data = [], isLoading, onClick, sx }) {
                 ...sx
               }}
             >
-              {(data?.data || []).map((item, index) => {
+              {data.map((item, index) => {
                 const {
                   name,
                   created: time,

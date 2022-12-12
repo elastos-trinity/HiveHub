@@ -104,7 +104,7 @@ export default function NodesMapView({ nodes = [], isLoading }) {
           nodeList.map((item, index) => (
             <NodePopup
               key={index}
-              data={item}
+              data={item?.data || []}
               isLoading={isLoading}
               onClick={(nId) => handleAccess(nId)}
             />

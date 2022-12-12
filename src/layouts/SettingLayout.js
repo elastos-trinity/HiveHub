@@ -8,12 +8,12 @@ const subMenuItemsList = [
     title: 'About',
     path: '/dashboard/settings/about',
     label: 'about'
-  },
-  {
-    title: 'Language',
-    path: '/dashboard/settings/language',
-    label: 'language'
   }
+  // {
+  //   title: 'Language',
+  //   path: '/dashboard/settings/language',
+  //   label: 'language'
+  // }
 ];
 
 export default function SettingLayout() {

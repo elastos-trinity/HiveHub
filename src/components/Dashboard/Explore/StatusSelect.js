@@ -70,7 +70,7 @@ export default function StatusSelect({ selected, onChange, sx = {} }) {
     >
       {menuItems.map((item, i) => (
         <MenuItem key={i} value={i} autoFocus={selected === i}>
-          <LabelTypo sx={{ fontFamily: 'Roboto', color: '#FFF' }}>{item.name}</LabelTypo>
+          <LabelTypo sx={{ fontFamily: 'sans-serif', color: '#FFF' }}>{item.name}</LabelTypo>
         </MenuItem>
       ))}
     </Select>

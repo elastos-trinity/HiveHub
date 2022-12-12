@@ -6,31 +6,18 @@ import { BaseTypography } from '../../../Custom/CustomTypos';
 import { getMapX, getMapY, getHexFromCircle } from './utils';
 
 NodePopup.propTypes = {
-  longitude: PropTypes.number,
-  latitude: PropTypes.number,
-  name: PropTypes.string,
-  status: PropTypes.bool,
-  time: PropTypes.string,
-  description: PropTypes.string,
-  endpoint: PropTypes.string,
-  ownerDid: PropTypes.string,
+  data: PropTypes.any,
+  isLoading: PropTypes.bool,
   onClick: PropTypes.func,
   sx: PropTypes.object
 };
 
-export default function NodePopup({
-  longitude,
-  latitude,
-  name,
-  status,
-  time,
-  description,
-  endpoint,
-  ownerDid,
-  onClick,
-  sx
-}) {
+export default function NodePopup({ data = [], isLoading, onClick, sx }) {
+  // console.log('==========', data);
   const { t } = useTranslation();
+  const [longitude, setLongitude] = React.useState(0);
+  const [latitude, setLatitude] = React.useState(0);
+  const [nodeColor, setNodeColor] = React.useState('#B3B3B3');
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -42,16 +29,28 @@ export default function NodePopup({
   const handlePopoverClose = () => {
     setOpen(false);
   };
-  let color = '#B3B3B3'; // blank
-  if (status === true) color = '#67B674'; // online
-  else if (status === false) color = '#E23A45'; // offline
-  else color = '#FF881B'; // connecting
+
+  React.useEffect(() => {
+    if (!isLoading && Array.isArray(data) && data.length) {
+      setLongitude(data?.data[0]?.longitude ?? 0);
+      setLatitude(data?.data[0]?.latitude ?? 0);
+      const status = data?.data[0]?.status || false;
+      let color = '#B3B3B3'; // blank
+      if (status === true) color = '#67B674'; // online
+      else if (status === false) color = '#E23A45'; // offline
+      else color = '#FF881B'; // connecting
+      setNodeColor(color);
+    }
+  }, [isLoading, data]);
+
+  console.log('===========', longitude, latitude, nodeColor, data);
+
   return (
     <>
       <polygon
         points={getHexFromCircle(getMapX(longitude), getMapY(latitude), 4)}
         stroke="#1D1F21"
-        fill={color}
+        fill={nodeColor}
         strokeWidth="1"
         onClick={handlePopoverOpen}
         onMouseEnter={handlePopoverOpen}
@@ -68,144 +67,168 @@ export default function NodePopup({
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps}>
-            <Box
-              onClick={() => {}}
+            <Stack
+              spacing={2.5}
               sx={{
                 backgroundColor: '#131317',
                 borderRadius: '20px',
                 width: '100%',
                 padding: '10px 10px 10px 20px',
-                position: 'relative',
                 ...sx
               }}
             >
-              <BaseTypography
-                sx={{
-                  color: '#B3B3B3',
-                  fontSize: '10px',
-                  lineHeight: '12px',
-                  fontWeight: 400,
-                  whiteSpace: 'nowrap',
-                  position: 'absolute',
-                  right: '10px',
-                  top: '10px'
-                }}
-              >
-                {time}
-              </BaseTypography>
-              <Stack spacing="20px">
-                <Stack spacing="10px" py="10px">
-                  <Stack direction="row" alignItems="center" spacing="10px">
+              {(data?.data || []).map((item, index) => {
+                const {
+                  name,
+                  created: time,
+                  remark: description,
+                  ip: endpoint,
+                  owner_did: ownerDid,
+                  status,
+                  nid
+                } = item;
+                return (
+                  <Box key={index} sx={{ position: 'relative' }}>
                     <BaseTypography
-                      sx={{ fontWeight: 700, fontSize: '20px', lineHeight: '24px', color: '#FFF' }}
+                      sx={{
+                        color: '#B3B3B3',
+                        fontSize: '10px',
+                        lineHeight: '12px',
+                        fontWeight: 400,
+                        whiteSpace: 'nowrap',
+                        position: 'absolute',
+                        right: '10px',
+                        top: '10px'
+                      }}
                     >
-                      {name}
+                      {time}
                     </BaseTypography>
-                    {status ? (
-                      <Chip
-                        label={t('badge-online')}
-                        color="success"
-                        sx={{
-                          height: '11px !important',
-                          color: '#FFFFFF',
-                          '& .MuiChip-label': {
-                            px: '5px !important'
-                          }
-                        }}
-                      />
-                    ) : (
-                      <Chip
-                        label={t('badge-offline')}
-                        color="error"
-                        sx={{
-                          height: '11px !important',
-                          color: '#FFFFFF',
-                          '& .MuiChip-label': {
-                            px: '5px !important'
-                          }
-                        }}
-                      />
-                    )}
-                  </Stack>
-                  <BaseTypography
-                    sx={{ fontWeight: 400, fontSize: '10px', lineHeight: '12px', color: '#B3B3B3' }}
-                  >
-                    {description}
-                  </BaseTypography>
-                </Stack>
-                <Stack direction="row" sx={{ display: 'flex', alignItems: 'end' }}>
-                  <Typography component="div" noWrap sx={{ flexGrow: 1 }} alignItems="center">
-                    <Stack spacing={1}>
-                      <Stack direction="row" sx={{ pb: '5px' }}>
+                    <Stack spacing="20px">
+                      <Stack spacing="10px" py="10px">
+                        <Stack direction="row" alignItems="center" spacing="10px">
+                          <BaseTypography
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: '20px',
+                              lineHeight: '24px',
+                              color: '#FFF'
+                            }}
+                          >
+                            {name}
+                          </BaseTypography>
+                          {status ? (
+                            <Chip
+                              label={t('badge-online')}
+                              color="success"
+                              sx={{
+                                height: '11px !important',
+                                color: '#FFFFFF',
+                                '& .MuiChip-label': {
+                                  px: '5px !important'
+                                }
+                              }}
+                            />
+                          ) : (
+                            <Chip
+                              label={t('badge-offline')}
+                              color="error"
+                              sx={{
+                                height: '11px !important',
+                                color: '#FFFFFF',
+                                '& .MuiChip-label': {
+                                  px: '5px !important'
+                                }
+                              }}
+                            />
+                          )}
+                        </Stack>
                         <BaseTypography
                           sx={{
                             fontWeight: 400,
                             fontSize: '10px',
                             lineHeight: '12px',
-                            color: '#B3B3B3',
-                            pr: '5px'
+                            color: '#B3B3B3'
                           }}
                         >
-                          {t('node-detail-endpoint')}:
-                        </BaseTypography>
-                        <BaseTypography
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: '10px',
-                            lineHeight: '12px',
-                            color: '#FFF'
-                          }}
-                        >
-                          {endpoint}
+                          {description}
                         </BaseTypography>
                       </Stack>
-                      <Stack direction="row" sx={{ pb: '5px' }}>
-                        <BaseTypography
+                      <Stack direction="row" sx={{ display: 'flex', alignItems: 'end' }}>
+                        <Typography component="div" noWrap sx={{ flexGrow: 1 }} alignItems="center">
+                          <Stack spacing={1}>
+                            <Stack direction="row" sx={{ pb: '5px' }}>
+                              <BaseTypography
+                                sx={{
+                                  fontWeight: 400,
+                                  fontSize: '10px',
+                                  lineHeight: '12px',
+                                  color: '#B3B3B3',
+                                  pr: '5px'
+                                }}
+                              >
+                                {t('node-detail-endpoint')}:
+                              </BaseTypography>
+                              <BaseTypography
+                                sx={{
+                                  fontWeight: 600,
+                                  fontSize: '10px',
+                                  lineHeight: '12px',
+                                  color: '#FFF'
+                                }}
+                              >
+                                {endpoint}
+                              </BaseTypography>
+                            </Stack>
+                            <Stack direction="row" sx={{ pb: '5px' }}>
+                              <BaseTypography
+                                sx={{
+                                  fontWeight: 400,
+                                  fontSize: '10px',
+                                  lineHeight: '12px',
+                                  color: '#B3B3B3',
+                                  pr: '5px'
+                                }}
+                              >
+                                {t('node-detail-owner-did')}:
+                              </BaseTypography>
+                              <BaseTypography
+                                sx={{
+                                  fontWeight: 600,
+                                  fontSize: '10px',
+                                  lineHeight: '12px',
+                                  color: '#FFF'
+                                }}
+                                noWrap
+                              >
+                                {ownerDid}
+                              </BaseTypography>
+                            </Stack>
+                          </Stack>
+                        </Typography>
+                        <Button
                           sx={{
-                            fontWeight: 400,
-                            fontSize: '10px',
-                            lineHeight: '12px',
-                            color: '#B3B3B3',
-                            pr: '5px'
-                          }}
-                        >
-                          {t('node-detail-owner-did')}:
-                        </BaseTypography>
-                        <BaseTypography
-                          sx={{
+                            mt: '10px',
+                            background: 'linear-gradient(270deg, #FF8A00 0%, #E23A45 100%)',
+                            borderRadius: '200px',
+                            color: 'white',
                             fontWeight: 600,
-                            fontSize: '10px',
                             lineHeight: '12px',
-                            color: '#FFF'
+                            fontSize: '10px',
+                            height: '30px',
+                            padding: '7px 14px',
+                            width: 'fit-content',
+                            textTransform: 'inherit'
                           }}
-                          noWrap
+                          onClick={() => onClick(nid)}
                         >
-                          {ownerDid}
-                        </BaseTypography>
+                          {t('btn-access')}
+                        </Button>
                       </Stack>
                     </Stack>
-                  </Typography>
-                  <Button
-                    sx={{
-                      mt: '10px',
-                      background: 'linear-gradient(270deg, #FF8A00 0%, #E23A45 100%)',
-                      borderRadius: '200px',
-                      color: 'white',
-                      fontWeight: 600,
-                      lineHeight: '12px',
-                      fontSize: '10px',
-                      height: '30px',
-                      padding: '7px 14px',
-                      width: 'fit-content',
-                      textTransform: 'inherit'
-                    }}
-                    onClick={onClick}
-                  >
-                    {t('btn-access')}
-                  </Button>
-                </Stack>
-              </Stack>
-            </Box>
+                  </Box>
+                );
+              })}
+            </Stack>
           </Fade>
         )}
       </Popper>

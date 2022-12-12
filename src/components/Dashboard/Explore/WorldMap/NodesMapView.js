@@ -14,10 +14,11 @@ import NodePopup from './NodePopup';
 // const map = new DottedMap({ map: JSON.parse(mapJsonString) });
 
 NodesMapView.propTypes = {
-  nodes: PropTypes.array
+  nodes: PropTypes.array,
+  isLoading: PropTypes.bool
 };
 
-export default function NodesMapView({ nodes = [] }) {
+export default function NodesMapView({ nodes = [], isLoading }) {
   // const svgMap = map.getSVG({
   //   shape: 'hexagon',
   //   radius: 0.22,
@@ -53,8 +54,32 @@ export default function NodesMapView({ nodes = [] }) {
   //   }
   // }, [nodes]);
 
-  const isLoaded = nodes.length > 0 && Object.keys(nodes[0]).length > 0;
-  const handleAccess = () => {};
+  const [nodeList, setNodeList] = React.useState(nodes);
+
+  React.useEffect(() => {
+    if (!isLoading) {
+      const grouped = nodes.reduce((acc, item) => {
+        const lng = Math.round(item?.longitude ?? 0);
+        const lat = Math.round(item?.latitude ?? 0);
+        if (!acc.length) {
+          acc = [{ longitude: lng, latitude: lat, data: [item] }];
+        } else {
+          const idx = acc.findIndex((el) => el.longitude === lng && el.latitude === lat);
+          if (idx === -1) {
+            acc = [...acc, { longitude: lng, latitude: lat, data: [item] }];
+          } else {
+            acc[idx].data.push(item);
+          }
+        }
+        return acc;
+      }, {});
+      setNodeList(grouped);
+    }
+  }, [isLoading, nodes]);
+
+  const handleAccess = (nId) => {
+    console.log('====', nId);
+  };
 
   return (
     <>
@@ -75,19 +100,13 @@ export default function NodesMapView({ nodes = [] }) {
             onClick={() => {}}
           />
         ))}
-        {isLoaded &&
-          nodes.map((item, index) => (
+        {!isLoading &&
+          nodeList.map((item, index) => (
             <NodePopup
               key={index}
-              longitude={item.longitude}
-              latitude={item.latitude}
-              name={item?.name || ''}
-              status={item?.status}
-              time={item?.created}
-              description={item?.remark}
-              endpoint={item?.ip}
-              ownerDid={item?.owner_did || ''}
-              onClick={handleAccess}
+              data={item}
+              isLoading={isLoading}
+              onClick={(nId) => handleAccess(nId)}
             />
           ))}
       </svg>

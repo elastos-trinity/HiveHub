@@ -19,7 +19,7 @@ export default function ViewToggleGroup({ selected, onChange, sx = {} }) {
         onChange(value);
       }}
       size="small"
-      color="warning"
+      color="orange"
       exclusive
       sx={{
         '& .MuiToggleButton-root': {

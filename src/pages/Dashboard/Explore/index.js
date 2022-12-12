@@ -102,7 +102,7 @@ export default function ExploreNode() {
             height: '80%'
           }}
         >
-          <NodesMapView nodes={filteredNodeList} sx={{ mt: { xs: 2.5, md: 5 } }} />
+          <NodesMapView nodes={filteredNodeList} isLoading={isLoading} />
         </div>
       )}
       {!!filteredNodeList.length && viewMode === 1 && (

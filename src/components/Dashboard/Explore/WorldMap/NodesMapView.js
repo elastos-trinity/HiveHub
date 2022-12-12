@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // import * as DotMap from 'dotted-map';
 // import DottedMap from 'dotted-map/without-countries';
@@ -54,6 +55,7 @@ export default function NodesMapView({ nodes = [], isLoading }) {
   //   }
   // }, [nodes]);
 
+  const navigate = useNavigate();
   const [nodeList, setNodeList] = React.useState(nodes);
 
   React.useEffect(() => {
@@ -78,7 +80,10 @@ export default function NodesMapView({ nodes = [], isLoading }) {
   }, [isLoading, nodes]);
 
   const handleAccess = (nId) => {
-    console.log('====', nId);
+    const nodeIdx = parseInt(nId, 10);
+    if (typeof nodeIdx === 'number' && nodeIdx >= 0) {
+      navigate(`/dashboard/node/public/${nodeIdx}`);
+    }
   };
 
   return (

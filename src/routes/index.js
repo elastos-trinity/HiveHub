@@ -31,7 +31,8 @@ export default function Router() {
                 { path: '', element: <MyNodes /> },
                 { path: 'envconfig', element: <EnvConfigPage /> },
                 { path: 'create', element: <CreateNodePage /> },
-                { path: 'detail/:nodeId', element: <NodeDetailPage /> }
+                { path: 'detail/:nodeId', element: <MyNodeDetail /> },
+                { path: 'public/:nodeId', element: <PublicNodeDetail /> }
               ]
             },
             {
@@ -62,7 +63,8 @@ const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const MyNodes = Loadable(lazy(() => import('../pages/Dashboard/Node')));
 const EnvConfigPage = Loadable(lazy(() => import('../pages/Dashboard/Node/EnvConfiguration')));
 const CreateNodePage = Loadable(lazy(() => import('../pages/Dashboard/Node/CreateNode')));
-const NodeDetailPage = Loadable(lazy(() => import('../pages/Dashboard/Node/NodeDetail')));
+const MyNodeDetail = Loadable(lazy(() => import('../pages/Dashboard/Node/NodeDetail')));
+const PublicNodeDetail = Loadable(lazy(() => import('../pages/Dashboard/Node/PublicNodeDetail')));
 const MyVault = Loadable(lazy(() => import('../pages/Dashboard/Vault')));
 const ExploreNode = Loadable(lazy(() => import('../pages/Dashboard/Explore')));
 const AboutSettings = Loadable(lazy(() => import('../pages/Dashboard/Settings/About')));

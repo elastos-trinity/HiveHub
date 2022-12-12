@@ -6,7 +6,7 @@ import { BaseTypography } from '../../../Custom/CustomTypos';
 import { getMapX, getMapY, getHexFromCircle } from './utils';
 
 NodePopup.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.any,
   isLoading: PropTypes.bool,
   onClick: PropTypes.func,
   sx: PropTypes.object

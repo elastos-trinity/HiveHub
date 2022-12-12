@@ -76,7 +76,7 @@ export default function RemoveNodeConfirmDlg({ open, onClose, onClick, disabled 
             {t('btn-cancel')}
           </ConfirmButton>
           <ConfirmButton
-            onClick={() => onClick('https://hive-testnet2.trinity-tech.io')}
+            onClick={onClick}
             sx={{ width: { xs: '120px', md: '240px' } }}
             disabled={disabled}
           >

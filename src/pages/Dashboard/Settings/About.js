@@ -1,20 +1,21 @@
 import { Stack, Grid, Divider, Box, Link } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { SettingTitleTypo, LabelTypo } from '../../../components/Custom/CustomTypos';
 import generatedGitInfo from '../../../generatedGitInfo.json';
 import { config } from '../../../config';
 
-const aboutData = [
-  {
-    title: 'Website',
-    value: config.IsProductEnv ? 'https://hivehub.xyz' : 'https://testnet.hivehub.xyz'
-  },
-  { title: 'Email', value: 'hivehub@trinity-tech.io' },
-  { title: 'Github', value: config.GitHubRepo },
-  { title: 'Version', value: 'v1.0.1' },
-  { title: 'Commit ID', value: generatedGitInfo.gitCommitHash }
-];
-
 export default function AboutSettings() {
+  const { t } = useTranslation();
+  const aboutData = [
+    {
+      title: t('settings-about-website'),
+      value: config.IsProductEnv ? 'https://hivehub.xyz' : 'https://testnet.hivehub.xyz'
+    },
+    { title: t('settings-about-email'), value: 'hivehub@trinity-tech.io' },
+    { title: t('settings-about-github'), value: config.GitHubRepo },
+    { title: t('settings-about-version'), value: 'v1.0.1' },
+    { title: t('settings-about-commit-id'), value: generatedGitInfo.gitCommitHash }
+  ];
   return (
     <Box
       sx={{

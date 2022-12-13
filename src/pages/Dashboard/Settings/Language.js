@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Stack, Divider, Box, List, ListItem, ListItemText } from '@mui/material';
 import { Icon } from '@iconify/react';
+import { useTranslation } from 'react-i18next';
 import { SettingTitleTypo, LabelTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
 import { useLanguageContext } from '../../../contexts/LanguageContext';
 
-const languageData = [
-  { title: 'English', value: 'English' },
-  { title: '中文 (简体)', value: 'Chinese (simplified)' }
-];
-
 export default function LanguageSettings() {
+  const { t } = useTranslation();
   const { language, setLanguage, changeLanguage } = useLanguageContext();
   const [selected, setSelected] = useState(language === 'en' ? 0 : 1);
+
+  const languageData = [
+    { title: 'English', value: t('settings-language-english') },
+    { title: '中文 (简体)', value: t('settings-language-chinese-simplified') }
+  ];
 
   const handleChange = (id) => {
     if (id === 0) {
@@ -36,7 +38,7 @@ export default function LanguageSettings() {
     >
       <Stack spacing={6} alignItems="center">
         <NormalTypo sx={{ textAlign: 'left', width: '100%' }}>
-          Please choose your preferred language
+          {t('settings-language-title')}
         </NormalTypo>
         <List sx={{ p: 0, width: '100%' }}>
           {languageData.map((item, _i) => (

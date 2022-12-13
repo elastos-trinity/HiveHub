@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import SmallHexagon from '../../SmallHexagon';
 import { FeatureGrid } from '../../Custom/CustomContainer';
 import { HeaderTypo, LabelTypo } from '../../Custom/CustomTypos';
@@ -9,6 +10,7 @@ EmptyNodeView.propTypes = {
 };
 
 export default function EmptyNodeView({ sx = {} }) {
+  const { t } = useTranslation();
   return (
     <Box sx={{ ...sx }}>
       <FeatureGrid>
@@ -75,11 +77,11 @@ export default function EmptyNodeView({ sx = {} }) {
             </Box>
           </SmallHexagon>
         </Box>
-        <HeaderTypo sx={{ py: 1 }}>No deployed nodes found!</HeaderTypo>
+        <HeaderTypo sx={{ py: 1 }}>{t('explore-empty-title')}</HeaderTypo>
         <LabelTypo sx={{ py: 1 }}>
-          No deployed nodes available yet.
+          {t('explore-empty-label-1')}
           <br />
-          Please come back later!
+          {t('explore-empty-label-2')}
         </LabelTypo>
       </FeatureGrid>
     </Box>

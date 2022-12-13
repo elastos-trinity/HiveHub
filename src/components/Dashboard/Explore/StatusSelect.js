@@ -2,6 +2,7 @@ import React from 'react';
 import { Select } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { LabelTypo } from '../../Custom/CustomTypos';
 
 const MenuProps = {
@@ -16,12 +17,6 @@ const MenuProps = {
   variant: 'menu'
 };
 
-const menuItems = [
-  { name: 'All', status: undefined },
-  { name: 'Online', status: true },
-  { name: 'Offline', status: false }
-];
-
 StatusSelect.propTypes = {
   selected: PropTypes.number,
   onChange: PropTypes.func,
@@ -29,6 +24,13 @@ StatusSelect.propTypes = {
 };
 
 export default function StatusSelect({ selected, onChange, sx = {} }) {
+  const { t } = useTranslation();
+  const menuItems = [
+    { name: t('status-filter-all'), status: undefined },
+    { name: t('status-filter-online'), status: true },
+    { name: t('status-filter-offline'), status: false }
+  ];
+
   const handleChange = (event) => {
     onChange(event.target.value);
   };

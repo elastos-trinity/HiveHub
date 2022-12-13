@@ -21,12 +21,12 @@ export default function SettingLayout() {
       title: t('settings-menu-about'),
       path: '/dashboard/settings/about',
       label: 'about'
-    },
-    {
-      title: t('settings-menu-language'),
-      path: '/dashboard/settings/language',
-      label: 'language'
     }
+    // {
+    //   title: t('settings-menu-language'),
+    //   path: '/dashboard/settings/language',
+    //   label: 'language'
+    // }
   ];
 
   return (

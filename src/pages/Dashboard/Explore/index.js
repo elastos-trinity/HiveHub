@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import StatusSelect from '../../../components/Dashboard/Explore/StatusSelect';
 import ViewToggleGroup from '../../../components/Dashboard/Explore/ViewToggleGroup';
 import EmptyNodeView from '../../../components/Dashboard/Explore/EmptyNodeView';
@@ -16,6 +17,7 @@ export default function ExploreNode() {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { getHiveNodesList, removeHiveNode } = useHiveHubContracts();
+  const { t } = useTranslation();
   const [statusFilter, setStatusFilter] = useState(0);
   const [viewMode, setViewMode] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +77,7 @@ export default function ExploreNode() {
   return (
     <>
       <Stack direction="row" justifyContent="space-between">
-        <HeaderTypo sx={{ py: 1 }}>Explore all public Hive nodes</HeaderTypo>
+        <HeaderTypo sx={{ py: 1 }}>{t('explore-title')}</HeaderTypo>
         <Stack direction="row" spacing={2}>
           <StatusSelect selected={statusFilter} onChange={setStatusFilter} />
           <ViewToggleGroup selected={viewMode} onChange={setViewMode} />

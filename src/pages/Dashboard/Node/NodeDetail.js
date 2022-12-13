@@ -7,6 +7,7 @@ import { NodeTitle, HeaderTypo, NormalTypo } from '../../../components/Custom/Cu
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { getHiveNodeInfo } from '../../../service/fetch';
+import { getTime } from '../../../service/common';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
@@ -39,21 +40,21 @@ export default function MyNodeDetail() {
 
   const detailInfo = [
     { label: t('node-detail-owner-did'), field: 'owner_did' },
-    { label: t('node-detail-service-did'), field: 'service_did' },
+    { label: t('node-detail-service-did'), field: 'serviceDid' },
     { label: t('node-detail-name'), field: 'ownerName' },
     { label: t('node-detail-description'), field: 'remark' },
     { label: t('node-detail-email'), field: 'email' },
     { label: t('node-detail-endpoint'), field: 'url' },
     { label: t('node-detail-created-date'), field: 'created' },
     { label: t('node-detail-version'), field: 'version' },
-    { label: t('node-detail-commit-id'), field: 'version' },
-    { label: t('node-detail-vault-no'), field: 'version' },
-    { label: t('node-detail-backup-no'), field: 'version' },
-    { label: t('node-detail-last-access'), field: 'version' },
-    { label: t('node-detail-memory-used'), field: 'version' },
-    { label: t('node-detail-total-memory'), field: 'version' },
-    { label: t('node-detail-storage-used'), field: 'version' },
-    { label: t('node-detail-total-storage'), field: 'version' }
+    { label: t('node-detail-commit-id'), field: 'lastCommitId' },
+    { label: t('node-detail-vault-no'), field: 'vaultCount' },
+    { label: t('node-detail-backup-no'), field: 'backupCount' },
+    { label: t('node-detail-last-access'), field: 'lastAccessTime' },
+    { label: t('node-detail-memory-used'), field: 'memoryUsed' },
+    { label: t('node-detail-total-memory'), field: 'memoryTotal' },
+    { label: t('node-detail-storage-used'), field: 'storageUsed' },
+    { label: t('node-detail-total-storage'), field: 'storageTotal' }
   ];
 
   useEffect(() => {
@@ -61,10 +62,29 @@ export default function MyNodeDetail() {
       setIsLoading(true);
       try {
         const detail = await getHiveNodeItem(nodeId, user.did, true, true, false);
-        setNodeDetail(detail || {});
         if (detail) {
           const nodeInfo = await getHiveNodeInfo(user.did, detail.url);
           if (nodeInfo?.getOwnerDid() !== user.did) navigate('/dashboard/node');
+          else {
+            let lastAccess = '';
+            if (nodeInfo?.latest_access_time) {
+              const objLastAccess = getTime(nodeInfo.latest_access_time * 1000);
+              lastAccess = `${objLastAccess.date} ${objLastAccess.time}`;
+            }
+            setNodeDetail({
+              ...detail,
+              serviceDid: nodeInfo?.service_did || '',
+              vaultCount: nodeInfo?.vault_count ?? 0,
+              userCount: nodeInfo?.user_count ?? 0,
+              backupCount: nodeInfo?.backup_count ?? 0,
+              lastCommitId: nodeInfo?.last_commit_id || '',
+              lastAccessTime: lastAccess,
+              memoryTotal: `${((nodeInfo?.memory_total ?? 0) / 1024 / 1024).toFixed(2)} MB`,
+              memoryUsed: `${((nodeInfo?.memory_used ?? 0) / 1024 / 1024).toFixed(2)} MB`,
+              storageTotal: `${((nodeInfo?.storage_total ?? 0) / 1024 / 1024).toFixed(2)} MB`,
+              storageUsed: `${((nodeInfo?.storage_used ?? 0) / 1024 / 1024).toFixed(2)} MB`
+            });
+          }
         } else navigate('/dashboard/node');
       } catch (e) {
         console.error(e);

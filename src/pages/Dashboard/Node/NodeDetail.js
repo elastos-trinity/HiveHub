@@ -38,13 +38,22 @@ export default function MyNodeDetail() {
   const [nodeDetail, setNodeDetail] = useState({});
 
   const detailInfo = [
-    { label: t('node-detail-did'), field: 'owner_did' },
+    { label: t('node-detail-owner-did'), field: 'owner_did' },
+    { label: t('node-detail-service-did'), field: 'service_did' },
     { label: t('node-detail-name'), field: 'ownerName' },
     { label: t('node-detail-description'), field: 'remark' },
     { label: t('node-detail-email'), field: 'email' },
     { label: t('node-detail-endpoint'), field: 'url' },
     { label: t('node-detail-created-date'), field: 'created' },
-    { label: t('node-detail-version'), field: 'version' }
+    { label: t('node-detail-version'), field: 'version' },
+    { label: t('node-detail-commit-id'), field: 'version' },
+    { label: t('node-detail-vault-no'), field: 'version' },
+    { label: t('node-detail-backup-no'), field: 'version' },
+    { label: t('node-detail-last-access'), field: 'version' },
+    { label: t('node-detail-memory-used'), field: 'version' },
+    { label: t('node-detail-total-memory'), field: 'version' },
+    { label: t('node-detail-storage-used'), field: 'version' },
+    { label: t('node-detail-total-storage'), field: 'version' }
   ];
 
   useEffect(() => {

@@ -74,7 +74,7 @@ export default function MyVault() {
     if (!myVault) return;
     setOnProgress(true);
     try {
-      console.log('====Backup vault to: ', backupNodeProvider);
+      console.log('Backup vault to: ', backupNodeProvider);
       const result = await backupVault(user.did, backupNodeProvider);
       if (result === 1) {
         enqueueSnackbar('Backup vault succeed', {

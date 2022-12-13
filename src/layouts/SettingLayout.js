@@ -1,24 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Typography, Stack, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { HeaderTypo } from '../components/Custom/CustomTypos';
-
-const subMenuItemsList = [
-  {
-    title: 'About',
-    path: '/dashboard/settings/about',
-    label: 'about'
-  }
-  // {
-  //   title: 'Language',
-  //   path: '/dashboard/settings/language',
-  //   label: 'language'
-  // }
-];
 
 export default function SettingLayout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState(pathname.split('/')[2]); // value can be 'home' 'explore' 'nodes' 'vaults'
 
   useEffect(() => {
@@ -27,9 +16,22 @@ export default function SettingLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  const subMenuItemsList = [
+    {
+      title: t('settings-menu-about'),
+      path: '/dashboard/settings/about',
+      label: 'about'
+    },
+    {
+      title: t('settings-menu-language'),
+      path: '/dashboard/settings/language',
+      label: 'language'
+    }
+  ];
+
   return (
     <>
-      <HeaderTypo sx={{ py: 1 }}>User settings</HeaderTypo>
+      <HeaderTypo sx={{ py: 1 }}>{t('settings-title')}</HeaderTypo>
       <Stack direction="row" mt={{ xs: 2.5, md: 5 }} spacing={6}>
         <Stack
           sx={{

@@ -50,9 +50,9 @@ export default function DappBox({
   name,
   description,
   appDid,
-  used = 1,
+  used,
   redirect,
-  total = 5,
+  total,
   isLoading = false,
   innerSx = {}
 }) {

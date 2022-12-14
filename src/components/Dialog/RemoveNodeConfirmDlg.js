@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -44,11 +44,12 @@ export default function RemoveNodeConfirmDlg({ open, onClose, onClick, disabled 
         </HeaderTypo>
       </DialogTitle>
       <DialogContent>
-        <img
-          src="/static/ic_backup.svg"
+        <Box
+          component="img"
+          src="/static/ic_remove_node.svg"
           alt="remove_node_icon"
-          width="60px"
-          style={{ margin: '20px auto 30px auto' }}
+          width={{ xs: '80px', sm: '156px' }}
+          sx={{ margin: { xs: '10px auto 15px auto', md: '20px auto 30px auto' } }}
         />
         <DialogContentText
           id="remove-node-dialog-description"

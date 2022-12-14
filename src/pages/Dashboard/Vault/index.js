@@ -210,14 +210,20 @@ export default function MyVault() {
       )}
       <BackupConfirmDlg
         open={openBackupDlg}
-        onClose={() => setOpenBackupDlg(false)}
+        onClose={() => {
+          setOpenBackupDlg(false);
+          setOnProgress(false);
+        }}
         onClick={handleBackup}
         disabled={onProgress}
         activeNodes={activeNodeUrls}
       />
       <MigrateConfirmDlg
         open={openMigrateDlg}
-        onClose={() => setOpenMigrateDlg(false)}
+        onClose={() => {
+          setOpenMigrateDlg(false);
+          setOnProgress(false);
+        }}
         onClick={handleMigrate}
         disabled={onProgress}
         activeNodes={activeNodeUrls}

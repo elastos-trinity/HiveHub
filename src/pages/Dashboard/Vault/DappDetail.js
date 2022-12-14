@@ -129,7 +129,7 @@ export default function DappDetail() {
               {detailInfo.map((item, _i) => {
                 let value;
                 if (item.field === 'access_last_time') {
-                  if (dappDetail[item.field] === -1) value = '---';
+                  if (dappDetail[item.field] === -1) value = myVault.time;
                   else {
                     const timestamp = getTime(dappDetail[item.field]);
                     value = `${timestamp.date} ${timestamp.time}`;

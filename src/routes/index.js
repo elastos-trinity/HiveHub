@@ -37,7 +37,10 @@ export default function Router() {
             },
             {
               path: 'vault',
-              children: [{ path: '', element: <MyVault /> }]
+              children: [
+                { path: '', element: <MyVault /> },
+                { path: 'dapp/:appDid', element: <DappDetail /> }
+              ]
             },
             {
               path: 'explore',
@@ -66,6 +69,7 @@ const CreateNodePage = Loadable(lazy(() => import('../pages/Dashboard/Node/Creat
 const MyNodeDetail = Loadable(lazy(() => import('../pages/Dashboard/Node/NodeDetail')));
 const PublicNodeDetail = Loadable(lazy(() => import('../pages/Dashboard/Node/PublicNodeDetail')));
 const MyVault = Loadable(lazy(() => import('../pages/Dashboard/Vault')));
+const DappDetail = Loadable(lazy(() => import('../pages/Dashboard/Vault/DappDetail')));
 const ExploreNode = Loadable(lazy(() => import('../pages/Dashboard/Explore')));
 const AboutSettings = Loadable(lazy(() => import('../pages/Dashboard/Settings/About')));
 const LanguageSettings = Loadable(lazy(() => import('../pages/Dashboard/Settings/Language')));

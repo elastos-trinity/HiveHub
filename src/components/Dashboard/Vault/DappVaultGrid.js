@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Stack, LinearProgress, Skeleton, Typography, Box, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { LabelTypo, NormalTypo } from '../../Custom/CustomTypos';
 import { reduceHexAddress } from '../../../service/common';
 import { fetchHiveScriptPictureToDataUrl } from '../../../service/fetch';
@@ -49,6 +50,7 @@ export default function DappVaultGrid({
   isLoading,
   innerSx = {}
 }) {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useUserContext();
   const [appName, setAppName] = useState(name || '');
@@ -95,17 +97,21 @@ export default function DappVaultGrid({
         </Box>
       ) : (
         <Box
+          onClick={() => {
+            if (appDid) navigate(`/dashboard/vault/dapp/${appDid}`);
+          }}
           sx={{
             backgroundColor: 'rgba(255, 147, 30, 0.05)',
             borderRadius: '20px',
             width: '100%',
             padding: { xs: '10px 10px 10px 20px', sm: '20px 20px 20px 40px' },
             position: 'relative',
+            cursor: 'pointer',
             ...innerSx
           }}
         >
           <Stack direction="row" spacing={2} alignItems="center">
-            <img src={appAvatar} alt="dapp_avatar" width="30px" />
+            <img src={appAvatar} alt="" width="30px" />
             <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }} noWrap>
               {appName || reduceHexAddress(appDid, 6)}
             </NormalTypo>

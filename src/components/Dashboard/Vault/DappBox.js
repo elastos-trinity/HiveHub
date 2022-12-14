@@ -174,7 +174,7 @@ export default function DappBox({
               </Box>
             </Box>
             <Box sx={{ width: '100%' }}>
-              <PageTitleTypo sub noWrap>
+              <PageTitleTypo sub="true" noWrap>
                 {appName || reduceHexAddress(appDid, 6)}
               </PageTitleTypo>
               <NormalTypo noWrap sx={{ color: '#B3B3B3' }}>

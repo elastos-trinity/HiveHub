@@ -110,3 +110,13 @@ export const dedicatedDappList = [
     avatar: '/static/dapp/ic_feeds.svg'
   }
 ];
+
+export const getImageFromIPFS = (url) => {
+  // pasar:image:xxx
+  // no data
+  if (!url) return '';
+  const segments = url.split(':').filter((item) => item);
+  if (segments.length === 3 && segments[2] && segments[2] !== 'undefined')
+    return `${config.IPFSUploadUrl}/ipfs/${segments[2]}`;
+  return '';
+};

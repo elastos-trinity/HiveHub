@@ -5,7 +5,7 @@ const client = create({ url: config.IPFSUploadUrl });
 
 export const uploadAvatar2Ipfs = (avatar) =>
   new Promise((resolve, reject) => {
-    if (!avatar) resolve('empty data');
+    if (!avatar) resolve('');
     else {
       const avatarBase64 = avatar.replace('data:image/png;base64,', '');
       const binaryString = window.atob(avatarBase64);

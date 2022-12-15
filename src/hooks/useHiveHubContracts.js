@@ -13,7 +13,7 @@ import {
   getIPFromDomain,
   getLocationFromIP
 } from '../service/fetch';
-import { getTime, isInAppBrowser, reduceHexAddress } from '../service/common';
+import { getImageFromIPFS, getTime, isInAppBrowser, reduceHexAddress } from '../service/common';
 import { config } from '../config';
 
 export default function useHiveHubContracts() {
@@ -75,8 +75,8 @@ export default function useHiveHubContracts() {
       version: item?.version || '',
       type: item?.type || '',
       area: '',
-      avatar: item?.data?.avatar || '',
-      banner: item?.data?.banner || '',
+      avatar: getImageFromIPFS(item?.data?.avatar || ''),
+      banner: getImageFromIPFS(item?.data?.banner || ''),
       created,
       email: item?.data?.email || '',
       ip: '',

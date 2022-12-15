@@ -202,7 +202,11 @@ export default function MyNodeDetail() {
           <NormalTypo sx={{ color: '#B3B3B3', py: 1 }}>{nodeDetail?.description || ''}</NormalTypo>
           <Stack spacing={{ xs: 1, md: 2.5 }} mt={{ xs: 2, md: 7 }} mb={{ xs: 1, md: 4 }}>
             {detailInfo.map((item, index) => (
-              <DetailItem key={index} label={item.label} value={nodeDetail[item.field] || '---'} />
+              <DetailItem
+                key={index}
+                label={item.label}
+                value={nodeDetail[item.field] || 'Not available'}
+              />
             ))}
           </Stack>
         </ContainerBox>

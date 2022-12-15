@@ -64,7 +64,7 @@ export default function DappDetailBox({
                 }
               } else if (item.field === 'access_amount' || item.field === 'access_count')
                 value = info[item.field] ?? 0;
-              else value = info[item.field] || '---';
+              else value = info[item.field] || 'Not available';
               return (
                 <Grid item key={_i} pt={_i ? 2 : 0}>
                   <SettingTitleTypo sx={{ fontWeight: 700, textAlign: 'left' }}>

@@ -59,7 +59,7 @@ export default function DappDetailBox({
               if (item.field === 'access_last_time') {
                 if (info[item.field] === -1) value = vaultCreationTime;
                 else {
-                  const timestamp = getTime(info[item.field]);
+                  const timestamp = getTime(info[item.field] * 1000);
                   value = `${timestamp.date} ${timestamp.time}`;
                 }
               } else if (item.field === 'access_amount' || item.field === 'access_count')

@@ -4,7 +4,7 @@ import { Stack, LinearProgress, Skeleton, Typography, Box, Grid } from '@mui/mat
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LabelTypo, NormalTypo } from '../../Custom/CustomTypos';
-import { reduceHexAddress } from '../../../service/common';
+import { dedicatedDappList, reduceHexAddress } from '../../../service/common';
 import { fetchHiveScriptPictureToDataUrl } from '../../../service/fetch';
 import { useUserContext } from '../../../contexts/UserContext';
 
@@ -17,29 +17,6 @@ DappVaultGrid.propTypes = {
   isLoading: PropTypes.bool,
   innerSx: PropTypes.object
 };
-
-const dappList = [
-  {
-    name: '???',
-    appDid: '---',
-    avatar: '/static/dapp/ic_unknown.svg'
-  },
-  {
-    name: 'HiveHub',
-    appDid: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML',
-    avatar: '/static/dapp/ic_hivehub.svg'
-  },
-  {
-    name: 'Pasar',
-    appDid: 'did:elastos:iZvAak2SUHaKwBHmPFsgtVVMGtTpi4r2kY',
-    avatar: '/static/dapp/ic_pasar.svg'
-  },
-  {
-    name: 'Feeds',
-    appDid: 'did:elastos:iqtWRVjz7gsYhyuQEb1hYNNmWQt1Z9geXg',
-    avatar: '/static/dapp/ic_feeds.svg'
-  }
-];
 
 export default function DappVaultGrid({
   avatar,
@@ -59,10 +36,12 @@ export default function DappVaultGrid({
   useEffect(() => {
     const fetch = async () => {
       if (!name || !avatar) {
-        const id = dappList.findIndex((el) => el.appDid === appDid);
+        const id = dedicatedDappList.findIndex((el) => el.appDid === appDid);
         const dappId = id < 0 ? 0 : id;
-        setAppName(dappId === 0 && appDid ? reduceHexAddress(appDid, 10) : dappList[dappId].name);
-        setAppAvatar(dappList[dappId].avatar);
+        setAppName(
+          dappId === 0 && appDid ? reduceHexAddress(appDid, 10) : dedicatedDappList[dappId].name
+        );
+        setAppAvatar(dedicatedDappList[dappId].avatar);
       } else if (avatar) {
         const avatarUrl = await fetchHiveScriptPictureToDataUrl(avatar, user.did);
         setAppAvatar(avatarUrl);

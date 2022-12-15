@@ -87,3 +87,26 @@ export const getVaultPricingPlanBadge = (str) => {
       return '';
   }
 };
+
+export const dedicatedDappList = [
+  {
+    name: '???',
+    appDid: '---',
+    avatar: '/static/dapp/ic_unknown.svg'
+  },
+  {
+    name: 'HiveHub',
+    appDid: 'did:elastos:ik3ngW1tRxzTtwRstgkCWuv4SmUQ6nGcML',
+    avatar: '/static/dapp/ic_hivehub.svg'
+  },
+  {
+    name: 'Pasar',
+    appDid: 'did:elastos:iZvAak2SUHaKwBHmPFsgtVVMGtTpi4r2kY',
+    avatar: '/static/dapp/ic_pasar.svg'
+  },
+  {
+    name: 'Feeds',
+    appDid: 'did:elastos:iqtWRVjz7gsYhyuQEb1hYNNmWQt1Z9geXg',
+    avatar: '/static/dapp/ic_feeds.svg'
+  }
+];

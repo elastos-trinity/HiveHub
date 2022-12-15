@@ -13,10 +13,12 @@ import { getCredentialsFromDID } from '../../../service/fetch';
 function DetailItem({ label, value }) {
   return (
     <Stack direction="row" spacing={{ xs: '5px', md: '10px' }}>
-      <NormalTypo sx={{ py: 1, color: '#FF931E', width: '140px', textAlign: 'left' }}>
+      <NormalTypo
+        sx={{ py: 1, color: '#FF931E', width: { xs: '70px', sm: '140px' }, textAlign: 'left' }}
+      >
         {label}:
       </NormalTypo>
-      <NormalTypo sx={{ py: 1, color: '#FFF' }} noWrap>
+      <NormalTypo sx={{ py: 1, color: '#FFF', flex: 1, textAlign: 'left' }} noWrap>
         {value}
       </NormalTypo>
     </Stack>

@@ -79,7 +79,9 @@ export default function PublicNodeDetail() {
             sx={{
               display: 'inline-flex',
               height: '100%',
-              background: `url('/static/img_node_detail.svg') no-repeat center`,
+              background: `url(${
+                nodeDetail?.banner || '/static/img_node_detail.svg'
+              }) no-repeat center`,
               backgroundSize: 'cover',
               borderRadius: '20px 20px 0px 0px'
             }}

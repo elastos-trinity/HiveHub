@@ -8,6 +8,7 @@ import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
+import { getCredentialsFromDID } from '../../../service/fetch';
 
 function DetailItem({ label, value }) {
   return (
@@ -39,7 +40,7 @@ export default function PublicNodeDetail() {
   const detailInfo = [
     { label: t('node-detail-did'), field: 'owner_did' },
     { label: t('node-detail-name'), field: 'ownerName' },
-    { label: t('node-detail-description'), field: 'remark' },
+    { label: t('node-detail-description'), field: 'ownerDescription' },
     { label: t('node-detail-email'), field: 'email' },
     { label: t('node-detail-endpoint'), field: 'url' },
     { label: t('node-detail-created-date'), field: 'created' },
@@ -51,9 +52,13 @@ export default function PublicNodeDetail() {
       setIsLoading(true);
       try {
         const detail = await getHiveNodeItem(nodeId, undefined, true, true, false);
-        setNodeDetail(detail || {});
+        if (detail) {
+          const ownerCredentials = await getCredentialsFromDID(detail.owner_did);
+          setNodeDetail({ ...detail, ownerDescription: ownerCredentials?.description || '' });
+        } else setNodeDetail({});
       } catch (e) {
         console.error(e);
+        setNodeDetail({});
       }
       setIsLoading(false);
     };

@@ -90,7 +90,7 @@ export default function DappVaultGrid({
           }}
         >
           <Stack direction="row" spacing={2} alignItems="center">
-            <img src={appAvatar} alt="" width="30px" />
+            <Box component="img" src={appAvatar} alt="" width="30px" sx={{ borderRadius: '5px' }} />
             <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }} noWrap>
               {appName || reduceHexAddress(appDid, 6)}
             </NormalTypo>

@@ -72,7 +72,7 @@ export default function DappSummaryBox({
             ...innerSx
           }}
         >
-          <Stack direction="row" spacing={{ xs: 1.5, md: 4 }} alignItems="left">
+          <Stack direction="row" spacing={{ xs: 3, md: 6 }} alignItems="left">
             <Box sx={{ display: 'flex', width: '200px' }}>
               <Box
                 sx={{
@@ -125,9 +125,24 @@ export default function DappSummaryBox({
             ...innerSx
           }}
         >
-          <Stack direction="row" spacing={{ xs: 1.5, md: 4 }} alignItems="left">
+          <Stack direction="row" spacing={{ xs: 4, md: 8 }} alignItems="left">
             <Box sx={{ display: 'flex' }}>
               <Box
+                component="img"
+                src={appAvatar}
+                alt=""
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: { xs: '50px', md: '100px' },
+                  height: { xs: '50px', md: '100px' },
+                  mx: { xs: 1.5, md: 4 },
+                  my: 'auto',
+                  borderRadius: '200px'
+                }}
+              />
+              {/* <Box
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -147,10 +162,10 @@ export default function DappSummaryBox({
                   sx={{
                     width: { xs: '35px', md: '70px' },
                     height: { xs: '35px', md: '70px' },
-                    transition: 'border-radius .2s'
+                    transition: 'border-radius .2s',
                   }}
                 />
-              </Box>
+              </Box> */}
             </Box>
             <Box sx={{ width: '100%' }}>
               <PageTitleTypo sub="true" noWrap>

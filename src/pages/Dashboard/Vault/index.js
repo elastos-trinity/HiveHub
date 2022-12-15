@@ -151,7 +151,6 @@ export default function MyVault() {
       });
   };
 
-  console.log('========', dappsOnVault);
   return (
     <>
       {!isLoading && !myVault && (

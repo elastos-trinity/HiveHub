@@ -33,7 +33,7 @@ const dappList = [
   }
 ];
 
-DappBox.propTypes = {
+DappSummaryBox.propTypes = {
   avatar: PropTypes.string,
   description: PropTypes.string,
   name: PropTypes.string,
@@ -45,7 +45,7 @@ DappBox.propTypes = {
   innerSx: PropTypes.object
 };
 
-export default function DappBox({
+export default function DappSummaryBox({
   avatar,
   name,
   description,

@@ -69,9 +69,7 @@ export default function DappDetail() {
           const data = (dapps || []).find((item) => item.app_did === appDid);
           if (data) {
             try {
-              const appDidDoc = await getDIDDocumentFromDID(
-                'did:elastos:iqtWRVjz7gsYhyuQEb1hYNNmWQt1Z9geXg'
-              );
+              const appDidDoc = await getDIDDocumentFromDID(data.app_did);
               const appCredentials = appDidDoc.getCredentials();
               const devDid = appCredentials.length
                 ? appCredentials[0].getSubject()?.getProperty('developer')?.did || ''

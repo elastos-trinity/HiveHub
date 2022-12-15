@@ -13,7 +13,8 @@ import {
   getDappsOnVault,
   getHiveVaultInfo,
   backupVault,
-  migrateVault
+  migrateVault,
+  createVault
 } from '../../../service/fetch';
 import BackupConfirmDlg from '../../../components/Dialog/BackupConfirmDlg';
 import MigrateConfirmDlg from '../../../components/Dialog/MigrateConfirmDlg';
@@ -68,6 +69,48 @@ export default function MyVault() {
     fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.nodeProvider]);
+
+  const handleCreateVault = async () => {
+    if (!user.did) return;
+    try {
+      const res = await createVault(user.did);
+      if (res) {
+        enqueueSnackbar('Create vault succeed', {
+          variant: 'success',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+        window.location.reload();
+      } else
+        enqueueSnackbar('Vault already exists', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+    } catch (e) {
+      console.error(e);
+      enqueueSnackbar('Create vault error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
+  };
+
+  const handleOpenBackupDlg = () => {
+    if (activeNodeUrls.length) setOpenBackupDlg(true);
+    else
+      enqueueSnackbar('No Active Hive Nodes.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+  };
+
+  const handleOpenMigrateDlg = () => {
+    if (activeNodeUrls.length) setOpenMigrateDlg(true);
+    else
+      enqueueSnackbar('No Active Hive Nodes.', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+  };
 
   const handleBackup = async (backupNodeProvider) => {
     if (!user.did || !backupNodeProvider) return;
@@ -133,24 +176,6 @@ export default function MyVault() {
     setOnProgress(false);
   };
 
-  const handleOpenBackupDlg = () => {
-    if (activeNodeUrls.length) setOpenBackupDlg(true);
-    else
-      enqueueSnackbar('No Active Hive Nodes.', {
-        variant: 'error',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
-      });
-  };
-
-  const handleOpenMigrateDlg = () => {
-    if (activeNodeUrls.length) setOpenMigrateDlg(true);
-    else
-      enqueueSnackbar('No Active Hive Nodes.', {
-        variant: 'error',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' }
-      });
-  };
-
   return (
     <>
       {!isLoading && !myVault && (
@@ -162,7 +187,7 @@ export default function MyVault() {
             height: '100%'
           }}
         >
-          <VaultInitialView onClickCreateVault={() => {}} />
+          <VaultInitialView onClickCreateVault={handleCreateVault} />
         </div>
       )}
       {!!myVault && (

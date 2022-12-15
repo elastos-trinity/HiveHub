@@ -12,7 +12,12 @@ import {
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import DappBox from '../../../components/Dashboard/Vault/DappBox';
-import { getDappsOnVault, getHiveVaultInfo } from '../../../service/fetch';
+import {
+  getCredentialsFromDID,
+  getDappsOnVault,
+  getDIDDocumentFromDID,
+  getHiveVaultInfo
+} from '../../../service/fetch';
 import { getTime } from '../../../service/common';
 import { useUserContext } from '../../../contexts/UserContext';
 
@@ -62,11 +67,36 @@ export default function DappDetail() {
           setMyVault(vaultItem);
           const dapps = await getDappsOnVault(user.did, undefined);
           const data = (dapps || []).find((item) => item.app_did === appDid);
-          setDappDetail(data || {});
+          if (data) {
+            try {
+              const appDidDoc = await getDIDDocumentFromDID(
+                'did:elastos:iqtWRVjz7gsYhyuQEb1hYNNmWQt1Z9geXg'
+              );
+              const appCredentials = appDidDoc.getCredentials();
+              const devDid = appCredentials.length
+                ? appCredentials[0].getSubject()?.getProperty('developer')?.did || ''
+                : '';
+              if (devDid) {
+                const devCredentials = await getCredentialsFromDID(devDid);
+                const devName = devCredentials?.name || '';
+                const devBio = devCredentials?.bio || '';
+                setDappDetail({
+                  ...data,
+                  developer_did: devDid,
+                  developer_name: devName,
+                  about_developer: devBio
+                });
+              } else setDappDetail({ ...data });
+            } catch (e) {
+              console.error(`Failed to load dev credentials: ${e}`);
+              setDappDetail({ ...data });
+            }
+          }
         }
       } catch (e) {
         console.error(`Failed to load my dapp info: ${e}`);
         setMyVault(null);
+        setDappDetail({});
       }
       setIsLoading(false);
     };
@@ -74,8 +104,6 @@ export default function DappDetail() {
     else navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.did]);
-
-  // console.log('=====', dappDetail);
 
   return (
     <>

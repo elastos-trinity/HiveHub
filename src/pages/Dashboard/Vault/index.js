@@ -47,7 +47,7 @@ export default function MyVault() {
           setDappsOnVault(dapps);
         }
       } catch (e) {
-        console.error(`Failed to load my nodes: ${e}`);
+        console.error(`Failed to load my vault: ${e}`);
         setMyVault(null);
       }
       setIsLoading(false);
@@ -151,6 +151,7 @@ export default function MyVault() {
       });
   };
 
+  console.log('========', dappsOnVault);
   return (
     <>
       {!isLoading && !myVault && (

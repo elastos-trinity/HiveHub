@@ -156,9 +156,11 @@ export default function DappSummaryBox({
               <PageTitleTypo sub="true" noWrap>
                 {appName || reduceHexAddress(appDid, 6)}
               </PageTitleTypo>
-              <NormalTypo noWrap sx={{ color: '#B3B3B3' }}>
-                {description}
-              </NormalTypo>
+              {description && (
+                <NormalTypo noWrap sx={{ color: '#B3B3B3' }}>
+                  {description}
+                </NormalTypo>
+              )}
               <LabelTypo mt={4} mb={1}>
                 {used} MB {t('vault-used')}
               </LabelTypo>

@@ -47,33 +47,40 @@ export default function DappDetail() {
       setIsLoading(true);
       try {
         const vaultItem = await getHiveVaultInfo(user.did, undefined, 1);
+        setMyVault(vaultItem);
         if (vaultItem) {
-          setMyVault(vaultItem);
           const dapps = await getDappsOnVault(user.did, undefined);
           const data = (dapps || []).find((item) => item.app_did === appDid);
           if (data) {
             try {
               const appDidDoc = await getDIDDocumentFromDID(data.app_did);
               const appCredentials = appDidDoc.getCredentials();
-              const devDid = appCredentials.length
-                ? appCredentials[0].getSubject()?.getProperty('developer')?.did || ''
-                : '';
-              if (devDid) {
-                const devCredentials = await getCredentialsFromDID(devDid);
-                const devName = devCredentials?.name || '';
-                const devBio = devCredentials?.bio || '';
-                setDappDetail({
-                  ...data,
-                  developer_did: devDid,
-                  developer_name: devName,
-                  about_developer: devBio
-                });
+              if (appCredentials.length) {
+                const devDid = appCredentials[0].getSubject()?.getProperty('developer')?.did || '';
+                const appDescription = appCredentials[0].getSubject()?.getProperty('bio') || '';
+                if (devDid) {
+                  const devCredentials = await getCredentialsFromDID(devDid);
+                  const devName = devCredentials?.name || '';
+                  const devBio = devCredentials?.bio || '';
+                  setDappDetail({
+                    ...data,
+                    developer_did: devDid,
+                    app_description: appDescription,
+                    developer_name: devName,
+                    about_developer: devBio
+                  });
+                } else
+                  setDappDetail({
+                    ...data,
+                    developer_did: devDid,
+                    app_description: appDescription
+                  });
               } else setDappDetail({ ...data });
             } catch (e) {
               console.error(`Failed to load dev credentials: ${e}`);
               setDappDetail({ ...data });
             }
-          }
+          } else setDappDetail({});
         }
       } catch (e) {
         console.error(`Failed to load my dapp info: ${e}`);
@@ -92,7 +99,7 @@ export default function DappDetail() {
       <HeaderTypo sx={{ py: 1 }}>{t('vault-dapp-title')}</HeaderTypo>
       <DappSummaryBox
         name={dappDetail?.name || ''}
-        description="Decentralized social web3"
+        description={dappDetail?.app_description || ''}
         appDid={dappDetail?.app_did || ''}
         avatar={dappDetail?.icon_url || ''}
         used={((dappDetail?.used_storage_size ?? 0) / 1024 / 1024).toFixed(2) * 1.0}

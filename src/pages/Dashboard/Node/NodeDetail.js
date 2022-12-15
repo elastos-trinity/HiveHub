@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { NodeTitle, HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
-import { getHiveNodeInfo } from '../../../service/fetch';
+import { getCredentialsFromDID, getHiveNodeInfo } from '../../../service/fetch';
 import { getTime } from '../../../service/common';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
@@ -42,7 +42,7 @@ export default function MyNodeDetail() {
     { label: t('node-detail-owner-did'), field: 'owner_did' },
     { label: t('node-detail-service-did'), field: 'serviceDid' },
     { label: t('node-detail-name'), field: 'ownerName' },
-    { label: t('node-detail-description'), field: 'remark' },
+    { label: t('node-detail-description'), field: 'ownerDescription' },
     { label: t('node-detail-email'), field: 'email' },
     { label: t('node-detail-endpoint'), field: 'url' },
     { label: t('node-detail-created-date'), field: 'created' },
@@ -66,6 +66,7 @@ export default function MyNodeDetail() {
           const nodeInfo = await getHiveNodeInfo(user.did, detail.url);
           if (nodeInfo?.getOwnerDid() !== user.did) navigate('/dashboard/node');
           else {
+            const ownerCredentials = await getCredentialsFromDID(detail.owner_did);
             let lastAccess = '';
             if (nodeInfo?.latest_access_time) {
               const objLastAccess = getTime(nodeInfo.latest_access_time * 1000);
@@ -73,10 +74,11 @@ export default function MyNodeDetail() {
             }
             setNodeDetail({
               ...detail,
+              ownerDescription: ownerCredentials?.description || '',
               serviceDid: nodeInfo?.service_did || '',
-              vaultCount: nodeInfo?.vault_count ?? 0,
-              userCount: nodeInfo?.user_count ?? 0,
-              backupCount: nodeInfo?.backup_count ?? 0,
+              vaultCount: (nodeInfo?.vault_count ?? 0).toString(),
+              userCount: (nodeInfo?.user_count ?? 0).toString(),
+              backupCount: (nodeInfo?.backup_count ?? 0).toString(),
               lastCommitId: nodeInfo?.last_commit_id || '',
               lastAccessTime: lastAccess,
               memoryTotal: `${((nodeInfo?.memory_total ?? 0) / 1024 / 1024).toFixed(2)} MB`,

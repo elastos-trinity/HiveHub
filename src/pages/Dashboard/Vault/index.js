@@ -14,8 +14,10 @@ import {
   getHiveVaultInfo,
   backupVault,
   migrateVault,
-  createVault
+  createVault,
+  bindDid
 } from '../../../service/fetch';
+import BindConfirmDlg from '../../../components/Dialog/BindConfirmDlg';
 import BackupConfirmDlg from '../../../components/Dialog/BackupConfirmDlg';
 import MigrateConfirmDlg from '../../../components/Dialog/MigrateConfirmDlg';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
@@ -30,6 +32,7 @@ export default function MyVault() {
   const [myVault, setMyVault] = useState(null);
   const [backupStatus, setBackupStatus] = useState(false);
   const [dappsOnVault, setDappsOnVault] = useState(Array(2).fill(0));
+  const [openBindDlg, setOpenBindDlg] = useState(false);
   const [openBackupDlg, setOpenBackupDlg] = useState(false);
   const [openMigrateDlg, setOpenMigrateDlg] = useState(false);
   const [onProgress, setOnProgress] = useState(false);
@@ -70,28 +73,16 @@ export default function MyVault() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.nodeProvider]);
 
-  const handleCreateVault = async () => {
-    if (!user.did) return;
-    try {
-      const res = await createVault(user.did);
-      if (res) {
-        enqueueSnackbar('Create vault succeed', {
-          variant: 'success',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-        window.location.reload();
-      } else
-        enqueueSnackbar('Vault already exists', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-    } catch (e) {
-      console.error(e);
-      enqueueSnackbar('Create vault error', {
+  const handleOpenBindDlg = () => {
+    if (user?.nodeProvider || '') {
+      handleCreateVault(undefined);
+    }
+    if (activeNodeUrls.length) setOpenBindDlg(true);
+    else
+      enqueueSnackbar('No Active Hive Nodes.', {
         variant: 'error',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
-    }
   };
 
   const handleOpenBackupDlg = () => {
@@ -110,6 +101,40 @@ export default function MyVault() {
         variant: 'error',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
+  };
+
+  const handleCreateVault = async (bindNodeUrl) => {
+    if (!user.did) return;
+    try {
+      setOnProgress(true);
+      const bindStatus = bindNodeUrl ? await bindDid(bindNodeUrl) : true;
+      setOnProgress(false);
+      if (bindStatus) {
+        setOpenBindDlg(false);
+        const res = await createVault(user.did);
+        if (res) {
+          enqueueSnackbar('Create vault succeed', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+          window.location.reload();
+        } else
+          enqueueSnackbar('Vault already exists', {
+            variant: 'error',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+      } else
+        enqueueSnackbar('Bind DID error', {
+          variant: 'error',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' }
+        });
+    } catch (e) {
+      console.error(e);
+      enqueueSnackbar('Create vault error', {
+        variant: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+    }
   };
 
   const handleBackup = async (backupNodeProvider) => {
@@ -187,7 +212,7 @@ export default function MyVault() {
             height: '100%'
           }}
         >
-          <VaultInitialView onClickCreateVault={handleCreateVault} />
+          <VaultInitialView onClickCreateVault={handleOpenBindDlg} />
         </div>
       )}
       {!!myVault && (
@@ -233,13 +258,23 @@ export default function MyVault() {
           )}
         </>
       )}
+      <BindConfirmDlg
+        open={openBindDlg}
+        onClose={() => {
+          setOpenBindDlg(false);
+          setOnProgress(false);
+        }}
+        onClick={(target) => handleCreateVault(target)}
+        disabled={onProgress}
+        activeNodes={activeNodeUrls}
+      />
       <BackupConfirmDlg
         open={openBackupDlg}
         onClose={() => {
           setOpenBackupDlg(false);
           setOnProgress(false);
         }}
-        onClick={handleBackup}
+        onClick={(target) => handleBackup(target)}
         disabled={onProgress}
         activeNodes={activeNodeUrls}
       />
@@ -249,7 +284,7 @@ export default function MyVault() {
           setOpenMigrateDlg(false);
           setOnProgress(false);
         }}
-        onClick={handleMigrate}
+        onClick={(target) => handleMigrate(target)}
         disabled={onProgress}
         activeNodes={activeNodeUrls}
       />

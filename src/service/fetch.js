@@ -160,6 +160,20 @@ export const getSubscriptionService = async (did) => {
   }
 };
 
+export const bindDid = async (targetNodeUrl) => {
+  try {
+    const didAccess = new ConnDID.DIDAccess();
+    const result = await didAccess.updateHiveVaultAddress(targetNodeUrl, '');
+    console.log('===+', result);
+    if (result === 'published') return true;
+    console.error('Failed to publish the target hive url for user did.');
+    return false;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
 export const createVault = (did, nodeProvider) =>
   new Promise((resolve, reject) => {
     getVaultSubscription(did, nodeProvider)

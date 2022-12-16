@@ -89,6 +89,7 @@ const en = {
   'btn-download': 'Download',
   'btn-deploy-node': 'Deploy node',
   'btn-create-vault': 'Create vault',
+  'btn-bind': 'Bind',
   'btn-backup': 'Backup',
   'btn-migrate': 'Migrate',
   'btn-remove': 'Remove',
@@ -105,6 +106,8 @@ const en = {
   'dlg-migrate-confirm-label-1': 'Select your preferred node provider to migrate your data.',
   'dlg-remove-node-confirm-title': 'Remove node',
   'dlg-remove-node-confirm-label': 'Are you sure you want to remove your node?',
+  'dlg-bind-confirm-label-1': 'Select your preferred node provider to bind your DID.',
+  'dlg-bind-confirm-label-2': '(Final confirmation required from the Essentials app)',
 
   'display-language': 'English',
   'landing-title-manage': 'Manage',

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Chip, Stack, Avatar, Skeleton, Typography } from '@mui/material';
+import { Box, Chip, Stack, Avatar, Skeleton, Typography, Tooltip } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { tooltipClasses } from '@mui/material/Tooltip';
 import { useTranslation } from 'react-i18next';
 import { NodeTitle, HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
@@ -14,6 +16,16 @@ import {
   fetchHiveScriptPictureToDataUrl
 } from '../../../service/fetch';
 
+const ValueTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(() => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    marginTop: '0 !important',
+    fontSize: 13,
+    borderRadius: 4
+  }
+}));
+
 function DetailItem({ label, value }) {
   return (
     <Stack direction="row" spacing={{ xs: '5px', md: '10px' }}>
@@ -22,9 +34,11 @@ function DetailItem({ label, value }) {
       >
         {label}:
       </NormalTypo>
-      <NormalTypo sx={{ py: 1, color: '#FFF', flex: 1, textAlign: 'left' }} noWrap>
-        {value}
-      </NormalTypo>
+      <ValueTooltip title={value || ''} placement="bottom-start">
+        <NormalTypo sx={{ py: 1, color: '#FFF', flex: 1, textAlign: 'left' }} noWrap>
+          {value}
+        </NormalTypo>
+      </ValueTooltip>
     </Stack>
   );
 }

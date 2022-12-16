@@ -8,7 +8,11 @@ import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
-import { getCredentialsFromDID } from '../../../service/fetch';
+import {
+  getCredentialsFromDID,
+  getHiveAvatarUrlFromDIDAvatarCredential,
+  fetchHiveScriptPictureToDataUrl
+} from '../../../service/fetch';
 
 function DetailItem({ label, value }) {
   return (
@@ -56,7 +60,18 @@ export default function PublicNodeDetail() {
         const detail = await getHiveNodeItem(nodeId, undefined, true, true, false);
         if (detail) {
           const ownerCredentials = await getCredentialsFromDID(detail.owner_did);
-          setNodeDetail({ ...detail, ownerDescription: ownerCredentials?.description || '' });
+          let ownerAvatar = detail?.avatar;
+          if (ownerCredentials?.avatar && !ownerAvatar) {
+            ownerAvatar = await fetchHiveScriptPictureToDataUrl(
+              getHiveAvatarUrlFromDIDAvatarCredential(ownerCredentials.avatar),
+              user.did
+            );
+          }
+          setNodeDetail({
+            ...detail,
+            ownerDescription: ownerCredentials?.description || '',
+            avatar: ownerAvatar
+          });
         } else setNodeDetail({});
       } catch (e) {
         console.error(e);

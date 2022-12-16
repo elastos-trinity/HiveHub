@@ -8,7 +8,12 @@ import { useTranslation } from 'react-i18next';
 import { NodeTitle, HeaderTypo, NormalTypo } from '../../../components/Custom/CustomTypos';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import { ConfirmButton } from '../../../components/Custom/CustomButtons';
-import { getCredentialsFromDID, getHiveNodeInfo } from '../../../service/fetch';
+import {
+  fetchHiveScriptPictureToDataUrl,
+  getHiveAvatarUrlFromDIDAvatarCredential,
+  getCredentialsFromDID,
+  getHiveNodeInfo
+} from '../../../service/fetch';
 import { getTime } from '../../../service/common';
 import { useUserContext } from '../../../contexts/UserContext';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
@@ -83,6 +88,13 @@ export default function MyNodeDetail() {
           if (nodeInfo?.getOwnerDid() !== user.did) navigate('/dashboard/node');
           else {
             const ownerCredentials = await getCredentialsFromDID(detail.owner_did);
+            let ownerAvatar = detail?.avatar;
+            if (ownerCredentials?.avatar && !ownerAvatar) {
+              ownerAvatar = await fetchHiveScriptPictureToDataUrl(
+                getHiveAvatarUrlFromDIDAvatarCredential(ownerCredentials.avatar),
+                user.did
+              );
+            }
             let lastAccess = '';
             if (nodeInfo?.latest_access_time) {
               const objLastAccess = getTime(nodeInfo.latest_access_time * 1000);
@@ -90,6 +102,7 @@ export default function MyNodeDetail() {
             }
             setNodeDetail({
               ...detail,
+              avatar: ownerAvatar,
               ownerDescription: ownerCredentials?.description || '',
               serviceDid: nodeInfo?.service_did || '',
               vaultCount: (nodeInfo?.vault_count ?? 0).toString(),

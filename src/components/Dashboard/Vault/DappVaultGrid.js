@@ -51,6 +51,11 @@ export default function DappVaultGrid({
     if (user.did) fetch();
   }, [appDid, avatar, name, user.did]);
 
+  const handleImageError = (e) => {
+    e.target.src = '/static/dapp/ic_unknown.svg';
+    setAppAvatar(e.target.src);
+  };
+
   return (
     <Grid item lg={6} md={6} sm={12} xs={12}>
       {isLoading ? (
@@ -90,7 +95,14 @@ export default function DappVaultGrid({
           }}
         >
           <Stack direction="row" spacing={2} alignItems="center">
-            <Box component="img" src={appAvatar} alt="" width="30px" sx={{ borderRadius: '5px' }} />
+            <Box
+              component="img"
+              src={appAvatar}
+              alt=""
+              width="30px"
+              onError={handleImageError}
+              sx={{ borderRadius: '5px' }}
+            />
             <NormalTypo sx={{ fontWeight: 600, color: '#FFF' }} noWrap>
               {appName || reduceHexAddress(appDid, 6)}
             </NormalTypo>

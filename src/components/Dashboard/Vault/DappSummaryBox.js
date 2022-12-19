@@ -59,6 +59,11 @@ export default function DappSummaryBox({
     if (user.did) fetch();
   }, [appDid, avatar, name, user.did]);
 
+  const handleImageError = (e) => {
+    e.target.src = '/static/dapp/ic_unknown.svg';
+    setAppAvatar(e.target.src);
+  };
+
   return (
     <Grid item lg={6} md={6} sm={12} xs={12}>
       {isLoading ? (
@@ -131,6 +136,7 @@ export default function DappSummaryBox({
                 component="img"
                 src={appAvatar}
                 alt=""
+                onError={handleImageError}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',

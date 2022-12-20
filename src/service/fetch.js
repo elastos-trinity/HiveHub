@@ -313,6 +313,9 @@ export const checkBackupStatus = async (did) => {
 
 export const backupVault = async (did, targetNodeUrl) => {
   const appContext = await getAppContext(did);
+  if (!appContext) {
+    throw new Error('Can not get backup credential, please confirm on the Essentials app.')
+  }
   // const nodeProvider = await appContext.getProviderAddress(did);
   // Vault to back up
   const vault = new Vault(appContext);

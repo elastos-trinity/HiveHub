@@ -53,20 +53,7 @@ export default function useConnectEE() {
     }
   };
 
-  const signOutWithEssentialsWithoutRefresh = async () => {
-    console.log('Signing out user. Deleting session info');
-    localStorage.removeItem('did');
-    try {
-      if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
-        await essentialsConnector.getWalletConnectProvider().disconnect();
-      if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
-        await window.elastos.getWeb3Provider().disconnect();
-    } catch (e) {
-      console.error('Error while disconnecting the wallet', e);
-    }
-  };
-
-  const signOutWithEssentials = async () => {
+  const signOutWithEssentials = async (pageRefresh = true) => {
     console.log('Signing out user. Deleting session info');
     localStorage.removeItem('did');
     try {
@@ -79,7 +66,7 @@ export default function useConnectEE() {
     } catch (e) {
       console.error('Error while disconnecting the wallet', e);
     }
-    window.location.reload();
+    if (pageRefresh) window.location.reload();
   };
 
   const isConnectedEE =
@@ -88,7 +75,6 @@ export default function useConnectEE() {
   return {
     isConnectedEE,
     signInWithEssentials,
-    signOutWithEssentialsWithoutRefresh,
     signOutWithEssentials
   };
 }

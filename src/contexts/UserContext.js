@@ -12,7 +12,7 @@ import {
 
 const initialState = {
   user: {},
-  setDid: () => {}
+  setUser: () => {}
 };
 
 const UserContext = createContext(initialState);

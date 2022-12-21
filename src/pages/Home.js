@@ -14,8 +14,7 @@ import PublicNodes from '../components/Home/PublicNodes';
 import { config } from '../config';
 
 export default function HomePage() {
-  const { isConnectedEE, signInWithEssentials, signOutWithEssentialsWithoutRefresh } =
-    useConnectEE();
+  const { isConnectedEE, signInWithEssentials, signOutWithEssentials } = useConnectEE();
   const { user } = useUserContext();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -26,12 +25,8 @@ export default function HomePage() {
   const login = async () => {
     setLoading(true);
     try {
-      if (isConnectedEE) {
-        await signOutWithEssentialsWithoutRefresh();
-        await signInWithEssentials();
-      } else {
-        await signInWithEssentials();
-      }
+      if (isConnectedEE) await signOutWithEssentials(false);
+      await signInWithEssentials();
     } catch (e) {
       console.error(e);
     }

@@ -277,6 +277,9 @@ export class BrowserConnectivitySDKHiveAuthHelper {
       targetDid,
       targetHost
     );
+    if (!credential) {
+      throw new Error(`Cannot get the backup credential from Essentials app.`);
+    }
     console.log(`backup credential: ${credential.toString(true)}`);
     return credential.toString(true);
   }

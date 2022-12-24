@@ -63,9 +63,19 @@ export default function CreateNode() {
         return;
       }
       // get node info
-      const nodeInfo = await getHiveNodeInfo(user.did, url);
-      if (!nodeInfo) {
-        enqueueSnackbar('Invalid node url', {
+      let nodeInfo = null;
+      try {
+        nodeInfo = await getHiveNodeInfo(user.did, url);
+        if (!nodeInfo) {
+          enqueueSnackbar('Invalid node url', {
+            variant: 'error',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' }
+          });
+          setOnProgress(false);
+          return;
+        }
+      } catch (e) {
+        enqueueSnackbar(`${e.message}`, {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });
@@ -102,16 +112,6 @@ export default function CreateNode() {
         )
       ) {
         enqueueSnackbar('Invalid owner', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-        setOnProgress(false);
-        return;
-      }
-      // check node status
-      const status = await checkHiveNodeStatus(url);
-      if (!status) {
-        enqueueSnackbar('Hive Node is not accessible.', {
           variant: 'error',
           anchorOrigin: { horizontal: 'right', vertical: 'top' }
         });

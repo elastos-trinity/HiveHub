@@ -37,11 +37,12 @@ export const checkHiveNodeStatus = async (nodeUrl) => {
   }
 };
 
-export const getHiveNodeInfo = async (did, nodeProvider) => {
+export const getHiveNodeInfo = async (did, nodeProvider, throwEx=false) => {
   try {
     const serviceEndpoint = await getServiceEndpoint(did, nodeProvider);
     return new AboutService(serviceEndpoint).getInfo();
   } catch (err) {
+    if (throwEx) throw err;
     console.error(err);
     return undefined;
   }
@@ -98,8 +99,7 @@ export const getServiceEndpoint = async (did, nodeProviderUrl) => {
   try {
     const appContext = await getAppContext(did);
     const nodeProvider = await appContext.getProviderAddress(did);
-    const serviceEndpoint = new ServiceEndpoint(appContext, nodeProviderUrl || nodeProvider);
-    return serviceEndpoint;
+    return new ServiceEndpoint(appContext, nodeProviderUrl || nodeProvider);
   } catch (err) {
     console.error(err);
     return undefined;

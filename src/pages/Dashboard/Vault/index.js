@@ -143,28 +143,16 @@ export default function MyVault() {
     setOnProgress(true);
     try {
       console.log('Backup vault to: ', backupNodeProvider);
-      const result = await backupVault(user.did, backupNodeProvider);
-      if (result === 1) {
-        enqueueSnackbar('Backup vault succeed', {
-          variant: 'success',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-        setOpenBackupDlg(false);
-        window.location.reload();
-      } else if (result === 2) {
-        enqueueSnackbar('Already backup', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-      } else {
-        enqueueSnackbar('Backup vault error', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-      }
+      await backupVault(user.did, backupNodeProvider);
+      enqueueSnackbar('Backup vault succeed', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      setOpenBackupDlg(false);
+      window.location.reload();
     } catch (err) {
       console.error(err);
-      enqueueSnackbar('Backup vault error', {
+      enqueueSnackbar(`${err.message}`, {
         variant: 'error',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });
@@ -178,22 +166,16 @@ export default function MyVault() {
     setOnProgress(true);
     try {
       console.log('Migrate vault to: ', backupNodeProvider);
-      const result = await migrateVault(user.did, backupNodeProvider);
-      if (result) {
-        enqueueSnackbar('Migrate vault succeed', {
-          variant: 'success',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
-        setOpenMigrateDlg(false);
-        window.location.reload();
-      } else
-        enqueueSnackbar('Migrate vault error', {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' }
-        });
+      await migrateVault(user.did, backupNodeProvider);
+      enqueueSnackbar('Migrate vault succeed', {
+        variant: 'success',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' }
+      });
+      setOpenMigrateDlg(false);
+      window.location.reload();
     } catch (err) {
       console.log(err);
-      enqueueSnackbar('Migrate vault error', {
+      enqueueSnackbar(`${err.message}`, {
         variant: 'error',
         anchorOrigin: { horizontal: 'right', vertical: 'top' }
       });

@@ -10,7 +10,7 @@ import { ConfirmButton } from '../../../components/Custom/CustomButtons';
 import { ContainerBox } from '../../../components/Custom/CustomContainer';
 import CustomTextField from '../../../components/Custom/CustomTextField';
 import { useUserContext } from '../../../contexts/UserContext';
-import { checkHiveNodeStatus, getHiveNodeInfo } from '../../../service/fetch';
+import { getHiveNodeInfo } from '../../../service/fetch';
 import useHiveHubContracts from '../../../hooks/useHiveHubContracts';
 
 export default function CreateNode() {

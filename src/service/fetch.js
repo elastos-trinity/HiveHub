@@ -11,8 +11,7 @@ import {
   InsertOptions,
   BackupResultResult,
   HiveException,
-  Backup,
-  VaultNotFoundException
+  Backup
 } from '@elastosfoundation/hive-js-sdk';
 import { DID, DIDBackend, DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 import { DID as ConnDID } from '@elastosfoundation/elastos-connectivity-sdk-js';
@@ -37,7 +36,7 @@ export const checkHiveNodeStatus = async (nodeUrl) => {
   }
 };
 
-export const getHiveNodeInfo = async (did, nodeProvider, throwEx=false) => {
+export const getHiveNodeInfo = async (did, nodeProvider, throwEx = false) => {
   try {
     const serviceEndpoint = await getServiceEndpoint(did, nodeProvider);
     return new AboutService(serviceEndpoint).getInfo();

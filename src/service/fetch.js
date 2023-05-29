@@ -470,7 +470,7 @@ export const createHiveNodeEnvConfig = (
     : '0x81897263EC51A2314d256703b2B9f57664B772a9';
   const ipfsGatewayUrl = config.IsProductEnv
     ? 'https://ipfs.triniy-tech.io'
-    : 'https://ipfs-test.trinity-feeds.app';
+    : 'https://ipfs-testnet.trinity-tech.io';
   const content = `EID_RESOLVER_URL = ${eidUrl}
 ESC_RESOLVER_URL = ${escUrl}
 SERVICE_DID_PRIVATE_KEY = ${serviceDIDContent}
@@ -485,12 +485,12 @@ PAYMENT_CONFIG_PATH = ./payment_config.json
 PAYMENT_CONTRACT_ADDRESS = ${paymentContractAddress}
 PAYMENT_RECEIVING_ADDRESS = ${paymentReceivingAddress}
 ATLAS_ENABLED = False
-MONGODB_URL = mongodb://localhost:27017
-IPFS_NODE_URL = http://localhost:5001
+MONGODB_URL = mongodb://hivemongodb:27017
+IPFS_NODE_URL = http://hiveipfs:5001
 IPFS_GATEWAY_URL = ${ipfsGatewayUrl}
 ENABLE_CORS = True
-VERSION = v2.9.1
-LAST_COMMIT = cec7d255
+VERSION = v2.9.2
+LAST_COMMIT = e2621af
 NODE_NAME = ${nodeName}
 NODE_EMAIL = ${nodeEmail}
 NODE_DESCRIPTION = ${nodeDescription} `;
